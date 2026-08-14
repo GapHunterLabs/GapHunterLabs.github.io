@@ -1,72 +1,80 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Estado en vivo del catálogo de plugins de Gap Hunter Labs: nicho, función, descargas, reviews, rating y crecimiento por producto.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%93%8A%3C/text%3E%3C/svg%3E">
+<meta name="description" content="Live status of the Gap Hunter Labs plugin catalog: niche, function, downloads, reviews, rating, and growth per product.">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%201024%201024%22%20width%3D%22100%25%22%20height%3D%22100%25%22%3E%20%3C%21--%20White%20background%3A%20keeps%20the%20mark%20legible%20in%20light%20theme%20and%20on%20the%20Marketplace%20listing%20card%20--%3E%20%3Crect%20width%3D%221024%22%20height%3D%221024%22%20fill%3D%22%23FFFFFF%22/%3E%20%3Cpath%20d%3D%22%20M%20511%2C81%20L%20847%2C283%20L%20725%2C351%20L%20508%2C223%20L%20296%2C348%20L%20296%2C588%20L%20463%2C691%20L%20342%2C765%20L%20173%2C665%20L%20172%2C281%20Z%22%20fill%3D%22%230151FC%22%20/%3E%20%3Cpath%20d%3D%22%20M%20846%2C412%20L%20844%2C668%20L%20518%2C863%20L%20393%2C795%20L%20724%2C589%20L%20721%2C540%20L%20567%2C538%20L%20568%2C412%20Z%22%20fill%3D%22%2301B3FD%22%20/%3E%20%3Cpolygon%20points%3D%22569%2C413%20695%2C413%20695%2C539%20569%2C539%22%20fill%3D%22%2302F172%22%20/%3E%20%3C/svg%3E">
 <title>Gap Hunter Labs — Catalog Report</title>
 <style>
+  /* Brand palette, pulled directly from pluginIcon.svg/pluginIcon_dark.svg
+     (the same mark shared by all 34 plugins) -- never invented:
+     #0151FC (primary blue, sits on the icon's white/light background),
+     #01B3FD (secondary cyan-blue, the icon's own "reads on dark"
+     tone), #02F172 (accent green). Light theme uses the darker brand
+     blue the same way the icon does on white; dark theme uses the
+     lighter cyan-blue the same way the icon's dark variant does on a
+     transparent/dark ground -- not an arbitrary choice either way. */
   :root {
-    --bg: #F0EEE7;
-    --surface: #FFFFFF;
-    --surface-2: #E8E4D9;
-    --border: #DBD5C4;
-    --text: #211D15;
-    --text-dim: #6B6353;
-    --text-faint: #948B76;
-    --accent: #B87A1F;
+    --bg: #FFFFFF;
+    --surface: #F6F8FC;
+    --surface-2: #EAF0FA;
+    --border: #D6E1F5;
+    --text: #0B1220;
+    --text-dim: #46516B;
+    --text-faint: #7C89A8;
+    --accent: #0151FC;
     --accent-ink: #FFFFFF;
-    --good: #3F9C46;
-    --bad: #C43F35;
-    --pending: #4C6478;
-    --pending-bg: #E1E8ED;
-    --good-bg: #E4F2E4;
-    --bad-bg: #F7E5E3;
+    --good: #06914B;
+    --bad: #D6304C;
+    --pending: #3F63A6;
+    --pending-bg: #E7EEFB;
+    --good-bg: #E1F5EA;
+    --bad-bg: #FBE6EA;
     --mono: ui-monospace, "JetBrains Mono", "Cascadia Code", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
     --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-    --shadow: 0 1px 2px rgba(33,29,21,0.06), 0 4px 14px rgba(33,29,21,0.05);
+    --shadow: 0 1px 2px rgba(11,18,32,0.06), 0 4px 14px rgba(11,18,32,0.05);
     --radius: 10px;
   }
 
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --bg: #15130F;
-      --surface: #1E1B15;
-      --surface-2: #26221B;
-      --border: #37322A;
-      --text: #EDE7D9;
-      --text-dim: #A39A87;
-      --text-faint: #766E5D;
-      --accent: #E7A33D;
-      --accent-ink: #191204;
-      --good: #7BCB7F;
-      --bad: #E2756B;
-      --pending: #93AFC2;
-      --pending-bg: #232C33;
-      --good-bg: #1E2B1E;
-      --bad-bg: #2E211E;
-      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+      --bg: #090D16;
+      --surface: #111726;
+      --surface-2: #1A2235;
+      --border: #29334A;
+      --text: #E9EDF8;
+      --text-dim: #9AA6C4;
+      --text-faint: #6C7793;
+      --accent: #3FA2FF;
+      --accent-ink: #06101F;
+      --good: #02F172;
+      --bad: #FF6E7A;
+      --pending: #8DACE0;
+      --pending-bg: #16233B;
+      --good-bg: #0F2A1D;
+      --bad-bg: #34191D;
+      --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 8px 24px rgba(0,0,0,0.4);
     }
   }
 
   :root[data-theme="dark"] {
-    --bg: #15130F;
-    --surface: #1E1B15;
-    --surface-2: #26221B;
-    --border: #37322A;
-    --text: #EDE7D9;
-    --text-dim: #A39A87;
-    --text-faint: #766E5D;
-    --accent: #E7A33D;
-    --accent-ink: #191204;
-    --good: #7BCB7F;
-    --bad: #E2756B;
-    --pending: #93AFC2;
-    --pending-bg: #232C33;
-    --good-bg: #1E2B1E;
-    --bad-bg: #2E211E;
-    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+    --bg: #090D16;
+    --surface: #111726;
+    --surface-2: #1A2235;
+    --border: #29334A;
+    --text: #E9EDF8;
+    --text-dim: #9AA6C4;
+    --text-faint: #6C7793;
+    --accent: #3FA2FF;
+    --accent-ink: #06101F;
+    --good: #02F172;
+    --bad: #FF6E7A;
+    --pending: #8DACE0;
+    --pending-bg: #16233B;
+    --good-bg: #0F2A1D;
+    --bad-bg: #34191D;
+    --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 8px 24px rgba(0,0,0,0.4);
   }
 
   * { box-sizing: border-box; }
@@ -412,11 +420,11 @@
   <header class="top">
     <div class="eyebrow">Gap Hunter Labs</div>
     <h1>Catalog Report</h1>
-    <p class="subtitle">Estado real de los 34 plugins del catálogo — nicho, función, mejoras sobre el competidor citado, y métricas en vivo de JetBrains Marketplace y GitHub.</p>
+    <p class="subtitle">Real state of the 34-plugin catalog — niche, function, improvements over the cited competitor, and live metrics from JetBrains Marketplace and GitHub.</p>
     <div class="meta-row">
-      <span>Generado: <b id="generatedAt">—</b></span>
-      <span>Fuente: <b>plugins.jetbrains.com/api</b> + <b>GitHub API</b></span>
-      <span>Se actualiza cuando se pide una corrida nueva de <b>pipeline/28_catalog_report.py</b></span>
+      <span>Generated: <b id="generatedAt">—</b></span>
+      <span>Source: <b>plugins.jetbrains.com/api</b> + <b>GitHub API</b></span>
+      <span>Refreshed on request via <b>pipeline/28_catalog_report.py</b></span>
     </div>
   </header>
 
@@ -424,14 +432,14 @@
 
   <div class="controls">
     <div class="search">
-      <input type="text" id="searchInput" placeholder="Buscar por nombre, nicho o repo…" autocomplete="off" />
+      <input type="text" id="searchInput" placeholder="Search by name, niche, or repo…" autocomplete="off" />
     </div>
     <select id="pricingFilter">
-      <option value="">Todos los modelos</option>
+      <option value="">All pricing models</option>
       <option value="FREE">Free</option>
       <option value="FREEMIUM">Freemium</option>
       <option value="PAID">Paid</option>
-      <option value="PENDING">Pendiente de moderación</option>
+      <option value="PENDING">Pending moderation</option>
     </select>
     <span class="count-note" id="countNote"></span>
   </div>
@@ -441,23 +449,23 @@
       <thead>
         <tr>
           <th data-key="name">Plugin</th>
-          <th data-key="downloads" style="text-align:right">Descargas</th>
+          <th data-key="downloads" style="text-align:right">Downloads</th>
           <th data-key="reviews" style="text-align:right">Reviews</th>
           <th data-key="rating" style="text-align:right">★ Rating</th>
           <th data-key="stars" style="text-align:right">GitHub ★</th>
-          <th data-key="pricing">Modelo</th>
-          <th data-key="firstPublished">Publicado</th>
+          <th data-key="pricing">Pricing</th>
+          <th data-key="firstPublished">Published</th>
         </tr>
       </thead>
       <tbody id="tbody"></tbody>
     </table>
-    <div class="no-results" id="noResults" style="display:none">Sin resultados para ese filtro.</div>
+    <div class="no-results" id="noResults" style="display:none">No results for that filter.</div>
   </div>
 
   <footer class="notes">
-    <p><b>Metodología:</b> descargas, modelo de precio, fecha de primera publicación y reviews vienen de <code>searchPlugins</code>/<code>/plugins/&lt;id&gt;/comments</code> de la API pública de JetBrains Marketplace, no estimados. GitHub ★ viene de <code>gh repo view</code>. El "crecimiento" compara contra la <b>primera captura conocida</b> de cada plugin, no solo contra la corrida anterior (pasá el mouse sobre el % para ver la fecha base y el valor de arranque) — un plugin sin ninguna captura previa muestra "—". La captura del <b>2026-08-07</b> (25 plugins) fue confirmada directamente por el usuario, no extraída de un snapshot de API archivado — se usa igual como base real de crecimiento, marcada como tal en <code>out/catalog_history.json</code>. Las demás capturas (2026-08-11 en adelante) sí vienen de la API en vivo. Los 7 plugins marcados <b>Pendiente</b> fueron subidos a Marketplace el 2026-08-14 y todavía no aparecen indexados en <code>searchPlugins</code> — normal durante moderación, no es un error de este reporte.</p>
-    <p><b>Qué NO se guarda nunca aquí:</b> código de producto de Marketplace (<code>productCode</code>) ni datos de contacto del vendor (email/teléfono/dirección) — la API los expone, pero se descartan explícitamente antes de escribir cualquier archivo, siguiendo la misma regla que el resto de los repos de este catálogo.</p>
-    <p>Para refrescar este reporte con datos nuevos: correr <code>python pipeline/28_catalog_report.py</code> y pedir que se regenere este artifact — reemplaza el mismo link, no crea uno nuevo.</p>
+    <p><b>Methodology:</b> downloads, pricing model, first-published date, and reviews come from <code>searchPlugins</code>/<code>/plugins/&lt;id&gt;/comments</code> in JetBrains Marketplace's public API, never estimated. GitHub ★ comes from <code>gh repo view</code>. "Growth" compares against the <b>earliest known snapshot</b> for each plugin, not just the previous run (hover the % to see the baseline date and starting value) — a plugin with no earlier snapshot shows "—". The <b>2026-08-07</b> snapshot (25 plugins) was confirmed directly by the team, not pulled from an archived API snapshot — it's still used as a real growth baseline, marked as such in <code>out/catalog_history.json</code>. Every snapshot from 2026-08-11 onward comes from the live API. The 7 plugins marked <b>Pending</b> were submitted to Marketplace on 2026-08-14 and aren't indexed in <code>searchPlugins</code> yet — normal during moderation, not an error in this report.</p>
+    <p><b>What's never stored here:</b> Marketplace product codes (<code>productCode</code>) or vendor contact details (email/phone/address) — the API exposes them, but they're explicitly discarded before anything is written to disk, the same rule followed across every repo in this catalog.</p>
+    <p>To refresh this report with new data: run <code>python pipeline/28_catalog_report.py</code> and ask for this page to be regenerated — it replaces the same link, never creates a new one.</p>
   </footer>
 </div>
 
@@ -472,12 +480,12 @@
 
   var statsEl = document.getElementById('stats');
   var statDefs = [
-    { num: data.totalPlugins, label: 'Plugins reales', accent: true },
-    { num: data.totalDownloads.toLocaleString('en-US'), label: 'Descargas totales' },
-    { num: data.pending, label: 'En moderación' },
-    { num: data.totalReviews, label: 'Reviews totales' },
-    { num: data.avgRating != null ? data.avgRating.toFixed(2) : '—', label: 'Rating promedio' },
-    { num: data.totalStars, label: 'GitHub ★ totales' },
+    { num: data.totalPlugins, label: 'Real plugins', accent: true },
+    { num: data.totalDownloads.toLocaleString('en-US'), label: 'Total downloads' },
+    { num: data.pending, label: 'In moderation' },
+    { num: data.totalReviews, label: 'Total reviews' },
+    { num: data.avgRating != null ? data.avgRating.toFixed(2) : '—', label: 'Average rating' },
+    { num: data.totalStars, label: 'Total GitHub ★' },
   ];
   statsEl.innerHTML = statDefs.map(function (s) {
     return '<div class="stat"><div class="num' + (s.accent ? ' accent' : '') + '">' + s.num + '</div><div class="label">' + s.label + '</div></div>';
@@ -490,7 +498,7 @@
   var expandedRepo = null;
 
   function pricingLabel(p, isPending) {
-    if (isPending) return { cls: 'pending', text: 'Pendiente' };
+    if (isPending) return { cls: 'pending', text: 'Pending' };
     if (p === 'FREE') return { cls: 'free', text: 'Free' };
     if (p === 'FREEMIUM') return { cls: 'freemium', text: 'Freemium' };
     if (p === 'PAID') return { cls: 'paid', text: 'Paid' };
@@ -499,7 +507,7 @@
 
   function growthMarkup(p) {
     var g = p.growth;
-    var title = p.growthSince ? ('Desde ' + p.growthSince + ': ' + p.growthFrom + ' → ' + p.downloads) : 'Sin captura anterior';
+    var title = p.growthSince ? ('Since ' + p.growthSince + ': ' + p.growthFrom + ' → ' + p.downloads) : 'No earlier snapshot';
     var titleAttr = ' title="' + esc(title) + '"';
     if (g === null || g === undefined) return '<span class="growth flat"' + titleAttr + '>—</span>';
     if (g > 0) return '<span class="growth up"' + titleAttr + '>▲ ' + g.toFixed(1) + '%</span>';
@@ -577,8 +585,8 @@
       html += '<td class="num-cell" style="text-align:left">' + (p.firstPublished || '—') + '</td>';
       html += '</tr>';
       html += '<tr class="expand-row"><td colspan="7"><div class="expand-inner' + (isOpen ? ' open' : '') + '" id="exp-' + esc(p.repo) + '">';
-      html += '<div class="block"><div class="field-label">Función</div>' + mdInline(p.pitch || '—') + '</div>';
-      html += '<div class="block"><div class="field-label">Mejora / evidencia de mercado</div>' + mdInline(p.why || '—') + '</div>';
+      html += '<div class="block"><div class="field-label">Function</div>' + mdInline(p.pitch || '—') + '</div>';
+      html += '<div class="block"><div class="field-label">Improvement / market evidence</div>' + mdInline(p.why || '—') + '</div>';
       html += '<div class="links">';
       if (p.marketplaceUrl) html += '<a href="' + esc(p.marketplaceUrl) + '" target="_blank" rel="noopener">Marketplace →</a>';
       html += '<a href="' + esc(p.githubUrl) + '" target="_blank" rel="noopener">GitHub →</a>';
