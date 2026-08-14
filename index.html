@@ -7,58 +7,17 @@
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%201024%201024%22%20width%3D%22100%25%22%20height%3D%22100%25%22%3E%20%3C%21--%20White%20background%3A%20keeps%20the%20mark%20legible%20in%20light%20theme%20and%20on%20the%20Marketplace%20listing%20card%20--%3E%20%3Crect%20width%3D%221024%22%20height%3D%221024%22%20fill%3D%22%23FFFFFF%22/%3E%20%3Cpath%20d%3D%22%20M%20511%2C81%20L%20847%2C283%20L%20725%2C351%20L%20508%2C223%20L%20296%2C348%20L%20296%2C588%20L%20463%2C691%20L%20342%2C765%20L%20173%2C665%20L%20172%2C281%20Z%22%20fill%3D%22%230151FC%22%20/%3E%20%3Cpath%20d%3D%22%20M%20846%2C412%20L%20844%2C668%20L%20518%2C863%20L%20393%2C795%20L%20724%2C589%20L%20721%2C540%20L%20567%2C538%20L%20568%2C412%20Z%22%20fill%3D%22%2301B3FD%22%20/%3E%20%3Cpolygon%20points%3D%22569%2C413%20695%2C413%20695%2C539%20569%2C539%22%20fill%3D%22%2302F172%22%20/%3E%20%3C/svg%3E">
 <title>Gap Hunter Labs — Catalog Report</title>
 <style>
-  /* Brand palette, pulled directly from pluginIcon.svg/pluginIcon_dark.svg
-     (the same mark shared by all 34 plugins) -- never invented:
-     #0151FC (primary blue, sits on the icon's white/light background),
-     #01B3FD (secondary cyan-blue, the icon's own "reads on dark"
-     tone), #02F172 (accent green). Light theme uses the darker brand
-     blue the same way the icon does on white; dark theme uses the
-     lighter cyan-blue the same way the icon's dark variant does on a
-     transparent/dark ground -- not an arbitrary choice either way. */
+  /* Deliberately single-theme (always dark) -- a brand-consistency
+     choice made explicitly by the team, not an omission: every
+     visitor sees the same look regardless of their own system
+     setting. Brand palette pulled directly from
+     pluginIcon.svg/pluginIcon_dark.svg (the same mark shared by all
+     34 plugins) -- never invented: #0151FC (primary blue) lightened
+     to #3FA2FF for legibility on a dark ground (mirrors how the
+     icon's own dark variant uses the lighter cyan-blue on a
+     transparent/dark background, not the darker blue meant for
+     white), #02F172 (accent green, used directly for growth-up). */
   :root {
-    --bg: #FFFFFF;
-    --surface: #F6F8FC;
-    --surface-2: #EAF0FA;
-    --border: #D6E1F5;
-    --text: #0B1220;
-    --text-dim: #46516B;
-    --text-faint: #7C89A8;
-    --accent: #0151FC;
-    --accent-ink: #FFFFFF;
-    --good: #06914B;
-    --bad: #D6304C;
-    --pending: #3F63A6;
-    --pending-bg: #E7EEFB;
-    --good-bg: #E1F5EA;
-    --bad-bg: #FBE6EA;
-    --mono: ui-monospace, "JetBrains Mono", "Cascadia Code", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
-    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-    --shadow: 0 1px 2px rgba(11,18,32,0.06), 0 4px 14px rgba(11,18,32,0.05);
-    --radius: 10px;
-  }
-
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg: #090D16;
-      --surface: #111726;
-      --surface-2: #1A2235;
-      --border: #29334A;
-      --text: #E9EDF8;
-      --text-dim: #9AA6C4;
-      --text-faint: #6C7793;
-      --accent: #3FA2FF;
-      --accent-ink: #06101F;
-      --good: #02F172;
-      --bad: #FF6E7A;
-      --pending: #8DACE0;
-      --pending-bg: #16233B;
-      --good-bg: #0F2A1D;
-      --bad-bg: #34191D;
-      --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 8px 24px rgba(0,0,0,0.4);
-    }
-  }
-
-  :root[data-theme="dark"] {
     --bg: #090D16;
     --surface: #111726;
     --surface-2: #1A2235;
@@ -74,7 +33,10 @@
     --pending-bg: #16233B;
     --good-bg: #0F2A1D;
     --bad-bg: #34191D;
+    --mono: ui-monospace, "JetBrains Mono", "Cascadia Code", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
     --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 8px 24px rgba(0,0,0,0.4);
+    --radius: 10px;
   }
 
   * { box-sizing: border-box; }
