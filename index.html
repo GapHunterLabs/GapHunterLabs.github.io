@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Estado en vivo del catálogo de plugins de Gap Hunter Labs: nicho, función, descargas, reviews, rating y crecimiento por producto.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27%3E%3Ctext y=%27.9em%27 font-size=%2790%27%3E%F0%9F%93%8A%3C/text%3E%3C/svg%3E">
+<title>Gap Hunter Labs — Catalog Report</title>
+<style>
+  :root {
+    --bg: #F0EEE7;
+    --surface: #FFFFFF;
+    --surface-2: #E8E4D9;
+    --border: #DBD5C4;
+    --text: #211D15;
+    --text-dim: #6B6353;
+    --text-faint: #948B76;
+    --accent: #B87A1F;
+    --accent-ink: #FFFFFF;
+    --good: #3F9C46;
+    --bad: #C43F35;
+    --pending: #4C6478;
+    --pending-bg: #E1E8ED;
+    --good-bg: #E4F2E4;
+    --bad-bg: #F7E5E3;
+    --mono: ui-monospace, "JetBrains Mono", "Cascadia Code", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --shadow: 0 1px 2px rgba(33,29,21,0.06), 0 4px 14px rgba(33,29,21,0.05);
+    --radius: 10px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #15130F;
+      --surface: #1E1B15;
+      --surface-2: #26221B;
+      --border: #37322A;
+      --text: #EDE7D9;
+      --text-dim: #A39A87;
+      --text-faint: #766E5D;
+      --accent: #E7A33D;
+      --accent-ink: #191204;
+      --good: #7BCB7F;
+      --bad: #E2756B;
+      --pending: #93AFC2;
+      --pending-bg: #232C33;
+      --good-bg: #1E2B1E;
+      --bad-bg: #2E211E;
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #15130F;
+    --surface: #1E1B15;
+    --surface-2: #26221B;
+    --border: #37322A;
+    --text: #EDE7D9;
+    --text-dim: #A39A87;
+    --text-faint: #766E5D;
+    --accent: #E7A33D;
+    --accent-ink: #191204;
+    --good: #7BCB7F;
+    --bad: #E2756B;
+    --pending: #93AFC2;
+    --pending-bg: #232C33;
+    --good-bg: #1E2B1E;
+    --bad-bg: #2E211E;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  header.top {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+  }
+
+  h1 {
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: clamp(24px, 3.4vw, 34px);
+    margin: 2px 0 0;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+
+  .subtitle {
+    color: var(--text-dim);
+    font-size: 14.5px;
+    margin: 4px 0 0;
+    max-width: 62ch;
+  }
+
+  .meta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 16px;
+    margin-top: 14px;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-faint);
+  }
+
+  .meta-row b { color: var(--text-dim); font-weight: 600; }
+
+  /* ---- stat tiles ---- */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 12px;
+    margin: 28px 0 32px;
+  }
+
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    box-shadow: var(--shadow);
+  }
+
+  .stat .num {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 26px;
+    font-weight: 700;
+    line-height: 1;
+  }
+
+  .stat .num.accent { color: var(--accent); }
+
+  .stat .label {
+    margin-top: 8px;
+    font-size: 11.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+
+  /* ---- controls ---- */
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 14px;
+  }
+
+  .search {
+    flex: 1 1 260px;
+    position: relative;
+  }
+
+  .search input {
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 12px 9px 32px;
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 13.5px;
+    outline: none;
+  }
+
+  .search input:focus {
+    border-color: var(--accent);
+  }
+
+  .search::before {
+    content: "";
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 13px;
+    height: 13px;
+    border: 1.6px solid var(--text-faint);
+    border-radius: 50%;
+  }
+
+  .search::after {
+    content: "";
+    position: absolute;
+    left: 20px;
+    top: 62%;
+    width: 6px;
+    height: 1.6px;
+    background: var(--text-faint);
+    transform: rotate(45deg);
+  }
+
+  select#pricingFilter {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 10px;
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 13.5px;
+  }
+
+  .count-note {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-faint);
+  }
+
+  /* ---- table ---- */
+  .table-scroll {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    box-shadow: var(--shadow);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 880px;
+  }
+
+  thead th {
+    position: sticky;
+    top: 0;
+    background: var(--surface-2);
+    text-align: left;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    white-space: nowrap;
+    user-select: none;
+  }
+
+  thead th:hover { color: var(--text); }
+
+  thead th.sorted { color: var(--accent); }
+
+  thead th .arrow { font-size: 9px; margin-left: 3px; opacity: 0.7; }
+
+  tbody tr.row {
+    cursor: pointer;
+    border-bottom: 1px solid var(--border);
+  }
+
+  tbody tr.row:hover { background: var(--surface-2); }
+
+  tbody tr.row:last-child { border-bottom: none; }
+
+  tbody td {
+    padding: 11px 14px;
+    vertical-align: middle;
+  }
+
+  td.name-cell {
+    max-width: 240px;
+  }
+
+  .plugin-name {
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  .niche {
+    font-size: 12px;
+    color: var(--text-dim);
+    margin-top: 1px;
+  }
+
+  td.num-cell {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+    font-size: 13.5px;
+  }
+
+  .growth {
+    font-size: 12px;
+    margin-left: 6px;
+  }
+
+  .growth.up { color: var(--good); }
+  .growth.down { color: var(--bad); }
+  .growth.flat { color: var(--text-faint); }
+
+  .chip {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 100px;
+    white-space: nowrap;
+  }
+
+  .chip.free { background: var(--surface-2); color: var(--text-dim); }
+  .chip.freemium { background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent); }
+  .chip.paid { background: color-mix(in srgb, var(--accent) 30%, transparent); color: var(--accent); }
+  .chip.pending { background: var(--pending-bg); color: var(--pending); }
+
+  .expand-row td {
+    padding: 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .expand-inner {
+    display: none;
+    padding: 16px 18px 20px 14px;
+    background: var(--surface-2);
+    font-size: 13.5px;
+    color: var(--text-dim);
+    border-left: 3px solid var(--accent);
+  }
+
+  .expand-inner.open { display: block; }
+
+  .expand-inner .block { max-width: 78ch; }
+  .expand-inner .block + .block { margin-top: 10px; }
+
+  .expand-inner .field-label {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 4px;
+  }
+
+  .expand-inner .links {
+    margin-top: 12px;
+    display: flex;
+    gap: 14px;
+    font-family: var(--mono);
+    font-size: 12px;
+  }
+
+  .expand-inner a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .expand-inner a:hover { text-decoration: underline; }
+
+  .verified-mark {
+    color: var(--accent);
+    font-size: 11px;
+    margin-left: 4px;
+  }
+
+  .no-results {
+    padding: 40px;
+    text-align: center;
+    color: var(--text-faint);
+    font-family: var(--mono);
+    font-size: 13px;
+  }
+
+  footer.notes {
+    margin-top: 28px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+    font-size: 12.5px;
+    color: var(--text-faint);
+    line-height: 1.7;
+  }
+
+  footer.notes b { color: var(--text-dim); }
+
+  @media (max-width: 640px) {
+    .wrap { padding: 28px 14px 60px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="eyebrow">Gap Hunter Labs</div>
+    <h1>Catalog Report</h1>
+    <p class="subtitle">Estado real de los 34 plugins del catálogo — nicho, función, mejoras sobre el competidor citado, y métricas en vivo de JetBrains Marketplace y GitHub.</p>
+    <div class="meta-row">
+      <span>Generado: <b id="generatedAt">—</b></span>
+      <span>Fuente: <b>plugins.jetbrains.com/api</b> + <b>GitHub API</b></span>
+      <span>Se actualiza cuando se pide una corrida nueva de <b>pipeline/28_catalog_report.py</b></span>
+    </div>
+  </header>
+
+  <section class="stats" id="stats"></section>
+
+  <div class="controls">
+    <div class="search">
+      <input type="text" id="searchInput" placeholder="Buscar por nombre, nicho o repo…" autocomplete="off" />
+    </div>
+    <select id="pricingFilter">
+      <option value="">Todos los modelos</option>
+      <option value="FREE">Free</option>
+      <option value="FREEMIUM">Freemium</option>
+      <option value="PAID">Paid</option>
+      <option value="PENDING">Pendiente de moderación</option>
+    </select>
+    <span class="count-note" id="countNote"></span>
+  </div>
+
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th data-key="name">Plugin</th>
+          <th data-key="downloads" style="text-align:right">Descargas</th>
+          <th data-key="reviews" style="text-align:right">Reviews</th>
+          <th data-key="rating" style="text-align:right">★ Rating</th>
+          <th data-key="stars" style="text-align:right">GitHub ★</th>
+          <th data-key="pricing">Modelo</th>
+          <th data-key="firstPublished">Publicado</th>
+        </tr>
+      </thead>
+      <tbody id="tbody"></tbody>
+    </table>
+    <div class="no-results" id="noResults" style="display:none">Sin resultados para ese filtro.</div>
+  </div>
+
+  <footer class="notes">
+    <p><b>Metodología:</b> descargas, modelo de precio, fecha de primera publicación y reviews vienen de <code>searchPlugins</code>/<code>/plugins/&lt;id&gt;/comments</code> de la API pública de JetBrains Marketplace, no estimados. GitHub ★ viene de <code>gh repo view</code>. El "crecimiento" compara contra la <b>primera captura conocida</b> de cada plugin, no solo contra la corrida anterior (pasá el mouse sobre el % para ver la fecha base y el valor de arranque) — un plugin sin ninguna captura previa muestra "—". La captura del <b>2026-08-07</b> (25 plugins) fue confirmada directamente por el usuario, no extraída de un snapshot de API archivado — se usa igual como base real de crecimiento, marcada como tal en <code>out/catalog_history.json</code>. Las demás capturas (2026-08-11 en adelante) sí vienen de la API en vivo. Los 7 plugins marcados <b>Pendiente</b> fueron subidos a Marketplace el 2026-08-14 y todavía no aparecen indexados en <code>searchPlugins</code> — normal durante moderación, no es un error de este reporte.</p>
+    <p><b>Qué NO se guarda nunca aquí:</b> código de producto de Marketplace (<code>productCode</code>) ni datos de contacto del vendor (email/teléfono/dirección) — la API los expone, pero se descartan explícitamente antes de escribir cualquier archivo, siguiendo la misma regla que el resto de los repos de este catálogo.</p>
+    <p>Para refrescar este reporte con datos nuevos: correr <code>python pipeline/28_catalog_report.py</code> y pedir que se regenere este artifact — reemplaza el mismo link, no crea uno nuevo.</p>
+  </footer>
+</div>
+
+<script id="catalog-data" type="application/json">{"generatedAt":"2026-08-14 15:36:19 UTC","totalPlugins":34,"totalDownloads":1036,"pending":7,"totalStars":0,"totalReviews":0,"avgRating":null,"plugins":[{"repo":"ansible-companion","name":"Ansible Companion","niche":"Ansible / DevOps","pitch":"IntelliJ/PyCharm plugin. **Encrypt and decrypt Ansible Vault (1.1/AES256 format) directly in the editor**, without depending on `ansible-vault` being installed.","why":"Born from real evidence in JetBrains Marketplace reviews, not assumptions: this niche's incumbents (paid and free) have concrete, repeated complaints about price, YAML they shouldn't touch, and badly parsed Jinja2. Vault encrypt/decrypt in particular is one of the features users value most in the paid incumbent — and one of the few pieces that can be built without depending on an external language server.","githubUrl":"https://github.com/GapHunterLabs/ansible-companion","marketplaceUrl":"https://plugins.jetbrains.com/plugin/33082-ansible-companion","downloads":108,"growth":18.7,"growthSince":"2026-08-07","growthFrom":91,"pricing":"FREEMIUM","reviews":0,"rating":null,"stars":0,"firstPublished":"2026-08-06","verified":true},{"repo":"react-native-companion","name":"React Native Companion","niche":"React Native Tooling","pitch":"IntelliJ/WebStorm/PhpStorm plugin. Run React Native commands (`run-android`, `run-ios`, Metro) from a tool window without freezing the IDE.","why":"Born from real evidence in JetBrains Marketplace reviews, not assumptions: the leading paid alternative in this space (React Native Console, ~430K downloads, $19-24/year) has a recent, severe, reproducible complaint — \"severely impacting IDE performance... frequently becomes unresponsive... thread dumps are required\" — plus older reports of buggy iOS simulator integration and unreliable buttons. The same vendor's own free tier is rated higher than their paid one, suggesting the problem is implementation quality in the paid tier's extra features, not something inherent to the feature set.","githubUrl":"https://github.com/GapHunterLabs/react-native-companion","marketplaceUrl":"https://plugins.jetbrains.com/plugin/33093-react-native-companion","downloads":104,"growth":70.5,"growthSince":"2026-08-07","growthFrom":61,"pricing":"FREE","reviews":0,"rating":null,"stars":0,"firstPublished":"2026-08-13","verified":true},{"repo":"api-security-companion","name":"API Security Companion","niche":"API Security","pitch":"IntelliJ/Android Studio plugin. Lightweight, 100% local API-security checks for Java and Kotlin — hardcoded secrets, plaintext HTTP, TLS misconfiguration, and OWASP API Security Top 10 patterns.","why":"Built after reviewing real, recent reviews of the market-leading security scanners, not assumptions:","githubUrl":"https://github.com/GapHunterLabs/api-security-companion","marketplaceUrl":"https://plugins.jetbrains.com/plugin/33195-api-security-companion","downloads":74,"growth":25.4,"growthSince":"2026-08-07","growthFrom":59,"pricing":"FREEMIUM","reviews":0,"rating":null,"stars":0,"firstPublished":"2026-08-06","verified":true},{"repo":"cert-companion","name":"Cert Companion","niche":"Certificates / X.509","pitch":"IntelliJ-family plugin. A native, client-side viewer for X.509 certificates and keystores — decode a `.pem`, `.crt`, `.cer`, `.der`, `.jks`, `.p12`, or `.pfx` file without leaving the IDE.","why":"Born from real evidence in JetBrains Marketplace reviews of a paid certificate/keystore explorer plugin (308K downloads, 83% of reviews at 3 stars or fewer), not assumptions:","githubUrl":"https://github.com/GapHunterLabs/cert-companion","marketplaceUrl":"https://plugins.jetbrains.com/plugin/33153-cert-companion","downloads":63,"growth":8.6,"growthSince":"2026-08-07","growthFrom":58,"pricing":"FREE","reviews":0,"rating":null,"stars":0,"firstPublished":"2026-07-30","verified":true},{"repo":"highlight-companion","name":"Highlight Companion","niche":"Code Complexity","pitch":"IntelliJ-family plugin. A cognitive-complexity gutter icon for Java and Kotlin methods/functions — a colored badge with the real number, computed with SonarSource's documented Cognitive Complexity algorithm, never blocking the UI thread.","why":"Born from real, independent, recent (2026-02) evidence in JetBrains Marketplace reviews of Better Highlights (1.03M downloads, FREEMIUM) — not the raw aggregate rating, which is contaminated by unrelated products sharing the word \"better\", but the actual review text once filtered:","githubUrl":"https://github.com/GapHunterLabs/highlight-companion","marketplaceUrl":"https://plugins.jetbrains.com/plugin/33169-highlight-companion","downloads":59,"growth":7.3,"growthSince":"2026-08-07","growthFrom":55,"pricing":"FREE","reviews":0,"rating":null,"stars":0,"firstPublished":"2026-08-04","verified":true},{"repo":"gitlab-ci-companion","name":"GitLab CI Companion","niche":"GitLab CI/CD","pitch":"IntelliJ-family plugin. Static syntax and structural checks for `.gitlab-ci.yml` — catch mistakes before running a real pipeline, not after.","why":"Born from real evidence in JetBrains Marketplace reviews of \"GitLab CICD — Pipelines & Jobs, Builds Run Cancel Retry View Log\" (26,891 downloads, paid), not assumptions:","githubUrl":"https://github.com/GapHunterLabs/gitlab-ci-companion","marketplaceUrl":"https://plugins.jetbrains.com/plugin/33317-gitlab-ci-companion","downloads":55,"growth":96.4,"growthSince":"2026-08-07","growthFrom":28,"pricing":"FREE","reviews":0,"rating":null,"stars":0,"firstPublished":"2026-08-13","verified":true},{"repo":"theme-companion","name":"Theme Companion","niche":"Editor Theme","pitch":"IntelliJ-family plugin. A dark, high-contrast editor color scheme plus a folder-icon provider that keeps source/test/resource root icons showing up, always.","why":"Born from real evidence in JetBrains Marketplace reviews of a paid Monokai theme plugin (2.47M downloads, 85%+ of reviews at 3 stars or below), not assumptions:","githubUrl":"https://github.com/GapHunterLabs/theme-companion","marketplaceUrl":"https://plugins.jetbrains.com/plugin/33151-theme-companion","downloads":50,"growth":8.7,"growthSince":"2026-08-07","growthFrom":46,"pricing":"FREE","reviews":0,"rating":null,"stars":0,"firstPublished":"2026-07-30","verified":true},{"repo":"spreadsheet-companion","name":"Spreadsheet Companion","niche":"CSV/XLSX Tooling","pitch":"IntelliJ-family plugin. Edit CSV/TSV files in a real table and view XLSX workbooks — without leaving the IDE, and without the plugin taking over your files.","why":"Born from real evidence in JetBrains Marketplace reviews, not assumptions: the leading paid spreadsheet plugin in this space ($39/year, ~307K downloads) has 50% of its reviews at 3 stars or fewer, with paying users reporting that they cannot add or delete rows, cannot copy/paste cells, that the plugin forcibly takes over CSV files with no way to opt out, that its license prompt freezes the whole IDE, and that it corrupted XLSX files on save.","githubUrl":"https://github.com/GapHunterLabs/spreadsheet-companion","marketplaceUrl":"https://plugins.jetbrains.com/plugin/33095-spreadsheet-companion","downloads":49,"growth":44.1,"growthSince":"2026-08-07","growthFrom":34,"pricing":"FREE","reviews":0,"rating":null,"stars":0,"firstPublished":"2026-08-06","verified":true},{"repo":"openapi-companion","name":"OpenAPI Companion","niche":"OpenAPI/Swagger Tooling","pitch":"IntelliJ-family plugin. Reliable go-to-definition (Ctrl+Click / Ctrl+B) for `$ref` values in OpenAPI/Swagger specs written in JSON or YAML, resolved entirely against local files, plus a warning on any `$ref` that doesn't actually resolve.","why":"Built from real, current evidence across four independent sources in this exact space, not assumptions:","githubUrl":"https://github.com/GapHunterLabs/openapi-companion","marketplaceUrl":"https://plugins.jetbrains.com/plugin/33349-openapi-companion","downloads":47,"growth":135.0,"growthSince":"2026-08-07","growthFrom":20,"pricing":"PAID","reviews":0,"rating":null,"stars":0,"firstPublished":"2026-08-13","verified":true},{"repo":"mermaid-companion","name":"Mermaid Companion","niche":"Diagrams","pitch":"Syntax highlighting and real syntax validation for `.mmd`/`.mermaid` diagram source files (flowchart, sequence, and class diagrams).","why":"**Mermaid Studio** (JetBrains Marketplace id 29870), 11,168 downloads, paid, vendor Tachi Labs. Real, verbatim reviewer complaints:","githubUrl":"https://github.com/GapHunterLabs/mermaid-companion","marketplaceUrl":"https://plugins.jetbrains.com/plugin/33340-mermaid-companion","downloads":46,"growth":4500.0,"growthSince":"2026-08-07","growthFrom":1,"pricing":"FREE","reviews":0,"rating":null,"stars":0,"firstPublished":"2026-08-09","verified":true},{"repo":"refactor-simulator","name":"Refactor Simulator","niche":"Refactoring Tools","pitch":"IntelliJ IDEA (Community + Ultimate) plugin. **Preview every refactoring before committing it.** Simulates a rename in an isolated, in-memory sandbox — using IntelliJ's own PSI, Find Usages, and refactoring processors, never a custom engine — and shows a full impact report, deterministic validation, and a native side-by-side diff before anything touches a real file.","why":"Unlike the other 8 Gap Hunter Labs plugins, this one wasn't built from a documented backlog of real competitor reviews. A quick evidence check (2026-07-28) confirmed there's no direct competitor with real, citable paid-tier complaints in this exact space — refactor previews already exist natively in IntelliJ, and the closest paid product found (Parasoft Jtest) is an unrelated enterprise test-impact-analysis suite that runs tests *after* a change is applied, not a pre-commit simulation. This is an original idea, not market-validated the way the other 8 plugins were — treat it accordingly.","githubUrl":"https://github.com/GapHunterLabs/refactor-simulator","marketplaceUrl":"https://plugins.jetbrains.com/plugin/33204-refactor-simulator","downloads":42,"growth":35.5,"growthSince":"2026-08-07","growthFrom":31,"pricing":"FREEMIUM","reviews":0,"rating":null,"stars":0,"firstPublished":"2026-08-11","verified":true},{"repo":"jwt-companion","name":"JWT Companion","niche":"JWT / Auth Tooling","pitch":"IntelliJ-family plugin. Decode and verify JSON Web Tokens directly in a dedicated tool window — no browser round-trip, no data leaving the IDE.","why":"Born from real evidence in JetBrains Marketplace reviews of JWT (JSON Web Token) Analyzer (74,353 downloads), not assumptions:","githubUrl":"https://github.com/GapHunterLabs/jwt-companion","marketplaceUrl":"https://plugins.jetbrains.com/plugin/33316-jwt-companion","downloads":37,"growth":27.6,"growthSince":"2026-08-07","growthFrom":29,"pricing":"FREE","reviews":0,"rating":null,"stars":0,"firstPublished":"2026-08-03","verified":true},{"repo":"git-hygiene-companion","name":"Git Hygiene Companion","niche":"Git Tooling","pitch":"IntelliJ-family plugin. Lightweight inline git blame — author and date at the end of the current line — designed from the ground up to never block the editor.","why":"Born from real evidence in GitToolBox's own public issue tracker (~10.2M downloads, 4.7★ freemium — the largest install base found while researching this niche), not assumptions:","githubUrl":"https://github.com/GapHunterLabs/git-hygiene-companion","marketplaceUrl":"https://plugins.jetbrains.com/plugin/33315-git-hygiene-companion","downloads":33,"growth":13.8,"growthSince":"2026-08-07","growthFrom":29,"pricing":"FREE","reviews":0,"rating":null,"stars":0,"firstPublished":"2026-08-03","verified":true},{"repo":"firestore-companion","name":"Firestore Companion","niche":"Firestore / Database","pitch":"Browse and edit Firestore collections, documents, and subcollections in a tool window, authenticating with a GCP service account key via simple REST calls.","why":"**Firebase Firestore** (JetBrains Marketplace id 23609), 14,735 downloads, paid, vendor Anton Shuvaev (also the author of JetClient/ DynamoDB/Elasticsearch companions -- not Google). Rated 3.80, notably the lowest among that vendor's ~6 database plugins (DynamoDB 4.41, Elasticsearch 4.62), confirming this is a problem specific to this plugin, not general vendor reputation. Real, verbatim reviewer complaints (same exact error, 3 users, 8+ months):","githubUrl":"https://github.com/GapHunterLabs/firestore-companion","marketplaceUrl":"https://plugins.jetbrains.com/plugin/33330-firestore-companion","downloads":32,"growth":100.0,"growthSince":"2026-08-07","growthFrom":16,"pricing":"FREE","reviews":0,"rating":null,"stars":0,"firstPublished":"2026-08-13","verified":true},{"repo":"graphql-companion","name":"GraphQL Companion","niche":"GraphQL Tooling","pitch":"IntelliJ-family plugin. Fast syntax highlighting for `.graphql`/`.graphqls` files, and multi-schema discovery that works out of the box — with or without a `.graphqlconfig` file.","why":"Born from real evidence in JetBrains's own official GraphQL plugin (millions of downloads), not assumptions:","githubUrl":"https://github.com/GapHunterLabs/graphql-companion","marketplaceUrl":"https://plugins.jetbrains.com/plugin/33319-graphql-companion","downloads":28,"growth":21.7,"growthSince":"2026-08-07","growthFrom":23,"pricing":"FREE","reviews":0,"rating":null,"stars":0,"firstPublished":"2026-08-03","verified":true},{"repo":"xsd-companion","name":"XSD Companion","niche":"XSD/WSDL Tooling","pitch":"IntelliJ-family plugin. Go-to-definition and a real structure tree for XSD/WSDL schemas split across multiple files.","why":"Born from real evidence in JetBrains Marketplace reviews of a paid XSD/WSDL visualizer plugin (~$10/month, 69% of reviews at 3 stars or fewer), not assumptions:","githubUrl":"https://github.com/GapHunterLabs/xsd-companion","marketplaceUrl":"https://plugins.jetbrains.com/plugin/33392-xsd-companion","downloads":28,"growth":null,"growthSince":"2026-08-07","growthFrom":0,"pricing":"FREE","reviews":0,"rating":null,"stars":0,"firstPublished":"2026-08-13","verified":true},{"repo":"asyncapi-companion","name":"AsyncAPI Companion","niche":"AsyncAPI Tooling","pitch":"IntelliJ-family plugin. Reliable go-to-definition for `$ref` values in AsyncAPI documents (JSON and YAML) — 100% local, no network calls, and it never breaks when a new JetBrains IDE version ships.","why":"Born from real evidence in JetBrains Marketplace reviews, not assumptions: the leading AsyncAPI plugin in this space (FREEMIUM, actively developed) has 55% of its reviews at 3 stars or fewer — higher than the negative-review rate that anchored several other plugins in this catalog. Paying and free users alike report:","githubUrl":"https://github.com/GapHunterLabs/asyncapi-companion","marketplaceUrl":"https://plugins.jetbrains.com/plugin/33389-asyncapi-companion","downloads":27,"growth":null,"growthSince":"2026-08-07","growthFrom":0,"pricing":"FREE","reviews":0,"rating":null,"stars":0,"firstPublished":"2026-08-13","verified":true},{"repo":"nginx-companion","name":"Nginx Companion","niche":"Nginx Config","pitch":"IntelliJ-family plugin. Syntax highlighting and directive completion for nginx config files.","why":"Born from real evidence in JetBrains Marketplace reviews, not assumptions: the leading nginx plugin's paid tier (254K+ downloads) has recent complaints of locking up the IDE \"even on non-nginx related edits,\" and of the free tier repeatedly prompting for analytics/tracking consent on every startup regardless of how many times the user declines. The historical free alternative has been abandoned since 2019.","githubUrl":"https://github.com/GapHunterLabs/nginx-companion","marketplaceUrl":"https://plugins.jetbrains.com/plugin/33097-nginx-companion","downloads":27,"growth":8.0,"growthSince":"2026-08-07","growthFrom":25,"pricing":"FREE","reviews":0,"rating":null,"stars":0,"firstPublished":"2026-07-30","verified":true},{"repo":"k6-companion","name":"k6 Companion","niche":"Load Testing","pitch":"A Run Configuration for [k6](https://k6.io) load test scripts, plus a tool window for k6's `--summary-export` JSON.","why":"**k6** (JetBrains Marketplace id 16141), 81,065 downloads, freemium with a real paid license tier, vendor Mikhail Bolotov. Real, verbatim reviewer complaints (5 independent reviewers over ~2 years):","githubUrl":"https://github.com/GapHunterLabs/k6-companion","marketplaceUrl":"https://plugins.jetbrains.com/plugin/33348-k6-companion","downloads":24,"growth":166.7,"growthSince":"2026-08-07","growthFrom":9,"pricing":"FREE","reviews":0,"rating":null,"stars":0,"firstPublished":"2026-08-13","verified":true},{"repo":"format-converter-companion","name":"Format Converter Companion","niche":"Data Format Conversion","pitch":"Converts JSON, YAML, and XML directly in the editor -- select text (or convert the whole file) and pick a target format from the right-click menu.","why":"**JSON-YAML-XML Converter** (JetBrains Marketplace id 20297), 10,062 downloads, paid, vendor Syncro Soft -- rated 2.9/5, the lowest of any competitor evaluated for this workspace. Real, verbatim reviewer complaints:","githubUrl":"https://github.com/GapHunterLabs/format-converter-companion","marketplaceUrl":"https://plugins.jetbrains.com/plugin/33342-format-converter-companion","downloads":23,"growth":35.3,"growthSince":"2026-08-07","growthFrom":17,"pricing":"FREE","reviews":0,"rating":null,"stars":0,"firstPublished":"2026-08-04","verified":true},{"repo":"cmake-companion","name":"CMake Companion","niche":"CMake / Build Tooling","pitch":"Syntax highlighting, known-command highlighting, and an unmatched-paren inspection for `CMakeLists.txt`/`*.cmake` files.","why":"**CMake Plus** (JetBrains Marketplace id 12869), 57,780 downloads, paid subscription, vendor Artsiom Chapialiou. The same vendor's free sibling plugin (\"CMake simple highlighter\", 254k downloads) had its command-argument highlighting moved behind the paid plugin, which drew complaints about the business model on top of real bugs. Verbatim reviewer complaints:","githubUrl":"https://github.com/GapHunterLabs/cmake-companion","marketplaceUrl":"https://plugins.jetbrains.com/plugin/33339-cmake-companion","downloads":18,"growth":80.0,"growthSince":"2026-08-07","growthFrom":10,"pricing":"FREE","reviews":0,"rating":null,"stars":0,"firstPublished":"2026-08-04","verified":true},{"repo":"jenkinsfile-companion","name":"Jenkinsfile Companion","niche":"Jenkins CI/CD","pitch":"IntelliJ-family plugin. Real Groovy syntax highlighting for `Jenkinsfile` plus two genuine structural checks — 100% local, zero network calls, never a live Jenkins server connection.","why":"Born from real evidence in JetBrains Marketplace reviews, not assumptions. Two independent signals in this exact space:","githubUrl":"https://github.com/GapHunterLabs/jenkinsfile-companion","marketplaceUrl":"https://plugins.jetbrains.com/plugin/33390-jenkinsfile-companion","downloads":18,"growth":null,"growthSince":"2026-08-07","growthFrom":0,"pricing":"FREE","reviews":0,"rating":null,"stars":0,"firstPublished":"2026-08-06","verified":true},{"repo":"review-companion","name":"Review Companion","niche":"Code Review","pitch":"IntelliJ-family plugin. Local, rule-based code review hints for Java and Kotlin — no account, no rate limit, no cloud call.","why":"Born from real evidence in JetBrains Marketplace reviews of Bito AI Code Reviews (~864K downloads, freemium), not assumptions:","githubUrl":"https://github.com/GapHunterLabs/review-companion","marketplaceUrl":"https://plugins.jetbrains.com/plugin/33318-review-companion","downloads":16,"growth":14.3,"growthSince":"2026-08-07","growthFrom":14,"pricing":"FREE","reviews":0,"rating":null,"stars":0,"firstPublished":"2026-08-03","verified":true},{"repo":"material-companion","name":"Material Companion","niche":"Editor Theme","pitch":"IntelliJ-family plugin. A Material Design-inspired dark editor color scheme — cool greys, blues, teals, and purples — with zero forced UI elements, zero paywalled customization, and zero performance cost.","why":"Born from real evidence in JetBrains Marketplace reviews of the leading Material-style theme plugin (18.6M downloads, 80% of recent reviews at 3 stars or fewer despite active development), not assumptions:","githubUrl":"https://github.com/GapHunterLabs/material-companion","marketplaceUrl":"https://plugins.jetbrains.com/plugin/33391-material-companion","downloads":14,"growth":null,"growthSince":"2026-08-07","growthFrom":0,"pricing":"FREE","reviews":0,"rating":null,"stars":0,"firstPublished":"2026-08-06","verified":true},{"repo":"json-schema-companion","name":"JSON Schema Companion","niche":"JSON Schema Tooling","pitch":"Go-to-definition (Ctrl+Click) for `$ref` values inside JSON Schema files, resolved entirely against local files.","why":"**JSON Schema Visualizer/Editor** (JetBrains Marketplace id 23554), 3,340 downloads, paid, vendor Syncro Soft -- confirmed independently by two separate investigations. Real, verbatim reviewer complaints:","githubUrl":"https://github.com/GapHunterLabs/json-schema-companion","marketplaceUrl":"https://plugins.jetbrains.com/plugin/33341-json-schema-companion","downloads":12,"growth":33.3,"growthSince":"2026-08-07","growthFrom":9,"pricing":"FREE","reviews":0,"rating":null,"stars":0,"firstPublished":"2026-08-04","verified":true},{"repo":"test-scaffold-companion","name":"Test Scaffold Companion","niche":"Testing / Codegen","pitch":"IntelliJ-family plugin (IntelliJ IDEA, Android Studio, and any IntelliJ-based IDE that bundles the Java and Kotlin plugins). Generates a real, compiling JUnit test skeleton for a Java or Kotlin class — one empty test method per public method, with your project's own test framework detected and imported correctly.","why":"The free alternatives in this space have the same defect, reported by their own users: generated code that doesn't compile or a test that \"passes\" without asserting anything real. From those plugins' own JetBrains Marketplace reviews:","githubUrl":"https://github.com/GapHunterLabs/test-scaffold-companion","marketplaceUrl":"https://plugins.jetbrains.com/plugin/33503-test-scaffold-companion","downloads":2,"growth":0.0,"growthSince":"2026-08-14","growthFrom":2,"pricing":"FREE","reviews":0,"rating":null,"stars":0,"firstPublished":"2026-08-12","verified":true},{"repo":"bean-copy-companion","name":"Bean Copy Companion","niche":"Java/Kotlin Codegen","pitch":"Generates a real, compiling object-copy method between two Java or Kotlin classes. Select exactly two class files in the Project view, right-click → **Generate Bean Copy Method**, pick the copy direction, and get a new copier file with fields matched by name and type.","why":"The closest existing competitor in this space, **Simple Object Copy** (32,992 downloads, PAID, JetBrains Marketplace id 18151), has real, verbatim user complaints:","githubUrl":"https://github.com/GapHunterLabs/bean-copy-companion","marketplaceUrl":"https://plugins.jetbrains.com/plugin/33531-bean-copy-companion","downloads":0,"growth":null,"growthSince":"2026-08-14","growthFrom":0,"pricing":"FREE","reviews":0,"rating":null,"stars":0,"firstPublished":"2026-08-14","verified":true},{"repo":"change-case-companion","name":"Change Case Companion","niche":"Editor Productivity","pitch":"IntelliJ-family plugin. Select an identifier (or just place the caret on one — no selection needed) and instantly convert it between `camelCase`, `PascalCase`, `snake_case`, `kebab-case`, and `CONSTANT_CASE`.","why":"Ports a pattern that's genuinely popular elsewhere — VS Code has multiple \"change case\" extensions with millions of combined installs — with no real equivalent anywhere in JetBrains Marketplace (confirmed by search before building this, not assumed). A deliberate \"port a proven concept\" bet, not a competitor-complaint-driven build — see `CONSTITUTION.md` §1 for the documented-exception discipline this follows (same treatment as Refactor Simulator/Bean Copy Companion/ Turbo Log Companion).","githubUrl":"https://github.com/GapHunterLabs/change-case-companion","marketplaceUrl":null,"downloads":null,"growth":null,"growthSince":null,"growthFrom":null,"pricing":null,"reviews":null,"rating":null,"stars":0,"firstPublished":null,"verified":null},{"repo":"env-diff-companion","name":"Env Diff Companion","niche":"Env Config Tooling","pitch":"IntelliJ-family plugin. Select exactly two env-style files in the Project view — `.env` vs `.env.example`, `.env.development` vs `.env.production`, anything with `KEY=VALUE` lines — run **Compare Env Files**, and get a real report of which keys are missing from each side.","why":"Ports a pattern that's genuinely popular elsewhere — env-diff/env-sync tooling exists across other editors and CLI tools — with no real equivalent anywhere in JetBrains Marketplace (confirmed by search before building this, not assumed). A deliberate \"port a proven concept\" bet — see `CONSTITUTION.md` §1 for the documented-exception discipline this follows (same treatment as Refactor Simulator/Bean Copy Companion/Turbo Log Companion/Change Case Companion/JSON to Code Companion).","githubUrl":"https://github.com/GapHunterLabs/env-diff-companion","marketplaceUrl":null,"downloads":null,"growth":null,"growthSince":null,"growthFrom":null,"pricing":null,"reviews":null,"rating":null,"stars":0,"firstPublished":null,"verified":null},{"repo":"error-lens-companion","name":"Error Lens Companion","niche":"Inline Diagnostics","pitch":"IntelliJ-family plugin. Shows errors and warnings inline, at the end of the line that has them, instead of only as a gutter icon or a squiggly underline you have to hover to read. One hint per line (most severe diagnostic wins) so it never turns into unreadable clutter.","why":"Ports the \"Error Lens\" concept -- VS Code's Error Lens extension has 10M+ installs and is one of that ecosystem's most-used extensions -- into the IDE's own highlighting pipeline. Confirmed before building this that no equivalent already exists in JetBrains Marketplace. Same \"port a proven concept, no equivalent exists yet\" bet as the other 6 plugins built this same session -- see `CONSTITUTION.md` §1 for the documented-exception discipline this follows.","githubUrl":"https://github.com/GapHunterLabs/error-lens-companion","marketplaceUrl":null,"downloads":null,"growth":null,"growthSince":null,"growthFrom":null,"pricing":null,"reviews":null,"rating":null,"stars":0,"firstPublished":null,"verified":null},{"repo":"import-cost-companion","name":"Import Cost Companion","niche":"JS/TS Tooling","pitch":"IntelliJ-family plugin. Run **Check Import Sizes** on a JS/TS file and get a real report of every `node_modules` package it imports, sorted by on-disk size, with unusually large ones flagged.","why":"Born from real evidence in JetBrains Marketplace reviews of the closest existing plugin in this space (135K downloads, 75% of reviews at 3 stars or fewer): a documented, years-long pattern of severe CPU spikes and IDE freezes —","githubUrl":"https://github.com/GapHunterLabs/import-cost-companion","marketplaceUrl":null,"downloads":null,"growth":null,"growthSince":null,"growthFrom":null,"pricing":null,"reviews":null,"rating":null,"stars":0,"firstPublished":null,"verified":null},{"repo":"json-to-code-companion","name":"JSON to Code Companion","niche":"Codegen","pitch":"IntelliJ-family plugin. Select a JSON object — in a `.json` file, a string literal, anywhere — run **Generate Class from JSON**, and get a real Java POJO or Kotlin `data class` with field types inferred from the actual JSON values, including nested objects (their own nested/ sibling classes) and arrays (`List<T>`, typed from the first element).","why":"Ports a pattern that's genuinely popular elsewhere (\"Paste JSON as Code\"-style tools, widely used across editors) with no real equivalent anywhere in JetBrains Marketplace (confirmed by search before building this, not assumed). A deliberate \"port a proven concept\" bet — see `CONSTITUTION.md` §1 for the documented-exception discipline this follows (same treatment as Refactor Simulator/Bean Copy Companion/ Turbo Log Companion/Change Case Companion).","githubUrl":"https://github.com/GapHunterLabs/json-to-code-companion","marketplaceUrl":null,"downloads":null,"growth":null,"growthSince":null,"growthFrom":null,"pricing":null,"reviews":null,"rating":null,"stars":0,"firstPublished":null,"verified":null},{"repo":"regex-preview-companion","name":"Regex Preview Companion","niche":"Regex Tooling","pitch":"IntelliJ-family plugin. A tool window with a pattern field and a sample-text area — type a regex, type or paste sample text, and every match is highlighted live as you type, with a real match count. Case insensitive, multiline, and dot-all flags are real checkboxes, not something you have to remember inline syntax for.","why":"Ports a pattern that's genuinely popular elsewhere (standalone regex testers are a daily tool for many developers) directly into the IDE, with no real equivalent already in JetBrains Marketplace (confirmed by search before building this, not assumed). A deliberate \"port a proven concept\" bet — see `CONSTITUTION.md` §1 for the documented-exception discipline this follows (same treatment as Refactor Simulator/Bean Copy Companion and the other plugins built this same session).","githubUrl":"https://github.com/GapHunterLabs/regex-preview-companion","marketplaceUrl":null,"downloads":null,"growth":null,"growthSince":null,"growthFrom":null,"pricing":null,"reviews":null,"rating":null,"stars":0,"firstPublished":null,"verified":null},{"repo":"turbo-log-companion","name":"Turbo Log Companion","niche":"Debugging / Codegen","pitch":"IntelliJ-family plugin. Place the caret on a variable, parameter, or field, run **Insert Log Statement**, and get a real `println` (Kotlin) / `System.out.println` (Java) inserted right after the enclosing statement — class, method, and line number already baked in as literal text. **Remove All Log Statements** finds and deletes every one this plugin has added to the current file, in one action.","why":"Ports a pattern that's genuinely popular elsewhere — VS Code's Turbo Console Log has millions of installs — with **no equivalent anywhere in JetBrains Marketplace** (confirmed by search before building this, not assumed: zero results for \"turbo console log\", \"turbo log\", \"console log\" as a code-generation concept). This is a deliberate \"port a proven concept\" bet, not a competitor-complaint-driven build — see `CONSTITUTION.md` §1 for the documented-exception discipline this follows (same treatment as Refactor Simulator/Bean Copy Companion).","githubUrl":"https://github.com/GapHunterLabs/turbo-log-companion","marketplaceUrl":null,"downloads":null,"growth":null,"growthSince":null,"growthFrom":null,"pricing":null,"reviews":null,"rating":null,"stars":0,"firstPublished":null,"verified":null}]}</script>
+<script>
+(function () {
+  var raw = document.getElementById('catalog-data').textContent;
+  var data = JSON.parse(raw);
+  var plugins = data.plugins;
+
+  document.getElementById('generatedAt').textContent = data.generatedAt;
+
+  var statsEl = document.getElementById('stats');
+  var statDefs = [
+    { num: data.totalPlugins, label: 'Plugins reales', accent: true },
+    { num: data.totalDownloads.toLocaleString('en-US'), label: 'Descargas totales' },
+    { num: data.pending, label: 'En moderación' },
+    { num: data.totalReviews, label: 'Reviews totales' },
+    { num: data.avgRating != null ? data.avgRating.toFixed(2) : '—', label: 'Rating promedio' },
+    { num: data.totalStars, label: 'GitHub ★ totales' },
+  ];
+  statsEl.innerHTML = statDefs.map(function (s) {
+    return '<div class="stat"><div class="num' + (s.accent ? ' accent' : '') + '">' + s.num + '</div><div class="label">' + s.label + '</div></div>';
+  }).join('');
+
+  var sortKey = 'downloads';
+  var sortDir = -1; // desc
+  var filterText = '';
+  var filterPricing = '';
+  var expandedRepo = null;
+
+  function pricingLabel(p, isPending) {
+    if (isPending) return { cls: 'pending', text: 'Pendiente' };
+    if (p === 'FREE') return { cls: 'free', text: 'Free' };
+    if (p === 'FREEMIUM') return { cls: 'freemium', text: 'Freemium' };
+    if (p === 'PAID') return { cls: 'paid', text: 'Paid' };
+    return { cls: 'free', text: p || '—' };
+  }
+
+  function growthMarkup(p) {
+    var g = p.growth;
+    var title = p.growthSince ? ('Desde ' + p.growthSince + ': ' + p.growthFrom + ' → ' + p.downloads) : 'Sin captura anterior';
+    var titleAttr = ' title="' + esc(title) + '"';
+    if (g === null || g === undefined) return '<span class="growth flat"' + titleAttr + '>—</span>';
+    if (g > 0) return '<span class="growth up"' + titleAttr + '>▲ ' + g.toFixed(1) + '%</span>';
+    if (g < 0) return '<span class="growth down"' + titleAttr + '>▼ ' + Math.abs(g).toFixed(1) + '%</span>';
+    return '<span class="growth flat"' + titleAttr + '>0%</span>';
+  }
+
+  function esc(s) {
+    if (s == null) return '';
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+
+  function mdInline(s) {
+    // very small **bold**/`code` renderer for the pitch/why text -- no markdown lib needed
+    return esc(s)
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/`([^`]+)`/g, '<code>$1</code>');
+  }
+
+  function matches(p) {
+    var isPending = p.downloads === null;
+    if (filterPricing) {
+      if (filterPricing === 'PENDING' && !isPending) return false;
+      if (filterPricing !== 'PENDING' && p.pricing !== filterPricing) return false;
+    }
+    if (!filterText) return true;
+    var hay = (p.name + ' ' + p.niche + ' ' + p.repo).toLowerCase();
+    return hay.indexOf(filterText) !== -1;
+  }
+
+  function sortedFiltered() {
+    var rows = plugins.filter(matches);
+    rows.sort(function (a, b) {
+      var av = a[sortKey], bv = b[sortKey];
+      if (sortKey === 'name') { av = a.name.toLowerCase(); bv = b.name.toLowerCase(); }
+      var an = (av === null || av === undefined);
+      var bn = (bv === null || bv === undefined);
+      if (an && bn) return 0;
+      if (an) return 1;
+      if (bn) return -1;
+      if (av < bv) return -1 * sortDir;
+      if (av > bv) return 1 * sortDir;
+      return 0;
+    });
+    return rows;
+  }
+
+  function render() {
+    var rows = sortedFiltered();
+    var tbody = document.getElementById('tbody');
+    var noResults = document.getElementById('noResults');
+    document.getElementById('countNote').textContent = rows.length + ' / ' + plugins.length + ' plugins';
+
+    if (rows.length === 0) {
+      tbody.innerHTML = '';
+      noResults.style.display = 'block';
+      return;
+    }
+    noResults.style.display = 'none';
+
+    var html = '';
+    rows.forEach(function (p) {
+      var isPending = p.downloads === null;
+      var pr = pricingLabel(p.pricing, isPending);
+      var isOpen = expandedRepo === p.repo;
+      html += '<tr class="row" data-repo="' + esc(p.repo) + '">';
+      html += '<td class="name-cell"><div class="plugin-name">' + esc(p.name) + (p.verified ? '<span class="verified-mark" title="Vendor verificado">✓</span>' : '') + '</div><div class="niche">' + esc(p.niche) + '</div></td>';
+      html += '<td class="num-cell">' + (isPending ? '—' : p.downloads.toLocaleString('en-US')) + (isPending ? '' : growthMarkup(p)) + '</td>';
+      html += '<td class="num-cell">' + (p.reviews === null ? '—' : p.reviews) + '</td>';
+      html += '<td class="num-cell">' + (p.rating != null ? p.rating.toFixed(2) : '—') + '</td>';
+      html += '<td class="num-cell">' + (p.stars != null ? p.stars : '—') + '</td>';
+      html += '<td><span class="chip ' + pr.cls + '">' + pr.text + '</span></td>';
+      html += '<td class="num-cell" style="text-align:left">' + (p.firstPublished || '—') + '</td>';
+      html += '</tr>';
+      html += '<tr class="expand-row"><td colspan="7"><div class="expand-inner' + (isOpen ? ' open' : '') + '" id="exp-' + esc(p.repo) + '">';
+      html += '<div class="block"><div class="field-label">Función</div>' + mdInline(p.pitch || '—') + '</div>';
+      html += '<div class="block"><div class="field-label">Mejora / evidencia de mercado</div>' + mdInline(p.why || '—') + '</div>';
+      html += '<div class="links">';
+      if (p.marketplaceUrl) html += '<a href="' + esc(p.marketplaceUrl) + '" target="_blank" rel="noopener">Marketplace →</a>';
+      html += '<a href="' + esc(p.githubUrl) + '" target="_blank" rel="noopener">GitHub →</a>';
+      html += '</div></div></td></tr>';
+    });
+    tbody.innerHTML = html;
+
+    Array.prototype.forEach.call(tbody.querySelectorAll('tr.row'), function (tr) {
+      tr.addEventListener('click', function () {
+        var repo = tr.getAttribute('data-repo');
+        expandedRepo = expandedRepo === repo ? null : repo;
+        render();
+      });
+    });
+  }
+
+  Array.prototype.forEach.call(document.querySelectorAll('thead th'), function (th) {
+    th.addEventListener('click', function () {
+      var key = th.getAttribute('data-key');
+      if (sortKey === key) {
+        sortDir *= -1;
+      } else {
+        sortKey = key;
+        sortDir = (key === 'name' || key === 'pricing' || key === 'firstPublished') ? 1 : -1;
+      }
+      Array.prototype.forEach.call(document.querySelectorAll('thead th'), function (t) {
+        t.classList.remove('sorted');
+        t.querySelector('.arrow') && t.querySelector('.arrow').remove();
+      });
+      th.classList.add('sorted');
+      var arrow = document.createElement('span');
+      arrow.className = 'arrow';
+      arrow.textContent = sortDir === 1 ? '▲' : '▼';
+      th.appendChild(arrow);
+      render();
+    });
+  });
+
+  document.getElementById('searchInput').addEventListener('input', function (e) {
+    filterText = e.target.value.trim().toLowerCase();
+    render();
+  });
+  document.getElementById('pricingFilter').addEventListener('change', function (e) {
+    filterPricing = e.target.value;
+    render();
+  });
+
+  render();
+})();
+</script>
+
+</body>
+</html>
