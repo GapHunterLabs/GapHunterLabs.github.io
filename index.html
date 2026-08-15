@@ -346,60 +346,95 @@
     margin-top: 2px;
   }
 
-  /* 2026-08-15: enlarged ~20% (font sizes, orbit/hub geometry computed
-     in JS) + real transitions/animation added -- was a static diagram
-     with only a hover-opacity blip before. Node entrance uses a fade+
-     grow keyframe with a small per-node stagger (delay set inline by
-     renderHuntingSvg); the hub is now its own clickable "home" control
-     (see .hub-group below) that clears the category filter, same
-     destination as picking "All categories" in the dropdown.
-     2026-08-15 follow-up: label/count font sizes bumped again (10.2/9
-     -> 12/10.5), plus real hover/active effects (glow + grow on the
-     dot, not just an opacity blip) and a slow "breathing" pulse on
-     whichever category is currently selected, so the active state
-     reads at a glance instead of only via the thin active-stroke ring.
-     Hub logo: dropped the white backing badge (was there for legibility
-     on a WHITE background, per the favicon's own original design intent
-     -- doesn't apply here, the hub already sits on the dark panel) and
-     sized the mark to fill most of the hub ring directly. */
+  /* 2026-08-15, third pass: the hub is no longer just a click-to-reset
+     button -- it's a persistent token that TRAVELS along the spokes to
+     whichever category is active (by click, by dropdown, or by
+     dragging the hub itself), then "arrives" with a glitch/hack effect.
+     That requires the SVG structure to be built ONCE (buildHuntingSvg,
+     called from the one-time init block below) and only ever UPDATED
+     after that (updateHuntingSvg, called every render) -- a full
+     innerHTML rebuild every render, like every other part of this page
+     does, would recreate the hub as a brand-new DOM node each time and
+     nothing could transition smoothly between two positions. The hub's
+     world position is driven by the --hx/--hy custom properties (see
+     .hub-group transform below) so a plain CSS transition handles both
+     the click-triggered "slide over" and the drag-triggered live
+     follow (transition suppressed via .instant while a real drag is
+     in progress, so it tracks the pointer without lag). Nodes/lines
+     never change shape after being built (category counts are static),
+     only their .active/.targeting classes toggle. */
   @keyframes nodeIn {
     from { opacity: 0; transform: scale(0.55); }
     to   { opacity: 1; transform: scale(1); }
   }
   @keyframes pulseGlow {
-    0%, 100% { opacity: 0.62; filter: none; }
-    50% { opacity: 0.88; filter: drop-shadow(0 0 7px rgba(255,255,255,0.45)); }
+    0%, 100% { filter: none; }
+    50% { filter: drop-shadow(0 0 7px rgba(255,255,255,0.45)); }
+  }
+  /* Cyberpunk "hack" flicker played once when the hub lands on a node
+     (drag-drop or click-triggered travel alike) -- brightness/hue
+     jitter plus a couple pixels of horizontal shake, over fast enough
+     (~0.5s) to read as a glitch, not a distraction. */
+  @keyframes hackFlicker {
+    0%, 100% { filter: brightness(1) hue-rotate(0deg); }
+    8%  { filter: brightness(2.6) hue-rotate(35deg); transform: translate(calc(var(--hx) + 2px), var(--hy)); }
+    18% { filter: brightness(0.5) hue-rotate(-25deg); transform: translate(calc(var(--hx) - 2px), var(--hy)); }
+    30% { filter: brightness(2.2) hue-rotate(15deg); }
+    44% { filter: brightness(0.6); transform: translate(calc(var(--hx) + 1px), var(--hy)); }
+    60% { filter: brightness(1.9) hue-rotate(-10deg); }
+    75% { filter: brightness(0.8); }
+  }
+  @keyframes hackFlickerNode {
+    0%, 100% { filter: none; }
+    15% { filter: brightness(2.4); }
+    30% { filter: brightness(0.5); }
+    50% { filter: brightness(2); }
+    70% { filter: brightness(0.7); }
   }
 
   .hunting-svg { width: 100%; height: auto; margin-top: 10px; overflow: visible; }
+
   .hunting-svg .node { cursor: pointer; transform-box: fill-box; transform-origin: 50% 50%; animation: nodeIn 0.4s ease backwards; }
   .hunting-svg .node circle.dot {
-    transition: r 0.15s ease, opacity 0.15s ease, stroke-width 0.15s ease, transform 0.15s ease;
+    fill-opacity: 1;
+    stroke: var(--border);
+    stroke-width: 1.5;
+    transition: r 0.15s ease, stroke-width 0.15s ease, transform 0.15s ease, stroke 0.15s ease;
     transform-box: fill-box;
     transform-origin: 50% 50%;
   }
   .hunting-svg .node:hover circle.dot {
-    opacity: 0.95;
     transform: scale(1.14);
     filter: drop-shadow(0 0 8px rgba(255,255,255,0.35));
   }
+  .hunting-svg .node.targeting circle.dot {
+    stroke: var(--accent);
+    stroke-width: 3;
+    transform: scale(1.2);
+    filter: drop-shadow(0 0 10px var(--accent));
+  }
   .hunting-svg .node.active circle.dot { stroke: var(--text); stroke-width: 2.6; animation: pulseGlow 1.8s ease-in-out infinite; }
+  .hunting-svg .node.hack circle.dot { animation: hackFlickerNode 0.5s steps(6); }
   .hunting-svg .node text { font-family: var(--mono); font-size: 12px; fill: var(--text-dim); transition: fill 0.15s ease; }
   .hunting-svg .node.active text.label { fill: var(--text); font-weight: 700; }
   .hunting-svg .node text.count { fill: var(--text-faint); font-size: 10.5px; }
-  .hunting-svg line.spoke { stroke-width: 1; opacity: 0.3; transition: opacity 0.15s ease, stroke-width 0.15s ease; }
-  .hunting-svg line.spoke.active { opacity: 0.85; stroke-width: 1.8; }
+
+  /* Lines: subtle gradient from the hub outward to each category's own
+     color (defined per-node in buildHuntingSvg via <linearGradient>),
+     thicker and more visible at rest than the old flat low-opacity
+     stroke, brighter still on the currently-docked spoke. */
+  .hunting-svg line.spoke { stroke-width: 1.5; opacity: 0.5; transition: opacity 0.15s ease, stroke-width 0.15s ease; }
+  .hunting-svg line.spoke.active { opacity: 1; stroke-width: 2.2; }
 
   .hunting-svg .hub-group {
-    cursor: pointer;
-    transform-box: fill-box;
-    transform-origin: 50% 50%;
-    transition: transform 0.15s ease, filter 0.15s ease;
+    cursor: grab;
+    touch-action: none;
+    transform: translate(var(--hx, 192px), var(--hy, 168px));
+    transition: transform 0.55s cubic-bezier(.25,.8,.3,1), filter 0.15s ease;
   }
-  .hunting-svg .hub-group:hover {
-    transform: scale(1.08);
-    filter: drop-shadow(0 0 10px rgba(63,162,255,0.5));
-  }
+  .hunting-svg .hub-group.instant { transition: filter 0.15s ease; cursor: grabbing; }
+  .hunting-svg .hub-group:hover { filter: drop-shadow(0 0 10px rgba(63,162,255,0.5)); }
+  .hunting-svg .hub-group.hack { animation: hackFlicker 0.5s steps(7); }
   .hunting-svg .hub-group circle.hub-ring { transition: stroke 0.15s ease, fill 0.15s ease; }
   .hunting-svg .hub-group:hover circle.hub-ring { stroke: var(--accent); fill: var(--surface-3); }
 
@@ -1085,62 +1120,101 @@
   // the font sizes getting bigger inside the old cramped layout.
   var FIELD_SCALE = 1.2;
 
-  function renderHuntingSvg() {
+  var HUB_CX = 192, HUB_CY = 168, HUB_ORBIT = 108 * FIELD_SCALE, HUB_R = 30 * FIELD_SCALE;
+  var huntingNodes = [];       // built once: [{key,label,color,count,x,y,angle,r}, ...]
+  var hubDragState = null;     // non-null only while a real pointer-drag is in progress
+  var lastDockedCategory = null; // null = not painted yet (avoids a hack effect on first load)
+
+  function activeCategories() {
     var counts = {};
     CATEGORIES.forEach(function (c) { counts[c.key] = 0; });
     plugins.forEach(function (p) { counts[p.categoryKey] = (counts[p.categoryKey] || 0) + 1; });
-    var active = CATEGORIES.filter(function (c) { return c.key !== 'other' || counts.other > 0; });
+    return CATEGORIES.filter(function (c) { return c.key !== 'other' || counts.other > 0; })
+      .map(function (c) { return { key: c.key, label: c.label, color: c.color, count: counts[c.key] || 0 }; });
+  }
 
-    var cx = 192, cy = 168, orbit = 108 * FIELD_SCALE, hub = 30 * FIELD_SCALE;
+  function nodeByKey(key) {
+    for (var i = 0; i < huntingNodes.length; i++) if (huntingNodes[i].key === key) return huntingNodes[i];
+    return null;
+  }
+
+  function currentDockedCategory() {
+    if (filterCategory) return filterCategory;
+    if (selectedRepo) {
+      var p = byRepo(selectedRepo);
+      if (p) return p.categoryKey;
+    }
+    return '';
+  }
+
+  // Structural build -- runs exactly ONCE (called from the one-time init
+  // block near the bottom of this script). Category counts never change
+  // after load, so nothing here needs to be rebuilt; only .active/
+  // .targeting classes and the hub's --hx/--hy position get touched on
+  // every subsequent render (see updateHuntingSvg).
+  function buildHuntingSvg() {
     var svg = document.getElementById('huntingSvg');
+    var active = activeCategories();
     var parts = [];
 
-    active.forEach(function (c, i) {
+    huntingNodes = active.map(function (c, i) {
       var deg = i * (360 / active.length);
-      var pos = polar(cx, cy, orbit, deg);
-      var isActive = filterCategory === c.key;
-      parts.push('<line class="spoke' + (isActive ? ' active' : '') + '" x1="' + cx + '" y1="' + cy + '" x2="' + pos.x.toFixed(1) + '" y2="' + pos.y.toFixed(1) + '" stroke="' + c.color + '"></line>');
+      var pos = polar(HUB_CX, HUB_CY, HUB_ORBIT, deg);
+      var r = (12 + Math.sqrt(c.count) * 3) * FIELD_SCALE;
+      return { key: c.key, label: c.label, color: c.color, count: c.count, x: pos.x, y: pos.y, angle: deg, r: r };
     });
 
-    // Hub doubles as a "back to start" control: clicking it clears both
-    // the category filter and any open dossier, same destination as
-    // picking "All categories" from the dropdown next to search.
-    // Logo sized to fill most of the hub ring directly, no white backing
-    // circle (that badge existed for legibility on a WHITE page, per the
-    // favicon comment -- the hub sits on the dark panel here, and the
-    // mark's own saturated blue/cyan/green read fine straight on
-    // --surface-2 without it, transparent as requested).
-    var logoR = hub * 0.72;
+    // Each spoke gets its own gradient, hub-neutral -> that category's
+    // color, so the lines read as "energy running out to the node"
+    // instead of a flat low-opacity tint (2026-08-15 "mejora las
+    // lineas" request).
+    huntingNodes.forEach(function (n) {
+      parts.push(
+        '<linearGradient id="spokeGrad-' + n.key + '" x1="' + HUB_CX + '" y1="' + HUB_CY + '" x2="' + n.x.toFixed(1) + '" y2="' + n.y.toFixed(1) + '" gradientUnits="userSpaceOnUse">' +
+        '<stop offset="0%" stop-color="var(--border)"></stop>' +
+        '<stop offset="100%" stop-color="' + n.color + '"></stop>' +
+        '</linearGradient>'
+      );
+    });
+    huntingNodes.forEach(function (n) {
+      parts.push('<line class="spoke" data-cat="' + n.key + '" x1="' + HUB_CX + '" y1="' + HUB_CY + '" x2="' + n.x.toFixed(1) + '" y2="' + n.y.toFixed(1) + '" stroke="url(#spokeGrad-' + n.key + ')"></line>');
+    });
+
+    huntingNodes.forEach(function (n, i) {
+      var labelY = n.y + n.r + 13;
+      var delay = (i * 45) + 'ms';
+      parts.push(
+        '<g class="node" data-cat="' + n.key + '" style="animation-delay:' + delay + '">' +
+        '<circle class="dot" cx="' + n.x.toFixed(1) + '" cy="' + n.y.toFixed(1) + '" r="' + n.r.toFixed(1) + '" fill="' + n.color + '"></circle>' +
+        '<text class="label" x="' + n.x.toFixed(1) + '" y="' + labelY.toFixed(1) + '" text-anchor="middle">' + esc(n.label) + '</text>' +
+        '<text class="count" x="' + n.x.toFixed(1) + '" y="' + (labelY + 12).toFixed(1) + '" text-anchor="middle">' + n.count + ' plugin' + (n.count === 1 ? '' : 's') + '</text>' +
+        '</g>'
+      );
+    });
+
+    // Hub: drawn at LOCAL (0,0) -- its world position comes entirely
+    // from the CSS transform driven by --hx/--hy (see .hub-group in the
+    // stylesheet), which is what makes it possible to animate/drag it
+    // smoothly instead of redrawing it at a new cx/cy every time. Logo
+    // sized to fill almost the whole ring (2026-08-15 "hasta el limite
+    // interno" request) with no white backing circle -- that badge
+    // existed for legibility on a WHITE page per the favicon's own
+    // design comment, doesn't apply on this dark panel.
+    var logoR = HUB_R * 0.92;
     var logoScale = (logoR * 2 / 1024).toFixed(4);
     var logoOffset = logoR.toFixed(1);
     parts.push(
       '<g class="hub-group" id="huntingHub">' +
-      '<circle class="hub-ring" cx="' + cx + '" cy="' + cy + '" r="' + hub.toFixed(1) + '" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5"></circle>' +
-      '<g transform="translate(' + (cx - logoOffset) + ',' + (cy - logoOffset) + ') scale(' + logoScale + ')">' +
+      '<circle class="hub-ring" cx="0" cy="0" r="' + HUB_R.toFixed(1) + '" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5"></circle>' +
+      '<g transform="translate(' + (-logoOffset) + ',' + (-logoOffset) + ') scale(' + logoScale + ')">' +
       '<path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#0151FC"/>' +
       '<path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z" fill="#01B3FD"/>' +
       '<polygon points="569,413 695,413 695,539 569,539" fill="#02F172"/>' +
       '</g></g>'
     );
 
-    active.forEach(function (c, i) {
-      var deg = i * (360 / active.length);
-      var pos = polar(cx, cy, orbit, deg);
-      var n = counts[c.key] || 0;
-      var r = (12 + Math.sqrt(n) * 3) * FIELD_SCALE;
-      var isActive = filterCategory === c.key;
-      var labelY = pos.y + r + 13;
-      var delay = (i * 45) + 'ms';
-      parts.push(
-        '<g class="node' + (isActive ? ' active' : '') + '" data-cat="' + c.key + '" style="animation-delay:' + delay + '">' +
-        '<circle class="dot" cx="' + pos.x.toFixed(1) + '" cy="' + pos.y.toFixed(1) + '" r="' + r.toFixed(1) + '" fill="' + c.color + '" opacity="0.62"></circle>' +
-        '<text class="label" x="' + pos.x.toFixed(1) + '" y="' + labelY.toFixed(1) + '" text-anchor="middle">' + esc(c.label) + '</text>' +
-        '<text class="count" x="' + pos.x.toFixed(1) + '" y="' + (labelY + 12).toFixed(1) + '" text-anchor="middle">' + n + ' plugin' + (n === 1 ? '' : 's') + '</text>' +
-        '</g>'
-      );
-    });
-
     svg.innerHTML = parts.join('');
+
     Array.prototype.forEach.call(svg.querySelectorAll('.node'), function (g) {
       g.addEventListener('click', function () {
         var cat = g.getAttribute('data-cat');
@@ -1149,11 +1223,154 @@
         renderAll();
       });
     });
-    document.getElementById('huntingHub').addEventListener('click', function () {
-      filterCategory = '';
-      selectedRepo = null;
-      renderAll();
+
+    attachHubDrag(svg);
+    dockHubAt('', false); // paint at center immediately, no transition on first load
+  }
+
+  function dockHubAt(key, animate) {
+    var hub = document.getElementById('huntingHub');
+    if (!hub) return;
+    var target = key ? nodeByKey(key) : null;
+    var x = target ? target.x : HUB_CX;
+    var y = target ? target.y : HUB_CY;
+    hub.classList.toggle('instant', !animate);
+    hub.style.setProperty('--hx', x.toFixed(1) + 'px');
+    hub.style.setProperty('--hy', y.toFixed(1) + 'px');
+  }
+
+  function playHackEffect(key) {
+    var hub = document.getElementById('huntingHub');
+    if (hub) {
+      hub.classList.remove('hack');
+      void hub.offsetWidth; // restart the animation even if it's already mid-flight
+      hub.classList.add('hack');
+      setTimeout(function () { hub.classList.remove('hack'); }, 520);
+    }
+    var node = document.querySelector('.hunting-svg .node[data-cat="' + key + '"]');
+    if (node) {
+      node.classList.remove('hack');
+      void node.offsetWidth;
+      node.classList.add('hack');
+      setTimeout(function () { node.classList.remove('hack'); }, 520);
+    }
+  }
+
+  // Called every render (from renderField). Only touches classes + the
+  // hub's docked position -- never rebuilds the SVG.
+  function updateHuntingSvg() {
+    var svg = document.getElementById('huntingSvg');
+    if (!svg || !svg.querySelector('.hub-group')) return; // not built yet
+    var docked = currentDockedCategory();
+
+    Array.prototype.forEach.call(svg.querySelectorAll('.node'), function (g) {
+      g.classList.toggle('active', g.getAttribute('data-cat') === docked);
     });
+    Array.prototype.forEach.call(svg.querySelectorAll('.spoke'), function (l) {
+      l.classList.toggle('active', l.getAttribute('data-cat') === docked);
+    });
+
+    if (!hubDragState) {
+      var changed = lastDockedCategory !== null && docked !== lastDockedCategory;
+      dockHubAt(docked, true);
+      if (changed && docked) playHackEffect(docked);
+      lastDockedCategory = docked;
+    }
+  }
+
+  // ---- Hub drag: the hub token can be dragged out along whichever
+  // spoke is closest to the pointer's direction and "dropped" onto a
+  // node to travel there (2026-08-15 experiment). A short drag that
+  // doesn't reach far enough springs back to wherever the hub is really
+  // docked; a drag that never really moves is just treated as a click
+  // on the hub (reset to center / "All categories").
+  var HUB_DRAG_MOVE_THRESHOLD = 4;   // px of pointer movement before it counts as a drag, not a click
+  var HUB_DRAG_ARRIVE_RATIO = 0.72;  // fraction of the orbit radius that counts as "reached the node"
+
+  function svgPointFromEvent(svg, evt) {
+    var pt = svg.createSVGPoint();
+    pt.x = evt.clientX;
+    pt.y = evt.clientY;
+    var ctm = svg.getScreenCTM();
+    if (!ctm) return { x: HUB_CX, y: HUB_CY };
+    var loc = pt.matrixTransform(ctm.inverse());
+    return { x: loc.x, y: loc.y };
+  }
+
+  function nearestNodeByAngle(angleDeg) {
+    var best = null, bestDiff = Infinity;
+    huntingNodes.forEach(function (n) {
+      var diff = Math.abs(((n.angle - angleDeg + 540) % 360) - 180);
+      if (diff < bestDiff) { bestDiff = diff; best = n; }
+    });
+    return best;
+  }
+
+  function attachHubDrag(svg) {
+    var hub = document.getElementById('huntingHub');
+
+    hub.addEventListener('pointerdown', function (evt) {
+      evt.preventDefault();
+      hub.setPointerCapture(evt.pointerId);
+      hubDragState = { pointerId: evt.pointerId, startX: evt.clientX, startY: evt.clientY, moved: false, nearestKey: null, reached: false };
+      hub.classList.add('instant');
+    });
+
+    hub.addEventListener('pointermove', function (evt) {
+      if (!hubDragState || evt.pointerId !== hubDragState.pointerId) return;
+      var dx = evt.clientX - hubDragState.startX, dy = evt.clientY - hubDragState.startY;
+      if (!hubDragState.moved && (Math.abs(dx) + Math.abs(dy)) > HUB_DRAG_MOVE_THRESHOLD) hubDragState.moved = true;
+      if (!hubDragState.moved) return;
+
+      var loc = svgPointFromEvent(svg, evt);
+      var vx = loc.x - HUB_CX, vy = loc.y - HUB_CY;
+      var rawAngle = Math.atan2(vy, vx) * 180 / Math.PI + 90;
+      if (rawAngle < 0) rawAngle += 360;
+      var nearest = nearestNodeByAngle(rawAngle);
+      if (!nearest) return;
+
+      var dist = Math.sqrt(vx * vx + vy * vy);
+      var clamped = Math.max(0, Math.min(dist, HUB_ORBIT));
+      var pos = polar(HUB_CX, HUB_CY, clamped, nearest.angle);
+      hub.style.setProperty('--hx', pos.x.toFixed(1) + 'px');
+      hub.style.setProperty('--hy', pos.y.toFixed(1) + 'px');
+
+      var reached = clamped > HUB_ORBIT * HUB_DRAG_ARRIVE_RATIO;
+      hubDragState.nearestKey = nearest.key;
+      hubDragState.reached = reached;
+      Array.prototype.forEach.call(svg.querySelectorAll('.node'), function (g) {
+        g.classList.toggle('targeting', reached && g.getAttribute('data-cat') === nearest.key);
+      });
+    });
+
+    function endDrag(evt) {
+      if (!hubDragState || evt.pointerId !== hubDragState.pointerId) return;
+      hub.releasePointerCapture(evt.pointerId);
+      hub.classList.remove('instant');
+      Array.prototype.forEach.call(svg.querySelectorAll('.node'), function (g) { g.classList.remove('targeting'); });
+
+      var state = hubDragState;
+      hubDragState = null;
+
+      if (!state.moved) {
+        // A plain click on the hub, no real drag -- same as before:
+        // go back to the start.
+        filterCategory = '';
+        selectedRepo = null;
+        renderAll();
+      } else if (state.reached && state.nearestKey) {
+        filterCategory = state.nearestKey;
+        selectedRepo = null;
+        renderAll();
+      } else {
+        // Didn't drag far enough to arrive anywhere -- spring back to
+        // wherever the hub is actually docked right now.
+        dockHubAt(currentDockedCategory(), true);
+      }
+    }
+
+    hub.addEventListener('pointerup', endDrag);
+    hub.addEventListener('pointercancel', endDrag);
   }
 
   function populateCategorySelect() {
@@ -1298,7 +1515,7 @@
   }
 
   function renderField() {
-    renderHuntingSvg();
+    updateHuntingSvg();
     if (selectedRepo) {
       var p = byRepo(selectedRepo);
       if (p) { renderDossier(p); return; }
@@ -1417,6 +1634,7 @@
   // re-attaching a listener on every render would stack duplicate
   // 'change' handlers instead of replacing them.
   populateCategorySelect();
+  buildHuntingSvg();
 
   renderAll();
 })();
