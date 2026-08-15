@@ -277,17 +277,26 @@
     color: var(--text-faint);
   }
 
-  .active-category-note {
-    font-family: var(--mono);
-    font-size: 11.5px;
-    color: var(--accent);
-    cursor: pointer;
+  select#categoryFilter {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 9px 10px;
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 13.5px;
   }
 
   /* ---- FIELD layout ---- */
+  /* Sidebar widened 20% (300px -> 360px, 2026-08-15 request) specifically
+     to give the Hunting Field diagram more room -- bigger orbit radius,
+     bigger node labels, without cramping the "Filter by category" list
+     that used to live below it (that list moved into the controls row
+     as a <select>, see #categoryFilter, so all the extra width now goes
+     straight to the diagram). */
   .field-layout {
     display: grid;
-    grid-template-columns: 300px 1fr;
+    grid-template-columns: 360px 1fr;
     gap: 20px;
     align-items: start;
   }
@@ -337,39 +346,39 @@
     margin-top: 2px;
   }
 
-  .hunting-svg { width: 100%; height: auto; margin-top: 8px; }
-  .hunting-svg .node { cursor: pointer; }
-  .hunting-svg .node circle.dot { transition: r 0.12s ease, opacity 0.12s ease; }
-  .hunting-svg .node:hover circle.dot { opacity: 0.85; }
-  .hunting-svg .node.active circle.dot { stroke: var(--text); stroke-width: 2; }
-  .hunting-svg .node text { font-family: var(--mono); font-size: 8.5px; fill: var(--text-dim); }
-  .hunting-svg .node text.count { fill: var(--text-faint); font-size: 7.5px; }
-  .hunting-svg line.spoke { stroke-width: 1; opacity: 0.35; }
-  .hunting-svg .hub-badge { fill: #fff; }
+  /* 2026-08-15: enlarged ~20% (font sizes, orbit/hub geometry computed
+     in JS) + real transitions/animation added -- was a static diagram
+     with only a hover-opacity blip before. Node entrance uses a fade+
+     grow keyframe with a small per-node stagger (delay set inline by
+     renderHuntingSvg); the hub is now its own clickable "home" control
+     (see .hub-group below) that clears the category filter, same
+     destination as picking "All categories" in the dropdown. */
+  @keyframes nodeIn {
+    from { opacity: 0; transform: scale(0.55); }
+    to   { opacity: 1; transform: scale(1); }
+  }
 
-  .category-list { list-style: none; margin: 10px 0 0; padding: 0; }
+  .hunting-svg { width: 100%; height: auto; margin-top: 10px; overflow: visible; }
+  .hunting-svg .node { cursor: pointer; transform-box: fill-box; transform-origin: 50% 50%; animation: nodeIn 0.4s ease backwards; }
+  .hunting-svg .node circle.dot { transition: r 0.15s ease, opacity 0.15s ease, stroke-width 0.15s ease; }
+  .hunting-svg .node:hover circle.dot { opacity: 0.92; }
+  .hunting-svg .node.active circle.dot { stroke: var(--text); stroke-width: 2.4; }
+  .hunting-svg .node text { font-family: var(--mono); font-size: 10.2px; fill: var(--text-dim); transition: fill 0.15s ease; }
+  .hunting-svg .node.active text.label { fill: var(--text); font-weight: 700; }
+  .hunting-svg .node text.count { fill: var(--text-faint); font-size: 9px; }
+  .hunting-svg line.spoke { stroke-width: 1; opacity: 0.3; transition: opacity 0.15s ease, stroke-width 0.15s ease; }
+  .hunting-svg line.spoke.active { opacity: 0.85; stroke-width: 1.6; }
 
-  .category-list li {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-    padding: 7px 6px;
-    border-radius: 7px;
+  .hunting-svg .hub-group {
     cursor: pointer;
-    font-size: 13px;
+    transform-box: fill-box;
+    transform-origin: 50% 50%;
+    transition: transform 0.15s ease;
   }
-
-  .category-list li:hover { background: var(--surface-2); }
-  .category-list li.active { background: var(--surface-3); }
-
-  .category-list .dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
-  .category-list .cat-label { flex: 1; color: var(--text-dim); }
-  .category-list li.active .cat-label { color: var(--text); font-weight: 600; }
-  .category-list .cat-count {
-    font-family: var(--mono);
-    font-size: 11.5px;
-    color: var(--text-faint);
-  }
+  .hunting-svg .hub-group:hover { transform: scale(1.07); }
+  .hunting-svg .hub-group circle.hub-ring { transition: stroke 0.15s ease; }
+  .hunting-svg .hub-group:hover circle.hub-ring { stroke: var(--accent); }
+  .hunting-svg .hub-badge { fill: #fff; }
 
   .brand-blurb p {
     font-size: 12.5px;
@@ -688,6 +697,9 @@
     <div class="search">
       <input type="text" id="searchInput" placeholder="Search by name, niche, or repo…" autocomplete="off" />
     </div>
+    <select id="categoryFilter">
+      <option value="">All categories</option>
+    </select>
     <select id="pricingFilter">
       <option value="">All pricing models</option>
       <option value="FREE">Free</option>
@@ -695,7 +707,6 @@
       <option value="PAID">Paid</option>
       <option value="PENDING">Pending moderation</option>
     </select>
-    <span class="active-category-note" id="activeCategoryNote" style="display:none"></span>
     <span class="count-note" id="countNote"></span>
   </div>
 
@@ -704,12 +715,8 @@
     <aside class="field-sidebar">
       <div class="panel">
         <div class="panel-title">Hunting Field <span class="info-dot" title="Explore by technology gap">i</span></div>
-        <div class="panel-hint">Explore by technology gap</div>
-        <svg id="huntingSvg" class="hunting-svg" viewBox="0 0 320 300"></svg>
-      </div>
-      <div class="panel">
-        <div class="panel-title">Filter by category</div>
-        <ul class="category-list" id="categoryList"></ul>
+        <div class="panel-hint">Explore by technology gap · click the center mark to reset</div>
+        <svg id="huntingSvg" class="hunting-svg" viewBox="0 0 384 360"></svg>
       </div>
       <div class="panel brand-blurb">
         <div class="panel-title">We hunt gaps others miss</div>
@@ -927,13 +934,19 @@
     return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
   }
 
+  // Geometry scaled up 20% across the board (2026-08-15 request) --
+  // orbit/hub/node radii and the label offsets all carry the same 1.2x
+  // factor so the diagram grows as one coherent object instead of just
+  // the font sizes getting bigger inside the old cramped layout.
+  var FIELD_SCALE = 1.2;
+
   function renderHuntingSvg() {
     var counts = {};
     CATEGORIES.forEach(function (c) { counts[c.key] = 0; });
     plugins.forEach(function (p) { counts[p.categoryKey] = (counts[p.categoryKey] || 0) + 1; });
     var active = CATEGORIES.filter(function (c) { return c.key !== 'other' || counts.other > 0; });
 
-    var cx = 160, cy = 140, orbit = 108, hub = 30;
+    var cx = 192, cy = 168, orbit = 108 * FIELD_SCALE, hub = 30 * FIELD_SCALE;
     var svg = document.getElementById('huntingSvg');
     var parts = [];
 
@@ -941,31 +954,36 @@
       var deg = i * (360 / active.length);
       var pos = polar(cx, cy, orbit, deg);
       var isActive = filterCategory === c.key;
-      parts.push('<line class="spoke" x1="' + cx + '" y1="' + cy + '" x2="' + pos.x.toFixed(1) + '" y2="' + pos.y.toFixed(1) + '" stroke="' + c.color + '"></line>');
+      parts.push('<line class="spoke' + (isActive ? ' active' : '') + '" x1="' + cx + '" y1="' + cy + '" x2="' + pos.x.toFixed(1) + '" y2="' + pos.y.toFixed(1) + '" stroke="' + c.color + '"></line>');
     });
 
-    parts.push('<circle cx="' + cx + '" cy="' + cy + '" r="' + hub + '" fill="var(--surface-2)" stroke="var(--border)"></circle>');
-    parts.push('<circle class="hub-badge" cx="' + cx + '" cy="' + cy + '" r="' + (hub - 8) + '"></circle>');
+    // Hub doubles as a "back to start" control: clicking it clears both
+    // the category filter and any open dossier, same destination as
+    // picking "All categories" from the dropdown next to search.
     parts.push(
-      '<g transform="translate(' + (cx - 11) + ',' + (cy - 11) + ') scale(0.0215)">' +
+      '<g class="hub-group" id="huntingHub">' +
+      '<circle class="hub-ring" cx="' + cx + '" cy="' + cy + '" r="' + hub.toFixed(1) + '" fill="var(--surface-2)" stroke="var(--border)" stroke-width="1.5"></circle>' +
+      '<circle class="hub-badge" cx="' + cx + '" cy="' + cy + '" r="' + (hub - 10).toFixed(1) + '"></circle>' +
+      '<g transform="translate(' + (cx - 13) + ',' + (cy - 13) + ') scale(0.0258)">' +
       '<path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#0151FC"/>' +
       '<path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z" fill="#01B3FD"/>' +
       '<polygon points="569,413 695,413 695,539 569,539" fill="#02F172"/>' +
-      '</g>'
+      '</g></g>'
     );
 
     active.forEach(function (c, i) {
       var deg = i * (360 / active.length);
       var pos = polar(cx, cy, orbit, deg);
       var n = counts[c.key] || 0;
-      var r = 12 + Math.sqrt(n) * 3;
+      var r = (12 + Math.sqrt(n) * 3) * FIELD_SCALE;
       var isActive = filterCategory === c.key;
-      var labelY = pos.y + r + 11;
+      var labelY = pos.y + r + 13;
+      var delay = (i * 45) + 'ms';
       parts.push(
-        '<g class="node' + (isActive ? ' active' : '') + '" data-cat="' + c.key + '">' +
+        '<g class="node' + (isActive ? ' active' : '') + '" data-cat="' + c.key + '" style="animation-delay:' + delay + '">' +
         '<circle class="dot" cx="' + pos.x.toFixed(1) + '" cy="' + pos.y.toFixed(1) + '" r="' + r.toFixed(1) + '" fill="' + c.color + '" opacity="0.62"></circle>' +
-        '<text x="' + pos.x.toFixed(1) + '" y="' + labelY.toFixed(1) + '" text-anchor="middle">' + esc(c.label) + '</text>' +
-        '<text class="count" x="' + pos.x.toFixed(1) + '" y="' + (labelY + 10).toFixed(1) + '" text-anchor="middle">' + n + ' plugin' + (n === 1 ? '' : 's') + '</text>' +
+        '<text class="label" x="' + pos.x.toFixed(1) + '" y="' + labelY.toFixed(1) + '" text-anchor="middle">' + esc(c.label) + '</text>' +
+        '<text class="count" x="' + pos.x.toFixed(1) + '" y="' + (labelY + 12).toFixed(1) + '" text-anchor="middle">' + n + ' plugin' + (n === 1 ? '' : 's') + '</text>' +
         '</g>'
       );
     });
@@ -979,32 +997,29 @@
         renderAll();
       });
     });
+    document.getElementById('huntingHub').addEventListener('click', function () {
+      filterCategory = '';
+      selectedRepo = null;
+      renderAll();
+    });
   }
 
-  function renderCategoryList() {
+  function populateCategorySelect() {
     var counts = {};
     CATEGORIES.forEach(function (c) { counts[c.key] = 0; });
     plugins.forEach(function (p) { counts[p.categoryKey] = (counts[p.categoryKey] || 0) + 1; });
     var active = CATEGORIES.filter(function (c) { return c.key !== 'other' || counts.other > 0; });
 
-    var html = '<li class="' + (filterCategory === '' ? 'active' : '') + '" data-cat="">' +
-      '<span class="dot" style="background:var(--text-faint)"></span>' +
-      '<span class="cat-label">All categories</span>' +
-      '<span class="cat-count">' + plugins.length + '</span></li>';
+    var sel = document.getElementById('categoryFilter');
+    var html = '<option value="">All categories (' + plugins.length + ')</option>';
     active.forEach(function (c) {
-      html += '<li class="' + (filterCategory === c.key ? 'active' : '') + '" data-cat="' + c.key + '">' +
-        '<span class="dot" style="background:' + c.color + '"></span>' +
-        '<span class="cat-label">' + esc(c.label) + '</span>' +
-        '<span class="cat-count">' + (counts[c.key] || 0) + '</span></li>';
+      html += '<option value="' + c.key + '">' + esc(c.label) + ' (' + (counts[c.key] || 0) + ')</option>';
     });
-    var list = document.getElementById('categoryList');
-    list.innerHTML = html;
-    Array.prototype.forEach.call(list.querySelectorAll('li'), function (li) {
-      li.addEventListener('click', function () {
-        filterCategory = li.getAttribute('data-cat');
-        selectedRepo = null;
-        renderAll();
-      });
+    sel.innerHTML = html;
+    sel.addEventListener('change', function (e) {
+      filterCategory = e.target.value;
+      selectedRepo = null;
+      renderAll();
     });
   }
 
@@ -1037,7 +1052,6 @@
       card.addEventListener('click', function () {
         selectedRepo = card.getAttribute('data-repo');
         renderAll();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
       });
     });
   }
@@ -1130,14 +1144,12 @@
       card.addEventListener('click', function () {
         selectedRepo = card.getAttribute('data-repo');
         renderAll();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
       });
     });
   }
 
   function renderField() {
     renderHuntingSvg();
-    renderCategoryList();
     if (selectedRepo) {
       var p = byRepo(selectedRepo);
       if (p) { renderDossier(p); return; }
@@ -1198,14 +1210,7 @@
     var rows = sortedFiltered();
     document.getElementById('countNote').textContent = rows.length + ' / ' + plugins.length + ' plugins';
 
-    var note = document.getElementById('activeCategoryNote');
-    if (filterCategory) {
-      note.style.display = 'inline';
-      note.textContent = '✕ ' + CAT_BY_KEY[filterCategory].label;
-      note.onclick = function () { filterCategory = ''; selectedRepo = null; renderAll(); };
-    } else {
-      note.style.display = 'none';
-    }
+    document.getElementById('categoryFilter').value = filterCategory;
 
     document.getElementById('fieldView').style.display = mode === 'field' ? 'grid' : 'none';
     document.getElementById('tableView').style.display = mode === 'table' ? 'block' : 'none';
@@ -1254,6 +1259,15 @@
     filterPricing = e.target.value;
     renderAll();
   });
+
+  // one-time: build the category <select> options + attach its change
+  // listener. NOT called from renderAll()/renderField() -- the option
+  // list is static (same 8 categories every render), only the SELECTED
+  // value needs to stay in sync on every render, handled separately in
+  // renderAll() via categoryFilter.value = filterCategory. Populating +
+  // re-attaching a listener on every render would stack duplicate
+  // 'change' handlers instead of replacing them.
+  populateCategorySelect();
 
   renderAll();
 })();
