@@ -769,28 +769,39 @@
   td.num-cell { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; font-size: 13.5px; }
 
   .expand-row td { padding: 0; border-bottom: 1px solid var(--border); }
+  /* 2026-08-15, "el expandible ahora debería ser espectacular" -- this
+     used to host a bare 2-line Gap/Fix text block; now renders the same
+     full dossier content as the Field-mode page (dossierBodyHtml, see
+     JS), spanning the full colspan=7 row width instead of a single
+     column. max-width keeps it from stretching thin-and-wide on very
+     large viewports -- the dossier-grid's proportions were tuned for
+     the narrower Field-mode sidebar-adjacent column, not an
+     arbitrarily wide table. */
   .expand-inner {
     display: none;
-    padding: 16px 18px 20px 14px;
+    position: relative;
+    padding: 22px 26px 26px;
     background: var(--surface-2);
-    font-size: 13.5px;
-    color: var(--text-dim);
     border-left: 3px solid var(--accent);
+    max-width: 960px;
+    margin: 0 auto;
   }
   .expand-inner.open { display: block; }
-  .expand-inner .block { max-width: 78ch; }
-  .expand-inner .block + .block { margin-top: 10px; }
-  .expand-inner .field-label {
-    font-family: var(--mono);
-    font-size: 10.5px;
-    letter-spacing: 0.07em;
-    text-transform: uppercase;
-    color: var(--text-faint);
-    margin-bottom: 4px;
+  .dossier-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-dim);
+    font-size: 13px;
+    cursor: pointer;
+    z-index: 1;
   }
-  .expand-inner .links { margin-top: 12px; display: flex; gap: 14px; font-family: var(--mono); font-size: 12px; }
-  .expand-inner a { color: var(--accent); text-decoration: none; }
-  .expand-inner a:hover { text-decoration: underline; }
+  .dossier-close:hover { border-color: var(--accent); color: var(--text); }
 
   .verified-mark { color: var(--accent); font-size: 11px; margin-left: 4px; }
 
@@ -1779,7 +1790,19 @@
     });
   }
 
-  function renderDossier(p) {
+  // Full rich content of a plugin's dossier -- head (name/chips/pitch/
+  // gif/links), stats row, Gap+Fix+Facts grid, similar plugins. Shared
+  // between the Field-mode full-page Dossier AND the Table-mode row
+  // expand (2026-08-15, "el expandible ahora debería ser espectacular"
+  // -- the table's own expand used to be a bare 2-line Gap/Fix text
+  // block while this full version only existed in Field mode; rather
+  // than build a second, slightly-different rich layout for the table
+  // row and risk the two drifting apart over time, both now render the
+  // exact same content from the exact same function). Callers own their
+  // own wrapper (a "back" link for the full page, a "close" button for
+  // the inline row) and must call wireDossierInteractions() on their
+  // container afterward for the similar-card clicks to work.
+  function dossierBodyHtml(p) {
     var isPending = p.downloads === null;
     var pr = pricingLabel(p.pricing, isPending);
     var cat = CAT_BY_KEY[p.categoryKey];
@@ -1791,8 +1814,7 @@
       .sort(function (a, b) { return (b.downloads || 0) - (a.downloads || 0); })
       .slice(0, 4);
 
-    var html = '<a class="dossier-back" id="dossierBack">← Back to catalog</a>';
-    html += '<div class="dossier-head">';
+    var html = '<div class="dossier-head">';
     html += '<div class="dossier-intro"><div class="dossier-title-row"><h2>' + esc(p.name) + '</h2>' +
       '<span class="chip ' + pr.cls + '">' + pr.text + '</span>' +
       '<span class="chip" style="background:color-mix(in srgb, ' + cat.color + ' 20%, transparent); color:' + cat.color + '">' + esc(cat.label) + '</span></div>' +
@@ -1826,10 +1848,12 @@
     // Facts: technical/reference details only, no repeated marketing
     // copy and no "Verified vendor" line (2026-08-15 -- removed per
     // request, it read as an unexplained trust badge with no context).
-    // Traction removed as its own block the same day; the growth
-    // number+baseline it used to show as a chart is folded in here as
-    // a plain text row instead, so that detail isn't lost, just no
-    // longer given a whole panel of its own.
+    // No separate "Evidence"/"Traction" panels either -- Gap already
+    // carries the competitor evidence, and Traction's growth number is
+    // folded in here as a plain text row instead of a whole chart of
+    // its own (both decisions made and verified earlier this same day,
+    // carried forward here rather than reintroduced by a newer proposal
+    // that didn't know about that history).
     html += '<div class="dossier-col">';
     html += '<div class="info-block facts-block"><div class="ib-head"><span class="ib-icon facts">⚙</span><span class="ib-title">Facts</span></div><ul class="facts-list">' +
       '<li><span class="fk">Category</span><span class="fv">' + esc(cat.label) + '</span></li>' +
@@ -1852,7 +1876,26 @@
       });
       html += '</div></div>';
     }
+    return html;
+  }
 
+  // Wires the "similar plugin" cards inside a just-rendered dossier
+  // (full-page or inline) -- switching to a similar plugin from EITHER
+  // context just changes selectedRepo and re-renders in the CURRENT
+  // mode, so from a table row it re-opens as a different table row
+  // rather than jumping the user into Field mode.
+  function wireDossierInteractions(container) {
+    Array.prototype.forEach.call(container.querySelectorAll('.similar-card'), function (card) {
+      card.addEventListener('click', function (e) {
+        e.stopPropagation(); // don't also trigger the table row's own click-to-toggle
+        selectedRepo = card.getAttribute('data-repo');
+        renderAll();
+      });
+    });
+  }
+
+  function renderDossier(p) {
+    var html = '<a class="dossier-back" id="dossierBack">← Back to catalog</a>' + dossierBodyHtml(p);
     var main = document.getElementById('fieldMain');
     main.innerHTML = html;
 
@@ -1860,12 +1903,7 @@
       selectedRepo = null;
       renderAll();
     });
-    Array.prototype.forEach.call(main.querySelectorAll('.similar-card'), function (card) {
-      card.addEventListener('click', function () {
-        selectedRepo = card.getAttribute('data-repo');
-        renderAll();
-      });
-    });
+    wireDossierInteractions(main);
   }
 
   function renderField() {
@@ -1905,12 +1943,15 @@
       html += '<td class="num-cell" style="text-align:left">' + (p.firstPublished || '—') + '</td>';
       html += '</tr>';
       html += '<tr class="expand-row"><td colspan="7"><div class="expand-inner' + (isOpen ? ' open' : '') + '" id="exp-' + esc(p.repo) + '">';
-      html += '<div class="block"><div class="field-label">The Gap</div>' + mdInline(gapText(p)) + '</div>';
-      html += '<div class="block"><div class="field-label">The Fix</div>' + mdInline(p.pitch || '—') + '</div>';
-      html += '<div class="links">';
-      if (p.marketplaceUrl) html += '<a href="' + esc(p.marketplaceUrl) + '" target="_blank" rel="noopener">Marketplace →</a>';
-      html += '<a href="' + esc(p.githubUrl) + '" target="_blank" rel="noopener">GitHub →</a>';
-      html += '</div></div></td></tr>';
+      // Full dossier content, not just a 2-line Gap/Fix summary
+      // (2026-08-15, "el expandible ahora debería ser espectacular") --
+      // only actually built for the currently OPEN row (isOpen), so
+      // closed rows stay cheap even with all 34 present in the table.
+      if (isOpen) {
+        html += '<button type="button" class="dossier-close" data-repo="' + esc(p.repo) + '" aria-label="Close">✕</button>';
+        html += dossierBodyHtml(p);
+      }
+      html += '</div></td></tr>';
     });
     tbody.innerHTML = html;
 
@@ -1921,6 +1962,14 @@
         renderTable();
       });
     });
+    Array.prototype.forEach.call(tbody.querySelectorAll('.dossier-close'), function (btn) {
+      btn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        selectedRepo = null;
+        renderTable();
+      });
+    });
+    wireDossierInteractions(tbody);
   }
 
   // ---- top-level render ------------------------------------------------
