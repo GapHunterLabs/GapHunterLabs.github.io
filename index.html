@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Live status of the Gap Hunter Labs plugin catalog: niche, function, downloads, reviews, rating, and growth per product.">
+<meta name="description" content="Gap Hunter Labs hunts real, evidence-based gaps in developer tooling and ships focused IntelliJ-family plugins to fix them. Explore all 34 plugins by category, growth, and the specific competitor problem each one solves.">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%201024%201024%22%20width%3D%22100%25%22%20height%3D%22100%25%22%3E%20%3C%21--%20White%20background%3A%20keeps%20the%20mark%20legible%20in%20light%20theme%20and%20on%20the%20Marketplace%20listing%20card%20--%3E%20%3Crect%20width%3D%221024%22%20height%3D%221024%22%20fill%3D%22%23FFFFFF%22/%3E%20%3Cpath%20d%3D%22%20M%20511%2C81%20L%20847%2C283%20L%20725%2C351%20L%20508%2C223%20L%20296%2C348%20L%20296%2C588%20L%20463%2C691%20L%20342%2C765%20L%20173%2C665%20L%20172%2C281%20Z%22%20fill%3D%22%230151FC%22%20/%3E%20%3Cpath%20d%3D%22%20M%20846%2C412%20L%20844%2C668%20L%20518%2C863%20L%20393%2C795%20L%20724%2C589%20L%20721%2C540%20L%20567%2C538%20L%20568%2C412%20Z%22%20fill%3D%22%2301B3FD%22%20/%3E%20%3Cpolygon%20points%3D%22569%2C413%20695%2C413%20695%2C539%20569%2C539%22%20fill%3D%22%2302F172%22%20/%3E%20%3C/svg%3E">
-<title>Gap Hunter Labs — Catalog Report</title>
+<title>Gap Hunter Labs — Plugin Intelligence</title>
 <style>
   /* Deliberately single-theme (always dark) -- a brand-consistency
      choice made explicitly by the team, not an omission: every
@@ -16,23 +16,34 @@
      to #3FA2FF for legibility on a dark ground (mirrors how the
      icon's own dark variant uses the lighter cyan-blue on a
      transparent/dark background, not the darker blue meant for
-     white), #02F172 (accent green, used directly for growth-up). */
+     white), #02F172 (accent green, used directly for growth-up).
+     2026-08-15: added a "Hunting Field" categorical palette (8 hues)
+     for the new Field mode -- 3 of the 8 reuse literal brand colors
+     (--accent for API, --good for DevOps, --cyan for Codegen), the
+     other 5 are new but chosen to stay visually distinct from those
+     3 and from each other at a glance (color alone is never the only
+     signal -- every category also has a text label). */
   :root {
     --bg: #090D16;
     --surface: #111726;
     --surface-2: #1A2235;
+    --surface-3: #212C45;
     --border: #29334A;
     --text: #E9EDF8;
     --text-dim: #9AA6C4;
     --text-faint: #6C7793;
     --accent: #3FA2FF;
     --accent-ink: #06101F;
+    --cyan: #01B3FD;
     --good: #02F172;
     --bad: #FF6E7A;
     --pending: #8DACE0;
     --pending-bg: #16233B;
     --good-bg: #0F2A1D;
     --bad-bg: #34191D;
+    --purple: #B98CFF;
+    --amber: #FFB020;
+    --teal: #34D5C7;
     --mono: ui-monospace, "JetBrains Mono", "Cascadia Code", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
     --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
     --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 8px 24px rgba(0,0,0,0.4);
@@ -52,17 +63,80 @@
   }
 
   .wrap {
-    max-width: 1180px;
+    max-width: 1280px;
     margin: 0 auto;
-    padding: 40px 24px 80px;
+    padding: 32px 24px 80px;
   }
 
-  header.top {
+  /* ---- top brand row ---- */
+  .brand-row {
     display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin-bottom: 8px;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
   }
+
+  .brand-mark {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+  }
+
+  .brand-mark svg { width: 24px; height: 24px; }
+
+  .brand-name-block { flex: 1; min-width: 0; }
+
+  .brand-name {
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 14.5px;
+    letter-spacing: 0.02em;
+  }
+
+  .brand-tagline {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-top: 1px;
+  }
+
+  .mode-toggle {
+    display: flex;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 3px;
+    flex: none;
+  }
+
+  .mode-toggle button {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 7px 16px;
+    border-radius: 100px;
+    border: none;
+    background: transparent;
+    color: var(--text-faint);
+    cursor: pointer;
+  }
+
+  .mode-toggle button.active {
+    background: var(--accent);
+    color: var(--accent-ink);
+  }
+
+  header.top { margin-bottom: 8px; }
 
   .eyebrow {
     font-family: var(--mono);
@@ -86,7 +160,7 @@
     color: var(--text-dim);
     font-size: 14.5px;
     margin: 4px 0 0;
-    max-width: 62ch;
+    max-width: 66ch;
   }
 
   .meta-row {
@@ -104,28 +178,29 @@
   /* ---- stat tiles ---- */
   .stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
     gap: 12px;
-    margin: 28px 0 32px;
+    margin: 24px 0 24px;
   }
 
   .stat {
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 16px 18px;
+    padding: 14px 16px;
     box-shadow: var(--shadow);
   }
 
   .stat .num {
     font-family: var(--mono);
     font-variant-numeric: tabular-nums;
-    font-size: 26px;
+    font-size: 24px;
     font-weight: 700;
     line-height: 1;
   }
 
   .stat .num.accent { color: var(--accent); }
+  .stat .num .stat-growth { font-size: 13px; margin-left: 6px; color: var(--good); vertical-align: 2px; }
 
   .stat .label {
     margin-top: 8px;
@@ -141,7 +216,7 @@
     flex-wrap: wrap;
     gap: 10px;
     align-items: center;
-    margin-bottom: 14px;
+    margin-bottom: 18px;
   }
 
   .search {
@@ -161,9 +236,7 @@
     outline: none;
   }
 
-  .search input:focus {
-    border-color: var(--accent);
-  }
+  .search input:focus { border-color: var(--accent); }
 
   .search::before {
     content: "";
@@ -204,89 +277,149 @@
     color: var(--text-faint);
   }
 
-  /* ---- table ---- */
-  .table-scroll {
-    overflow-x: auto;
+  .active-category-note {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--accent);
+    cursor: pointer;
+  }
+
+  /* ---- FIELD layout ---- */
+  .field-layout {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 20px;
+    align-items: start;
+  }
+
+  @media (max-width: 900px) {
+    .field-layout { grid-template-columns: 1fr; }
+  }
+
+  .panel {
+    background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    background: var(--surface);
+    padding: 16px;
     box-shadow: var(--shadow);
   }
 
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 880px;
-  }
+  .panel + .panel { margin-top: 14px; }
 
-  thead th {
-    position: sticky;
-    top: 0;
-    background: var(--surface-2);
-    text-align: left;
+  .panel-title {
     font-family: var(--mono);
     font-size: 11px;
-    letter-spacing: 0.07em;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
+    color: var(--text);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .info-dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    border: 1px solid var(--text-faint);
     color: var(--text-faint);
-    padding: 11px 14px;
-    border-bottom: 1px solid var(--border);
+    font-size: 9px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+    font-family: var(--sans);
+  }
+
+  .panel-hint {
+    font-size: 11.5px;
+    color: var(--text-faint);
+    margin-top: 2px;
+  }
+
+  .hunting-svg { width: 100%; height: auto; margin-top: 8px; }
+  .hunting-svg .node { cursor: pointer; }
+  .hunting-svg .node circle.dot { transition: r 0.12s ease, opacity 0.12s ease; }
+  .hunting-svg .node:hover circle.dot { opacity: 0.85; }
+  .hunting-svg .node.active circle.dot { stroke: var(--text); stroke-width: 2; }
+  .hunting-svg .node text { font-family: var(--mono); font-size: 8.5px; fill: var(--text-dim); }
+  .hunting-svg .node text.count { fill: var(--text-faint); font-size: 7.5px; }
+  .hunting-svg line.spoke { stroke-width: 1; opacity: 0.35; }
+  .hunting-svg .hub-badge { fill: #fff; }
+
+  .category-list { list-style: none; margin: 10px 0 0; padding: 0; }
+
+  .category-list li {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 7px 6px;
+    border-radius: 7px;
     cursor: pointer;
-    white-space: nowrap;
-    user-select: none;
+    font-size: 13px;
   }
 
-  thead th:hover { color: var(--text); }
+  .category-list li:hover { background: var(--surface-2); }
+  .category-list li.active { background: var(--surface-3); }
 
-  thead th.sorted { color: var(--accent); }
-
-  thead th .arrow { font-size: 9px; margin-left: 3px; opacity: 0.7; }
-
-  tbody tr.row {
-    cursor: pointer;
-    border-bottom: 1px solid var(--border);
-  }
-
-  tbody tr.row:hover { background: var(--surface-2); }
-
-  tbody tr.row:last-child { border-bottom: none; }
-
-  tbody td {
-    padding: 11px 14px;
-    vertical-align: middle;
-  }
-
-  td.name-cell {
-    max-width: 240px;
-  }
-
-  .plugin-name {
-    font-weight: 600;
-    font-size: 14px;
-  }
-
-  .niche {
-    font-size: 12px;
-    color: var(--text-dim);
-    margin-top: 1px;
-  }
-
-  td.num-cell {
+  .category-list .dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+  .category-list .cat-label { flex: 1; color: var(--text-dim); }
+  .category-list li.active .cat-label { color: var(--text); font-weight: 600; }
+  .category-list .cat-count {
     font-family: var(--mono);
-    font-variant-numeric: tabular-nums;
-    text-align: right;
-    font-size: 13.5px;
+    font-size: 11.5px;
+    color: var(--text-faint);
   }
 
-  .growth {
-    font-size: 12px;
-    margin-left: 6px;
+  .brand-blurb p {
+    font-size: 12.5px;
+    color: var(--text-dim);
+    margin: 8px 0 0;
+    line-height: 1.6;
   }
 
-  .growth.up { color: var(--good); }
-  .growth.down { color: var(--bad); }
-  .growth.flat { color: var(--text-faint); }
+  /* ---- plugin grid (Field mode, no selection) ---- */
+  .plugin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 12px;
+  }
 
+  .plugin-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 15px 16px;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: border-color 0.12s ease, transform 0.12s ease;
+  }
+
+  .plugin-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+
+  .plugin-card .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .plugin-card .card-name { font-weight: 700; font-size: 14.5px; }
+  .plugin-card .card-niche { font-size: 11.5px; color: var(--text-faint); margin-top: 2px; }
+  .plugin-card .cat-dot { width: 8px; height: 8px; border-radius: 50%; flex: none; margin-top: 5px; }
+
+  .plugin-card .card-metrics {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    margin-top: 12px;
+    font-family: var(--mono);
+  }
+
+  .plugin-card .card-dl { font-size: 17px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .plugin-card .card-dl-label { font-size: 10px; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.05em; }
+
+  /* ---- chips ---- */
   .chip {
     display: inline-block;
     font-family: var(--mono);
@@ -304,11 +437,169 @@
   .chip.paid { background: color-mix(in srgb, var(--accent) 30%, transparent); color: var(--accent); }
   .chip.pending { background: var(--pending-bg); color: var(--pending); }
 
-  .expand-row td {
-    padding: 0;
-    border-bottom: 1px solid var(--border);
+  .growth { font-size: 12px; margin-left: 6px; }
+  .growth.up { color: var(--good); }
+  .growth.down { color: var(--bad); }
+  .growth.flat { color: var(--text-faint); }
+
+  /* ---- Plugin Dossier ---- */
+  .dossier-back {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-faint);
+    cursor: pointer;
+    margin-bottom: 14px;
+    display: inline-block;
   }
 
+  .dossier-back:hover { color: var(--accent); }
+
+  .dossier-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .dossier-title-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .dossier-title-row h2 { font-family: var(--mono); font-size: 24px; margin: 0; }
+  .dossier-niche { color: var(--text-dim); font-size: 13.5px; margin-top: 3px; }
+  .dossier-pitch { color: var(--text); font-size: 14.5px; margin-top: 10px; max-width: 70ch; }
+  .dossier-pitch code { background: var(--surface-2); padding: 1px 5px; border-radius: 4px; font-size: 0.92em; }
+
+  .dossier-links { display: flex; gap: 10px; flex: none; }
+
+  .btn {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 10px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    white-space: nowrap;
+    border: 1px solid var(--border);
+    color: var(--text);
+  }
+
+  .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .btn:hover { border-color: var(--accent); }
+  .btn.primary:hover { opacity: 0.9; }
+
+  .dossier-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 10px;
+    margin: 20px 0;
+  }
+
+  .dossier-stats .stat .num { font-size: 20px; }
+
+  .dossier-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 14px;
+  }
+
+  @media (max-width: 760px) { .dossier-grid { grid-template-columns: 1fr; } }
+
+  .dossier-col { display: flex; flex-direction: column; gap: 14px; }
+
+  .info-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 15px 16px;
+  }
+
+  .info-block .ib-head { display: flex; align-items: center; gap: 9px; margin-bottom: 9px; }
+
+  .ib-icon {
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12px; font-weight: 700;
+    flex: none;
+  }
+
+  .ib-icon.gap { background: var(--bad-bg); color: var(--bad); }
+  .ib-icon.fix { background: var(--good-bg); color: var(--good); }
+  .ib-icon.evidence { background: color-mix(in srgb, var(--purple) 22%, transparent); color: var(--purple); }
+  .ib-icon.traction { background: color-mix(in srgb, var(--accent) 20%, transparent); color: var(--accent); }
+
+  .ib-title { font-family: var(--mono); font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase; font-weight: 700; }
+  .info-block .ib-body { font-size: 13.5px; color: var(--text-dim); line-height: 1.65; }
+  .info-block .ib-body code { background: var(--surface-2); padding: 1px 5px; border-radius: 4px; font-size: 0.92em; color: var(--text); }
+
+  .facts-list { list-style: none; margin: 0; padding: 0; font-size: 13px; }
+  .facts-list li {
+    display: flex; justify-content: space-between;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .facts-list li:last-child { border-bottom: none; }
+  .facts-list .fk { color: var(--text-faint); font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; }
+  .facts-list .fv { color: var(--text); text-align: right; }
+
+  .traction-chart { margin-top: 6px; }
+  .traction-chart svg { width: 100%; height: 64px; overflow: visible; }
+  .traction-labels { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 10.5px; color: var(--text-faint); margin-top: 4px; }
+  .traction-pct { font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--good); }
+  .traction-empty { font-size: 12.5px; color: var(--text-faint); font-style: italic; }
+
+  .similar-section { margin-top: 22px; }
+  .similar-title { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 10px; }
+  .similar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
+  .similar-card {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 9px;
+    padding: 12px 14px; cursor: pointer; font-size: 12.5px;
+  }
+  .similar-card:hover { border-color: var(--accent); }
+  .similar-card .sc-name { font-weight: 600; color: var(--text); margin-bottom: 2px; }
+  .similar-card .sc-niche { color: var(--text-faint); font-size: 11px; }
+  .similar-card .sc-dl { margin-top: 8px; font-family: var(--mono); font-size: 12px; color: var(--text-dim); }
+
+  /* ---- TABLE mode (unchanged behavior, restyled to match) ---- */
+  .table-scroll {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    box-shadow: var(--shadow);
+  }
+
+  table { width: 100%; border-collapse: collapse; min-width: 880px; }
+
+  thead th {
+    position: sticky; top: 0;
+    background: var(--surface-2);
+    text-align: left;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    white-space: nowrap;
+    user-select: none;
+  }
+
+  thead th:hover { color: var(--text); }
+  thead th.sorted { color: var(--accent); }
+  thead th .arrow { font-size: 9px; margin-left: 3px; opacity: 0.7; }
+
+  tbody tr.row { cursor: pointer; border-bottom: 1px solid var(--border); }
+  tbody tr.row:hover { background: var(--surface-2); }
+  tbody tr.row:last-child { border-bottom: none; }
+  tbody td { padding: 11px 14px; vertical-align: middle; }
+  td.name-cell { max-width: 240px; }
+  .plugin-name { font-weight: 600; font-size: 14px; }
+  .niche { font-size: 12px; color: var(--text-dim); margin-top: 1px; }
+  td.num-cell { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; font-size: 13.5px; }
+
+  .expand-row td { padding: 0; border-bottom: 1px solid var(--border); }
   .expand-inner {
     display: none;
     padding: 16px 18px 20px 14px;
@@ -317,12 +608,9 @@
     color: var(--text-dim);
     border-left: 3px solid var(--accent);
   }
-
   .expand-inner.open { display: block; }
-
   .expand-inner .block { max-width: 78ch; }
   .expand-inner .block + .block { margin-top: 10px; }
-
   .expand-inner .field-label {
     font-family: var(--mono);
     font-size: 10.5px;
@@ -331,27 +619,11 @@
     color: var(--text-faint);
     margin-bottom: 4px;
   }
-
-  .expand-inner .links {
-    margin-top: 12px;
-    display: flex;
-    gap: 14px;
-    font-family: var(--mono);
-    font-size: 12px;
-  }
-
-  .expand-inner a {
-    color: var(--accent);
-    text-decoration: none;
-  }
-
+  .expand-inner .links { margin-top: 12px; display: flex; gap: 14px; font-family: var(--mono); font-size: 12px; }
+  .expand-inner a { color: var(--accent); text-decoration: none; }
   .expand-inner a:hover { text-decoration: underline; }
 
-  .verified-mark {
-    color: var(--accent);
-    font-size: 11px;
-    margin-left: 4px;
-  }
+  .verified-mark { color: var(--accent); font-size: 11px; margin-left: 4px; }
 
   .no-results {
     padding: 40px;
@@ -373,16 +645,36 @@
   footer.notes b { color: var(--text-dim); }
 
   @media (max-width: 640px) {
-    .wrap { padding: 28px 14px 60px; }
+    .wrap { padding: 24px 14px 60px; }
+    .dossier-head { flex-direction: column; }
+    .dossier-links { flex: none; }
   }
 </style>
 </head>
 <body>
 <div class="wrap">
+  <div class="brand-row">
+    <div class="brand-mark">
+      <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#0151FC"/>
+        <path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z" fill="#01B3FD"/>
+        <polygon points="569,413 695,413 695,539 569,539" fill="#02F172"/>
+      </svg>
+    </div>
+    <div class="brand-name-block">
+      <div class="brand-name">GAP HUNTER LABS</div>
+      <div class="brand-tagline">Plugin Intelligence</div>
+    </div>
+    <div class="mode-toggle" id="modeToggle">
+      <button data-mode="field" class="active">Field</button>
+      <button data-mode="table">Table</button>
+    </div>
+  </div>
+
   <header class="top">
-    <div class="eyebrow">Gap Hunter Labs</div>
-    <h1>Catalog Report</h1>
-    <p class="subtitle">Real state of the 34-plugin catalog — niche, function, improvements over the cited competitor, and live metrics from JetBrains Marketplace and GitHub.</p>
+    <div class="eyebrow">Catalog Report</div>
+    <h1>We hunt workflow gaps. You ship better software.</h1>
+    <p class="subtitle">Real state of the 34-plugin catalog — every product below exists because of a documented, evidence-based gap in existing tooling, not a guess. Niche, function, improvement over the cited competitor, and live metrics from JetBrains Marketplace and GitHub.</p>
     <div class="meta-row">
       <span>Generated: <b id="generatedAt">—</b></span>
       <span>Source: <b>plugins.jetbrains.com/api</b> + <b>GitHub API</b></span>
@@ -403,29 +695,54 @@
       <option value="PAID">Paid</option>
       <option value="PENDING">Pending moderation</option>
     </select>
+    <span class="active-category-note" id="activeCategoryNote" style="display:none"></span>
     <span class="count-note" id="countNote"></span>
   </div>
 
-  <div class="table-scroll">
-    <table>
-      <thead>
-        <tr>
-          <th data-key="name">Plugin</th>
-          <th data-key="downloads" style="text-align:right">Downloads</th>
-          <th data-key="reviews" style="text-align:right">Reviews</th>
-          <th data-key="rating" style="text-align:right">★ Rating</th>
-          <th data-key="stars" style="text-align:right">GitHub ★</th>
-          <th data-key="pricing">Pricing</th>
-          <th data-key="firstPublished">Published</th>
-        </tr>
-      </thead>
-      <tbody id="tbody"></tbody>
-    </table>
-    <div class="no-results" id="noResults" style="display:none">No results for that filter.</div>
+  <!-- ==================== FIELD MODE ==================== -->
+  <div id="fieldView" class="field-layout">
+    <aside class="field-sidebar">
+      <div class="panel">
+        <div class="panel-title">Hunting Field <span class="info-dot" title="Explore by technology gap">i</span></div>
+        <div class="panel-hint">Explore by technology gap</div>
+        <svg id="huntingSvg" class="hunting-svg" viewBox="0 0 320 300"></svg>
+      </div>
+      <div class="panel">
+        <div class="panel-title">Filter by category</div>
+        <ul class="category-list" id="categoryList"></ul>
+      </div>
+      <div class="panel brand-blurb">
+        <div class="panel-title">We hunt gaps others miss</div>
+        <p>Every plugin here started as a documented, evidence-based complaint about an existing tool — not a feature guess. Real reviews, real competitors, real numbers.</p>
+      </div>
+    </aside>
+    <main class="field-main" id="fieldMain"></main>
+  </div>
+
+  <!-- ==================== TABLE MODE ==================== -->
+  <div id="tableView" class="table-view" style="display:none">
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th data-key="name">Plugin</th>
+            <th data-key="downloads" style="text-align:right">Downloads</th>
+            <th data-key="reviews" style="text-align:right">Reviews</th>
+            <th data-key="rating" style="text-align:right">★ Rating</th>
+            <th data-key="stars" style="text-align:right">GitHub ★</th>
+            <th data-key="pricing">Pricing</th>
+            <th data-key="firstPublished">Published</th>
+          </tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <div class="no-results" id="noResults" style="display:none">No results for that filter.</div>
+    </div>
   </div>
 
   <footer class="notes">
     <p><b>Methodology:</b> downloads, pricing model, first-published date, and reviews come from <code>searchPlugins</code>/<code>/plugins/&lt;id&gt;/comments</code> in JetBrains Marketplace's public API, never estimated. GitHub ★ comes from <code>gh repo view</code>. "Growth" compares against the <b>earliest known snapshot</b> for each plugin, not just the previous run (hover the % to see the baseline date and starting value) — a plugin with no earlier snapshot shows "—". The <b>2026-08-07</b> snapshot (25 plugins) was confirmed directly by the team, not pulled from an archived API snapshot — it's still used as a real growth baseline, marked as such in <code>out/catalog_history.json</code>. Every snapshot from 2026-08-11 onward comes from the live API. The 7 plugins marked <b>Pending</b> were submitted to Marketplace on 2026-08-14 and aren't indexed in <code>searchPlugins</code> yet — normal during moderation, not an error in this report.</p>
+    <p><b>The Gap / The Fix:</b> "The Gap" is the competitor evidence already cited for each plugin (Marketplace reviews, complaint counts, download figures) — reframed here as the problem, not restated as a separate claim. "The Fix" is each plugin's own real, published description. Neither is generated or embellished — both come from the same fields this report has always shown, just organized to answer "what's broken" and "what we built" instead of a flat "Function / Improvement" pair.</p>
     <p><b>What's never stored here:</b> Marketplace product codes (<code>productCode</code>) or vendor contact details (email/phone/address) — the API exposes them, but they're explicitly discarded before anything is written to disk, the same rule followed across every repo in this catalog.</p>
     <p>To refresh this report with new data: run <code>python pipeline/28_catalog_report.py</code> and ask for this page to be regenerated — it replaces the same link, never creates a new one.</p>
   </footer>
@@ -440,24 +757,95 @@
 
   document.getElementById('generatedAt').textContent = data.generatedAt;
 
-  var statsEl = document.getElementById('stats');
-  var statDefs = [
-    { num: data.totalPlugins, label: 'Real plugins', accent: true },
-    { num: data.totalDownloads.toLocaleString('en-US'), label: 'Total downloads' },
-    { num: data.pending, label: 'In moderation' },
-    { num: data.totalReviews, label: 'Total reviews' },
-    { num: data.avgRating != null ? data.avgRating.toFixed(2) : '—', label: 'Average rating' },
-    { num: data.totalStars, label: 'Total GitHub ★' },
+  // ---- category model -----------------------------------------------
+  // Hand-curated grouping of each plugin's real `niche` string into one
+  // of 8 top-level "hunting field" categories -- content metadata, same
+  // spirit as the NICHE dict already curated by hand in
+  // pipeline/29_catalog_artifact_data.py. Lives client-side (not in the
+  // pipeline) deliberately for this pass: it's purely a presentation
+  // grouping, doesn't change what data is collected, and keeps this
+  // page self-contained without a pipeline change. If a future plugin's
+  // niche isn't in this map it falls into "Other" rather than breaking.
+  var CATEGORIES = [
+    { key: 'api', label: 'API', color: '#3FA2FF' },
+    { key: 'devops', label: 'DevOps', color: '#02F172' },
+    { key: 'security', label: 'Security', color: '#FF6E7A' },
+    { key: 'data', label: 'Data', color: '#B98CFF' },
+    { key: 'quality', label: 'Code Quality', color: '#FFB020' },
+    { key: 'codegen', label: 'Codegen', color: '#01B3FD' },
+    { key: 'testing', label: 'Testing', color: '#34D5C7' },
+    { key: 'editor', label: 'Editor', color: '#8DACE0' },
+    { key: 'other', label: 'Other', color: '#6C7793' }
   ];
-  statsEl.innerHTML = statDefs.map(function (s) {
-    return '<div class="stat"><div class="num' + (s.accent ? ' accent' : '') + '">' + s.num + '</div><div class="label">' + s.label + '</div></div>';
-  }).join('');
+  var CAT_BY_KEY = {};
+  CATEGORIES.forEach(function (c) { CAT_BY_KEY[c.key] = c; });
 
+  var NICHE_TO_CATEGORY = {
+    'Ansible / DevOps': 'devops',
+    'React Native Tooling': 'devops',
+    'GitLab CI/CD': 'devops',
+    'Jenkins CI/CD': 'devops',
+    'Git Tooling': 'devops',
+    'Nginx Config': 'devops',
+    'CMake / Build Tooling': 'devops',
+    'Env Config Tooling': 'devops',
+    'OpenAPI/Swagger Tooling': 'api',
+    'AsyncAPI Tooling': 'api',
+    'GraphQL Tooling': 'api',
+    'JSON Schema Tooling': 'api',
+    'XSD/WSDL Tooling': 'api',
+    'API Security': 'security',
+    'Certificates / X.509': 'security',
+    'JWT / Auth Tooling': 'security',
+    'Firestore / Database': 'data',
+    'CSV/XLSX Tooling': 'data',
+    'Data Format Conversion': 'data',
+    'Code Complexity': 'quality',
+    'Refactoring Tools': 'quality',
+    'Code Review': 'quality',
+    'Inline Diagnostics': 'quality',
+    'Java/Kotlin Codegen': 'codegen',
+    'Codegen': 'codegen',
+    'Debugging / Codegen': 'codegen',
+    'Load Testing': 'testing',
+    'Testing / Codegen': 'testing',
+    'Diagrams': 'editor',
+    'Editor Theme': 'editor',
+    'Editor Productivity': 'editor',
+    'JS/TS Tooling': 'editor',
+    'Regex Tooling': 'editor'
+  };
+
+  plugins.forEach(function (p) {
+    p.categoryKey = NICHE_TO_CATEGORY[p.niche] || 'other';
+  });
+
+  var mode = 'field';
   var sortKey = 'downloads';
   var sortDir = -1; // desc
   var filterText = '';
   var filterPricing = '';
-  var expandedRepo = null;
+  var filterCategory = '';
+  var selectedRepo = null;
+
+  // ---- shared helpers ---------------------------------------------
+  function esc(s) {
+    if (s == null) return '';
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+
+  function mdInline(s) {
+    return esc(s)
+      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+      .replace(/`([^`]+)`/g, '<code>$1</code>');
+  }
+
+  function byRepo(repo) {
+    for (var i = 0; i < plugins.length; i++) if (plugins[i].repo === repo) return plugins[i];
+    return null;
+  }
 
   function pricingLabel(p, isPending) {
     if (isPending) return { cls: 'pending', text: 'Pending' };
@@ -477,26 +865,13 @@
     return '<span class="growth flat"' + titleAttr + '>0%</span>';
   }
 
-  function esc(s) {
-    if (s == null) return '';
-    return String(s).replace(/[&<>"]/g, function (c) {
-      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
-    });
-  }
-
-  function mdInline(s) {
-    // very small **bold**/`code` renderer for the pitch/why text -- no markdown lib needed
-    return esc(s)
-      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      .replace(/`([^`]+)`/g, '<code>$1</code>');
-  }
-
   function matches(p) {
     var isPending = p.downloads === null;
     if (filterPricing) {
       if (filterPricing === 'PENDING' && !isPending) return false;
       if (filterPricing !== 'PENDING' && p.pricing !== filterPricing) return false;
     }
+    if (filterCategory && p.categoryKey !== filterCategory) return false;
     if (!filterText) return true;
     var hay = (p.name + ' ' + p.niche + ' ' + p.repo).toLowerCase();
     return hay.indexOf(filterText) !== -1;
@@ -519,11 +894,262 @@
     return rows;
   }
 
-  function render() {
+  // ---- stats bar -----------------------------------------------------
+  function renderStats() {
+    var baseSum = 0, curSum = 0, haveBaseline = false;
+    plugins.forEach(function (p) {
+      if (p.growthFrom != null && p.downloads != null) {
+        baseSum += p.growthFrom;
+        curSum += p.downloads;
+        haveBaseline = true;
+      }
+    });
+    var aggGrowth = (haveBaseline && baseSum > 0) ? ((curSum - baseSum) / baseSum * 100) : null;
+    var dlNum = data.totalDownloads.toLocaleString('en-US') +
+      (aggGrowth != null ? '<span class="stat-growth">▲ ' + aggGrowth.toFixed(1) + '%</span>' : '');
+
+    var statDefs = [
+      { num: data.totalPlugins, label: 'Plugins', accent: true },
+      { num: dlNum, label: 'Total downloads' },
+      { num: data.pending, label: 'In moderation' },
+      { num: data.totalReviews, label: 'Reviews' },
+      { num: data.avgRating != null ? data.avgRating.toFixed(2) : '—', label: 'Avg rating' },
+      { num: data.totalStars, label: 'GitHub ★' }
+    ];
+    document.getElementById('stats').innerHTML = statDefs.map(function (s) {
+      return '<div class="stat"><div class="num' + (s.accent ? ' accent' : '') + '">' + s.num + '</div><div class="label">' + s.label + '</div></div>';
+    }).join('');
+  }
+
+  // ---- Hunting Field radial nav ---------------------------------------
+  function polar(cx, cy, r, deg) {
+    var rad = (deg - 90) * Math.PI / 180;
+    return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) };
+  }
+
+  function renderHuntingSvg() {
+    var counts = {};
+    CATEGORIES.forEach(function (c) { counts[c.key] = 0; });
+    plugins.forEach(function (p) { counts[p.categoryKey] = (counts[p.categoryKey] || 0) + 1; });
+    var active = CATEGORIES.filter(function (c) { return c.key !== 'other' || counts.other > 0; });
+
+    var cx = 160, cy = 140, orbit = 108, hub = 30;
+    var svg = document.getElementById('huntingSvg');
+    var parts = [];
+
+    active.forEach(function (c, i) {
+      var deg = i * (360 / active.length);
+      var pos = polar(cx, cy, orbit, deg);
+      var isActive = filterCategory === c.key;
+      parts.push('<line class="spoke" x1="' + cx + '" y1="' + cy + '" x2="' + pos.x.toFixed(1) + '" y2="' + pos.y.toFixed(1) + '" stroke="' + c.color + '"></line>');
+    });
+
+    parts.push('<circle cx="' + cx + '" cy="' + cy + '" r="' + hub + '" fill="var(--surface-2)" stroke="var(--border)"></circle>');
+    parts.push('<circle class="hub-badge" cx="' + cx + '" cy="' + cy + '" r="' + (hub - 8) + '"></circle>');
+    parts.push(
+      '<g transform="translate(' + (cx - 11) + ',' + (cy - 11) + ') scale(0.0215)">' +
+      '<path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#0151FC"/>' +
+      '<path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z" fill="#01B3FD"/>' +
+      '<polygon points="569,413 695,413 695,539 569,539" fill="#02F172"/>' +
+      '</g>'
+    );
+
+    active.forEach(function (c, i) {
+      var deg = i * (360 / active.length);
+      var pos = polar(cx, cy, orbit, deg);
+      var n = counts[c.key] || 0;
+      var r = 12 + Math.sqrt(n) * 3;
+      var isActive = filterCategory === c.key;
+      var labelY = pos.y + r + 11;
+      parts.push(
+        '<g class="node' + (isActive ? ' active' : '') + '" data-cat="' + c.key + '">' +
+        '<circle class="dot" cx="' + pos.x.toFixed(1) + '" cy="' + pos.y.toFixed(1) + '" r="' + r.toFixed(1) + '" fill="' + c.color + '" opacity="0.62"></circle>' +
+        '<text x="' + pos.x.toFixed(1) + '" y="' + labelY.toFixed(1) + '" text-anchor="middle">' + esc(c.label) + '</text>' +
+        '<text class="count" x="' + pos.x.toFixed(1) + '" y="' + (labelY + 10).toFixed(1) + '" text-anchor="middle">' + n + ' plugin' + (n === 1 ? '' : 's') + '</text>' +
+        '</g>'
+      );
+    });
+
+    svg.innerHTML = parts.join('');
+    Array.prototype.forEach.call(svg.querySelectorAll('.node'), function (g) {
+      g.addEventListener('click', function () {
+        var cat = g.getAttribute('data-cat');
+        filterCategory = (filterCategory === cat) ? '' : cat;
+        selectedRepo = null;
+        renderAll();
+      });
+    });
+  }
+
+  function renderCategoryList() {
+    var counts = {};
+    CATEGORIES.forEach(function (c) { counts[c.key] = 0; });
+    plugins.forEach(function (p) { counts[p.categoryKey] = (counts[p.categoryKey] || 0) + 1; });
+    var active = CATEGORIES.filter(function (c) { return c.key !== 'other' || counts.other > 0; });
+
+    var html = '<li class="' + (filterCategory === '' ? 'active' : '') + '" data-cat="">' +
+      '<span class="dot" style="background:var(--text-faint)"></span>' +
+      '<span class="cat-label">All categories</span>' +
+      '<span class="cat-count">' + plugins.length + '</span></li>';
+    active.forEach(function (c) {
+      html += '<li class="' + (filterCategory === c.key ? 'active' : '') + '" data-cat="' + c.key + '">' +
+        '<span class="dot" style="background:' + c.color + '"></span>' +
+        '<span class="cat-label">' + esc(c.label) + '</span>' +
+        '<span class="cat-count">' + (counts[c.key] || 0) + '</span></li>';
+    });
+    var list = document.getElementById('categoryList');
+    list.innerHTML = html;
+    Array.prototype.forEach.call(list.querySelectorAll('li'), function (li) {
+      li.addEventListener('click', function () {
+        filterCategory = li.getAttribute('data-cat');
+        selectedRepo = null;
+        renderAll();
+      });
+    });
+  }
+
+  // ---- Field main: grid or dossier -----------------------------------
+  function pluginCardHtml(p) {
+    var isPending = p.downloads === null;
+    var cat = CAT_BY_KEY[p.categoryKey];
+    return '<div class="plugin-card" data-repo="' + esc(p.repo) + '">' +
+      '<div class="card-top">' +
+      '<div><div class="card-name">' + esc(p.name) + (p.verified ? '<span class="verified-mark" title="Verified vendor">✓</span>' : '') + '</div>' +
+      '<div class="card-niche">' + esc(p.niche) + '</div></div>' +
+      '<span class="cat-dot" style="background:' + cat.color + '"></span>' +
+      '</div>' +
+      '<div class="card-metrics">' +
+      (isPending
+        ? '<span class="chip pending">Pending</span>'
+        : '<span class="card-dl">' + p.downloads.toLocaleString('en-US') + '</span>' + growthMarkup(p)) +
+      '</div></div>';
+  }
+
+  function renderGrid() {
+    var rows = sortedFiltered();
+    var main = document.getElementById('fieldMain');
+    if (rows.length === 0) {
+      main.innerHTML = '<div class="no-results">No results for that filter.</div>';
+      return;
+    }
+    main.innerHTML = '<div class="plugin-grid">' + rows.map(pluginCardHtml).join('') + '</div>';
+    Array.prototype.forEach.call(main.querySelectorAll('.plugin-card'), function (card) {
+      card.addEventListener('click', function () {
+        selectedRepo = card.getAttribute('data-repo');
+        renderAll();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+  }
+
+  function tractionHtml(p) {
+    if (p.growth == null || p.growthFrom == null || p.downloads == null) {
+      return '<div class="traction-empty">New listing — no earlier snapshot to compare against yet.</div>';
+    }
+    var maxV = Math.max(p.growthFrom, p.downloads, 1);
+    var y0 = 46 - (p.growthFrom / maxV) * 40;
+    var y1 = 46 - (p.downloads / maxV) * 40;
+    var up = p.downloads >= p.growthFrom;
+    var color = up ? 'var(--good)' : 'var(--bad)';
+    var svg = '<svg viewBox="0 0 220 56" preserveAspectRatio="none">' +
+      '<polyline points="8,' + y0.toFixed(1) + ' 212,' + y1.toFixed(1) + '" fill="none" stroke="' + color + '" stroke-width="2"></polyline>' +
+      '<circle cx="8" cy="' + y0.toFixed(1) + '" r="3.5" fill="' + color + '"></circle>' +
+      '<circle cx="212" cy="' + y1.toFixed(1) + '" r="3.5" fill="' + color + '"></circle>' +
+      '</svg>';
+    return '<div class="traction-pct">' + (p.growth > 0 ? '▲ +' : p.growth < 0 ? '▼ ' : '') + p.growth.toFixed(1) + '%</div>' +
+      '<div class="traction-chart">' + svg + '</div>' +
+      '<div class="traction-labels"><span>' + esc(p.growthSince) + ' · ' + p.growthFrom + '</span><span>' + esc(data.generatedAt.slice(0, 10)) + ' · ' + p.downloads + '</span></div>';
+  }
+
+  function renderDossier(p) {
+    var isPending = p.downloads === null;
+    var pr = pricingLabel(p.pricing, isPending);
+    var cat = CAT_BY_KEY[p.categoryKey];
+
+    var similar = plugins
+      .filter(function (o) { return o.repo !== p.repo && o.categoryKey === p.categoryKey; })
+      .sort(function (a, b) { return (b.downloads || 0) - (a.downloads || 0); })
+      .slice(0, 4);
+
+    var html = '<a class="dossier-back" id="dossierBack">← Back to catalog</a>';
+    html += '<div class="dossier-head">';
+    html += '<div><div class="dossier-title-row"><h2>' + esc(p.name) + '</h2>' +
+      '<span class="chip ' + pr.cls + '">' + pr.text + '</span>' +
+      '<span class="chip" style="background:color-mix(in srgb, ' + cat.color + ' 20%, transparent); color:' + cat.color + '">' + esc(cat.label) + '</span></div>' +
+      '<div class="dossier-niche">' + esc(p.niche) + '</div>' +
+      '<div class="dossier-pitch">' + mdInline(p.pitch || '—') + '</div></div>';
+    html += '<div class="dossier-links">';
+    if (p.marketplaceUrl) html += '<a class="btn primary" href="' + esc(p.marketplaceUrl) + '" target="_blank" rel="noopener">Install on JetBrains ↗</a>';
+    html += '<a class="btn" href="' + esc(p.githubUrl) + '" target="_blank" rel="noopener">View on GitHub ↗</a>';
+    html += '</div></div>';
+
+    html += '<div class="dossier-stats">';
+    html += '<div class="stat"><div class="num">' + (isPending ? '—' : p.downloads.toLocaleString('en-US')) + '</div><div class="label">Downloads' + (isPending ? '' : ' ' + growthMarkup(p)) + '</div></div>';
+    html += '<div class="stat"><div class="num">' + (p.reviews == null ? '—' : p.reviews) + '</div><div class="label">Reviews</div></div>';
+    html += '<div class="stat"><div class="num">' + (p.rating != null ? p.rating.toFixed(2) : '—') + '</div><div class="label">Rating</div></div>';
+    html += '<div class="stat"><div class="num">' + (p.stars != null ? p.stars : '—') + '</div><div class="label">GitHub ★</div></div>';
+    html += '<div class="stat"><div class="num" style="font-size:15px">' + (p.firstPublished || '—') + '</div><div class="label">Published</div></div>';
+    html += '</div>';
+
+    html += '<div class="dossier-grid"><div class="dossier-col">';
+    html += '<div class="info-block"><div class="ib-head"><span class="ib-icon gap">!</span><span class="ib-title">The Gap</span></div>' +
+      '<div class="ib-body">' + mdInline(p.why || '—') + '</div></div>';
+    html += '<div class="info-block"><div class="ib-head"><span class="ib-icon fix">✓</span><span class="ib-title">The Fix</span></div>' +
+      '<div class="ib-body">' + mdInline(p.pitch || '—') + '</div></div>';
+    html += '</div>';
+
+    html += '<div class="dossier-col">';
+    html += '<div class="info-block"><div class="ib-head"><span class="ib-icon traction">↗</span><span class="ib-title">Traction</span></div>' + tractionHtml(p) + '</div>';
+    html += '<div class="info-block"><div class="ib-head"><span class="ib-title">Facts</span></div><ul class="facts-list">' +
+      '<li><span class="fk">Pricing</span><span class="fv">' + pr.text + '</span></li>' +
+      '<li><span class="fk">Category</span><span class="fv">' + esc(cat.label) + '</span></li>' +
+      '<li><span class="fk">First published</span><span class="fv">' + (p.firstPublished || '—') + '</span></li>' +
+      '<li><span class="fk">Verified vendor</span><span class="fv">' + (p.verified ? 'Yes' : '—') + '</span></li>' +
+      '</ul></div>';
+    html += '</div></div>';
+
+    if (similar.length) {
+      html += '<div class="similar-section"><div class="similar-title">Similar plugins you might like</div><div class="similar-grid">';
+      similar.forEach(function (s) {
+        html += '<div class="similar-card" data-repo="' + esc(s.repo) + '">' +
+          '<div class="sc-name">' + esc(s.name) + '</div>' +
+          '<div class="sc-niche">' + esc(s.niche) + '</div>' +
+          '<div class="sc-dl">' + (s.downloads == null ? 'Pending' : s.downloads.toLocaleString('en-US') + ' downloads') + '</div></div>';
+      });
+      html += '</div></div>';
+    }
+
+    var main = document.getElementById('fieldMain');
+    main.innerHTML = html;
+
+    document.getElementById('dossierBack').addEventListener('click', function () {
+      selectedRepo = null;
+      renderAll();
+    });
+    Array.prototype.forEach.call(main.querySelectorAll('.similar-card'), function (card) {
+      card.addEventListener('click', function () {
+        selectedRepo = card.getAttribute('data-repo');
+        renderAll();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+  }
+
+  function renderField() {
+    renderHuntingSvg();
+    renderCategoryList();
+    if (selectedRepo) {
+      var p = byRepo(selectedRepo);
+      if (p) { renderDossier(p); return; }
+    }
+    renderGrid();
+  }
+
+  // ---- Table mode (unchanged logic, restyled) -------------------------
+  function renderTable() {
     var rows = sortedFiltered();
     var tbody = document.getElementById('tbody');
     var noResults = document.getElementById('noResults');
-    document.getElementById('countNote').textContent = rows.length + ' / ' + plugins.length + ' plugins';
 
     if (rows.length === 0) {
       tbody.innerHTML = '';
@@ -536,9 +1162,9 @@
     rows.forEach(function (p) {
       var isPending = p.downloads === null;
       var pr = pricingLabel(p.pricing, isPending);
-      var isOpen = expandedRepo === p.repo;
+      var isOpen = selectedRepo === p.repo;
       html += '<tr class="row" data-repo="' + esc(p.repo) + '">';
-      html += '<td class="name-cell"><div class="plugin-name">' + esc(p.name) + (p.verified ? '<span class="verified-mark" title="Vendor verificado">✓</span>' : '') + '</div><div class="niche">' + esc(p.niche) + '</div></td>';
+      html += '<td class="name-cell"><div class="plugin-name">' + esc(p.name) + (p.verified ? '<span class="verified-mark" title="Verified vendor">✓</span>' : '') + '</div><div class="niche">' + esc(p.niche) + '</div></td>';
       html += '<td class="num-cell">' + (isPending ? '—' : p.downloads.toLocaleString('en-US')) + (isPending ? '' : growthMarkup(p)) + '</td>';
       html += '<td class="num-cell">' + (p.reviews === null ? '—' : p.reviews) + '</td>';
       html += '<td class="num-cell">' + (p.rating != null ? p.rating.toFixed(2) : '—') + '</td>';
@@ -547,8 +1173,8 @@
       html += '<td class="num-cell" style="text-align:left">' + (p.firstPublished || '—') + '</td>';
       html += '</tr>';
       html += '<tr class="expand-row"><td colspan="7"><div class="expand-inner' + (isOpen ? ' open' : '') + '" id="exp-' + esc(p.repo) + '">';
-      html += '<div class="block"><div class="field-label">Function</div>' + mdInline(p.pitch || '—') + '</div>';
-      html += '<div class="block"><div class="field-label">Improvement / market evidence</div>' + mdInline(p.why || '—') + '</div>';
+      html += '<div class="block"><div class="field-label">The Gap</div>' + mdInline(p.why || '—') + '</div>';
+      html += '<div class="block"><div class="field-label">The Fix</div>' + mdInline(p.pitch || '—') + '</div>';
       html += '<div class="links">';
       if (p.marketplaceUrl) html += '<a href="' + esc(p.marketplaceUrl) + '" target="_blank" rel="noopener">Marketplace →</a>';
       html += '<a href="' + esc(p.githubUrl) + '" target="_blank" rel="noopener">GitHub →</a>';
@@ -559,11 +1185,44 @@
     Array.prototype.forEach.call(tbody.querySelectorAll('tr.row'), function (tr) {
       tr.addEventListener('click', function () {
         var repo = tr.getAttribute('data-repo');
-        expandedRepo = expandedRepo === repo ? null : repo;
-        render();
+        selectedRepo = selectedRepo === repo ? null : repo;
+        renderTable();
       });
     });
   }
+
+  // ---- top-level render ------------------------------------------------
+  function renderAll() {
+    renderStats();
+
+    var rows = sortedFiltered();
+    document.getElementById('countNote').textContent = rows.length + ' / ' + plugins.length + ' plugins';
+
+    var note = document.getElementById('activeCategoryNote');
+    if (filterCategory) {
+      note.style.display = 'inline';
+      note.textContent = '✕ ' + CAT_BY_KEY[filterCategory].label;
+      note.onclick = function () { filterCategory = ''; selectedRepo = null; renderAll(); };
+    } else {
+      note.style.display = 'none';
+    }
+
+    document.getElementById('fieldView').style.display = mode === 'field' ? 'grid' : 'none';
+    document.getElementById('tableView').style.display = mode === 'table' ? 'block' : 'none';
+
+    if (mode === 'field') renderField();
+    else renderTable();
+  }
+
+  document.getElementById('modeToggle').addEventListener('click', function (e) {
+    var btn = e.target.closest('button[data-mode]');
+    if (!btn) return;
+    mode = btn.getAttribute('data-mode');
+    Array.prototype.forEach.call(document.querySelectorAll('#modeToggle button'), function (b) {
+      b.classList.toggle('active', b === btn);
+    });
+    renderAll();
+  });
 
   Array.prototype.forEach.call(document.querySelectorAll('thead th'), function (th) {
     th.addEventListener('click', function () {
@@ -583,20 +1242,20 @@
       arrow.className = 'arrow';
       arrow.textContent = sortDir === 1 ? '▲' : '▼';
       th.appendChild(arrow);
-      render();
+      renderAll();
     });
   });
 
   document.getElementById('searchInput').addEventListener('input', function (e) {
     filterText = e.target.value.trim().toLowerCase();
-    render();
+    renderAll();
   });
   document.getElementById('pricingFilter').addEventListener('change', function (e) {
     filterPricing = e.target.value;
-    render();
+    renderAll();
   });
 
-  render();
+  renderAll();
 })();
 </script>
 
