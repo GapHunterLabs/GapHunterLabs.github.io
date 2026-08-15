@@ -424,7 +424,19 @@
     fill: #000;
     stroke: var(--border);
     stroke-width: 1.5;
-    transition: stroke 0.2s ease, stroke-width 0.2s ease, filter 0.2s ease;
+    transition: stroke 0.25s ease, stroke-width 0.25s ease, filter 0.25s ease;
+  }
+  /* Lit whenever the hub has traveled away from home -- stroke color
+     comes from --axis-color, set in JS (updateAxisColor) to match
+     whichever category is currently active, so the ring itself signals
+     "a node is active" and "the house is a real destination to return
+     to," not just an empty default grey. Placed BEFORE .targeting
+     below (same specificity either way) so an active drag hovering
+     near the axis still visibly wins over this background state. */
+  .hunting-svg .hub-axis.lit {
+    stroke: var(--axis-color, var(--border));
+    stroke-width: 2.5;
+    filter: drop-shadow(0 0 7px var(--axis-color, transparent));
   }
   .hunting-svg .hub-axis.targeting {
     stroke: var(--accent);
@@ -1196,7 +1208,25 @@
   // the font sizes getting bigger inside the old cramped layout.
   var FIELD_SCALE = 1.2;
 
-  var HUB_CX = 192, HUB_CY = 168, HUB_ORBIT = 108 * FIELD_SCALE, HUB_R = 30 * FIELD_SCALE;
+  // Orbit lengthened (2026-08-15, "alarga el tamaño de las lineas") to
+  // stop the merged badge's text-plate from reaching into a neighboring
+  // node's circle -- confirmed as a real collision in the screenshots
+  // shared (Security merged, plate overlapping Data). Verified
+  // empirically (not assumed) against the actual worst-case pair
+  // (Security/Data, 90 degrees apart): 1.18 gets that specific overlap
+  // down to 0.1 user-units -- functionally zero, sub-pixel once
+  // rendered. A larger scale (tried 1.25) closed it to a clean 6px gap
+  // instead, but pushed the BOTTOM node's (Code Quality) merged plate
+  // well past the viewBox's own height -- and that overflow turned out
+  // to be a PRE-EXISTING issue from the earlier bigger-badge round, not
+  // something this change introduced (confirmed: it already overflowed
+  // ~26 units at the ORIGINAL 1.0 scale, just not enough to be obvious).
+  // Kept the panel's own footprint untouched as asked and picked the
+  // scale that resolves the specific collision without meaningfully
+  // compounding that separate, already-existing problem -- flagged to
+  // the user rather than silently deciding a fix for it here.
+  var ORBIT_SCALE = 1.18;
+  var HUB_CX = 192, HUB_CY = 168, HUB_ORBIT = 108 * FIELD_SCALE * ORBIT_SCALE, HUB_R = 30 * FIELD_SCALE;
   var huntingNodes = [];       // built once: [{key,label,color,count,x,y,angle,r}, ...]
   var hubDragState = null;     // non-null only while a real pointer-drag is in progress
   var lastDockedCategory = null; // null = not painted yet (avoids a hack effect on first load)
@@ -1288,14 +1318,23 @@
     // "home" marker even once the hub has traveled away to a node --
     // without it, the center would just look empty. Also acts as an
     // explicit drop target: dragging the hub back onto it is "go home",
-    // handled in attachHubDrag below. Radius bumped 5% (7 -> 7.35,
-    // 2026-08-15) and given a small house glyph (simple silhouette,
-    // roof triangle + body + a door notch) so its "home" role reads
-    // immediately instead of just being an unlabeled dot.
-    var HUB_AXIS_R2 = 7.35;
+    // handled in attachHubDrag below. Given a small house glyph (simple
+    // silhouette, roof triangle + body + a door notch) so its "home"
+    // role reads immediately instead of just being an unlabeled dot.
+    // 2026-08-15 follow-up: the first size bump (7 -> 7.35, only 5%)
+    // rendered the house glyph at roughly 5 screen px wide once scaled
+    // down through the SVG's viewBox -- genuinely too small to read,
+    // not a matter of taste. Bumped to a size the icon can actually
+    // register at (HUB_AXIS_R, real constant now instead of a local),
+    // icon path scaled up to match. Ring color is set dynamically from
+    // JS (updateAxisColor) to the active category's own color whenever
+    // the hub has traveled away from home, so the axis visibly signals
+    // "something is active elsewhere, and I'm a real destination too" --
+    // plain var(--border) grey again once back home.
+    var HUB_AXIS_R = 14;
     parts.push(
-      '<circle id="huntingAxis" class="hub-axis" cx="' + HUB_CX + '" cy="' + HUB_CY + '" r="' + HUB_AXIS_R2 + '"></circle>' +
-      '<path class="hub-axis-icon" d="M 0,-3.3 L 3,-0.6 L 3,2.6 L 1,2.6 L 1,0.5 L -1,0.5 L -1,2.6 L -3,2.6 L -3,-0.6 Z" ' +
+      '<circle id="huntingAxis" class="hub-axis" cx="' + HUB_CX + '" cy="' + HUB_CY + '" r="' + HUB_AXIS_R + '"></circle>' +
+      '<path class="hub-axis-icon" d="M 0,-6.6 L 6,-1.2 L 6,5.2 L 2,5.2 L 2,1 L -2,1 L -2,5.2 L -6,5.2 L -6,-1.2 Z" ' +
       'transform="translate(' + HUB_CX + ',' + HUB_CY + ')" pointer-events="none"></path>'
     );
 
@@ -1463,12 +1502,26 @@
   // point just past the axis's own radius, angled toward the new
   // destination, so the hub curves *through* the axis's space instead
   // of stopping dead and reversing direction sharply.
+  function updateAxisColor(docked) {
+    var axisEl = document.getElementById('huntingAxis');
+    if (!axisEl) return;
+    if (docked) {
+      var cat = CAT_BY_KEY[docked];
+      axisEl.style.setProperty('--axis-color', cat ? cat.color : '');
+      axisEl.classList.add('lit');
+    } else {
+      axisEl.classList.remove('lit');
+    }
+  }
+
   function updateHuntingSvg() {
     var svg = document.getElementById('huntingSvg');
     if (!svg || !svg.querySelector('.hub-group')) return; // not built yet
     var docked = currentDockedCategory();
     var viaDrag = lastChangeWasDrag;
     lastChangeWasDrag = false;
+
+    updateAxisColor(docked);
 
     Array.prototype.forEach.call(svg.querySelectorAll('.spoke'), function (l) {
       l.classList.toggle('active', l.getAttribute('data-cat') === docked);
