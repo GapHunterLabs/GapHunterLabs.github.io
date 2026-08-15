@@ -392,14 +392,43 @@
     70% { filter: brightness(0.7); }
   }
 
+  /* 2026-08-15, fourth pass: (1) the whole block is now unselectable --
+     dragging the hub was accidentally highlighting node labels as text
+     selection; (2) a small fixed "axis" pivot dot sits BEHIND the hub at
+     the true center, always visible even when the hub has traveled away
+     -- dragging back onto it is the explicit "go home" target, distinct
+     from just missing every node; (3) the hub's travel now eases the
+     same way in every direction (symmetric in/out curve, not the
+     ease-out-heavy one from the previous pass); (4) when the hub finishes
+     arriving at a node the two visually MERGE -- the node's own dot
+     grows into a colored halo just past the hub's edge (its label/count
+     nudge down to keep clear of it) instead of being fully hidden
+     underneath, and un-merge again (halo shrinks back) the moment the
+     hub leaves. Merge/un-merge and the hack-flicker are sequenced from
+     JS (updateHuntingSvg) to match the hub's real arrival/departure,
+     not fired instantly -- see HUB_TRANSITION_MS. */
+  .hunting-panel { user-select: none; -webkit-user-select: none; }
+
   .hunting-svg { width: 100%; height: auto; margin-top: 10px; overflow: visible; }
+
+  .hunting-svg .hub-axis {
+    fill: #000;
+    stroke: var(--border);
+    stroke-width: 1.5;
+    transition: stroke 0.2s ease, stroke-width 0.2s ease, filter 0.2s ease;
+  }
+  .hunting-svg .hub-axis.targeting {
+    stroke: var(--accent);
+    stroke-width: 2.5;
+    filter: drop-shadow(0 0 8px var(--accent));
+  }
 
   .hunting-svg .node { cursor: pointer; transform-box: fill-box; transform-origin: 50% 50%; animation: nodeIn 0.4s ease backwards; }
   .hunting-svg .node circle.dot {
     fill-opacity: 1;
     stroke: var(--border);
     stroke-width: 1.5;
-    transition: r 0.15s ease, stroke-width 0.15s ease, transform 0.15s ease, stroke 0.15s ease;
+    transition: r 0.35s cubic-bezier(.65,0,.35,1), stroke-width 0.25s ease, transform 0.15s ease, stroke 0.25s ease;
     transform-box: fill-box;
     transform-origin: 50% 50%;
   }
@@ -413,10 +442,19 @@
     transform: scale(1.2);
     filter: drop-shadow(0 0 10px var(--accent));
   }
-  .hunting-svg .node.active circle.dot { stroke: var(--text); stroke-width: 2.6; animation: pulseGlow 1.8s ease-in-out infinite; }
+  /* Merged-with-hub state: the dot grows into a halo ring peeking out
+     from behind the (larger) hub, sharing the same visual footprint --
+     "un solo objeto" instead of one flatly hiding the other. */
+  .hunting-svg .node.active circle.dot {
+    r: 40px;
+    stroke: var(--text);
+    stroke-width: 2.6;
+    animation: pulseGlow 1.8s ease-in-out infinite;
+  }
   .hunting-svg .node.hack circle.dot { animation: hackFlickerNode 0.5s steps(6); }
-  .hunting-svg .node text { font-family: var(--mono); font-size: 12px; fill: var(--text-dim); transition: fill 0.15s ease; }
-  .hunting-svg .node.active text.label { fill: var(--text); font-weight: 700; }
+  .hunting-svg .node text { font-family: var(--mono); font-size: 12px; fill: var(--text-dim); transition: fill 0.15s ease, transform 0.3s cubic-bezier(.65,0,.35,1); }
+  .hunting-svg .node.active text.label { fill: var(--text); font-weight: 700; transform: translateY(7px); }
+  .hunting-svg .node.active text.count { transform: translateY(7px); }
   .hunting-svg .node text.count { fill: var(--text-faint); font-size: 10.5px; }
 
   /* Lines: subtle gradient from the hub outward to each category's own
@@ -430,7 +468,11 @@
     cursor: grab;
     touch-action: none;
     transform: translate(var(--hx, 192px), var(--hy, 168px));
-    transition: transform 0.55s cubic-bezier(.25,.8,.3,1), filter 0.15s ease;
+    /* Symmetric ease-in-out (easeInOutCubic) -- reads the same whether
+       the hub is departing, mid-flight, or settling in, regardless of
+       which direction/spoke it's traveling, unlike the previous
+       ease-out-heavy curve which only really smoothed the arrival. */
+    transition: transform 0.6s cubic-bezier(.65,0,.35,1), filter 0.15s ease;
   }
   .hunting-svg .hub-group.instant { transition: filter 0.15s ease; cursor: grabbing; }
   .hunting-svg .hub-group:hover { filter: drop-shadow(0 0 10px rgba(63,162,255,0.5)); }
@@ -785,9 +827,9 @@
   <!-- ==================== FIELD MODE ==================== -->
   <div id="fieldView" class="field-layout">
     <aside class="field-sidebar">
-      <div class="panel">
+      <div class="panel hunting-panel">
         <div class="panel-title">Hunting Field <span class="info-dot" title="Explore by technology gap">i</span></div>
-        <div class="panel-hint">Explore by technology gap · click the center mark to reset</div>
+        <div class="panel-hint">Explore by technology gap · drag or click the center mark to travel</div>
         <svg id="huntingSvg" class="hunting-svg" viewBox="0 0 384 360"></svg>
       </div>
       <div class="panel brand-blurb">
@@ -1200,6 +1242,15 @@
     // interno" request) with no white backing circle -- that badge
     // existed for legibility on a WHITE page per the favicon's own
     // design comment, doesn't apply on this dark panel.
+    //
+    // Axis: a small fixed pivot dot at the true center, drawn BEHIND the
+    // hub (pushed to `parts` first) so it stays visible as a permanent
+    // "home" marker even once the hub has traveled away to a node --
+    // without it, the center would just look empty. Also acts as an
+    // explicit drop target: dragging the hub back onto it is "go home",
+    // handled in attachHubDrag below.
+    parts.push('<circle id="huntingAxis" class="hub-axis" cx="' + HUB_CX + '" cy="' + HUB_CY + '" r="7"></circle>');
+
     var logoR = HUB_R * 0.92;
     var logoScale = (logoR * 2 / 1024).toFixed(4);
     var logoOffset = logoR.toFixed(1);
@@ -1224,6 +1275,16 @@
       });
     });
 
+    var axisEl = document.getElementById('huntingAxis');
+    if (axisEl) {
+      axisEl.style.cursor = 'pointer';
+      axisEl.addEventListener('click', function () {
+        filterCategory = '';
+        selectedRepo = null;
+        renderAll();
+      });
+    }
+
     attachHubDrag(svg);
     dockHubAt('', false); // paint at center immediately, no transition on first load
   }
@@ -1239,53 +1300,94 @@
     hub.style.setProperty('--hy', y.toFixed(1) + 'px');
   }
 
-  function playHackEffect(key) {
-    var hub = document.getElementById('huntingHub');
-    if (hub) {
-      hub.classList.remove('hack');
-      void hub.offsetWidth; // restart the animation even if it's already mid-flight
-      hub.classList.add('hack');
-      setTimeout(function () { hub.classList.remove('hack'); }, 520);
-    }
+  function setNodeMerged(key, merged) {
     var node = document.querySelector('.hunting-svg .node[data-cat="' + key + '"]');
-    if (node) {
-      node.classList.remove('hack');
-      void node.offsetWidth;
-      node.classList.add('hack');
-      setTimeout(function () { node.classList.remove('hack'); }, 520);
-    }
+    if (node) node.classList.toggle('active', merged);
   }
 
+  function playHackOnHub() {
+    var hub = document.getElementById('huntingHub');
+    if (!hub) return;
+    hub.classList.remove('hack');
+    void hub.offsetWidth; // restart the animation even if it's already mid-flight
+    hub.classList.add('hack');
+    setTimeout(function () { hub.classList.remove('hack'); }, 520);
+  }
+
+  function playHackOnNode(key) {
+    var node = document.querySelector('.hunting-svg .node[data-cat="' + key + '"]');
+    if (!node) return;
+    node.classList.remove('hack');
+    void node.offsetWidth;
+    node.classList.add('hack');
+    setTimeout(function () { node.classList.remove('hack'); }, 520);
+  }
+
+  // Must match the .hub-group transform-transition duration in the
+  // stylesheet (0.6s) -- used to time the "merge" (halo grow-in on the
+  // destination node + hack flicker) to when the hub has actually
+  // FINISHED traveling there, not the instant the click/drop happens.
+  var HUB_TRANSITION_MS = 600;
+  var hubMergeTimer = null; // pending "merge with the arrival node" timeout, see note below
+
   // Called every render (from renderField). Only touches classes + the
-  // hub's docked position -- never rebuilds the SVG.
+  // hub's docked position -- never rebuilds the SVG. Un-merging from the
+  // category being LEFT happens immediately (with its own exit hack);
+  // merging with the category being ENTERED is delayed until the hub's
+  // travel animation completes (with its own entry hack) -- covers
+  // every path that can change the docked category the same way: a
+  // node click, a hub drag-drop, the category <select>, or opening a
+  // plugin card that belongs to a different category than whatever was
+  // docked before.
   function updateHuntingSvg() {
     var svg = document.getElementById('huntingSvg');
     if (!svg || !svg.querySelector('.hub-group')) return; // not built yet
     var docked = currentDockedCategory();
 
-    Array.prototype.forEach.call(svg.querySelectorAll('.node'), function (g) {
-      g.classList.toggle('active', g.getAttribute('data-cat') === docked);
-    });
     Array.prototype.forEach.call(svg.querySelectorAll('.spoke'), function (l) {
       l.classList.toggle('active', l.getAttribute('data-cat') === docked);
     });
 
-    if (!hubDragState) {
-      var changed = lastDockedCategory !== null && docked !== lastDockedCategory;
-      dockHubAt(docked, true);
-      if (changed && docked) playHackEffect(docked);
-      lastDockedCategory = docked;
+    if (hubDragState) return; // don't fight an in-progress drag
+
+    var changed = lastDockedCategory !== null && docked !== lastDockedCategory;
+    var leaving = lastDockedCategory;
+    dockHubAt(docked, true);
+
+    if (changed) {
+      // A second transition can start (e.g. rapid A -> B -> C clicking)
+      // before an earlier one's 600ms "arrived" timeout has fired --
+      // without cancelling it, that stale callback would still fire
+      // later and incorrectly re-merge/hack whatever it was originally
+      // targeting (A), even though the hub has already moved on to C.
+      // Only the most recent transition's arrival should ever fire.
+      if (hubMergeTimer) { clearTimeout(hubMergeTimer); hubMergeTimer = null; }
+
+      if (leaving) {
+        setNodeMerged(leaving, false);
+        playHackOnHub();
+        playHackOnNode(leaving);
+      }
+      hubMergeTimer = setTimeout(function () {
+        hubMergeTimer = null;
+        if (docked) setNodeMerged(docked, true);
+        playHackOnHub();
+        if (docked) playHackOnNode(docked);
+      }, HUB_TRANSITION_MS);
     }
+    lastDockedCategory = docked;
   }
 
   // ---- Hub drag: the hub token can be dragged out along whichever
   // spoke is closest to the pointer's direction and "dropped" onto a
-  // node to travel there (2026-08-15 experiment). A short drag that
-  // doesn't reach far enough springs back to wherever the hub is really
-  // docked; a drag that never really moves is just treated as a click
-  // on the hub (reset to center / "All categories").
+  // node to travel there (2026-08-15 experiment). Dragging it back onto
+  // the small center axis is an explicit "go home" -- distinct from
+  // just missing every node, which springs back to wherever the hub was
+  // really docked instead. A drag that never really moves is treated as
+  // a plain click on the hub (same as clicking the axis).
   var HUB_DRAG_MOVE_THRESHOLD = 4;   // px of pointer movement before it counts as a drag, not a click
   var HUB_DRAG_ARRIVE_RATIO = 0.72;  // fraction of the orbit radius that counts as "reached the node"
+  var HUB_AXIS_SNAP_RADIUS = 24;     // user-space units around center that count as "back on the axis"
 
   function svgPointFromEvent(svg, evt) {
     var pt = svg.createSVGPoint();
@@ -1310,9 +1412,10 @@
     var hub = document.getElementById('huntingHub');
 
     hub.addEventListener('pointerdown', function (evt) {
+      if (hubDragState) return; // a second pointer (multi-touch) shouldn't hijack an active drag
       evt.preventDefault();
       hub.setPointerCapture(evt.pointerId);
-      hubDragState = { pointerId: evt.pointerId, startX: evt.clientX, startY: evt.clientY, moved: false, nearestKey: null, reached: false };
+      hubDragState = { pointerId: evt.pointerId, startX: evt.clientX, startY: evt.clientY, moved: false, nearestKey: null, reached: false, overAxis: false };
       hub.classList.add('instant');
     });
 
@@ -1322,14 +1425,32 @@
       if (!hubDragState.moved && (Math.abs(dx) + Math.abs(dy)) > HUB_DRAG_MOVE_THRESHOLD) hubDragState.moved = true;
       if (!hubDragState.moved) return;
 
+      var axisEl = document.getElementById('huntingAxis');
       var loc = svgPointFromEvent(svg, evt);
       var vx = loc.x - HUB_CX, vy = loc.y - HUB_CY;
+      var dist = Math.sqrt(vx * vx + vy * vy);
+
+      // Close enough to the axis: snap the live position dead center and
+      // mark this drag as "going home" instead of hunting for a spoke
+      // angle (there isn't a meaningful one this close to the pivot).
+      if (dist <= HUB_AXIS_SNAP_RADIUS) {
+        hub.style.setProperty('--hx', HUB_CX.toFixed(1) + 'px');
+        hub.style.setProperty('--hy', HUB_CY.toFixed(1) + 'px');
+        hubDragState.nearestKey = null;
+        hubDragState.reached = false;
+        hubDragState.overAxis = true;
+        Array.prototype.forEach.call(svg.querySelectorAll('.node'), function (g) { g.classList.remove('targeting'); });
+        if (axisEl) axisEl.classList.add('targeting');
+        return;
+      }
+      if (axisEl) axisEl.classList.remove('targeting');
+      hubDragState.overAxis = false;
+
       var rawAngle = Math.atan2(vy, vx) * 180 / Math.PI + 90;
       if (rawAngle < 0) rawAngle += 360;
       var nearest = nearestNodeByAngle(rawAngle);
       if (!nearest) return;
 
-      var dist = Math.sqrt(vx * vx + vy * vy);
       var clamped = Math.max(0, Math.min(dist, HUB_ORBIT));
       var pos = polar(HUB_CX, HUB_CY, clamped, nearest.angle);
       hub.style.setProperty('--hx', pos.x.toFixed(1) + 'px');
@@ -1348,13 +1469,17 @@
       hub.releasePointerCapture(evt.pointerId);
       hub.classList.remove('instant');
       Array.prototype.forEach.call(svg.querySelectorAll('.node'), function (g) { g.classList.remove('targeting'); });
+      var axisEl = document.getElementById('huntingAxis');
+      if (axisEl) axisEl.classList.remove('targeting');
 
       var state = hubDragState;
       hubDragState = null;
 
-      if (!state.moved) {
-        // A plain click on the hub, no real drag -- same as before:
-        // go back to the start.
+      if (!state.moved || state.overAxis) {
+        // A plain click on the hub (no real drag), or a drag that ended
+        // back on the axis -- both mean "go home". updateHuntingSvg's
+        // own change-detection plays the exit hack/animation on whatever
+        // category was active, same as any other transition.
         filterCategory = '';
         selectedRepo = null;
         renderAll();
