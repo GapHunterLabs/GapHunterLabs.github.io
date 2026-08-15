@@ -1329,6 +1329,12 @@
     setHubPosition(x, y, animate);
   }
 
+  // Must match the .node.active text.label/count translateY() in the
+  // stylesheet -- getAttribute('x'/'y') below reads the text's BUILD-time
+  // (pre-shift) position, so the merged-state shift has to be added back
+  // in by hand to land the plate where the text actually renders.
+  var MERGE_TEXT_SHIFT = 34;
+
   function setNodeMerged(key, merged) {
     var node = document.querySelector('.hunting-svg .node[data-cat="' + key + '"]');
     if (!node) return;
@@ -1340,30 +1346,34 @@
       bg.classList.remove('show');
       return;
     }
-    // Size the backing plate to the REAL rendered text -- label length
-    // varies a lot between categories ("API" vs "Code Quality"), a
-    // fixed guessed width would either clip the long ones or float
-    // awkwardly around the short ones. getBBox() forces a synchronous
-    // layout read, so this only gives the right answer if the merged
-    // font-size has already landed on its FINAL value with no
-    // transition delay -- see the CSS comment on .node.active text,
-    // font-size is deliberately not animated for exactly this reason.
-    requestAnimationFrame(function () {
-      var label = node.querySelector('.label');
-      var count = node.querySelector('.count');
-      if (!label || !count) return;
-      var b1 = label.getBBox();
-      var b2 = count.getBBox();
-      var left = Math.min(b1.x, b2.x) - 8;
-      var right = Math.max(b1.x + b1.width, b2.x + b2.width) + 8;
-      var top = b1.y - 4;
-      var bottom = b2.y + b2.height + 4;
-      bg.setAttribute('x', left.toFixed(1));
-      bg.setAttribute('y', top.toFixed(1));
-      bg.setAttribute('width', Math.max(0, right - left).toFixed(1));
-      bg.setAttribute('height', Math.max(0, bottom - top).toFixed(1));
-      bg.classList.add('show');
-    });
+    // Size the backing plate to the label's real length -- "API" vs
+    // "Code Quality" need very different widths, a single fixed size
+    // would either clip the long ones or float awkwardly around the
+    // short ones. Originally measured via getBBox() on a delayed
+    // requestAnimationFrame, which turned out unreliable in practice
+    // (rAF fired, but getBBox() silently produced nothing usable at
+    // that point in the cycle -- confirmed live, the plate never
+    // appeared). Rebuilt on plain attribute reads instead: no layout
+    // dependency, no timing window, works the instant this function
+    // runs. --mono is a monospace stack, so a fixed per-character
+    // advance-width estimate (~0.6x font-size, standard for monospace)
+    // is accurate, not just a rough guess.
+    var label = node.querySelector('.label');
+    var count = node.querySelector('.count');
+    if (!label || !count) return;
+    var cx = parseFloat(label.getAttribute('x'));
+    var labelY = parseFloat(label.getAttribute('y')) + MERGE_TEXT_SHIFT;
+    var countY = parseFloat(count.getAttribute('y')) + MERGE_TEXT_SHIFT;
+    var labelWidth = label.textContent.length * 9.3;   // ~0.62 * 15px active label font-size
+    var countWidth = count.textContent.length * 7.5;   // ~0.62 * 12px active count font-size
+    var width = Math.max(labelWidth, countWidth) + 18;
+    var top = labelY - 16;
+    var bottom = countY + 5;
+    bg.setAttribute('x', (cx - width / 2).toFixed(1));
+    bg.setAttribute('y', top.toFixed(1));
+    bg.setAttribute('width', width.toFixed(1));
+    bg.setAttribute('height', (bottom - top).toFixed(1));
+    bg.classList.add('show');
   }
 
   function playHackOnHub() {
@@ -1460,24 +1470,29 @@
       playHackOnNode(leaving);
     }
 
-    if (leaving && docked && !viaDrag) {
-      var dest = nodeByKey(docked);
-      var swing = dest ? polar(HUB_CX, HUB_CY, HUB_SWING_R, dest.angle) : { x: HUB_CX, y: HUB_CY };
+    // Any real departure (leaving a node for another category OR going
+    // back home -- the two used to be handled differently, home was a
+    // flat direct hop while category-to-category got the curved detour,
+    // which read as inconsistent) swings out via a waypoint near the
+    // axis angled off the node being LEFT, then finishes with a second
+    // hop to wherever it's actually going. Starting fresh from home
+    // (no leaving) or a drag-drop that already landed near the target
+    // by hand skip the detour -- nothing to curve away from either way.
+    if (leaving && !viaDrag) {
+      var from = nodeByKey(leaving);
+      var swing = from ? polar(HUB_CX, HUB_CY, HUB_SWING_R, from.angle) : { x: HUB_CX, y: HUB_CY };
       setHubPosition(swing.x, swing.y, true);
       hubReturnTimer = setTimeout(function () {
         hubReturnTimer = null;
         dockHubAt(docked, true);
         hubMergeTimer = setTimeout(function () {
           hubMergeTimer = null;
-          setNodeMerged(docked, true);
+          if (docked) setNodeMerged(docked, true);
           playHackOnHub();
-          playHackOnNode(docked);
+          if (docked) playHackOnNode(docked);
         }, HUB_TRANSITION_MS);
       }, HUB_TRANSITION_MS);
     } else {
-      // Single hop: home -> node, node -> home, or a drag-drop that
-      // already landed the hub near the real target by hand (only
-      // needs a short final snap into the exact node position).
       dockHubAt(docked, true);
       hubMergeTimer = setTimeout(function () {
         hubMergeTimer = null;
