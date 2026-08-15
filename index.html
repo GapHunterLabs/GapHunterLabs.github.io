@@ -876,7 +876,7 @@
       <div class="panel hunting-panel">
         <div class="panel-title">Hunting Field <span class="info-dot" title="Explore by technology gap">i</span></div>
         <div class="panel-hint">Explore by technology gap · drag or click the center mark to travel</div>
-        <svg id="huntingSvg" class="hunting-svg" viewBox="0 0 384 360"></svg>
+        <svg id="huntingSvg" class="hunting-svg" viewBox="0 0 436 456"></svg>
       </div>
       <div class="panel brand-blurb">
         <div class="panel-title">We hunt gaps others miss</div>
@@ -1211,22 +1211,31 @@
   // Orbit lengthened (2026-08-15, "alarga el tamaño de las lineas") to
   // stop the merged badge's text-plate from reaching into a neighboring
   // node's circle -- confirmed as a real collision in the screenshots
-  // shared (Security merged, plate overlapping Data). Verified
-  // empirically (not assumed) against the actual worst-case pair
-  // (Security/Data, 90 degrees apart): 1.18 gets that specific overlap
-  // down to 0.1 user-units -- functionally zero, sub-pixel once
-  // rendered. A larger scale (tried 1.25) closed it to a clean 6px gap
-  // instead, but pushed the BOTTOM node's (Code Quality) merged plate
-  // well past the viewBox's own height -- and that overflow turned out
-  // to be a PRE-EXISTING issue from the earlier bigger-badge round, not
-  // something this change introduced (confirmed: it already overflowed
-  // ~26 units at the ORIGINAL 1.0 scale, just not enough to be obvious).
-  // Kept the panel's own footprint untouched as asked and picked the
-  // scale that resolves the specific collision without meaningfully
-  // compounding that separate, already-existing problem -- flagged to
-  // the user rather than silently deciding a fix for it here.
+  // shared (Security merged, plate overlapping Data). 1.18 gets that
+  // specific overlap down to 0.1 user-units -- functionally zero.
   var ORBIT_SCALE = 1.18;
-  var HUB_CX = 192, HUB_CY = 168, HUB_ORBIT = 108 * FIELD_SCALE * ORBIT_SCALE, HUB_R = 30 * FIELD_SCALE;
+
+  // 2026-08-15 follow-up ("resuelve eso" -- the previously-flagged
+  // bottom-overflow issue, now with explicit go-ahead to fix it
+  // properly): measured EVERY node's merged bounding box individually
+  // (dumped from the live DOM, not assumed) and found the overflow
+  // wasn't just Code Quality at the bottom -- Security's plate also
+  // reaches past the right edge, Testing's past the left edge, and
+  // API's circle past the top, once the 1.18-scaled orbit is combined
+  // with the bigger merged badge from the earlier round. True bounds
+  // needed across all 8: x in [-13.1, 402.7], y in [-26.9, 409.5]
+  // (relative to the OLD 192/168 center) -- i.e. a 415.8 x 436.4 area,
+  // bigger in both axes than the old 384 x 360 viewBox regardless of
+  // which single node is active. Grew the viewBox to fit that with a
+  // 10-unit margin on every side (436 x 456, see the <svg> tag) and
+  // recentered CX/CY so the worst case in each direction lands exactly
+  // at that margin, not just "somewhere that happens to fit" --
+  // verified after the fact with the same per-node bounds dump before
+  // trusting it. Panel does get a bit taller as a result (~330px "1fr"
+  // sidebar width unchanged, only its own row grows) -- unavoidable
+  // once actually measured; the earlier 1.25 attempt tried to dodge
+  // this by keeping the box fixed and got the overflow wrong instead.
+  var HUB_CX = 215, HUB_CY = 205, HUB_ORBIT = 108 * FIELD_SCALE * ORBIT_SCALE, HUB_R = 30 * FIELD_SCALE;
   var huntingNodes = [];       // built once: [{key,label,color,count,x,y,angle,r}, ...]
   var hubDragState = null;     // non-null only while a real pointer-drag is in progress
   var lastDockedCategory = null; // null = not painted yet (avoids a hack effect on first load)
