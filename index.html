@@ -373,14 +373,23 @@
   }
   /* Cyberpunk "hack" flicker played once when the hub lands on a node
      (drag-drop or click-triggered travel alike) -- brightness/hue
-     jitter plus a couple pixels of horizontal shake, over fast enough
-     (~0.5s) to read as a glitch, not a distraction. */
+     jitter, over fast enough (~0.5s) to read as a glitch, not a
+     distraction. Filter-ONLY -- an earlier version also jittered
+     `transform` a couple px sideways for a "shake," but that's the
+     SAME property the position transition runs on, and a CSS
+     `animation` always wins over a `transition` targeting the same
+     property on the same element. Since the hack fires immediately at
+     the START of every departure (see updateHuntingSvg), the shake
+     was silently overriding the smooth position transition for its
+     whole ~520ms, so movement only looked smooth once the hack ended
+     near the end of the trip -- confirmed as the actual cause of "solo
+     se suaviza al final, no desde que sale" (2026-08-15 report). */
   @keyframes hackFlicker {
     0%, 100% { filter: brightness(1) hue-rotate(0deg); }
-    8%  { filter: brightness(2.6) hue-rotate(35deg); transform: translate(calc(var(--hx) + 2px), var(--hy)); }
-    18% { filter: brightness(0.5) hue-rotate(-25deg); transform: translate(calc(var(--hx) - 2px), var(--hy)); }
+    8%  { filter: brightness(2.6) hue-rotate(35deg); }
+    18% { filter: brightness(0.5) hue-rotate(-25deg); }
     30% { filter: brightness(2.2) hue-rotate(15deg); }
-    44% { filter: brightness(0.6); transform: translate(calc(var(--hx) + 1px), var(--hy)); }
+    44% { filter: brightness(0.6); }
     60% { filter: brightness(1.9) hue-rotate(-10deg); }
     75% { filter: brightness(0.8); }
   }
@@ -448,22 +457,27 @@
      integrates every detail the plain node already had (color, label,
      count), just reorganized: the dot grows into a real background disc
      behind the hub, and the label+count get their own solid backing
-     plate (sized to the actual text via getBBox in setNodeMerged, see
-     JS) instead of floating loose underneath, plus a bump in their own
-     font size since there's room for it now. font-size is NOT
-     transitioned (r/transform still are) -- it has to land on its final
-     value instantly so the JS measurement right after toggling this
-     class reads the real, settled size, not a mid-animation one. */
+     plate (sized to the real text length in setNodeMerged, see JS)
+     instead of floating loose underneath, plus a bump in their own font
+     size since there's room for it now. font-size is NOT transitioned
+     (r/transform still are) -- it has to land on its final value
+     instantly so the JS measurement right after toggling this class
+     reads the real, settled size, not a mid-animation one.
+     2026-08-15 follow-up: dialed the CIRCLE back down (54->50->42, was
+     getting too dominant) while going the OTHER way on the text --
+     bigger plate, bigger font -- since the actual identifying
+     information (which category this is) lives in the text, not the
+     size of the colored disc behind it. */
   .hunting-svg .node.active circle.dot {
-    r: 50px;
+    r: 42px;
     stroke: var(--text);
     stroke-width: 2.6;
     animation: pulseGlow 1.8s ease-in-out infinite;
   }
   .hunting-svg .node.hack circle.dot { animation: hackFlickerNode 0.5s steps(6); }
   .hunting-svg .node text { font-family: var(--mono); font-size: 12px; fill: var(--text-dim); transition: fill 0.15s ease, transform 0.3s cubic-bezier(.65,0,.35,1); }
-  .hunting-svg .node.active text.label { fill: var(--text); font-weight: 700; font-size: 15px; transform: translateY(34px); }
-  .hunting-svg .node.active text.count { font-size: 12px; transform: translateY(34px); }
+  .hunting-svg .node.active text.label { fill: var(--text); font-weight: 700; font-size: 18px; transform: translateY(34px); }
+  .hunting-svg .node.active text.count { font-size: 14px; transform: translateY(34px); }
   .hunting-svg .node text.count { fill: var(--text-faint); font-size: 10.5px; }
 
   .hunting-svg .node .label-bg {
@@ -1339,6 +1353,23 @@
     var node = document.querySelector('.hunting-svg .node[data-cat="' + key + '"]');
     if (!node) return;
     node.classList.toggle('active', merged);
+
+    // All 8 nodes share one fixed build-time DOM order regardless of
+    // which one is currently merged -- without this, a category drawn
+    // LATER in that order could paint over (hide) an EARLIER one's
+    // enlarged badge/text-plate whenever their areas happen to overlap.
+    // Moving the merging node to just before the axis/hub puts it in
+    // front of every other category node while still staying behind
+    // the axis+hub themselves (the logo must stay visible on top for
+    // the "single object" merge to read correctly). 2026-08-15, "evita
+    // que el box de texto del nodo quede debajo de otro nodo".
+    if (merged) {
+      var axisEl = document.getElementById('huntingAxis');
+      if (axisEl && axisEl.parentNode === node.parentNode) {
+        node.parentNode.insertBefore(node, axisEl);
+      }
+    }
+
     var bg = node.querySelector('.label-bg');
     if (!bg) return;
 
@@ -1364,11 +1395,11 @@
     var cx = parseFloat(label.getAttribute('x'));
     var labelY = parseFloat(label.getAttribute('y')) + MERGE_TEXT_SHIFT;
     var countY = parseFloat(count.getAttribute('y')) + MERGE_TEXT_SHIFT;
-    var labelWidth = label.textContent.length * 9.3;   // ~0.62 * 15px active label font-size
-    var countWidth = count.textContent.length * 7.5;   // ~0.62 * 12px active count font-size
-    var width = Math.max(labelWidth, countWidth) + 18;
-    var top = labelY - 16;
-    var bottom = countY + 5;
+    var labelWidth = label.textContent.length * 11.2;  // ~0.62 * 18px active label font-size
+    var countWidth = count.textContent.length * 8.7;   // ~0.62 * 14px active count font-size
+    var width = Math.max(labelWidth, countWidth) + 26;
+    var top = labelY - 20;
+    var bottom = countY + 8;
     bg.setAttribute('x', (cx - width / 2).toFixed(1));
     bg.setAttribute('y', top.toFixed(1));
     bg.setAttribute('width', width.toFixed(1));
