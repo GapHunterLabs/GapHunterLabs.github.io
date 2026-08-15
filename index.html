@@ -442,20 +442,39 @@
     transform: scale(1.2);
     filter: drop-shadow(0 0 10px var(--accent));
   }
-  /* Merged-with-hub state: the dot grows into a halo ring peeking out
-     from behind the (larger) hub, sharing the same visual footprint --
-     "un solo objeto" instead of one flatly hiding the other. */
+  /* Merged-with-hub state (2026-08-15, "crear un nuevo nodo... mas
+     grande y mas organizado"): arriving doesn't just grow a thin halo
+     ring anymore -- it composes a genuinely bigger, distinct badge that
+     integrates every detail the plain node already had (color, label,
+     count), just reorganized: the dot grows into a real background disc
+     behind the hub, and the label+count get their own solid backing
+     plate (sized to the actual text via getBBox in setNodeMerged, see
+     JS) instead of floating loose underneath, plus a bump in their own
+     font size since there's room for it now. font-size is NOT
+     transitioned (r/transform still are) -- it has to land on its final
+     value instantly so the JS measurement right after toggling this
+     class reads the real, settled size, not a mid-animation one. */
   .hunting-svg .node.active circle.dot {
-    r: 40px;
+    r: 50px;
     stroke: var(--text);
     stroke-width: 2.6;
     animation: pulseGlow 1.8s ease-in-out infinite;
   }
   .hunting-svg .node.hack circle.dot { animation: hackFlickerNode 0.5s steps(6); }
   .hunting-svg .node text { font-family: var(--mono); font-size: 12px; fill: var(--text-dim); transition: fill 0.15s ease, transform 0.3s cubic-bezier(.65,0,.35,1); }
-  .hunting-svg .node.active text.label { fill: var(--text); font-weight: 700; transform: translateY(7px); }
-  .hunting-svg .node.active text.count { transform: translateY(7px); }
+  .hunting-svg .node.active text.label { fill: var(--text); font-weight: 700; font-size: 15px; transform: translateY(34px); }
+  .hunting-svg .node.active text.count { font-size: 12px; transform: translateY(34px); }
   .hunting-svg .node text.count { fill: var(--text-faint); font-size: 10.5px; }
+
+  .hunting-svg .node .label-bg {
+    fill: var(--surface-3);
+    stroke: var(--border);
+    stroke-width: 1;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+  }
+  .hunting-svg .node .label-bg.show { opacity: 0.95; }
 
   /* Lines: subtle gradient from the hub outward to each category's own
      color (defined per-node in buildHuntingSvg via <linearGradient>),
@@ -1228,6 +1247,12 @@
       parts.push(
         '<g class="node" data-cat="' + n.key + '" style="animation-delay:' + delay + '">' +
         '<circle class="dot" cx="' + n.x.toFixed(1) + '" cy="' + n.y.toFixed(1) + '" r="' + n.r.toFixed(1) + '" fill="' + n.color + '"></circle>' +
+        // Backing plate for the merged/"arrived" state -- starts at
+        // zero size, sized+positioned to fit the actual label+count
+        // text by setNodeMerged() (see JS) once this node merges with
+        // the hub, so it fits every category's label length correctly
+        // instead of a fixed guessed size.
+        '<rect class="label-bg" x="0" y="0" width="0" height="0" rx="6"></rect>' +
         '<text class="label" x="' + n.x.toFixed(1) + '" y="' + labelY.toFixed(1) + '" text-anchor="middle">' + esc(n.label) + '</text>' +
         '<text class="count" x="' + n.x.toFixed(1) + '" y="' + (labelY + 12).toFixed(1) + '" text-anchor="middle">' + n.count + ' plugin' + (n.count === 1 ? '' : 's') + '</text>' +
         '</g>'
@@ -1289,20 +1314,56 @@
     dockHubAt('', false); // paint at center immediately, no transition on first load
   }
 
-  function dockHubAt(key, animate) {
+  function setHubPosition(x, y, animate) {
     var hub = document.getElementById('huntingHub');
     if (!hub) return;
-    var target = key ? nodeByKey(key) : null;
-    var x = target ? target.x : HUB_CX;
-    var y = target ? target.y : HUB_CY;
     hub.classList.toggle('instant', !animate);
     hub.style.setProperty('--hx', x.toFixed(1) + 'px');
     hub.style.setProperty('--hy', y.toFixed(1) + 'px');
   }
 
+  function dockHubAt(key, animate) {
+    var target = key ? nodeByKey(key) : null;
+    var x = target ? target.x : HUB_CX;
+    var y = target ? target.y : HUB_CY;
+    setHubPosition(x, y, animate);
+  }
+
   function setNodeMerged(key, merged) {
     var node = document.querySelector('.hunting-svg .node[data-cat="' + key + '"]');
-    if (node) node.classList.toggle('active', merged);
+    if (!node) return;
+    node.classList.toggle('active', merged);
+    var bg = node.querySelector('.label-bg');
+    if (!bg) return;
+
+    if (!merged) {
+      bg.classList.remove('show');
+      return;
+    }
+    // Size the backing plate to the REAL rendered text -- label length
+    // varies a lot between categories ("API" vs "Code Quality"), a
+    // fixed guessed width would either clip the long ones or float
+    // awkwardly around the short ones. getBBox() forces a synchronous
+    // layout read, so this only gives the right answer if the merged
+    // font-size has already landed on its FINAL value with no
+    // transition delay -- see the CSS comment on .node.active text,
+    // font-size is deliberately not animated for exactly this reason.
+    requestAnimationFrame(function () {
+      var label = node.querySelector('.label');
+      var count = node.querySelector('.count');
+      if (!label || !count) return;
+      var b1 = label.getBBox();
+      var b2 = count.getBBox();
+      var left = Math.min(b1.x, b2.x) - 8;
+      var right = Math.max(b1.x + b1.width, b2.x + b2.width) + 8;
+      var top = b1.y - 4;
+      var bottom = b2.y + b2.height + 4;
+      bg.setAttribute('x', left.toFixed(1));
+      bg.setAttribute('y', top.toFixed(1));
+      bg.setAttribute('width', Math.max(0, right - left).toFixed(1));
+      bg.setAttribute('height', Math.max(0, bottom - top).toFixed(1));
+      bg.classList.add('show');
+    });
   }
 
   function playHackOnHub() {
@@ -1328,7 +1389,10 @@
   // destination node + hack flicker) to when the hub has actually
   // FINISHED traveling there, not the instant the click/drop happens.
   var HUB_TRANSITION_MS = 600;
-  var hubMergeTimer = null; // pending "merge with the arrival node" timeout, see note below
+  var HUB_SWING_R = 16;        // > the axis's own r=7, gives the detour a visible curve to swing through
+  var hubMergeTimer = null;    // pending "merge with the arrival node" timeout
+  var hubReturnTimer = null;   // pending "now head out to the new node" timeout (2-stage switch only)
+  var lastChangeWasDrag = false; // set right before renderAll() on a successful drag-drop; consumed once below
 
   // Called every render (from renderField). Only touches classes + the
   // hub's docked position -- never rebuilds the SVG. Un-merging from the
@@ -1339,10 +1403,22 @@
   // node click, a hub drag-drop, the category <select>, or opening a
   // plugin card that belongs to a different category than whatever was
   // docked before.
+  //
+  // Switching directly between two DIFFERENT categories (not via a
+  // drag, which already lands the hub near the real target by hand) is
+  // a 2-stage trip: back to the axis first, THEN out to the new node --
+  // not a straight cross-diagram line between two arbitrary node
+  // positions, which wouldn't follow any spoke at all. The waypoint
+  // isn't the mathematical dead-center either -- it's a small swing
+  // point just past the axis's own radius, angled toward the new
+  // destination, so the hub curves *through* the axis's space instead
+  // of stopping dead and reversing direction sharply.
   function updateHuntingSvg() {
     var svg = document.getElementById('huntingSvg');
     if (!svg || !svg.querySelector('.hub-group')) return; // not built yet
     var docked = currentDockedCategory();
+    var viaDrag = lastChangeWasDrag;
+    lastChangeWasDrag = false;
 
     Array.prototype.forEach.call(svg.querySelectorAll('.spoke'), function (l) {
       l.classList.toggle('active', l.getAttribute('data-cat') === docked);
@@ -1352,22 +1428,57 @@
 
     var changed = lastDockedCategory !== null && docked !== lastDockedCategory;
     var leaving = lastDockedCategory;
-    dockHubAt(docked, true);
 
-    if (changed) {
-      // A second transition can start (e.g. rapid A -> B -> C clicking)
-      // before an earlier one's 600ms "arrived" timeout has fired --
-      // without cancelling it, that stale callback would still fire
-      // later and incorrectly re-merge/hack whatever it was originally
-      // targeting (A), even though the hub has already moved on to C.
-      // Only the most recent transition's arrival should ever fire.
-      if (hubMergeTimer) { clearTimeout(hubMergeTimer); hubMergeTimer = null; }
+    if (!changed) {
+      // Re-rendering for an unrelated reason (search text, pricing
+      // filter, sort...) with the docked category unchanged. Only
+      // safe to re-assert the hub's position if nothing is currently
+      // mid-flight -- if a 2-stage switch is still running its swing/
+      // arrive timers, forcing dockHubAt() here would yank the hub
+      // straight to its final spot and cut the animation short on
+      // literally every keystroke typed into search while it plays.
+      if (!hubMergeTimer && !hubReturnTimer) dockHubAt(docked, true);
+      lastDockedCategory = docked;
+      return;
+    }
 
-      if (leaving) {
-        setNodeMerged(leaving, false);
-        playHackOnHub();
-        playHackOnNode(leaving);
-      }
+    // A second transition can start (e.g. rapid A -> B -> C clicking)
+    // before an earlier one's timers have fired -- without cancelling
+    // them, those stale callbacks would still fire later and
+    // incorrectly re-merge/hack/reposition for a target that's no
+    // longer current. Only the most recent transition should ever win.
+    // (Only reached here once we know a real transition IS starting --
+    // cancelling on every render, changed or not, was the earlier bug:
+    // it would silently cancel a still-pending merge just because an
+    // unrelated re-render happened to run first.)
+    if (hubMergeTimer) { clearTimeout(hubMergeTimer); hubMergeTimer = null; }
+    if (hubReturnTimer) { clearTimeout(hubReturnTimer); hubReturnTimer = null; }
+
+    if (leaving) {
+      setNodeMerged(leaving, false);
+      playHackOnHub();
+      playHackOnNode(leaving);
+    }
+
+    if (leaving && docked && !viaDrag) {
+      var dest = nodeByKey(docked);
+      var swing = dest ? polar(HUB_CX, HUB_CY, HUB_SWING_R, dest.angle) : { x: HUB_CX, y: HUB_CY };
+      setHubPosition(swing.x, swing.y, true);
+      hubReturnTimer = setTimeout(function () {
+        hubReturnTimer = null;
+        dockHubAt(docked, true);
+        hubMergeTimer = setTimeout(function () {
+          hubMergeTimer = null;
+          setNodeMerged(docked, true);
+          playHackOnHub();
+          playHackOnNode(docked);
+        }, HUB_TRANSITION_MS);
+      }, HUB_TRANSITION_MS);
+    } else {
+      // Single hop: home -> node, node -> home, or a drag-drop that
+      // already landed the hub near the real target by hand (only
+      // needs a short final snap into the exact node position).
+      dockHubAt(docked, true);
       hubMergeTimer = setTimeout(function () {
         hubMergeTimer = null;
         if (docked) setNodeMerged(docked, true);
@@ -1486,6 +1597,7 @@
       } else if (state.reached && state.nearestKey) {
         filterCategory = state.nearestKey;
         selectedRepo = null;
+        lastChangeWasDrag = true; // already landed near the real node by hand -- skip the axis detour
         renderAll();
       } else {
         // Didn't drag far enough to arrive anywhere -- spring back to
