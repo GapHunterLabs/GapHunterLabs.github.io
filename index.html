@@ -431,6 +431,7 @@
     stroke-width: 2.5;
     filter: drop-shadow(0 0 8px var(--accent));
   }
+  .hunting-svg .hub-axis-icon { fill: var(--text); pointer-events: none; }
 
   .hunting-svg .node { cursor: pointer; transform-box: fill-box; transform-origin: 50% 50%; animation: nodeIn 0.4s ease backwards; }
   .hunting-svg .node circle.dot {
@@ -1287,8 +1288,16 @@
     // "home" marker even once the hub has traveled away to a node --
     // without it, the center would just look empty. Also acts as an
     // explicit drop target: dragging the hub back onto it is "go home",
-    // handled in attachHubDrag below.
-    parts.push('<circle id="huntingAxis" class="hub-axis" cx="' + HUB_CX + '" cy="' + HUB_CY + '" r="7"></circle>');
+    // handled in attachHubDrag below. Radius bumped 5% (7 -> 7.35,
+    // 2026-08-15) and given a small house glyph (simple silhouette,
+    // roof triangle + body + a door notch) so its "home" role reads
+    // immediately instead of just being an unlabeled dot.
+    var HUB_AXIS_R2 = 7.35;
+    parts.push(
+      '<circle id="huntingAxis" class="hub-axis" cx="' + HUB_CX + '" cy="' + HUB_CY + '" r="' + HUB_AXIS_R2 + '"></circle>' +
+      '<path class="hub-axis-icon" d="M 0,-3.3 L 3,-0.6 L 3,2.6 L 1,2.6 L 1,0.5 L -1,0.5 L -1,2.6 L -3,2.6 L -3,-0.6 Z" ' +
+      'transform="translate(' + HUB_CX + ',' + HUB_CY + ')" pointer-events="none"></path>'
+    );
 
     var logoR = HUB_R * 0.92;
     var logoScale = (logoR * 2 / 1024).toFixed(4);
