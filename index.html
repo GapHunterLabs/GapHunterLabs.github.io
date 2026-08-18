@@ -344,7 +344,7 @@
     .topbar.nav-open .topbar-nav {
       display: flex;
       position: absolute;
-      top: 44px; left: 0; right: 0;
+      top: 51px; left: 0; right: 0;
       flex-direction: column;
       align-items: stretch;
       background: var(--bg);
@@ -355,6 +355,13 @@
     .topbar.nav-open .topbar-link { padding: 10px 12px; }
     .topbar.nav-open .topbar-link.active::before { display: none; }
     .topbar.nav-open .topbar-link.active { background: var(--surface-2); }
+    /* The open dropdown has the whole viewport width to work with --
+       the earlier 760px rule hiding .topbar-nav-labels was only meant
+       for the cramped INLINE bar before the burger takes over, not
+       this fully-expanded list. Without this override the dropdown
+       showed bare "01/02/03" with no "Overview"/"Table"/"Methodology"
+       text at all. */
+    .topbar.nav-open .topbar-nav-labels { display: inline; }
   }
 
   /* .brand-mark is still used by the site-footer's own brand row
@@ -744,11 +751,18 @@
     }
   }
 
+  /* Rail drops out here (needs the most side-margin relative to what
+     it offers), but brand+thesis deliberately KEEP the side-by-side
+     relationship they have on desktop instead of immediately falling
+     to a single column -- full stacking is reserved for an even
+     narrower breakpoint below, where 2 columns really do get too
+     tight for either block's text to read well. */
   @media (max-width: 760px) {
     .hero {
-      grid-template-columns: 1fr;
-      grid-template-areas: "brand" "thesis" "stats";
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas: "brand thesis" "stats stats";
       row-gap: 22px;
+      column-gap: 24px;
       padding: 24px 0 20px;
     }
     .hero-rail { display: none; }
@@ -756,6 +770,34 @@
     .hero-brand::before { display: none; }
     .hero-dotgrid { display: none; }
     .tele-row { padding: 11px 0; }
+    /* 6 rows in one column here left a lot of the available width
+       unused (each row is just an icon + a short number + label) --
+       2 columns puts 3 rows on screen instead of 6, same information,
+       roughly half the scroll. :nth-last-child(-n+2) drops the divider
+       under the LAST ROW (both items in it), not just the last DOM
+       item -- the plain :last-child rule only strips one corner's
+       border in a 2-column grid. */
+    .telemetry { display: grid; grid-template-columns: 1fr 1fr; column-gap: 20px; }
+    .tele-row { border-bottom: 1px solid var(--border); }
+    .tele-row:nth-last-child(-n+2) { border-bottom: none; }
+  }
+
+  /* Below this, 2 columns gets too tight for the number+label pairs --
+     back to a single column, with the border logic reset to match. */
+  @media (max-width: 460px) {
+    .telemetry { grid-template-columns: 1fr; }
+    .tele-row:nth-last-child(-n+2) { border-bottom: 1px solid var(--border); }
+    .tele-row:last-child { border-bottom: none; }
+  }
+
+  /* True single-column fallback -- below this, splitting brand/thesis
+     into 2 columns starts squeezing the hero-title's own clamp() min
+     size against the thesis text next to it. */
+  @media (max-width: 480px) {
+    .hero {
+      grid-template-columns: 1fr;
+      grid-template-areas: "brand" "thesis" "stats";
+    }
   }
 
   /* ==================== PROCESS STRIP ====================
@@ -955,14 +997,19 @@
   @media (max-width: 760px) {
     .process-strip { flex-direction: column; }
     .process-label { writing-mode: horizontal-tb; transform: none; border-right: none; border-bottom: 1px solid var(--border); padding: 8px 14px; justify-content: flex-start; }
-    .process-steps { padding: 16px 14px; gap: 16px; }
     /* Connectors assume a single row (flex:1 filling the gap between
-       two neighbors); once steps wrap to their own stacked rows on
-       mobile there's no meaningful "gap between" left for them to fill,
-       so they're dropped rather than rendered broken. */
+       two neighbors); once steps wrap there's no meaningful "gap
+       between" left for them to fill, so they're dropped rather than
+       rendered broken. A real 2x2 grid replaces plain flex-wrap here --
+       wrapping left everything looking randomly bunched at the left
+       edge instead of a deliberately organized layout. */
+    .process-steps { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 14px; padding: 16px 14px; }
     .process-connector { display: none; }
     .process-mission { width: auto; padding-left: 20px; }
     .process-mission::before { width: 2px; }
+  }
+  @media (max-width: 420px) {
+    .process-steps { grid-template-columns: 1fr; }
   }
 
   /* ---- controls ---- */
@@ -1034,6 +1081,17 @@
     color: var(--text);
     font-family: var(--sans);
     font-size: 13.5px;
+  }
+
+  /* Below ~640px, .search's own flex-shrink was letting it and
+     .view-toggle share a line where the toggle had no room left and
+     visibly clipped at the viewport edge -- category/pricing already
+     wrapped to their own line fine, only this specific pairing broke.
+     Forcing search to a full row of its own removes the ambiguity:
+     everything after it always gets a guaranteed-clean line, no
+     shrink math to get wrong. */
+  @media (max-width: 640px) {
+    .search { flex: 1 1 100%; }
   }
 
   /* ---- FIELD layout ---- */
@@ -2097,8 +2155,19 @@
   }
   .footer-close-mark .tick { color: var(--accent); opacity: 0.55; }
 
+  /* Brand block stays full-width on its own row (its paragraph needs
+     the room); Explore and Elsewhere sit side by side in the row below
+     instead of each taking a full row -- keeps the footer compact
+     instead of one long single-column stack. */
   @media (max-width: 760px) {
-    .footer-grid { grid-template-columns: 1fr; gap: 28px; }
+    .footer-grid {
+      grid-template-columns: 1fr 1fr;
+      grid-template-areas: "brand brand" "nav elsewhere";
+      gap: 28px 24px;
+    }
+    .footer-brand { grid-area: brand; }
+    .footer-nav { grid-area: nav; }
+    .footer-elsewhere { grid-area: elsewhere; }
   }
   @media (max-width: 640px) {
     .footer-bottom { flex-direction: column; align-items: flex-start; }
@@ -2108,6 +2177,13 @@
     .wrap { padding: 24px 14px 30px; }
     .dossier-head { flex-direction: column; }
     .dossier-side { width: 100%; }
+    /* .dossier-intro's flex-basis:360px (set for the side-by-side
+       layout, where flex-basis means WIDTH) silently became a MINIMUM
+       HEIGHT once flex-direction switches to column here -- the pitch
+       text is nowhere near 360px tall, so the box just rendered mostly
+       empty below the real content. auto lets it size to its own
+       content instead. */
+    .dossier-intro { flex-basis: auto; }
   }
 
   /* ---- mode transition overlay: logo + binary lock ---- */
