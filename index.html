@@ -709,11 +709,29 @@
      above .stat. ---- */
   .telemetry { grid-area: stats; display: flex; flex-direction: column; }
 
-  .tele-row { display: flex; align-items: center; gap: 12px; padding: 13px 0; border-bottom: 1px solid var(--border); }
+  /* min-width:0 -- .tele-row is the actual GRID ITEM once .telemetry
+     switches to display:grid on mobile (see the 760px breakpoint
+     below), a separate default min-width:auto from .tele-body's own
+     (fixed above) one level further in. Missing this specific one was
+     the real remaining cause of "DOWNLOADS TOTAL" still clipping at a
+     real ~360 CSS px width even after .tele-body was fixed -- found by
+     re-reading the actual DOM nesting top to bottom instead of
+     guessing another fix blind. */
+  .tele-row { display: flex; align-items: center; gap: 12px; padding: 13px 0; border-bottom: 1px solid var(--border); min-width: 0; }
   .tele-row:last-child { border-bottom: none; }
 
   .tele-icon { flex: none; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; }
   .tele-icon svg { width: 17px; height: 17px; }
+
+  /* min-width:0 -- a flex item's default min-width:auto refuses to
+     shrink below its own content's min-content size, same underlying
+     rule as the grid-track gotcha fixed on .telemetry/.process-steps
+     above, just one nesting level deeper. Without this, .tele-row's
+     text half wouldn't actually wrap even once the OUTER 2-column grid
+     was allowed to shrink -- confirmed as the real remaining cause via
+     a real ~360 CSS px screenshot still showing "DOWNLOADS TOTAL"
+     clipped after the grid-level fix alone. */
+  .tele-body { min-width: 0; }
 
   .tele-body.decoding .tele-num {
     color: var(--accent);
@@ -759,7 +777,14 @@
      tight for either block's text to read well. */
   @media (max-width: 760px) {
     .hero {
-      grid-template-columns: 1fr 1fr;
+      /* minmax(0, 1fr), not bare 1fr -- a bare 1fr track won't shrink
+         below its content's min-content width (the longest unbreakable
+         word), which was forcing the whole grid -- and so the page --
+         wider than a narrow phone's actual viewport instead of letting
+         text wrap. Real overflow, found on a real ~360 CSS px screenshot
+         (right-edge text silently clipped, not wrapped). Same fix
+         applied to .telemetry/.process-steps/.footer-grid below. */
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       grid-template-areas: "brand thesis" "stats stats";
       row-gap: 22px;
       column-gap: 24px;
@@ -777,23 +802,39 @@
        under the LAST ROW (both items in it), not just the last DOM
        item -- the plain :last-child rule only strips one corner's
        border in a 2-column grid. */
-    .telemetry { display: grid; grid-template-columns: 1fr 1fr; column-gap: 20px; }
+    .telemetry { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 20px; }
     .tele-row { border-bottom: 1px solid var(--border); }
     .tele-row:nth-last-child(-n+2) { border-bottom: none; }
+    /* hero-title's desktop clamp() floor (38px) stays ABOVE its own
+       5.6vw component for this entire range (5.6vw only exceeds 38px
+       past ~679px), so without this override "HUNTER" etc. render at a
+       fixed 38px no matter how narrow the half-width column gets below
+       that -- measured as a real overflow risk on a real ~411 CSS px
+       phone, not a guess. Lower floor scoped to just this breakpoint. */
+    .hero-title { font-size: clamp(26px, 7vw, 42px); }
   }
 
   /* Below this, 2 columns gets too tight for the number+label pairs --
      back to a single column, with the border logic reset to match. */
-  @media (max-width: 460px) {
+  /* 340px, not 460 -- 460 was reverting to a single column on most
+     real Android phones (measured against a real 1080x2400 device
+     screenshot, ~411 CSS px at a typical ~2.625 DPR for that
+     resolution class), which is exactly the width this 2-column grid
+     should still be serving. Real phones below ~340 CSS px are rare
+     enough now that a single column there is a reasonable floor. */
+  @media (max-width: 340px) {
     .telemetry { grid-template-columns: 1fr; }
     .tele-row:nth-last-child(-n+2) { border-bottom: 1px solid var(--border); }
     .tele-row:last-child { border-bottom: none; }
   }
 
-  /* True single-column fallback -- below this, splitting brand/thesis
-     into 2 columns starts squeezing the hero-title's own clamp() min
-     size against the thesis text next to it. */
-  @media (max-width: 480px) {
+  /* Same real-phone-width finding as .telemetry above: 480px was
+     already single-column on a real ~411 CSS px Android phone. Lowered
+     to 380px, WITH the hero-title's own clamp() floor also reduced in
+     the 380-760 range (below) so "HUNTER" etc. actually fits a
+     half-width column at that size instead of just moving the
+     breakpoint number and hoping. */
+  @media (max-width: 380px) {
     .hero {
       grid-template-columns: 1fr;
       grid-template-areas: "brand" "thesis" "stats";
@@ -863,6 +904,13 @@
     align-items: flex-start;
     gap: 13px;
     flex: none;
+    /* Harmless at desktop width (flex-shrink:0 via flex:none already
+       means it never shrinks there regardless of min-width) -- matters
+       once .process-steps switches to display:grid on mobile, where
+       THIS becomes a grid item with its own default min-width:auto,
+       one more nesting level of the same min-content-overflow gotcha
+       fixed on .telemetry/.tele-body above. */
+    min-width: 0;
   }
 
   .process-connector {
@@ -949,7 +997,7 @@
     50% { box-shadow: 0 0 15px color-mix(in srgb, var(--step-color, var(--accent)) 75%, transparent); }
   }
 
-  .ps-text { display: flex; flex-direction: column; gap: 2px; padding-top: 5px; }
+  .ps-text { display: flex; flex-direction: column; gap: 2px; padding-top: 5px; min-width: 0; }
   .ps-name {
     font-family: var(--mono);
     font-size: 14px;
@@ -961,7 +1009,11 @@
   }
   .process-step:hover .ps-name,
   .process-step.lit .ps-name { text-shadow: 0 0 8px color-mix(in srgb, var(--step-color, var(--accent)) 45%, transparent); }
-  .ps-desc { font-size: 12.5px; color: var(--text-faint); white-space: nowrap; }
+  /* No white-space:nowrap -- at wide desktop widths there's plenty of
+     room and it never wraps anyway; at narrow ones (see the 2x2 mobile
+     grid below) forcing one line risked clipping/overflowing instead
+     of just wrapping to a second line, which reads fine. */
+  .ps-desc { font-size: 12.5px; color: var(--text-faint); }
 
   /* Synthesis panel: the left edge is a gradient bar running through
      all 4 stage colors -- a small, literal "this panel is what the
@@ -1003,12 +1055,15 @@
        rendered broken. A real 2x2 grid replaces plain flex-wrap here --
        wrapping left everything looking randomly bunched at the left
        edge instead of a deliberately organized layout. */
-    .process-steps { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 14px; padding: 16px 14px; }
+    .process-steps { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 20px 14px; padding: 16px 14px; }
     .process-connector { display: none; }
     .process-mission { width: auto; padding-left: 20px; }
     .process-mission::before { width: 2px; }
   }
-  @media (max-width: 420px) {
+  /* 340px, not 420 -- same real-phone-width correction as .hero-title
+     and .telemetry above (measured against a real ~411 CSS px Android
+     screenshot). */
+  @media (max-width: 340px) {
     .process-steps { grid-template-columns: 1fr; }
   }
 
@@ -2161,7 +2216,7 @@
      instead of one long single-column stack. */
   @media (max-width: 760px) {
     .footer-grid {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
       grid-template-areas: "brand brand" "nav elsewhere";
       gap: 28px 24px;
     }
