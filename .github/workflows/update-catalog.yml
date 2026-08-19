@@ -1,0 +1,44 @@
+name: Update catalog data
+
+# Corre diario a las 5:30am America/Bogota (UTC-5, sin DST) = 10:30 UTC.
+# Trae datos EN VIVO de JetBrains Marketplace + GitHub (descargas,
+# pricing, reviews, rating, stars) para los 34 plugins y actualiza
+# index.html solo -- sin intervencion manual. Los campos que casi
+# nunca cambian (pitch/why/niche/xmlId) viven congelados en
+# pipeline/catalog_static_metadata.json, no se re-generan aca; ver el
+# comentario "_comment" de ese archivo para como regenerarlo a mano si
+# alguna vez hace falta.
+on:
+  schedule:
+    - cron: "30 10 * * *"
+  workflow_dispatch: {}  # permite disparar manualmente desde la pestaña Actions si hace falta
+
+permissions:
+  contents: write  # necesario para que el job pueda commitear/pushear index.html
+
+jobs:
+  update-catalog:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+
+      - name: Run auto-update (fetches live data, swaps index.html in place)
+        run: python pipeline/auto_update_catalog.py
+
+      - name: Commit and push if data changed
+        run: |
+          git config user.name "Gap Hunter Labs"
+          git config user.email "gaphunterlabs@gmail.com"
+          if git diff --quiet -- index.html pipeline/catalog_daily_history.json pipeline/catalog_latest_data.json; then
+            echo "sin cambios reales en los datos, no se commitea nada"
+          else
+            git add index.html pipeline/catalog_daily_history.json pipeline/catalog_latest_data.json
+            git commit -m "Auto-update catalog data ($(date -u +%Y-%m-%d))"
+            git push
+          fi
