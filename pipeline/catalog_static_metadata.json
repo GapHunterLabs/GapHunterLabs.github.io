@@ -1,0 +1,312 @@
+{
+  "_comment": "Metadatos FIJOS por plugin (pitch/why/niche/xmlId) -- NO se regeneran automaticamente por el workflow diario, que solo trae metricas en vivo (descargas/reviews/stars/pricing). Si el pitch/why/niche de un plugin cambia, re-generar este archivo a mano corriendo el snippet documentado en README_AUTO_UPDATE.md del mismo directorio.",
+  "generatedAt": "2026-08-18 23:04:30 UTC",
+  "plugins": {
+    "ansible-companion": {
+      "xmlId": "dev.gaphunter.ansiblecompanion",
+      "name": "Ansible Companion",
+      "pitch": "IntelliJ/PyCharm plugin. **Encrypt and decrypt Ansible Vault (1.1/AES256 format) directly in the editor**, without depending on `ansible-vault` being installed.",
+      "why": "Born from real evidence in JetBrains Marketplace reviews, not assumptions: this niche's incumbents (paid and free) have concrete, repeated complaints about price, YAML they shouldn't touch, and badly parsed Jinja2. Vault encrypt/decrypt in particular is one of the features users value most in the paid incumbent — and one of the few pieces that can be built without depending on an external language server.",
+      "niche": "Ansible / DevOps",
+      "githubUrl": "https://github.com/GapHunterLabs/ansible-companion",
+      "firstPublished": "2026-08-17"
+    },
+    "api-security-companion": {
+      "xmlId": "dev.gaphunter.apisecuritycompanion",
+      "name": "API Security Companion",
+      "pitch": "IntelliJ/Android Studio plugin. Lightweight, 100% local API-security checks for Java and Kotlin — hardcoded secrets, plaintext HTTP, TLS misconfiguration, and OWASP API Security Top 10 patterns.",
+      "why": "Built after reviewing real, recent reviews of the market-leading security scanners, not assumptions:",
+      "niche": "API Security",
+      "githubUrl": "https://github.com/GapHunterLabs/api-security-companion",
+      "firstPublished": "2026-08-06"
+    },
+    "asyncapi-companion": {
+      "xmlId": "dev.gaphunter.asyncapicompanion",
+      "name": "AsyncAPI Companion",
+      "pitch": "IntelliJ-family plugin. Reliable go-to-definition for `$ref` values in AsyncAPI documents (JSON and YAML) — 100% local, no network calls, and it never breaks when a new JetBrains IDE version ships.",
+      "why": "Born from real evidence in JetBrains Marketplace reviews, not assumptions: the leading AsyncAPI plugin in this space (FREEMIUM, actively developed) has 55% of its reviews at 3 stars or fewer — higher than the negative-review rate that anchored several other plugins in this catalog. Paying and free users alike report:",
+      "niche": "AsyncAPI Tooling",
+      "githubUrl": "https://github.com/GapHunterLabs/asyncapi-companion",
+      "firstPublished": "2026-08-13"
+    },
+    "bean-copy-companion": {
+      "xmlId": "dev.gaphunter.beancopycompanion",
+      "name": "Bean Copy Companion",
+      "pitch": "Generates a real, compiling object-copy method between two Java or Kotlin classes. Select exactly two class files in the Project view, right-click → **Generate Bean Copy Method**, pick the copy direction, and get a new copier file with fields matched by name and type.",
+      "why": "The closest existing competitor in this space, **Simple Object Copy** (32,992 downloads, PAID, JetBrains Marketplace id 18151), has real, verbatim user complaints:",
+      "niche": "Java/Kotlin Codegen",
+      "githubUrl": "https://github.com/GapHunterLabs/bean-copy-companion",
+      "firstPublished": "2026-08-14"
+    },
+    "cert-companion": {
+      "xmlId": "dev.gaphunter.certcompanion",
+      "name": "Cert Companion",
+      "pitch": "IntelliJ-family plugin. A native, client-side viewer for X.509 certificates and keystores — decode a `.pem`, `.crt`, `.cer`, `.der`, `.jks`, `.p12`, or `.pfx` file without leaving the IDE.",
+      "why": "Born from real evidence in JetBrains Marketplace reviews of a paid certificate/keystore explorer plugin (308K downloads, 83% of reviews at 3 stars or fewer), not assumptions:",
+      "niche": "Certificates / X.509",
+      "githubUrl": "https://github.com/GapHunterLabs/cert-companion",
+      "firstPublished": "2026-07-30"
+    },
+    "change-case-companion": {
+      "xmlId": "dev.gaphunter.changecasecompanion",
+      "name": "Change Case Companion",
+      "pitch": "IntelliJ-family plugin. Select an identifier (or just place the caret on one — no selection needed) and instantly convert it between `camelCase`, `PascalCase`, `snake_case`, `kebab-case`, and `CONSTANT_CASE`.",
+      "why": "Ports a pattern that's genuinely popular elsewhere — VS Code has multiple \"change case\" extensions with millions of combined installs — with no real equivalent anywhere in JetBrains Marketplace (confirmed by search before building this, not assumed). A deliberate \"port a proven concept\" bet, not a competitor-complaint-driven build — see `CONSTITUTION.md` §1 for the documented-exception discipline this follows (same treatment as Refactor Simulator/Bean Copy Companion/ Turbo Log Companion).",
+      "niche": "Editor Productivity",
+      "githubUrl": "https://github.com/GapHunterLabs/change-case-companion",
+      "firstPublished": "2026-08-14"
+    },
+    "cmake-companion": {
+      "xmlId": "dev.gaphunter.cmakecompanion",
+      "name": "CMake Companion",
+      "pitch": "Syntax highlighting, known-command highlighting, and an unmatched-paren inspection for `CMakeLists.txt`/`*.cmake` files.",
+      "why": "**CMake Plus** (JetBrains Marketplace id 12869), 57,780 downloads, paid subscription, vendor Artsiom Chapialiou. The same vendor's free sibling plugin (\"CMake simple highlighter\", 254k downloads) had its command-argument highlighting moved behind the paid plugin, which drew complaints about the business model on top of real bugs. Verbatim reviewer complaints:",
+      "niche": "CMake / Build Tooling",
+      "githubUrl": "https://github.com/GapHunterLabs/cmake-companion",
+      "firstPublished": "2026-08-04"
+    },
+    "env-diff-companion": {
+      "xmlId": "dev.gaphunter.envdiffcompanion",
+      "name": "Env Diff Companion",
+      "pitch": "IntelliJ-family plugin. Select exactly two env-style files in the Project view — `.env` vs `.env.example`, `.env.development` vs `.env.production`, anything with `KEY=VALUE` lines — run **Compare Env Files**, and get a real report of which keys are missing from each side.",
+      "why": "Ports a pattern that's genuinely popular elsewhere — env-diff/env-sync tooling exists across other editors and CLI tools — with no real equivalent anywhere in JetBrains Marketplace (confirmed by search before building this, not assumed). A deliberate \"port a proven concept\" bet — see `CONSTITUTION.md` §1 for the documented-exception discipline this follows (same treatment as Refactor Simulator/Bean Copy Companion/Turbo Log Companion/Change Case Companion/JSON to Code Companion).",
+      "niche": "Env Config Tooling",
+      "githubUrl": "https://github.com/GapHunterLabs/env-diff-companion",
+      "firstPublished": "2026-08-14"
+    },
+    "error-lens-companion": {
+      "xmlId": "dev.gaphunter.errorlenscompanion",
+      "name": "Error Lens Companion",
+      "pitch": "IntelliJ-family plugin. Shows errors and warnings inline, at the end of the line that has them, instead of only as a gutter icon or a squiggly underline you have to hover to read. One hint per line (most severe diagnostic wins) so it never turns into unreadable clutter.",
+      "why": "Ports the \"Error Lens\" concept -- VS Code's Error Lens extension has 10M+ installs and is one of that ecosystem's most-used extensions -- into the IDE's own highlighting pipeline. Confirmed before building this that no equivalent already exists in JetBrains Marketplace. Same \"port a proven concept, no equivalent exists yet\" bet as the other 6 plugins built this same session -- see `CONSTITUTION.md` §1 for the documented-exception discipline this follows.",
+      "niche": "Inline Diagnostics",
+      "githubUrl": "https://github.com/GapHunterLabs/error-lens-companion",
+      "firstPublished": "2026-08-14"
+    },
+    "firestore-companion": {
+      "xmlId": "dev.gaphunter.firestorecompanion",
+      "name": "Firestore Companion",
+      "pitch": "Browse and edit Firestore collections, documents, and subcollections in a tool window, authenticating with a GCP service account key via simple REST calls.",
+      "why": "**Firebase Firestore** (JetBrains Marketplace id 23609), 14,735 downloads, paid, vendor Anton Shuvaev (also the author of JetClient/ DynamoDB/Elasticsearch companions -- not Google). Rated 3.80, notably the lowest among that vendor's ~6 database plugins (DynamoDB 4.41, Elasticsearch 4.62), confirming this is a problem specific to this plugin, not general vendor reputation. Real, verbatim reviewer complaints (same exact error, 3 users, 8+ months):",
+      "niche": "Firestore / Database",
+      "githubUrl": "https://github.com/GapHunterLabs/firestore-companion",
+      "firstPublished": "2026-08-13"
+    },
+    "format-converter-companion": {
+      "xmlId": "dev.gaphunter.formatconvertercompanion",
+      "name": "Format Converter Companion",
+      "pitch": "Converts JSON, YAML, and XML directly in the editor -- select text (or convert the whole file) and pick a target format from the right-click menu.",
+      "why": "**JSON-YAML-XML Converter** (JetBrains Marketplace id 20297), 10,062 downloads, paid, vendor Syncro Soft -- rated 2.9/5, the lowest of any competitor evaluated for this workspace. Real, verbatim reviewer complaints:",
+      "niche": "Data Format Conversion",
+      "githubUrl": "https://github.com/GapHunterLabs/format-converter-companion",
+      "firstPublished": "2026-08-04"
+    },
+    "git-hygiene-companion": {
+      "xmlId": "dev.gaphunter.githygienecompanion",
+      "name": "Git Hygiene Companion",
+      "pitch": "IntelliJ-family plugin. Lightweight inline git blame — author and date at the end of the current line — designed from the ground up to never block the editor.",
+      "why": "Born from real evidence in GitToolBox's own public issue tracker (~10.2M downloads, 4.7★ freemium — the largest install base found while researching this niche), not assumptions:",
+      "niche": "Git Tooling",
+      "githubUrl": "https://github.com/GapHunterLabs/git-hygiene-companion",
+      "firstPublished": "2026-08-03"
+    },
+    "gitlab-ci-companion": {
+      "xmlId": "dev.gaphunter.gitlabcicompanion",
+      "name": "GitLab CI Companion",
+      "pitch": "IntelliJ-family plugin. Static syntax and structural checks for `.gitlab-ci.yml` — catch mistakes before running a real pipeline, not after.",
+      "why": "Born from real evidence in JetBrains Marketplace reviews of \"GitLab CICD — Pipelines & Jobs, Builds Run Cancel Retry View Log\" (26,891 downloads, paid), not assumptions:",
+      "niche": "GitLab CI/CD",
+      "githubUrl": "https://github.com/GapHunterLabs/gitlab-ci-companion",
+      "firstPublished": "2026-08-13"
+    },
+    "graphql-companion": {
+      "xmlId": "dev.gaphunter.graphqlcompanion",
+      "name": "GraphQL Companion",
+      "pitch": "IntelliJ-family plugin. Fast syntax highlighting for `.graphql`/`.graphqls` files, and multi-schema discovery that works out of the box — with or without a `.graphqlconfig` file.",
+      "why": "Born from real evidence in JetBrains's own official GraphQL plugin (millions of downloads), not assumptions:",
+      "niche": "GraphQL Tooling",
+      "githubUrl": "https://github.com/GapHunterLabs/graphql-companion",
+      "firstPublished": "2026-08-03"
+    },
+    "highlight-companion": {
+      "xmlId": "dev.gaphunter.highlightcompanion",
+      "name": "Highlight Companion",
+      "pitch": "IntelliJ-family plugin. A cognitive-complexity gutter icon for Java and Kotlin methods/functions — a colored badge with the real number, computed with SonarSource's documented Cognitive Complexity algorithm, never blocking the UI thread.",
+      "why": "Born from real, independent, recent (2026-02) evidence in JetBrains Marketplace reviews of Better Highlights (1.03M downloads, FREEMIUM) — not the raw aggregate rating, which is contaminated by unrelated products sharing the word \"better\", but the actual review text once filtered:",
+      "niche": "Code Complexity",
+      "githubUrl": "https://github.com/GapHunterLabs/highlight-companion",
+      "firstPublished": "2026-08-04"
+    },
+    "import-cost-companion": {
+      "xmlId": "dev.gaphunter.importcostcompanion",
+      "name": "Import Cost Companion",
+      "pitch": "IntelliJ-family plugin. Run **Check Import Sizes** on a JS/TS file and get a real report of every `node_modules` package it imports, sorted by on-disk size, with unusually large ones flagged.",
+      "why": "Born from real evidence in JetBrains Marketplace reviews of the closest existing plugin in this space (135K downloads, 75% of reviews at 3 stars or fewer): a documented, years-long pattern of severe CPU spikes and IDE freezes —",
+      "niche": "JS/TS Tooling",
+      "githubUrl": "https://github.com/GapHunterLabs/import-cost-companion",
+      "firstPublished": "2026-08-14"
+    },
+    "jenkinsfile-companion": {
+      "xmlId": "dev.gaphunter.jenkinsfilecompanion",
+      "name": "Jenkinsfile Companion",
+      "pitch": "IntelliJ-family plugin. Real Groovy syntax highlighting for `Jenkinsfile` plus two genuine structural checks — 100% local, zero network calls, never a live Jenkins server connection.",
+      "why": "Born from real evidence in JetBrains Marketplace reviews, not assumptions. Two independent signals in this exact space:",
+      "niche": "Jenkins CI/CD",
+      "githubUrl": "https://github.com/GapHunterLabs/jenkinsfile-companion",
+      "firstPublished": "2026-08-06"
+    },
+    "json-schema-companion": {
+      "xmlId": "dev.gaphunter.jsonschemacompanion",
+      "name": "JSON Schema Companion",
+      "pitch": "Go-to-definition (Ctrl+Click) for `$ref` values inside JSON Schema files, resolved entirely against local files.",
+      "why": "**JSON Schema Visualizer/Editor** (JetBrains Marketplace id 23554), 3,340 downloads, paid, vendor Syncro Soft -- confirmed independently by two separate investigations. Real, verbatim reviewer complaints:",
+      "niche": "JSON Schema Tooling",
+      "githubUrl": "https://github.com/GapHunterLabs/json-schema-companion",
+      "firstPublished": "2026-08-04"
+    },
+    "json-to-code-companion": {
+      "xmlId": "dev.gaphunter.jsontocodecompanion",
+      "name": "JSON to Code Companion",
+      "pitch": "IntelliJ-family plugin. Select a JSON object — in a `.json` file, a string literal, anywhere — run **Generate Class from JSON**, and get a real Java POJO or Kotlin `data class` with field types inferred from the actual JSON values, including nested objects (their own nested/ sibling classes) and arrays (`List<T>`, typed from the first element).",
+      "why": "Ports a pattern that's genuinely popular elsewhere (\"Paste JSON as Code\"-style tools, widely used across editors) with no real equivalent anywhere in JetBrains Marketplace (confirmed by search before building this, not assumed). A deliberate \"port a proven concept\" bet — see `CONSTITUTION.md` §1 for the documented-exception discipline this follows (same treatment as Refactor Simulator/Bean Copy Companion/ Turbo Log Companion/Change Case Companion).",
+      "niche": "Codegen",
+      "githubUrl": "https://github.com/GapHunterLabs/json-to-code-companion",
+      "firstPublished": "2026-08-14"
+    },
+    "jwt-companion": {
+      "xmlId": "dev.gaphunter.jwtcompanion",
+      "name": "JWT Companion",
+      "pitch": "IntelliJ-family plugin. Decode and verify JSON Web Tokens directly in a dedicated tool window — no browser round-trip, no data leaving the IDE.",
+      "why": "Born from real evidence in JetBrains Marketplace reviews of JWT (JSON Web Token) Analyzer (74,353 downloads), not assumptions:",
+      "niche": "JWT / Auth Tooling",
+      "githubUrl": "https://github.com/GapHunterLabs/jwt-companion",
+      "firstPublished": "2026-08-03"
+    },
+    "k6-companion": {
+      "xmlId": "dev.gaphunter.k6companion",
+      "name": "k6 Companion",
+      "pitch": "A Run Configuration for [k6](https://k6.io) load test scripts, plus a tool window for k6's `--summary-export` JSON.",
+      "why": "**k6** (JetBrains Marketplace id 16141), 81,065 downloads, freemium with a real paid license tier, vendor Mikhail Bolotov. Real, verbatim reviewer complaints (5 independent reviewers over ~2 years):",
+      "niche": "Load Testing",
+      "githubUrl": "https://github.com/GapHunterLabs/k6-companion",
+      "firstPublished": "2026-08-13"
+    },
+    "material-companion": {
+      "xmlId": "dev.gaphunter.materialcompanion",
+      "name": "Material Companion",
+      "pitch": "IntelliJ-family plugin. A Material Design-inspired dark editor color scheme — cool greys, blues, teals, and purples — with zero forced UI elements, zero paywalled customization, and zero performance cost.",
+      "why": "Born from real evidence in JetBrains Marketplace reviews of the leading Material-style theme plugin (18.6M downloads, 80% of recent reviews at 3 stars or fewer despite active development), not assumptions:",
+      "niche": "Editor Theme",
+      "githubUrl": "https://github.com/GapHunterLabs/material-companion",
+      "firstPublished": "2026-08-06"
+    },
+    "mermaid-companion": {
+      "xmlId": "dev.gaphunter.mermaidcompanion",
+      "name": "Mermaid Companion",
+      "pitch": "Syntax highlighting and real syntax validation for `.mmd`/`.mermaid` diagram source files (flowchart, sequence, and class diagrams).",
+      "why": "**Mermaid Studio** (JetBrains Marketplace id 29870), 11,168 downloads, paid, vendor Tachi Labs. Real, verbatim reviewer complaints:",
+      "niche": "Diagrams",
+      "githubUrl": "https://github.com/GapHunterLabs/mermaid-companion",
+      "firstPublished": "2026-08-09"
+    },
+    "nginx-companion": {
+      "xmlId": "dev.gaphunter.nginxcompanion",
+      "name": "Nginx Companion",
+      "pitch": "IntelliJ-family plugin. Syntax highlighting and directive completion for nginx config files.",
+      "why": "Born from real evidence in JetBrains Marketplace reviews, not assumptions: the leading nginx plugin's paid tier (254K+ downloads) has recent complaints of locking up the IDE \"even on non-nginx related edits,\" and of the free tier repeatedly prompting for analytics/tracking consent on every startup regardless of how many times the user declines. The historical free alternative has been abandoned since 2019.",
+      "niche": "Nginx Config",
+      "githubUrl": "https://github.com/GapHunterLabs/nginx-companion",
+      "firstPublished": "2026-07-30"
+    },
+    "openapi-companion": {
+      "xmlId": "dev.gaphunter.openapicompanion",
+      "name": "OpenAPI Companion",
+      "pitch": "IntelliJ-family plugin. Reliable go-to-definition (Ctrl+Click / Ctrl+B) for `$ref` values in OpenAPI/Swagger specs written in JSON or YAML, resolved entirely against local files, plus a warning on any `$ref` that doesn't actually resolve.",
+      "why": "Built from real, current evidence across four independent sources in this exact space, not assumptions:",
+      "niche": "OpenAPI/Swagger Tooling",
+      "githubUrl": "https://github.com/GapHunterLabs/openapi-companion",
+      "firstPublished": "2026-08-13"
+    },
+    "react-native-companion": {
+      "xmlId": "dev.gaphunter.reactnativecompanion",
+      "name": "React Native Companion",
+      "pitch": "IntelliJ/WebStorm/PhpStorm plugin. Run React Native commands (`run-android`, `run-ios`, Metro) from a tool window without freezing the IDE.",
+      "why": "Born from real evidence in JetBrains Marketplace reviews, not assumptions: the leading paid alternative in this space (React Native Console, ~430K downloads, $19-24/year) has a recent, severe, reproducible complaint — \"severely impacting IDE performance... frequently becomes unresponsive... thread dumps are required\" — plus older reports of buggy iOS simulator integration and unreliable buttons. The same vendor's own free tier is rated higher than their paid one, suggesting the problem is implementation quality in the paid tier's extra features, not something inherent to the feature set.",
+      "niche": "React Native Tooling",
+      "githubUrl": "https://github.com/GapHunterLabs/react-native-companion",
+      "firstPublished": "2026-08-13"
+    },
+    "refactor-simulator": {
+      "xmlId": "dev.gaphunter.refactorsimulator",
+      "name": "Refactor Simulator",
+      "pitch": "IntelliJ IDEA (Community + Ultimate) plugin. **Preview every refactoring before committing it.** Simulates a rename in an isolated, in-memory sandbox — using IntelliJ's own PSI, Find Usages, and refactoring processors, never a custom engine — and shows a full impact report, deterministic validation, and a native side-by-side diff before anything touches a real file.",
+      "why": "Unlike the other 8 Gap Hunter Labs plugins, this one wasn't built from a documented backlog of real competitor reviews. A quick evidence check (2026-07-28) confirmed there's no direct competitor with real, citable paid-tier complaints in this exact space — refactor previews already exist natively in IntelliJ, and the closest paid product found (Parasoft Jtest) is an unrelated enterprise test-impact-analysis suite that runs tests *after* a change is applied, not a pre-commit simulation. This is an original idea, not market-validated the way the other 8 plugins were — treat it accordingly.",
+      "niche": "Refactoring Tools",
+      "githubUrl": "https://github.com/GapHunterLabs/refactor-simulator",
+      "firstPublished": "2026-08-11"
+    },
+    "regex-preview-companion": {
+      "xmlId": "dev.gaphunter.regexpreviewcompanion",
+      "name": "Regex Preview Companion",
+      "pitch": "IntelliJ-family plugin. A tool window with a pattern field and a sample-text area — type a regex, type or paste sample text, and every match is highlighted live as you type, with a real match count. Case insensitive, multiline, and dot-all flags are real checkboxes, not something you have to remember inline syntax for.",
+      "why": "Ports a pattern that's genuinely popular elsewhere (standalone regex testers are a daily tool for many developers) directly into the IDE, with no real equivalent already in JetBrains Marketplace (confirmed by search before building this, not assumed). A deliberate \"port a proven concept\" bet — see `CONSTITUTION.md` §1 for the documented-exception discipline this follows (same treatment as Refactor Simulator/Bean Copy Companion and the other plugins built this same session).",
+      "niche": "Regex Tooling",
+      "githubUrl": "https://github.com/GapHunterLabs/regex-preview-companion",
+      "firstPublished": "2026-08-14"
+    },
+    "review-companion": {
+      "xmlId": "dev.gaphunter.reviewcompanion",
+      "name": "Review Companion",
+      "pitch": "IntelliJ-family plugin. Local, rule-based code review hints for Java and Kotlin — no account, no rate limit, no cloud call.",
+      "why": "Born from real evidence in JetBrains Marketplace reviews of Bito AI Code Reviews (~864K downloads, freemium), not assumptions:",
+      "niche": "Code Review",
+      "githubUrl": "https://github.com/GapHunterLabs/review-companion",
+      "firstPublished": "2026-08-03"
+    },
+    "spreadsheet-companion": {
+      "xmlId": "dev.gaphunter.spreadsheetcompanion",
+      "name": "Spreadsheet Companion",
+      "pitch": "IntelliJ-family plugin. Edit CSV/TSV files in a real table and view XLSX workbooks — without leaving the IDE, and without the plugin taking over your files.",
+      "why": "Born from real evidence in JetBrains Marketplace reviews, not assumptions: the leading paid spreadsheet plugin in this space ($39/year, ~307K downloads) has 50% of its reviews at 3 stars or fewer, with paying users reporting that they cannot add or delete rows, cannot copy/paste cells, that the plugin forcibly takes over CSV files with no way to opt out, that its license prompt freezes the whole IDE, and that it corrupted XLSX files on save.",
+      "niche": "CSV/XLSX Tooling",
+      "githubUrl": "https://github.com/GapHunterLabs/spreadsheet-companion",
+      "firstPublished": "2026-08-06"
+    },
+    "test-scaffold-companion": {
+      "xmlId": "dev.gaphunter.testscaffoldcompanion",
+      "name": "Test Scaffold Companion",
+      "pitch": "IntelliJ-family plugin (IntelliJ IDEA, Android Studio, and any IntelliJ-based IDE that bundles the Java and Kotlin plugins). Generates a real, compiling JUnit test skeleton for a Java or Kotlin class — one empty test method per public method, with your project's own test framework detected and imported correctly.",
+      "why": "The free alternatives in this space have the same defect, reported by their own users: generated code that doesn't compile or a test that \"passes\" without asserting anything real. From those plugins' own JetBrains Marketplace reviews:",
+      "niche": "Testing / Codegen",
+      "githubUrl": "https://github.com/GapHunterLabs/test-scaffold-companion",
+      "firstPublished": "2026-08-12"
+    },
+    "theme-companion": {
+      "xmlId": "dev.gaphunter.themecompanion",
+      "name": "Theme Companion",
+      "pitch": "IntelliJ-family plugin. A dark, high-contrast editor color scheme plus a folder-icon provider that keeps source/test/resource root icons showing up, always.",
+      "why": "Born from real evidence in JetBrains Marketplace reviews of a paid Monokai theme plugin (2.47M downloads, 85%+ of reviews at 3 stars or below), not assumptions:",
+      "niche": "Editor Theme",
+      "githubUrl": "https://github.com/GapHunterLabs/theme-companion",
+      "firstPublished": "2026-07-30"
+    },
+    "turbo-log-companion": {
+      "xmlId": "dev.gaphunter.turbologcompanion",
+      "name": "Turbo Log Companion",
+      "pitch": "IntelliJ-family plugin. Place the caret on a variable, parameter, or field, run **Insert Log Statement**, and get a real `println` (Kotlin) / `System.out.println` (Java) inserted right after the enclosing statement — class, method, and line number already baked in as literal text. **Remove All Log Statements** finds and deletes every one this plugin has added to the current file, in one action.",
+      "why": "Ports a pattern that's genuinely popular elsewhere — VS Code's Turbo Console Log has millions of installs — with **no equivalent anywhere in JetBrains Marketplace** (confirmed by search before building this, not assumed: zero results for \"turbo console log\", \"turbo log\", \"console log\" as a code-generation concept). This is a deliberate \"port a proven concept\" bet, not a competitor-complaint-driven build — see `CONSTITUTION.md` §1 for the documented-exception discipline this follows (same treatment as Refactor Simulator/Bean Copy Companion).",
+      "niche": "Debugging / Codegen",
+      "githubUrl": "https://github.com/GapHunterLabs/turbo-log-companion",
+      "firstPublished": "2026-08-14"
+    },
+    "xsd-companion": {
+      "xmlId": "dev.gaphunter.xsdcompanion",
+      "name": "XSD Companion",
+      "pitch": "IntelliJ-family plugin. Go-to-definition and a real structure tree for XSD/WSDL schemas split across multiple files.",
+      "why": "Born from real evidence in JetBrains Marketplace reviews of a paid XSD/WSDL visualizer plugin (~$10/month, 69% of reviews at 3 stars or fewer), not assumptions:",
+      "niche": "XSD/WSDL Tooling",
+      "githubUrl": "https://github.com/GapHunterLabs/xsd-companion",
+      "firstPublished": "2026-08-13"
+    }
+  }
+}
