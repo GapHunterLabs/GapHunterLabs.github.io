@@ -3,7 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Gap Hunter Labs hunts real, evidence-based gaps in developer tooling and ships focused IntelliJ-family plugins to fix them. Explore all 34 plugins by category, growth, and the specific competitor problem each one solves.">
+<meta name="description" content="Gap Hunter Labs hunts real, evidence-based gaps in developer tooling and ships focused IntelliJ-family plugins to fix them. Explore every plugin by category, growth, and the specific competitor problem each one solves.">
+<!-- Locked down deliberately, not a boilerplate copy-paste: this page is
+     100% inline HTML/CSS/JS (no build step, no external script/style/font
+     host) plus one live JSON data island swapped in by pipeline/
+     auto_update_catalog.py from JetBrains Marketplace + GitHub API
+     responses. That data island is the actual untrusted-input surface on
+     this page (see esc()/safeUrl() below for the render-time half of this
+     defense) -- script-src/style-src stay 'self' + 'unsafe-inline' only
+     because everything really is inline, never relaxed for a CDN;
+     object-src/base-uri/form-action are locked to 'none' since this page
+     never embeds plugins or submits forms; img-src allows only this origin,
+     data: (the inline SVG favicon/icons), and raw.githubusercontent.com
+     (the only external host ever referenced, for demo GIFs) -- no other
+     origin is ever fetched from this page, by design. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://raw.githubusercontent.com; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%201024%201024%22%20width%3D%22100%25%22%20height%3D%22100%25%22%3E%20%3C%21--%20White%20background%3A%20keeps%20the%20mark%20legible%20in%20light%20theme%20and%20on%20the%20Marketplace%20listing%20card%20--%3E%20%3Crect%20width%3D%221024%22%20height%3D%221024%22%20fill%3D%22%23FFFFFF%22/%3E%20%3Cpath%20d%3D%22%20M%20511%2C81%20L%20847%2C283%20L%20725%2C351%20L%20508%2C223%20L%20296%2C348%20L%20296%2C588%20L%20463%2C691%20L%20342%2C765%20L%20173%2C665%20L%20172%2C281%20Z%22%20fill%3D%22%230151FC%22%20/%3E%20%3Cpath%20d%3D%22%20M%20846%2C412%20L%20844%2C668%20L%20518%2C863%20L%20393%2C795%20L%20724%2C589%20L%20721%2C540%20L%20567%2C538%20L%20568%2C412%20Z%22%20fill%3D%22%2301B3FD%22%20/%3E%20%3Cpolygon%20points%3D%22569%2C413%20695%2C413%20695%2C539%20569%2C539%22%20fill%3D%22%2302F172%22%20/%3E%20%3C/svg%3E">
 <title>Gap Hunter Labs — Plugin Intelligence</title>
 <style>
@@ -2825,6 +2841,22 @@
     });
   }
 
+  // esc() only neutralizes HTML metacharacters -- it does NOT validate a
+  // URL's scheme, so on its own `esc(p.marketplaceUrl)` would still render
+  // a working `href="javascript:..."` if that field ever arrived malformed
+  // (marketplaceUrl/githubUrl both trace back to pipeline/
+  // auto_update_catalog.py, which builds them from a live JetBrains
+  // Marketplace API response -- not attacker input today, but not this
+  // page's own literal either). Every dynamic href/src on this page goes
+  // through this gate first: only http(s) survives, anything else
+  // (javascript:, data:, vbscript:, a bare "//host" scheme-relative link)
+  // is replaced with '#' instead of ever reaching the DOM.
+  function safeUrl(s) {
+    if (s == null) return '#';
+    var str = String(s).trim();
+    return /^https?:\/\//i.test(str) ? str : '#';
+  }
+
   function mdInline(s) {
     return esc(s)
       .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
@@ -3626,8 +3658,8 @@
       html += '<img class="dossier-gif" src="' + esc(gifUrl) + '" alt="' + esc(p.name) + ' in action" loading="lazy" onerror="this.remove()">';
     }
     html += '<div class="dossier-links">';
-    if (p.marketplaceUrl) html += '<a class="btn primary" href="' + esc(p.marketplaceUrl) + '" target="_blank" rel="noopener">Install on JetBrains ↗</a>';
-    html += '<a class="btn" href="' + esc(p.githubUrl) + '" target="_blank" rel="noopener">View on GitHub ↗</a>';
+    if (p.marketplaceUrl) html += '<a class="btn primary" href="' + esc(safeUrl(p.marketplaceUrl)) + '" target="_blank" rel="noopener">Install on JetBrains ↗</a>';
+    html += '<a class="btn" href="' + esc(safeUrl(p.githubUrl)) + '" target="_blank" rel="noopener">View on GitHub ↗</a>';
     html += '</div></div>';
     html += '</div>';
 
@@ -3711,8 +3743,8 @@
       '<div class="tbl-niche">' + esc(p.niche) + '</div>' +
       '<div class="tbl-pitch">' + mdInline(p.pitch || '—') + '</div></div>';
     html += '<div class="tbl-links">';
-    if (p.marketplaceUrl) html += '<a class="btn primary" href="' + esc(p.marketplaceUrl) + '" target="_blank" rel="noopener">Install on JetBrains ↗</a>';
-    html += '<a class="btn" href="' + esc(p.githubUrl) + '" target="_blank" rel="noopener">View on GitHub ↗</a>';
+    if (p.marketplaceUrl) html += '<a class="btn primary" href="' + esc(safeUrl(p.marketplaceUrl)) + '" target="_blank" rel="noopener">Install on JetBrains ↗</a>';
+    html += '<a class="btn" href="' + esc(safeUrl(p.githubUrl)) + '" target="_blank" rel="noopener">View on GitHub ↗</a>';
     html += '</div>';
     html += '</div>';
 
