@@ -2426,7 +2426,7 @@
       <h1 class="hero-title"><span class="ht-line">Gap</span><span class="ht-line">Hunter</span><span class="ht-line accent">Labs</span></h1>
       <span class="hero-dotgrid" aria-hidden="true"></span>
       <div class="hero-caption">Plugin Intelligence / Catalog Report</div>
-      <p class="hero-subtitle">Real state of the 34-plugin catalog — every product exists because of a documented, evidence-based gap in existing tooling, not a guess.</p>
+      <p class="hero-subtitle" id="heroSubtitle">Real state of the 34-plugin catalog — every product exists because of a documented, evidence-based gap in existing tooling, not a guess.</p>
     </div>
 
     <div class="hero-thesis">
@@ -2920,7 +2920,14 @@
     requestAnimationFrame(frame);
   }
 
+  function updateHeroSubtitle() {
+    var el = document.getElementById('heroSubtitle');
+    if (!el) return;
+    el.textContent = 'Real state of the ' + data.totalPlugins + '-plugin catalog — every product exists because of a documented, evidence-based gap in existing tooling, not a guess.';
+  }
+
   function renderStats() {
+    updateHeroSubtitle();
     var baseSum = 0, curSum = 0, haveBaseline = false;
     plugins.forEach(function (p) {
       if (p.growthFrom != null && p.downloads != null) {
