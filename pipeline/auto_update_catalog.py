@@ -78,6 +78,17 @@ def resolve_numeric_id(xml_id, name):
         return None
     for p in data.get("plugins", []):
         if p.get("xmlId") == xml_id:
+            # Defense in depth: `id` becomes the numeric segment of
+            # marketplaceUrl below, which index.html's safeUrl() already
+            # gates to http(s)-only before ever using it in an href -- but
+            # validating the *shape* here too means a malformed/non-numeric
+            # `id` (a JetBrains API bug, or a compromised response) never
+            # even reaches catalog_latest_data.json in the first place,
+            # rather than relying solely on the browser-side gate.
+            plugin_id = p.get("id")
+            if not isinstance(plugin_id, int):
+                print(f"  [warn] id no-numerico para '{name}' ({plugin_id!r}), tratando como no encontrado", file=sys.stderr)
+                return None
             return p
     return None
 
@@ -239,6 +250,16 @@ def main():
     json.loads(m.group(2))  # valida el bloque VIEJO antes de tocar nada
 
     new_json = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
+    # json.dumps() nunca escapa "</script>" -- si cualquier campo de texto
+    # (pitch/why en catalog_static_metadata.json, en teoria tambien algo
+    # devuelto por la API de JetBrains) llegara a contener ese substring
+    # literal, cerraria el <script id="catalog-data"> antes de tiempo y el
+    # resto del documento se interpretaria fuera de contexto. "\/" es un
+    # escape JSON valido (a diferencia de "\!", que NO lo es y rompe
+    # json.loads -- confirmado antes de fijar este approach) que JSON.parse
+    # revierte a "/" sin cambiar el valor decodificado, asi que este fix es
+    # transparente para el JS que lo lee.
+    new_json = new_json.replace("</script>", "<\\/script>")
     new_html = pattern.sub(lambda mm: mm.group(1) + new_json + mm.group(3), html, count=1)
 
     m2 = pattern.search(new_html)
