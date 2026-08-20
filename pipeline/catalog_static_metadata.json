@@ -307,6 +307,87 @@
       "niche": "XSD/WSDL Tooling",
       "githubUrl": "https://github.com/GapHunterLabs/xsd-companion",
       "firstPublished": "2026-08-13"
+    },
+    "http-status-inline-companion": {
+      "xmlId": "dev.gaphunter.httpstatusinlinecompanion",
+      "name": "HTTP Status Code Inline Companion",
+      "pitch": "IntelliJ-family plugin. Shows the official name of any HTTP status code (`404 -> Not Found`, `503 -> Service Unavailable`) inline, right after the numeric literal, in Java and Kotlin code — no need to look it up. Works in any code context, not tied to a specific HTTP framework's own annotations.",
+      "why": "An original idea, not a port of an existing competitor — validated against CONSTITUTION.md §1's \"Plan B permanente\" discipline before being built: confirmed no plugin in this catalog or in JetBrains Marketplace does exactly this, and confirmed buildable with the same inlay rendering mechanism Error Lens Companion and Regex Named Group Companion already ship.",
+      "niche": "Editor Productivity",
+      "githubUrl": "https://github.com/GapHunterLabs/http-status-inline-companion",
+      "firstPublished": "2026-08-19"
+    },
+    "dockerfile-layer-size-companion": {
+      "xmlId": "dev.gaphunter.dockerfilelayersizecompanion",
+      "name": "Dockerfile Layer Size Companion",
+      "pitch": "IntelliJ-family plugin. Shows the real, on-disk size of each COPY/ADD layer in an open Dockerfile, inline — computed by summing the actual file sizes of what gets copied from your local build context, respecting .dockerignore. No Docker daemon, no build, no network call.",
+      "why": "An original idea, not a port of an existing competitor — validated against CONSTITUTION.md §1's \"Plan B permanente\" discipline before being built: confirmed no plugin in this catalog or in JetBrains Marketplace does exactly this (\"docker layer size\" → 0 Marketplace results), buildable with a hand-rolled line-based Dockerfile scanner plus the same inlay mechanism already proven twice in this catalog.",
+      "niche": "Docker / DevOps",
+      "githubUrl": "https://github.com/GapHunterLabs/dockerfile-layer-size-companion",
+      "firstPublished": "2026-08-19"
+    },
+    "circular-dependency-companion": {
+      "xmlId": "dev.gaphunter.circulardependencycompanion",
+      "name": "Circular Dependency Companion",
+      "pitch": "IntelliJ-family plugin. Visualizes the dependency graph between modules of a multi-module Gradle or Maven project, and highlights real circular dependencies when they exist — module/build-system level, not file/class-level \"circular import\". 100% static text/XML analysis, no Gradle daemon, no Maven reactor build, no network call.",
+      "why": "An original idea, not a port of an existing competitor — validated against CONSTITUTION.md §1's \"Plan B permanente\" discipline before being built: confirmed no plugin in this catalog or in JetBrains Marketplace focuses specifically on build-module cycles, buildable with a hand-rolled text/regex parser for Gradle DSL.",
+      "niche": "Build Tooling / Architecture",
+      "githubUrl": "https://github.com/GapHunterLabs/circular-dependency-companion",
+      "firstPublished": "2026-08-19"
+    },
+    "unused-npm-script-companion": {
+      "xmlId": "dev.gaphunter.unusednpmscriptcompanion",
+      "name": "Unused npm Script Companion",
+      "pitch": "IntelliJ-family plugin. Gutter icon on every entry of an open package.json's \"scripts\" section, showing whether that script is actually referenced anywhere in your project — or an orphan nobody calls, a real candidate for cleanup. 100% static text/PSI analysis, no Node.js/npm process spawned, no network call.",
+      "why": "An original idea, not a port of an existing competitor — validated against CONSTITUTION.md §1's \"Plan B permanente\" discipline before being built: confirmed no plugin does exactly this (\"unused dependency\" tools like Knip analyze packages under node_modules, never the scripts declared in package.json itself), buildable with the bundled JSON plugin's own PSI.",
+      "niche": "Node.js / npm Tooling",
+      "githubUrl": "https://github.com/GapHunterLabs/unused-npm-script-companion",
+      "firstPublished": "2026-08-19"
+    },
+    "env-var-missing-companion": {
+      "xmlId": "dev.gaphunter.envvarmissingcompanion",
+      "name": "Env Var Missing Companion",
+      "pitch": "IntelliJ-family plugin. Cross-checks every real environment-variable access in your open file (process.env.PORT, os.environ[\"DEBUG\"], os.getenv(\"TIMEOUT\")) against your project's real .env/.env.example/etc. files, and warns on any variable used in code but never declared anywhere — with a real quick-fix to add it. 100% static text analysis, no network call.",
+      "why": "An original idea, not a port of an existing competitor — validated against CONSTITUTION.md §1's \"Plan B permanente\" discipline before being built: confirmed no existing tool cross-references actual process.env/os.environ accesses in source against .env* file contents.",
+      "niche": "Env Config Tooling",
+      "githubUrl": "https://github.com/GapHunterLabs/env-var-missing-companion",
+      "firstPublished": "2026-08-19"
+    },
+    "sql-concatenation-companion": {
+      "xmlId": "dev.gaphunter.sqlconcatenationcompanion",
+      "name": "SQL String Concatenation Companion",
+      "pitch": "IntelliJ-family plugin. Flags SQL queries built by unparameterized string concatenation or interpolation — the classic SQL-injection shape — across Java, Kotlin, and Python, and offers a real quick-fix toward parameterization. Deliberately narrow, near-zero configuration, tuned hard against false positives.",
+      "why": "An original idea, not a port of an existing competitor — validated against CONSTITUTION.md §1's \"Plan B permanente\" discipline before being built: confirmed no plugin in this catalog does exactly this, and Qodana (968K downloads) is a full general-purpose SAST scanner, much heavier and broader than this single, zero-config pattern check.",
+      "niche": "Code Quality / Security",
+      "githubUrl": "https://github.com/GapHunterLabs/sql-concatenation-companion",
+      "firstPublished": "2026-08-19"
+    },
+    "feature-flag-reference-companion": {
+      "xmlId": "dev.gaphunter.featureflagreferencecompanion",
+      "name": "Feature Flag Reference Companion",
+      "pitch": "IntelliJ-family plugin. Gutter icon next to every recognized feature-flag-check call's key literal in Java/Kotlin code, showing how many times that exact key is referenced anywhere else in the open project — helps find orphaned flags left behind after a rollout completed. 100% static PSI analysis, no provider connection ever.",
+      "why": "An original idea, not a port of an existing competitor — validated against CONSTITUTION.md §1's \"Plan B permanente\" discipline before being built: the 3 existing feature-flag plugins on JetBrains Marketplace are all clients that connect to a provider's live service; this plugin is deliberately the opposite, complementary rather than competing.",
+      "niche": "Code Quality / Feature Flags",
+      "githubUrl": "https://github.com/GapHunterLabs/feature-flag-reference-companion",
+      "firstPublished": "2026-08-19"
+    },
+    "log-format-string-companion": {
+      "xmlId": "dev.gaphunter.logformatstringcompanion",
+      "name": "Log Format String Companion",
+      "pitch": "IntelliJ-family plugin. Flags a log message whose placeholder count doesn't match its argument count — an error that today only surfaces at runtime. Deliberately narrow, near-zero configuration, tuned hard against false positives (correctly ignores SLF4J's trailing-Throwable exception argument).",
+      "why": "An original idea, not a port of an existing competitor — validated against CONSTITUTION.md §1's \"Plan B permanente\" discipline before being built: confirmed no plugin in this catalog does exactly this, buildable with a whole-document regex scan, the same mechanism sql-concatenation-companion already proved.",
+      "niche": "Code Quality / Logging",
+      "githubUrl": "https://github.com/GapHunterLabs/log-format-string-companion",
+      "firstPublished": "2026-08-19"
+    },
+    "commit-message-convention-companion": {
+      "xmlId": "dev.gaphunter.commitmessageconventioncompanion",
+      "name": "Commit Message Convention Companion",
+      "pitch": "IntelliJ-family plugin. Validates the commit message you are currently writing, live, in the IntelliJ VCS Commit dialog — against the Conventional Commits convention — and shows the exact rule it breaks before you commit, instead of silently accepting or rejecting.",
+      "why": "An original idea, not a port of an existing competitor — validated against CONSTITUTION.md §1's \"Plan B permanente\" discipline before being built: confirmed no plugin in this catalog does exactly this, buildable with CheckinHandlerFactory/CheckinHandler, its real signature confirmed via javap against the platform jar rather than guessed.",
+      "niche": "VCS / Git Workflow",
+      "githubUrl": "https://github.com/GapHunterLabs/commit-message-convention-companion",
+      "firstPublished": "2026-08-19"
     }
   }
 }
