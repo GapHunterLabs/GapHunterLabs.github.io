@@ -454,6 +454,140 @@
           "downloads": 45
         }
       }
+    },
+    {
+      "date": "2026-08-22",
+      "plugins": {
+        "dev.gaphunter.ansiblecompanion": {
+          "downloads": 129
+        },
+        "dev.gaphunter.apisecuritycompanion": {
+          "downloads": 75
+        },
+        "dev.gaphunter.asyncapicompanion": {
+          "downloads": 38
+        },
+        "dev.gaphunter.beancopycompanion": {
+          "downloads": 10
+        },
+        "dev.gaphunter.certcompanion": {
+          "downloads": 71
+        },
+        "dev.gaphunter.changecasecompanion": {
+          "downloads": 8
+        },
+        "dev.gaphunter.circulardependencycompanion": {
+          "downloads": 3
+        },
+        "dev.gaphunter.cmakecompanion": {
+          "downloads": 21
+        },
+        "dev.gaphunter.commitmessageconventioncompanion": {
+          "downloads": 2
+        },
+        "dev.gaphunter.dockerfilelayersizecompanion": {
+          "downloads": 2
+        },
+        "dev.gaphunter.envdiffcompanion": {
+          "downloads": 9
+        },
+        "dev.gaphunter.envvarmissingcompanion": {
+          "downloads": 1
+        },
+        "dev.gaphunter.errorlenscompanion": {
+          "downloads": 14
+        },
+        "dev.gaphunter.featureflagreferencecompanion": {
+          "downloads": 2
+        },
+        "dev.gaphunter.firestorecompanion": {
+          "downloads": 54
+        },
+        "dev.gaphunter.formatconvertercompanion": {
+          "downloads": 28
+        },
+        "dev.gaphunter.githygienecompanion": {
+          "downloads": 36
+        },
+        "dev.gaphunter.gitlabcicompanion": {
+          "downloads": 84
+        },
+        "dev.gaphunter.graphqlcompanion": {
+          "downloads": 31
+        },
+        "dev.gaphunter.highlightcompanion": {
+          "downloads": 60
+        },
+        "dev.gaphunter.httpstatusinlinecompanion": {
+          "downloads": 2
+        },
+        "dev.gaphunter.importcostcompanion": {
+          "downloads": 10
+        },
+        "dev.gaphunter.jenkinsfilecompanion": {
+          "downloads": 20
+        },
+        "dev.gaphunter.jsonschemacompanion": {
+          "downloads": 15
+        },
+        "dev.gaphunter.jsontocodecompanion": {
+          "downloads": 7
+        },
+        "dev.gaphunter.jwtcompanion": {
+          "downloads": 61
+        },
+        "dev.gaphunter.k6companion": {
+          "downloads": 43
+        },
+        "dev.gaphunter.logformatstringcompanion": {
+          "downloads": 2
+        },
+        "dev.gaphunter.materialcompanion": {
+          "downloads": 16
+        },
+        "dev.gaphunter.mermaidcompanion": {
+          "downloads": 116
+        },
+        "dev.gaphunter.nginxcompanion": {
+          "downloads": 30
+        },
+        "dev.gaphunter.openapicompanion": {
+          "downloads": 53
+        },
+        "dev.gaphunter.reactnativecompanion": {
+          "downloads": 149
+        },
+        "dev.gaphunter.refactorsimulator": {
+          "downloads": 52
+        },
+        "dev.gaphunter.regexpreviewcompanion": {
+          "downloads": 20
+        },
+        "dev.gaphunter.reviewcompanion": {
+          "downloads": 16
+        },
+        "dev.gaphunter.spreadsheetcompanion": {
+          "downloads": 61
+        },
+        "dev.gaphunter.sqlconcatenationcompanion": {
+          "downloads": 2
+        },
+        "dev.gaphunter.testscaffoldcompanion": {
+          "downloads": 12
+        },
+        "dev.gaphunter.themecompanion": {
+          "downloads": 51
+        },
+        "dev.gaphunter.turbologcompanion": {
+          "downloads": 8
+        },
+        "dev.gaphunter.unusednpmscriptcompanion": {
+          "downloads": 2
+        },
+        "dev.gaphunter.xsdcompanion": {
+          "downloads": 49
+        }
+      }
     }
   ]
 }
