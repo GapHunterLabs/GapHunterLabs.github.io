@@ -1683,25 +1683,16 @@
     stroke: currentColor;
     stroke-width: 1.35;
   }
-  .hunting-svg .node:hover .dot-icon-anchor { transform: scale(1.1); }
-  .hunting-svg .node text.count-inline {
-    font-family: var(--mono);
-    font-weight: 700;
-    font-size: 9px;
-    fill: #fff;
-    opacity: 0.95;
-    pointer-events: none;
-    text-shadow: 0 1px 2px rgba(0,0,0,0.5);
-    transition: transform 0.15s ease;
-  }
-  .hunting-svg .node:hover text.count-inline { transform: scale(1.12); }
-  /* Both fade out on the merged/active state -- that state already
-     grows the dot into a plain background disc behind the hub (see
-     .node.active circle.dot above) with its own bigger label+count
-     plate doing the identifying work, so the small inline icon/count
-     would just clutter the same space. */
-  .hunting-svg .node.active .dot-icon-anchor,
-  .hunting-svg .node.active text.count-inline { opacity: 0; transition: opacity 0.15s ease; }
+  /* 2026-08-21 round 6: user asked to remove the inline count and stop
+     the icon moving on hover entirely -- simplest fix for both is to
+     drop the hover scale transform. Permanent +10% size now baked into
+     iconScale at build time (buildHuntingSvg) instead of a hover
+     effect. */
+  /* Fades out on the merged/active state -- that state already grows
+     the dot into a plain background disc behind the hub (see
+     .node.active circle.dot above) with its own label+count plate
+     doing the identifying work, so the icon would just clutter it. */
+  .hunting-svg .node.active .dot-icon-anchor { opacity: 0; transition: opacity 0.15s ease; }
 
   /* Connector stub + name tag, 2026-08-21 round 3: user's explicit
      follow-up -- "si el nombre de la categoria queda por fuera almenos
@@ -3740,7 +3731,7 @@
       // a bigger dot AND a proportionally bigger icon, not a fixed
       // pixel size that would look tiny in a big node or cramped in a
       // small one).
-      var iconScale = (n.r * 0.46 / HUNTING_ICON_HALF).toFixed(3);
+      var iconScale = (n.r * 0.46 / HUNTING_ICON_HALF * 1.1).toFixed(3);
       var iconCy = (n.y - n.r * 0.22).toFixed(1);
       var countCy = (n.y + n.r * 0.42).toFixed(1);
 
@@ -3773,7 +3764,6 @@
         '<g class="dot-icon-anchor" style="transform-origin:' + n.x.toFixed(1) + 'px ' + iconCy + 'px" transform="translate(' + n.x.toFixed(1) + ',' + iconCy + ')">' +
         '<g class="dot-icon" transform="scale(' + iconScale + ')">' + (CATEGORY_ICON_PATHS[n.key] || '') + '</g>' +
         '</g>' +
-        '<text class="count-inline" style="transform-origin:' + n.x.toFixed(1) + 'px ' + countCy + 'px" x="' + n.x.toFixed(1) + '" y="' + countCy + '" text-anchor="middle">' + n.count + '</text>' +
         // Connector stub: a short vertical line from the dot's bottom
         // edge to the tag, same category color as the dot itself so it
         // reads as one continuous piece, not a gap.
