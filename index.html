@@ -1624,7 +1624,7 @@
   }
   .hunting-svg .node.hack circle.dot { animation: hackFlickerNode 0.5s steps(6); }
   .hunting-svg .node text { font-family: var(--mono); font-size: 12px; fill: var(--text-dim); transition: fill 0.15s ease, transform 0.3s cubic-bezier(.65,0,.35,1); }
-  .hunting-svg .node.active text.label { fill: var(--text); font-weight: 700; font-size: 18px; transform: translateY(34px); }
+  .hunting-svg .node.active text.label { fill: var(--text); font-weight: 700; font-size: 18px; transform: translateY(48px); }
   /* Bug fixed 2026-08-21 round 5: "varias capas de texto superpuestas...
      chocandose entre si" -- text.count (the full "N plugins" line) was
      ALWAYS rendered, stacked just 12px under .label, but the resting
@@ -3907,7 +3907,7 @@
   // stylesheet -- getAttribute('x'/'y') below reads the text's BUILD-time
   // (pre-shift) position, so the merged-state shift has to be added back
   // in by hand to land the plate where the text actually renders.
-  var MERGE_TEXT_SHIFT = 34;
+  var MERGE_TEXT_SHIFT = 48;
 
   function setNodeMerged(key, merged) {
     var node = document.querySelector('.hunting-svg .node[data-cat="' + key + '"]');
@@ -3954,17 +3954,19 @@
     // runs. --mono is a monospace stack, so a fixed per-character
     // advance-width estimate (~0.6x font-size, standard for monospace)
     // is accurate, not just a rough guess.
+    // count text was removed (overlapped the label, unreadable) -- the
+    // plate now fits the label alone, no longer depends on a .count
+    // element that no longer exists (that null check was silently
+    // bailing out here, leaving the label with no plate at all --
+    // "queda huerfana en el medio del nodo").
     var label = node.querySelector('.label');
-    var count = node.querySelector('.count');
-    if (!label || !count) return;
+    if (!label) return;
     var cx = parseFloat(label.getAttribute('x'));
     var labelY = parseFloat(label.getAttribute('y')) + MERGE_TEXT_SHIFT;
-    var countY = parseFloat(count.getAttribute('y')) + MERGE_TEXT_SHIFT;
     var labelWidth = label.textContent.length * 11.2;  // ~0.62 * 18px active label font-size
-    var countWidth = count.textContent.length * 8.7;   // ~0.62 * 14px active count font-size
-    var width = Math.max(labelWidth, countWidth) + 26;
+    var width = labelWidth + 26;
     var top = labelY - 20;
-    var bottom = countY + 8;
+    var bottom = labelY + 8;
     bg.setAttribute('x', (cx - width / 2).toFixed(1));
     bg.setAttribute('y', top.toFixed(1));
     bg.setAttribute('width', width.toFixed(1));
