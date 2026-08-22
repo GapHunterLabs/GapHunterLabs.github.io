@@ -1,0 +1,16 @@
+{
+  "name": "Gap Hunter Labs — Plugin Intelligence",
+  "short_name": "Gap Hunter Labs",
+  "description": "Real, evidence-based gaps in developer tooling — every plugin exists because of a documented gap, not a guess.",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#090D16",
+  "theme_color": "#090D16",
+  "icons": [
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ]
+}
