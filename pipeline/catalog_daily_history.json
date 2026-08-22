@@ -342,14 +342,29 @@
         "dev.gaphunter.changecasecompanion": {
           "downloads": 8
         },
+        "dev.gaphunter.circulardependencycompanion": {
+          "downloads": 2
+        },
         "dev.gaphunter.cmakecompanion": {
           "downloads": 21
+        },
+        "dev.gaphunter.commitmessageconventioncompanion": {
+          "downloads": 2
+        },
+        "dev.gaphunter.dockerfilelayersizecompanion": {
+          "downloads": 2
         },
         "dev.gaphunter.envdiffcompanion": {
           "downloads": 8
         },
+        "dev.gaphunter.envvarmissingcompanion": {
+          "downloads": 1
+        },
         "dev.gaphunter.errorlenscompanion": {
           "downloads": 12
+        },
+        "dev.gaphunter.featureflagreferencecompanion": {
+          "downloads": 2
         },
         "dev.gaphunter.firestorecompanion": {
           "downloads": 49
@@ -369,6 +384,9 @@
         "dev.gaphunter.highlightcompanion": {
           "downloads": 60
         },
+        "dev.gaphunter.httpstatusinlinecompanion": {
+          "downloads": 2
+        },
         "dev.gaphunter.importcostcompanion": {
           "downloads": 9
         },
@@ -386,6 +404,9 @@
         },
         "dev.gaphunter.k6companion": {
           "downloads": 39
+        },
+        "dev.gaphunter.logformatstringcompanion": {
+          "downloads": 2
         },
         "dev.gaphunter.materialcompanion": {
           "downloads": 15
@@ -414,6 +435,9 @@
         "dev.gaphunter.spreadsheetcompanion": {
           "downloads": 61
         },
+        "dev.gaphunter.sqlconcatenationcompanion": {
+          "downloads": 2
+        },
         "dev.gaphunter.testscaffoldcompanion": {
           "downloads": 12
         },
@@ -422,6 +446,9 @@
         },
         "dev.gaphunter.turbologcompanion": {
           "downloads": 7
+        },
+        "dev.gaphunter.unusednpmscriptcompanion": {
+          "downloads": 2
         },
         "dev.gaphunter.xsdcompanion": {
           "downloads": 45
