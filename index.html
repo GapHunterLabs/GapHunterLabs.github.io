@@ -3121,8 +3121,21 @@
       <aside class="field-sidebar">
         <div class="panel hunting-panel corner-frame">
           <h2 class="panel-title"><span class="hf-live-dot" aria-hidden="true"></span>Hunting Field <span class="info-dot" title="Explore by technology gap">i</span></h2>
-          <div class="panel-hint">Explore by technology gap · drag or click the center mark to travel</div>
-          <svg id="huntingSvg" class="hunting-svg" viewBox="0 0 436 456"></svg>
+          <div class="panel-hint" id="huntingHint">Explore by technology gap · drag or click the center mark to travel</div>
+          <!-- role="img" + aria-label added 2026-08-23 (external review
+               feedback, verified against the real markup before acting):
+               this SVG had no accessible name/role at all -- a screen
+               reader announced it as generic, unlabeled graphics content.
+               role="img" is correct here (not role="application"/a live
+               region) because the diagram's real interaction -- drag or
+               click to filter -- is fully duplicated by the ordinary
+               category <select> a few lines up in the controls row,
+               which IS already keyboard/AT-operable; this SVG is a
+               visual-only shortcut to the same filtering, not the sole
+               way to reach that function. aria-describedby points at
+               the existing .panel-hint text instead of repeating it in
+               the label, so the two stay in sync automatically. -->
+          <svg id="huntingSvg" class="hunting-svg" viewBox="0 0 436 456" role="img" aria-label="Hunting Field: a radial diagram of plugin categories" aria-describedby="huntingHint"></svg>
         </div>
         <div class="panel brand-blurb">
           <h2 class="panel-title">We hunt gaps others miss</h2>
@@ -3768,6 +3781,18 @@
       })
       .catch(function () { /* stays as em dash, no fake fallback number */ });
   }
+  // Confirmed 2026-08-23 (external review raised adblocker resilience
+  // as a concern): both GoatCounter integration points already degrade
+  // cleanly with no fix needed. The <script data-goatcounter> tag near
+  // </body> is a plain async <script src> with nothing else on this
+  // page calling into it -- if an adblocker blocks it, the browser just
+  // skips loading that file, no exception anywhere. This fetch() above
+  // already has the empty .catch() right above this comment for the
+  // exact "counter API blocked/unreachable" case. And the stat that
+  // would display this value ("Visitors today") is currently hidden
+  // from the header entirely anyway (see the commented-out statDefs
+  // entry in renderStats() below), so there's no visible "stuck
+  // loading" UI for a blocked request to leave behind even in theory.
 
   function renderStats() {
     updateHeroSubtitle();
