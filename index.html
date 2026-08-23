@@ -103,13 +103,29 @@
 <meta property="og:title" content="Gap Hunter Labs — Plugin Intelligence">
 <meta property="og:description" content="Real, evidence-based gaps in developer tooling — every plugin exists because of a documented gap, not a guess. Explore the full catalog by category, growth, and the specific competitor problem each one solves.">
 <meta property="og:image" content="https://gaphunterlabs.github.io/og-image.png">
+<!-- og:image:secure_url + og:image:type added 2026-08-23: some
+     crawlers (WhatsApp's included, per their own scraper docs) prefer
+     an explicit secure_url alongside og:image even when they're
+     identical (this page is HTTPS-only already), and without an
+     explicit image:type some clients have to sniff the MIME type
+     themselves before rendering a preview -- a needless extra step
+     that can silently fail on a stricter client. og:locale declares
+     the page's real language explicitly rather than leaving it
+     unstated. -->
+<meta property="og:image:secure_url" content="https://gaphunterlabs.github.io/og-image.png">
+<meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:image:alt" content="Gap Hunter Labs — Plugin Intelligence Catalog Report">
+<meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Gap Hunter Labs — Plugin Intelligence">
 <meta name="twitter:description" content="Real, evidence-based gaps in developer tooling — every plugin exists because of a documented gap, not a guess.">
 <meta name="twitter:image" content="https://gaphunterlabs.github.io/og-image.png">
+<!-- twitter:image:alt added 2026-08-23 -- Twitter/X reads its own
+     separate alt for the card image rather than falling back to
+     og:image:alt, which had no Twitter-specific equivalent before this. -->
+<meta name="twitter:image:alt" content="Gap Hunter Labs — Plugin Intelligence Catalog Report">
 
 <!-- JSON-LD structured data, added 2026-08-21: helps search engines
      understand this is an Organization page listing SoftwareApplication

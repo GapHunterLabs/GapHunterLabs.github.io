@@ -1,12 +1,28 @@
-"""Regenerate og-image.png (1200x630) -- fourth pass, 2026-08-23.
+"""Regenerate og-image.png (1200x630) -- fifth pass, 2026-08-23.
 
-User feedback on v3: remove the Matrix-style divider entirely ("muy
-feo"), align the Hunting Field nodes faithfully to the REAL diagram
-(the real page currently renders exactly 8 nodes -- 'other' dropped to
-0 plugins after this session's NICHE_TO_CATEGORY fix -- at equal 45°
-steps starting straight up, same order as CATEGORIES in index.html:
-API, DevOps, Security, Data, Code Quality, Codegen, Testing, Editor),
-and make the logo bigger again.
+User feedback on v4 (real WhatsApp preview, confirmed the cache-busting
+?v= trick worked and the new image WAS showing): logo still too small,
+the "Real, evidence-based gaps..." subtitle text too small -- "trabaja
+en el preview haciendo la mayor cantidad de ajustes y agregando
+cualquier cosa que se pueda" (make as many adjustments as reasonable,
+add anything that can be added).
+
+Changes this round:
+- Logo: 132px -> 168px. Wordmark: 44px -> 52px.
+- Subtitle: 20px -> 26px, moved down to clear the now-taller headline.
+- New bottom-left trust-mark row (mono/instrumentation style, matches
+  the real site's .tele-row language) -- ONLY verifiable, atemporal
+  facts this time (no repeat of the earlier 'MIT LICENSED' mistake
+  with no LICENSE file backing it): "8 CATEGORIES" (matches the live
+  CATEGORIES array, minus 'other' which is genuinely empty),
+  "JETBRAINS MARKETPLACE", "OPEN SOURCE ON GITHUB". No download/plugin
+  COUNT baked in (still deliberately atemporal, per the original
+  2026-08-21 design decision -- those numbers move twice a day).
+- Small "GHL" corner wordmark added top-right of the diagram panel for
+  extra brand presence in the open space there.
+- Headline sizes bumped slightly too (54 -> 58) so the whole left
+  column reads as more confidently sized together, not just the two
+  specific lines called out.
 
 Still deliberately atemporal: no live catalog numbers baked in.
 """
@@ -18,8 +34,10 @@ LOGO_SRC = Image.open('apple-touch-icon.png').convert('RGBA')
 W, H = 1200, 630
 BG = (9, 13, 22)
 TEXT = (230, 234, 242)
-TEXT_DIM = (150, 160, 180)
+TEXT_DIM = (165, 174, 196)
+TEXT_FAINT = (120, 132, 158)
 ACCENT = (63, 162, 255)   # #3FA2FF -- real CATEGORIES.api color
+TEAL = (52, 213, 199)
 
 # Real CATEGORIES palette + order from index.html:3115-3125, exactly as
 # buildHuntingSvg() actually renders them: deg = i * (360/8), and
@@ -51,10 +69,12 @@ d = ImageDraw.Draw(img, 'RGBA')
 FONTS = 'C:/Windows/Fonts/'
 def font(path, size): return ImageFont.truetype(FONTS + path, size)
 
-f_brand = font('segoeuib.ttf', 44)
-f_h1 = font('segoeuib.ttf', 54)
-f_sub = font('segoeui.ttf', 20)
+f_brand = font('segoeuib.ttf', 52)
+f_h1 = font('segoeuib.ttf', 58)
+f_sub = font('segoeui.ttf', 26)
 f_node = font('consolab.ttf', 12)
+f_mono = font('consolab.ttf', 14)
+f_corner = font('consolab.ttf', 13)
 
 # ---- background dot-grid texture (matches .hero-dotgrid on the real site) ----
 step = 26
@@ -70,39 +90,54 @@ def corner(x, y, dx, dy, size=26, color=(70,82,110,255)):
 corner(40, 40, 1, 1)
 corner(W-40, H-40, -1, -1)
 
-# ---- logo mark: paste the REAL rasterized brand mark, resized -- bigger again per user feedback ----
+# ---- logo mark: paste the REAL rasterized brand mark, resized -- bigger AGAIN per explicit user feedback ----
 def draw_logo(cx, cy, s):
     size = int(s)
     resized = LOGO_SRC.resize((size, size), Image.LANCZOS)
     img.paste(resized, (int(cx - size/2), int(cy - size/2)), resized)
 
-draw_logo(112, 152, 132)
-d.text((192, 122), 'Gap Hunter Labs', font=f_brand, fill=TEXT)
+draw_logo(126, 150, 168)
+d.text((222, 118), 'Gap Hunter Labs', font=f_brand, fill=TEXT)
 
 # ---- headline ----
-d.text((90, 272), 'Plugin Intelligence', font=f_h1, fill=TEXT)
-d.text((90, 336), 'Catalog Report', font=f_h1, fill=ACCENT)
+d.text((90, 262), 'Plugin Intelligence', font=f_h1, fill=TEXT)
+d.text((90, 328), 'Catalog Report', font=f_h1, fill=ACCENT)
 
-# ---- subtitle ----
+# ---- subtitle, bigger per explicit user feedback ----
 sub_lines = [
     'Real, evidence-based gaps in developer tooling —',
     'every plugin exists because of one, not a guess.',
 ]
-sy = 428
+sy = 412
 for line in sub_lines:
     d.text((90, sy), line, font=f_sub, fill=TEXT_DIM)
-    sy += 28
+    sy += 35
+
+# ---- bottom-left trust-mark row: only verifiable, atemporal facts,
+# no repeat of the earlier "MIT LICENSED / no LICENSE file" mistake ----
+trust_y = 560
+trust_items = ['8 CATEGORIES', 'JETBRAINS MARKETPLACE', 'OPEN SOURCE ON GITHUB']
+tx = 90
+for item in trust_items:
+    d.ellipse([tx, trust_y+5, tx+5, trust_y+10], fill=TEAL)
+    d.text((tx+12, trust_y-2), item, font=f_mono, fill=TEXT_FAINT)
+    bbox = d.textbbox((tx+12, trust_y-2), item, font=f_mono)
+    tx = bbox[2] + 28
 
 # =====================================================================
 # Right panel: the real Hunting Field radial diagram -- all 8 category
 # nodes at the SAME angles the live SVG actually computes (polar(),
 # defined above, copied verbatim from index.html), same order/palette
-# as CATEGORIES. No divider between the two halves anymore (user: "muy
-# feo") -- the diagram just has its own open space on the page.
+# as CATEGORIES.
 # =====================================================================
-hub_x, hub_y = 890, 335
+hub_x, hub_y = 890, 345
 orbit_r = 155
 node_r = 27
+
+# small corner wordmark above the diagram, extra brand presence in the
+# open space there per "agregando cualquier cosa que se pueda"
+d.text((hub_x - 46, 60), 'HUNTING FIELD', font=f_corner, fill=TEXT_FAINT)
+d.line([hub_x - 46, 82, hub_x + 138, 82], fill=(70,82,110,255), width=1)
 
 for label, color, angle_deg in CATS:
     nx, ny = polar(hub_x, hub_y, orbit_r, angle_deg)
@@ -122,11 +157,7 @@ for label, color, angle_deg in CATS:
     d.ellipse([nx-node_r, ny-node_r, nx+node_r, ny+node_r], fill=color+(235,))
     d.ellipse([nx-node_r*0.5, ny-node_r*0.65, nx-node_r*0.05, ny-node_r*0.25], fill=(255,255,255,90))
     d.ellipse([nx-node_r, ny-node_r, nx+node_r, ny+node_r], outline=(230,234,242,140), width=1)
-    # label tag, contiguous stub like the real site's tag-stub. Tag sits
-    # BELOW the node for the bottom half of the circle (angle 45..315,
-    # i.e. not the two side nodes) and stays below for side nodes too --
-    # simplest layout that never overlaps the hub or another node at
-    # this orbit radius/node spacing (verified by eye across all 8).
+    # label tag, contiguous stub like the real site's tag-stub.
     bbox = d.textbbox((0,0), label, font=f_node)
     tw = bbox[2]-bbox[0]
     stub_y = ny + node_r
