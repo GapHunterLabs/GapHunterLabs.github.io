@@ -59,6 +59,7 @@ STATIC_PATH = os.path.join(PIPELINE_DIR, "catalog_static_metadata.json")
 HISTORY_PATH = os.path.join(PIPELINE_DIR, "catalog_daily_history.json")
 LATEST_PATH = os.path.join(PIPELINE_DIR, "catalog_latest_data.json")
 INDEX_PATH = os.path.join(ROOT, "index.html")
+SITEMAP_PATH = os.path.join(ROOT, "sitemap.xml")
 
 API = "https://plugins.jetbrains.com/api"
 UA = {"User-Agent": "gap-hunter-auto-update/1.0", "Accept": "application/json"}
@@ -270,6 +271,27 @@ def main():
         f.write(new_html)
 
     print("[auto_update] index.html actualizado, JSON re-parseado limpio antes y despues del swap")
+
+    # sitemap.xml <lastmod>, 2026-08-23 (audit finding): the page's real
+    # content changes twice a day via this same script, but the sitemap
+    # never carried a <lastmod> for crawlers to prioritize re-fetching
+    # against. Swap-in-place on the one <url> entry, same discipline as
+    # the catalog-data block above -- generatedAt is already a real UTC
+    # timestamp from this same run, just reused here as the date portion.
+    if os.path.exists(SITEMAP_PATH):
+        with open(SITEMAP_PATH, encoding="utf-8") as f:
+            sitemap = f.read()
+        lastmod_date = generated_at[:10]  # YYYY-MM-DD from the ISO timestamp
+        if "<lastmod>" in sitemap:
+            sitemap = re.sub(r"<lastmod>.*?</lastmod>", f"<lastmod>{lastmod_date}</lastmod>", sitemap)
+        else:
+            sitemap = sitemap.replace(
+                "<changefreq>daily</changefreq>",
+                f"<lastmod>{lastmod_date}</lastmod>\n    <changefreq>daily</changefreq>",
+            )
+        with open(SITEMAP_PATH, "w", encoding="utf-8") as f:
+            f.write(sitemap)
+        print(f"[auto_update] sitemap.xml lastmod actualizado a {lastmod_date}")
 
 
 if __name__ == "__main__":
