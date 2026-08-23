@@ -207,7 +207,7 @@
      Table view or the footer. content-visibility isn't needed -- it's
      a single row -- but z-index has to clear the mode-transition
      overlay's own children, hence the explicit stacking context. */
-  #top, #fieldView, #tableView, #methodology, #contentStage { scroll-margin-top: 68px; }
+  #top, #fieldView, #tableView, #methodology, #contentStage, #fieldMain, tr.row { scroll-margin-top: 68px; }
 
   .topbar {
     position: sticky;
@@ -549,7 +549,12 @@
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 14px 16px;
+    /* -30% per explicit user request, 2026-08-23 (Field-mode dossier
+       stat row felt oversized) -- padding, .num/.label font-sizes and
+       .dossier-stats .num below all scaled down together the same
+       ~30%, keeping their relative proportions instead of shrinking
+       just one dimension. */
+    padding: 10px 11px;
     box-shadow: var(--shadow);
     transition: border-color 0.25s ease;
   }
@@ -566,18 +571,18 @@
   .stat .num {
     font-family: var(--mono);
     font-variant-numeric: tabular-nums;
-    font-size: 24px;
+    font-size: 17px;
     font-weight: 700;
     line-height: 1;
     min-height: 1em;
   }
 
   .stat .num.accent { color: var(--accent); }
-  .stat .num .stat-growth { font-size: 13px; margin-left: 6px; color: var(--good); vertical-align: 2px; }
+  .stat .num .stat-growth { font-size: 10px; margin-left: 5px; color: var(--good); vertical-align: 2px; }
 
   .stat .label {
-    margin-top: 8px;
-    font-size: 11.5px;
+    margin-top: 6px;
+    font-size: 9px;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--text-faint);
@@ -1747,14 +1752,19 @@
     stroke-width: 1.75;
     stroke-linecap: round;
     stroke-dasharray: 3 5;
-    animation: spokeFlow 1.6s linear infinite;
     opacity: 0.55;
     transition: opacity 0.15s ease, stroke-width 0.15s ease;
   }
+  /* spokeFlow (an infinite 1.6s dash-offset animation on all 8 spokes
+     at once, all the time) removed 2026-08-23 -- user reported the
+     panel "feels laggy," and a permanently-running animation across 8
+     SVG elements is real continuous repaint work for zero information
+     gain once the panel is idle. Lines keep their dashed look (still
+     reads as a signal line, not a plain rule) just without the
+     never-ending motion. */
   .hunting-svg line.spoke.active { opacity: 1; stroke-width: 2.4; }
-  @keyframes spokeFlow { to { stroke-dashoffset: -16; } }
   @media (prefers-reduced-motion: reduce) {
-    .hunting-svg line.spoke { animation: none; stroke-dasharray: none; }
+    .hunting-svg line.spoke { stroke-dasharray: none; }
   }
 
   .hunting-svg .hub-group {
@@ -1991,12 +2001,12 @@
 
   .dossier-stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-    gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(78px, 1fr));
+    gap: 8px;
     margin: 20px 0;
   }
 
-  .dossier-stats .stat .num { font-size: 20px; }
+  .dossier-stats .stat .num { font-size: 14px; }
 
   .dossier-grid {
     display: grid;
@@ -2006,6 +2016,25 @@
   }
 
   @media (max-width: 760px) { .dossier-grid { grid-template-columns: 1fr; } }
+
+  /* Fixed 2026-08-23, explicit user request + screenshot: Install/View
+     wrapped to 2 separate rows on phone -- .dossier-links is already
+     flex+wrap, but each .btn's full-length label ("Install on
+     JetBrains ↗" / "View on GitHub ↗") at the desktop font-size/padding
+     was simply wider than half the phone viewport, forcing the wrap.
+     Smaller font/padding/icon + allowing the label to wrap ITS OWN text
+     (not the whole button) keeps both buttons on one row instead. */
+  @media (max-width: 480px) {
+    .dossier-links .btn {
+      font-size: 11px;
+      padding: 9px 8px;
+      gap: 5px;
+      white-space: normal;
+      text-align: center;
+      line-height: 1.25;
+    }
+    .dossier-links .btn-icon { width: 13px; height: 13px; }
+  }
 
   .dossier-col { display: flex; flex-direction: column; gap: 14px; height: 100%; }
 
@@ -3029,7 +3058,7 @@
           </div>
         </div>
         <p>We hunt real, evidence-based gaps in developer tooling and ship focused IntelliJ-family plugins to fix them. Every product in this catalog exists because of a documented complaint, not a guess.</p>
-        <div class="footer-status"><span class="dot"></span>34 plugins tracked</div>
+        <div class="footer-status"><span class="dot"></span><span id="footerStatusText">34 plugins tracked</span></div>
       </div>
 
       <nav class="footer-nav" aria-label="Footer navigation">
@@ -3533,7 +3562,12 @@
     var statDefs = [
       { icon: ICONS.plugins, color: 'var(--accent)', plain: String(data.totalPlugins), extra: '', label: 'Plugins active', accent: true },
       { icon: ICONS.downloads, color: 'var(--good)', plain: data.totalDownloads.toLocaleString('en-US'), extra: dlGrowthHtml, label: 'Downloads total' },
-      { icon: ICONS.visitors, color: 'var(--purple)', plain: visitorCountText(), extra: '', label: 'Visitors today', live: true },
+      // "Visitors today" hidden from the header, 2026-08-23, explicit
+      // user request ("esconde... de forma visual") -- GoatCounter
+      // tracking itself stays wired (script tag + fetchVisitorCount()
+      // untouched), only this row's render is skipped so the header
+      // has one less stat instead of leaving a live counter empty/dead.
+      // { icon: ICONS.visitors, color: 'var(--purple)', plain: visitorCountText(), extra: '', label: 'Visitors today', live: true },
       { icon: ICONS.reviews, color: 'var(--amber)', plain: String(data.totalReviews), extra: '', label: 'Reviews total' },
       { icon: ICONS.rating, color: 'var(--text-faint)', plain: data.avgRating != null ? data.avgRating.toFixed(2) : '—', extra: '', label: 'Avg rating' },
       { icon: ICONS.github, color: 'var(--text)', plain: String(data.totalStars), extra: '', label: 'GitHub stars' }
@@ -4618,15 +4652,23 @@
     // ambiguous here (a "similar plugin" card inside that same dossier
     // carries the SAME data-repo value as the card that opened it once
     // the user later reopens it from elsewhere).
+    // block:'start' (not 'nearest') -- 'nearest' only scrolls when the
+    // element is judged off-screen, and even then doesn't promise the
+    // element's own top lands under the sticky topbar; it can stop
+    // wherever "nearest" happens to be. 'start' + the scroll-margin-top
+    // above (68px, matching .topbar's real height) is what actually
+    // guarantees the opened dossier/row's top sits flush under the
+    // header on both desktop and phone, every time -- the exact
+    // alignment bug reported live via screenshot. 2026-08-23.
     var fieldMain = document.getElementById('fieldMain');
     if (mode === 'field' && fieldMain) {
-      fieldMain.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      fieldMain.scrollIntoView({ behavior: 'smooth', block: 'start' });
       return;
     }
     // Table mode: the row itself IS the right anchor, and tr.row is the
     // one place data-repo is guaranteed unique per repo in this view.
     var row = document.querySelector('tr.row[data-repo="' + selectedRepo + '"]');
-    if (row) row.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    if (row) row.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
   // Added 2026-08-21: the browser tab title never changed from the
@@ -4717,6 +4759,14 @@
       });
       mode = newMode;
       renderAll();
+      // Bug fixed 2026-08-23: switching Table -> Field (or back) while a
+      // plugin is already open never called scrollSelectedIntoView() --
+      // every OTHER path that opens/changes a dossier does (see the
+      // other 3 call sites), this one was just missed. Without it, the
+      // newly-rendered Field dossier / Table row could land off-screen
+      // with no scroll to bring it under the header, unlike every other
+      // way of opening a plugin.
+      if (selectedRepo) scrollSelectedIntoView();
       setTimeout(function () {
         overlay.classList.remove('show');
         modeLockActive = false;
@@ -4814,6 +4864,8 @@
     var topbarEl = document.getElementById('topbar');
     var statusText = document.getElementById('topbarStatusText');
     if (statusText) statusText.textContent = data.totalPlugins + ' plugins';
+    var footerStatusText = document.getElementById('footerStatusText');
+    if (footerStatusText) footerStatusText.textContent = data.totalPlugins + ' plugins tracked';
 
     // The merged "02" nav slot (topbar/rail/footer -- see
     // #topbarModeNavLink/#railModeNavLink/#footerModeNavLink) is never
