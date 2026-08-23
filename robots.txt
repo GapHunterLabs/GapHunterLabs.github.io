@@ -1,4 +1,11 @@
 User-agent: *
 Allow: /
+# 2026-08-23 (indexing audit): pipeline/ holds the build scripts + raw
+# JSON data files that generate index.html's own catalog-data island --
+# same data, duplicated as standalone crawlable URLs, plus a .py file
+# with no search value. Nothing here is sensitive (it's already
+# documented as intentionally public data), this is purely a crawl-
+# budget / duplicate-content cleanup, not a security measure.
+Disallow: /pipeline/
 
 Sitemap: https://gaphunterlabs.github.io/sitemap.xml
