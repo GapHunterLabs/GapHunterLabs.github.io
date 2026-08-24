@@ -39,16 +39,14 @@
     align-items: center;
     gap: 0px;
   }
-  .brand-row img {
-    width: 118px;
-    height: 118px;
+  .brand-row .brand-logo {
+    width: 95px;
+    height: 110px;
     display: block;
-    margin-right: -18px;
-    position: relative;
-    z-index: 1;
+    margin-right: 2px;
   }
   .brand-row .brand-name {
-    font-size: 59px;
+    font-size: 64px;
     font-weight: 800;
     background: linear-gradient(90deg, #FFFFFF 0%, #FFFFFF 40%, #3FA2FF 100%);
     -webkit-background-clip: text;
@@ -155,7 +153,11 @@
   <div class="corner br"></div>
 
   <div class="brand-row">
-    <img src="icon-512.png" alt="">
+    <svg class="brand-logo" viewBox="172 81 675 782">
+      <path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#3FA2FF"/>
+      <path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z" fill="#01B3FD"/>
+      <polygon points="569,413 695,413 695,539 569,539" fill="#02F172"/>
+    </svg>
     <div class="brand-name">ap Hunter Labs</div>
   </div>
 
