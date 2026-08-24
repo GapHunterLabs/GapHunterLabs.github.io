@@ -1,0 +1,280 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body {
+    width: 1200px;
+    height: 630px;
+    background: #090D16;
+    font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+    overflow: hidden;
+    position: relative;
+  }
+  /* faint dot grid, same texture as the existing og-image.png */
+  body::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(circle, #29334A 1px, transparent 1px);
+    background-size: 22px 22px;
+    opacity: 0.35;
+  }
+  .corner {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border: 2px solid #3FA2FF;
+    opacity: 0.6;
+  }
+  .corner.tl { top: 28px; left: 28px; border-right: none; border-bottom: none; }
+  .corner.br { bottom: 28px; right: 28px; border-left: none; border-top: none; }
+
+  .eyebrow {
+    position: absolute;
+    top: 60px;
+    right: 64px;
+    text-align: right;
+  }
+  .eyebrow .label {
+    font-size: 13px;
+    letter-spacing: 3px;
+    color: #8894B8;
+    font-family: "Consolas", "Courier New", monospace;
+  }
+  .eyebrow .rule {
+    margin-top: 8px;
+    height: 1px;
+    width: 180px;
+    background: linear-gradient(90deg, transparent, #3FA2FF);
+    margin-left: auto;
+  }
+
+  .brand-row {
+    position: absolute;
+    top: 92px;
+    left: 64px;
+    display: flex;
+    align-items: center;
+    gap: 22px;
+  }
+  .brand-row img {
+    width: 84px;
+    height: 84px;
+    display: block;
+  }
+  .brand-row .brand-name {
+    font-size: 44px;
+    font-weight: 800;
+    background: linear-gradient(90deg, #FFFFFF 0%, #FFFFFF 40%, #3FA2FF 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    letter-spacing: -0.5px;
+  }
+
+  .headline {
+    position: absolute;
+    top: 258px;
+    left: 64px;
+    max-width: 660px;
+  }
+  .headline .line1 {
+    font-size: 46px;
+    font-weight: 800;
+    color: #E9EDF8;
+    line-height: 1.15;
+  }
+  .headline .line2 {
+    font-size: 46px;
+    font-weight: 800;
+    line-height: 1.15;
+    background: linear-gradient(90deg, #3FA2FF, #01B3FD);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .subhead {
+    margin-top: 22px;
+    font-size: 19px;
+    color: #9AA6C4;
+    line-height: 1.5;
+    max-width: 560px;
+  }
+
+  .badges {
+    position: absolute;
+    bottom: 56px;
+    left: 64px;
+    display: flex;
+    gap: 26px;
+    align-items: center;
+  }
+  .badges .badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: #8DACE0;
+    font-family: "Consolas", "Courier New", monospace;
+    letter-spacing: 0.5px;
+  }
+  .badges .dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #34D5C7;
+  }
+  .badges .gh-icon {
+    width: 16px;
+    height: 16px;
+    fill: #8DACE0;
+  }
+  .badges .cat-icon {
+    width: 16px;
+    height: 16px;
+  }
+  .badges .jb-icon {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    background: linear-gradient(135deg, #FF318C, #FF6E00);
+    padding: 1px;
+  }
+
+  /* network graph on the right, mirroring the existing og-image.png */
+  .graph {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 560px;
+    height: 630px;
+  }
+  .graph svg { width: 100%; height: 100%; }
+  .node-label {
+    position: absolute;
+    font-size: 12px;
+    color: #E9EDF8;
+    background: #111726;
+    border: 1px solid #29334A;
+    border-radius: 4px;
+    padding: 2px 8px;
+    font-family: "Consolas", "Courier New", monospace;
+    white-space: nowrap;
+    transform: translate(-50%, 0);
+  }
+</style>
+</head>
+<body>
+  <div class="corner tl"></div>
+  <div class="corner br"></div>
+
+  <div class="eyebrow">
+    <div class="label">HUNTING FIELD</div>
+    <div class="rule"></div>
+  </div>
+
+  <div class="brand-row">
+    <img src="icon-512.png" alt="">
+    <div class="brand-name">Gap Hunter Labs</div>
+  </div>
+
+  <div class="headline">
+    <div class="line1">Plugin Intelligence</div>
+    <div class="line2">Catalog Report</div>
+    <div class="subhead">Real, evidence-based gaps in developer tooling —<br>
+    every plugin exists because of a documented<br>need, not a guess.</div>
+  </div>
+
+  <div class="badges">
+    <div class="badge">
+      <svg class="cat-icon" viewBox="0 0 16 16">
+        <rect x="1" y="9" width="3" height="6" fill="#3FA2FF"/>
+        <rect x="6.5" y="5" width="3" height="10" fill="#01B3FD"/>
+        <rect x="12" y="1" width="3" height="14" fill="#34D5C7"/>
+      </svg>
+      8 CATEGORIES
+    </div>
+    <div class="badge">
+      <svg class="jb-icon" viewBox="0 0 16 16"><path d="M3.43 3.43h9.14v9.14H3.43z"/><g fill="#fff"><path d="M4.42 10.86h3.43v.57H4.42z"/><path d="M4.28 5.79l.25-.24a.29.29 0 00.23.13c.1 0 .16-.07.16-.2V4.57h.39v.91a.53.53 0 01-.13.4.54.54 0 01-.39.14.59.59 0 01-.51-.23z"/><path d="M5.49 4.57h1.15v.33h-.76v.22h.68v.3h-.67v.23h.77v.33H5.49z"/><path d="M7.21 4.92h-.43v-.35h1.25v.35h-.43v1.08h-.4z"/><path d="M4.44 6.51h.67a.54.54 0 01.39.13.32.32 0 01.09.23.33.33 0 01-.22.32.35.35 0 01.28.35c0 .25-.2.39-.54.39h-.68zm.76.44c0-.08-.06-.12-.18-.12h-.2v.25h.19c.12 0 .19-.04.19-.12zm-.14.4h-.24v.27h.25c.12 0 .19-.05.19-.13s-.06-.14-.19-.14z"/><path d="M5.79 6.51h.62a.64.64 0 01.46.16.44.44 0 01.13.33.46.46 0 01-.29.44l.34.5h-.45l-.29-.43h-.13v.43h-.4zm.61.68c.13 0 .21-.07.21-.17s-.08-.17-.21-.17h-.22v.34z"/><path d="M7.5 6.5h.38l.61 1.44h-.42l-.1-.26h-.55l-.1.26h-.42zm.35.87l-.16-.4-.16.4z"/><path d="M8.5 6.51h.4v1.42h-.4z"/><path d="M9.05 6.51h.37l.51.76v-.76h.39v1.42h-.34l-.54-.78v.78h-.39z"/><path d="M10.35 7.7l.22-.26a.74.74 0 00.46.17c.11 0 .16-.04.16-.1s-.05-.09-.24-.14c-.31-.07-.54-.15-.54-.44s.21-.46.55-.46a.89.89 0 01.59.19l-.19.28a.7.7 0 00-.4-.14c-.1 0-.14.04-.14.09s.05.09.25.14c.33.07.53.18.53.44 0 .29-.23.45-.58.45a1 1 0 01-.67-.22z"/></g></svg>
+      JETBRAINS MARKETPLACE
+    </div>
+    <div class="badge">
+      <svg class="gh-icon" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38
+        0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58
+        1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12
+        0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82
+        1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0
+        16 8c0-4.42-3.58-8-8-8z"/></svg>
+      GITHUB OPEN SOURCE
+    </div>
+  </div>
+
+  <div class="graph">
+    <svg viewBox="0 0 560 630">
+      <!-- faint constellation lines, background texture -->
+      <g stroke="#29334A" stroke-width="1" opacity="0.5">
+        <line x1="560" y1="40" x2="470" y2="90"/>
+        <line x1="470" y1="90" x2="510" y2="150"/>
+        <line x1="510" y1="150" x2="560" y2="120"/>
+        <line x1="470" y1="90" x2="400" y2="60"/>
+        <line x1="400" y1="60" x2="330" y2="30"/>
+        <line x1="510" y1="150" x2="440" y2="190"/>
+        <line x1="440" y1="190" x2="470" y2="90"/>
+        <line x1="560" y1="220" x2="500" y2="260"/>
+        <line x1="500" y1="260" x2="440" y2="190"/>
+        <line x1="440" y1="530" x2="500" y2="580"/>
+        <line x1="500" y1="580" x2="560" y2="550"/>
+        <line x1="440" y1="530" x2="380" y2="570"/>
+      </g>
+      <!-- spokes -->
+      <g stroke-width="1.5" fill="none" opacity="0.9">
+        <line x1="290" y1="335" x2="290" y2="200" stroke="#3FA2FF"/>
+        <line x1="290" y1="335" x2="410" y2="245" stroke="#02F172"/>
+        <line x1="290" y1="335" x2="455" y2="345" stroke="#FF6E7A"/>
+        <line x1="290" y1="335" x2="410" y2="450" stroke="#B98CFF"/>
+        <line x1="290" y1="335" x2="290" y2="500" stroke="#FFB020"/>
+        <line x1="290" y1="335" x2="175" y2="450" stroke="#01B3FD"/>
+        <line x1="290" y1="335" x2="120" y2="345" stroke="#34D5C7"/>
+        <line x1="290" y1="335" x2="175" y2="245" stroke="#8894B8"/>
+      </g>
+      <!-- center hub -->
+      <circle cx="290" cy="335" r="34" fill="#0F1626" stroke="#29334A" stroke-width="2"/>
+      <g transform="translate(272, 317) scale(0.035)">
+        <path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#3FA2FF"/>
+        <path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z" fill="#01B3FD"/>
+        <polygon points="569,413 695,413 695,539 569,539" fill="#02F172"/>
+      </g>
+      <!-- nodes -->
+      <circle cx="290" cy="200" r="26" fill="#3FA2FF"/>
+      <circle cx="410" cy="245" r="26" fill="#02F172"/>
+      <circle cx="455" cy="345" r="26" fill="#FF6E7A"/>
+      <circle cx="410" cy="450" r="26" fill="#B98CFF"/>
+      <circle cx="290" cy="500" r="26" fill="#FFB020"/>
+      <circle cx="175" cy="450" r="26" fill="#01B3FD"/>
+      <circle cx="120" cy="345" r="26" fill="#34D5C7"/>
+      <circle cx="175" cy="245" r="26" fill="#8894B8"/>
+      <!-- highlight dots -->
+      <g fill="#FFFFFF" opacity="0.55">
+        <circle cx="283" cy="193" r="4"/>
+        <circle cx="403" cy="238" r="4"/>
+        <circle cx="448" cy="338" r="4"/>
+        <circle cx="403" cy="443" r="4"/>
+        <circle cx="283" cy="493" r="4"/>
+        <circle cx="168" cy="443" r="4"/>
+        <circle cx="113" cy="338" r="4"/>
+        <circle cx="168" cy="238" r="4"/>
+      </g>
+    </svg>
+    <div class="node-label" style="top:230px; left:290px;">API</div>
+    <div class="node-label" style="top:275px; left:412px;">DevOps</div>
+    <div class="node-label" style="top:378px; left:456px;">Security</div>
+    <div class="node-label" style="top:483px; left:412px;">Data</div>
+    <div class="node-label" style="top:530px; left:290px;">Code Quality</div>
+    <div class="node-label" style="top:483px; left:175px;">Codegen</div>
+    <div class="node-label" style="top:378px; left:118px;">Testing</div>
+    <div class="node-label" style="top:275px; left:175px;">Editor</div>
+  </div>
+</body>
+</html>
