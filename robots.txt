@@ -7,5 +7,11 @@ Allow: /
 # documented as intentionally public data), this is purely a crawl-
 # budget / duplicate-content cleanup, not a security measure.
 Disallow: /pipeline/
+# 2026-08-28 (auditoria, hallazgo bajo #42): og-image-source.html es el
+# mismo tipo de andamio de build que pipeline/ ya excluye -- el HTML
+# fuente que genera og-image.png (la imagen real que SI se comparte),
+# sin contenido propio de busqueda, indexable como pagina huerfana de
+# baja calidad si no se excluye explicitamente.
+Disallow: /og-image-source.html
 
 Sitemap: https://gaphunterlabs.github.io/sitemap.xml
