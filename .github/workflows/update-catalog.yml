@@ -53,8 +53,51 @@ jobs:
         with:
           python-version: "3.x"
 
+      # 2026-08-28: GH_TOKEN agregado -- bug real encontrado en auditoria
+      # (hallazgo critico #25/#24 en la sesion que lo encontro): sin esta
+      # env var, el `gh` CLI que pipeline/auto_update_catalog.py usa para
+      # traer GitHub stars (github_stars(), ver ese archivo) queda SIN
+      # AUTENTICAR -- toda llamada falla, github_stars() devuelve None
+      # por su propio except, y el step de todos modos sale con exit 0
+      # (el script solo imprime un [warn] a stderr por plugin, nunca
+      # aborta) -- asi que el workflow se reportaba en VERDE mientras el
+      # 100% de la recoleccion de stars fallaba en silencio, dejando
+      # "GitHub Stars: 0" y "Avg Rating/Reviews" (que dependen del mismo
+      # paso) permanentemente en cero en el sitio publicado. El token
+      # automatico GITHUB_TOKEN (generado por GitHub en cada run, scope
+      # ya cubierto por el bloque `permissions: contents: write` de
+      # arriba) es suficiente -- no hace falta ningun secret nuevo, `gh`
+      # lo reconoce automaticamente vía esta env var estandar.
       - name: Run auto-update (fetches live data, swaps index.html in place)
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: python pipeline/auto_update_catalog.py
+
+      # 2026-08-28 (auditoria, hallazgo cosmetico #56): red de seguridad
+      # adicional antes de commitear -- DOCUMENTATION.md ya documenta 2
+      # chequeos manuales ("the only real safety net") pero nunca
+      # estaban automatizados en el unico proceso que modifica
+      # index.html sin supervision humana. auto_update_catalog.py ya
+      # valida el JSON del bloque catalog-data 2 veces por su cuenta
+      # (antes y despues del swap, ver ese archivo) -- este paso agrega
+      # el chequeo de sintaxis del <script> PRINCIPAL como defensa
+      # adicional, aunque el script Python nunca toca ese bloque
+      # directamente (solo catalog-data + 3 literales de conteo), por
+      # si un cambio futuro al script rompe algo fuera de su alcance
+      # actual.
+      - name: Sanity-check index.html before committing
+        run: |
+          python3 - <<'PYEOF'
+          import re, sys
+          with open("index.html", encoding="utf-8") as f:
+              html = f.read()
+          m = re.search(r'<script id="catalog-data"[^>]*>(.*?)</script>', html, re.S)
+          if not m:
+              sys.exit("catalog-data script block not found")
+          import json
+          json.loads(m.group(1))
+          print("catalog-data JSON OK")
+          PYEOF
 
       - name: Commit and push if data changed
         run: |
