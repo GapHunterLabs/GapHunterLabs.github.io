@@ -147,6 +147,14 @@ def main():
 
     results = {}
     snapshot_for_history = {}
+    # 2026-08-28 (fix del hallazgo critico #25/#24 de la auditoria):
+    # contador real de exito/fallo de github_stars() -- antes nada
+    # trackeaba esto, asi que un GH_TOKEN faltante/invalido/sin permisos
+    # (exactamente lo que paso hasta este fix) hacia fallar el 100% de
+    # las llamadas en silencio, sin que el workflow lo notara. Ver el
+    # chequeo real despues del loop.
+    stars_attempted = 0
+    stars_succeeded = 0
 
     print(f"[auto_update] {len(static)} plugins en metadata estatica")
     for repo, meta in sorted(static.items()):
@@ -176,6 +184,9 @@ def main():
         pricing = p.get("pricingModel")
         reviews, rating = fetch_reviews(numeric_id)
         stars = github_stars(repo)
+        stars_attempted += 1
+        if stars is not None:
+            stars_succeeded += 1
 
         base_date, base_downloads = earliest_datapoint(history, xml_id)
         growth = None
@@ -234,6 +245,27 @@ def main():
 
     print(f"[auto_update] plugins: {len(rows)} | descargas totales: {total_downloads} "
           f"| pendientes: {pending} | stars: {total_stars}")
+    print(f"[auto_update] github_stars(): {stars_succeeded}/{stars_attempted} llamadas exitosas")
+
+    # 2026-08-28 (fix del hallazgo critico #25/#24 de la auditoria):
+    # abortar con exit code distinto de 0 si el 100% de las llamadas a
+    # github_stars() fallaron -- asi el workflow se marca en ROJO en vez
+    # de verde-silencioso cuando GH_TOKEN falta/expira/pierde permisos,
+    # que es exactamente el bug real que dejo GitHub Stars/Reviews/Rating
+    # en cero durante semanas sin que nadie lo notara (documentado en
+    # DOCUMENTATION.md). El umbral es "0 exitosas de al menos 10
+    # intentos" (no "menos del 100%") -- un puñado de fallos puntuales
+    # por rate-limit/timeout de gh en un plugin especifico es normal y
+    # no amerita abortar toda la corrida, solo un fallo TOTAL sistemico
+    # (token invalido/faltante) lo amerita.
+    if stars_attempted >= 10 and stars_succeeded == 0:
+        sys.exit(
+            "[auto_update] ERROR: 0/%d llamadas a github_stars() tuvieron exito -- "
+            "esto casi siempre significa que GH_TOKEN no esta seteado o no tiene "
+            "permisos (ver el paso 'Run auto-update' en update-catalog.yml). "
+            "Abortando ANTES del swap de index.html para no publicar stars en "
+            "cero silenciosamente." % stars_attempted
+        )
 
     # Swap-in-place dentro de index.html -- mismo mecanismo ya usado en
     # cada refresh manual: regex sobre el bloque <script id="catalog-data">,
@@ -267,10 +299,46 @@ def main():
     reparsed = json.loads(m2.group(2))  # valida el bloque NUEVO antes de escribir a disco
     assert reparsed["totalPlugins"] == len(rows)
 
+    # 2026-08-28 (fix del hallazgo alto #32 de la auditoria): 3 literales
+    # estaticos del HTML seguian codificados a mano como "43 plugins" --
+    # numero real del catalogo cuando se escribieron por primera vez
+    # (2026-08-14), nunca actualizado pese a que el catalogo crecio a 101.
+    # El JS SI los sobrescribe en runtime con el numero real
+    # (updateHeroSubtitle()/initTopbar(), ver index.html), pero:
+    # (a) un crawler sin JS (la mayoria, ver hallazgo #31 relacionado) lee
+    #     el valor estatico desactualizado como el numero real del sitio,
+    # (b) durante la ventana entre first-paint y que el JS termine de
+    #     parsear ~380KB de JSON, un usuario real ve "43" tambien.
+    # Mismo swap-in-place que el bloque catalog-data de arriba -- 3
+    # reemplazos anclados por el ID real del elemento (nunca un regex
+    # generico "43 plugins" suelto, que podria matchear texto no
+    # relacionado en el futuro si el copy cambia).
+    total = len(rows)
+    swaps = [
+        (re.compile(r'(<span id="topbarStatusText">)\d+( plugins</span>)'),
+         r"\g<1>%d\g<2>" % total),
+        (re.compile(r'(id="heroSubtitle">Real state of the )\d+(-plugin catalog)'),
+         r"\g<1>%d\g<2>" % total),
+        (re.compile(r'(<span id="footerStatusText">)\d+( plugins tracked</span>)'),
+         r"\g<1>%d\g<2>" % total),
+    ]
+    swap_count = 0
+    for rx, repl in swaps:
+        new_html, n = rx.subn(repl, new_html, count=1)
+        swap_count += n
+    if swap_count != len(swaps):
+        sys.exit(
+            "[auto_update] ERROR: se esperaban %d swaps de literales estaticos "
+            "(topbarStatusText/heroSubtitle/footerStatusText), se aplicaron %d -- "
+            "el markup de index.html probablemente cambio de forma incompatible "
+            "con estos regex. Abortando antes de escribir a disco." % (len(swaps), swap_count)
+        )
+
     with open(INDEX_PATH, "w", encoding="utf-8") as f:
         f.write(new_html)
 
-    print("[auto_update] index.html actualizado, JSON re-parseado limpio antes y despues del swap")
+    print(f"[auto_update] index.html actualizado (catalog-data + {swap_count} literales estaticos), "
+          f"JSON re-parseado limpio antes y despues del swap")
 
     # sitemap.xml <lastmod>, 2026-08-23 (audit finding): the page's real
     # content changes twice a day via this same script, but the sitemap
