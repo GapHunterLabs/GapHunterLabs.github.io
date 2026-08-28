@@ -133,17 +133,31 @@
     height: 630px;
   }
   .graph svg { width: 100%; height: 100%; }
+  /* 2026-08-28: texto/contenedor de las etiquetas mejorado -- mismo
+     pedido que ya se aplico al Hunting Field real del sitio (mejor
+     legibilidad de la categoria bajo cada nodo). font-size 12px->15px
+     (prioridad explicita del usuario en "priorizando el texto" -- esta
+     imagen se ve a tamano de preview de red social, chica y a menudo en
+     miniatura, un texto mas grande importa mas aca que en el sitio en
+     vivo donde el usuario puede acercarse/hacer zoom). color ya era
+     #E9EDF8 (equivalente a --text del sitio, brillante) -- no era el
+     problema; el contenedor si lo era: border-color mas presente
+     (opacity implicita del #29334A solo, ahora con box-shadow para dar
+     mas peso al plate) + font-weight 600 para que se lea mejor a
+     tamano reducido en miniatura. */
   .node-label {
     position: absolute;
-    font-size: 12px;
+    font-size: 15px;
+    font-weight: 600;
     color: #E9EDF8;
     background: #111726;
-    border: 1px solid #29334A;
-    border-radius: 4px;
-    padding: 2px 8px;
+    border: 1.5px solid #3A4666;
+    border-radius: 5px;
+    padding: 3px 10px;
     font-family: "Consolas", "Courier New", monospace;
     white-space: nowrap;
     transform: translate(-50%, 0);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.35);
   }
 </style>
 </head>
@@ -219,20 +233,32 @@
         <line x1="290" y1="335" x2="99.6" y2="346.2" stroke="#34D5C7"/>
         <line x1="290" y1="335" x2="161.2" y2="234.2" stroke="#8894B8"/>
       </g>
-      <!-- center hub -->
-      <circle cx="290" cy="335" r="38.1" fill="#0F1626" stroke="#29334A" stroke-width="2"/>
-      <g transform="translate(266, 311) scale(0.0472)">
+      <!-- center hub: agrandado 2026-08-28 (mismo cambio ya aplicado al
+           Hunting Field real -- "el boton del centro mas grande"),
+           r 38.1->40.7 (mismo factor ~1.4x sobre el radio de nodo 29.1
+           que se uso en el sitio en vivo), logo interno reescalado
+           proporcional (0.0472->0.05042) y su translate recalculado
+           para seguir centrado en el hub agrandado. -->
+      <circle cx="290" cy="335" r="40.7" fill="#0F1626" stroke="#29334A" stroke-width="2"/>
+      <g transform="translate(264.3, 311.2) scale(0.05042)">
         <path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#0151FC"/>
         <path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z" fill="#01B3FD"/>
         <polygon points="569,413 695,413 695,539 569,539" fill="#02F172"/>
       </g>
       <!-- nodes: fill circle, white ring, category icon -->
+      <!-- 2026-08-28: iconos rediseñados, mismo cambio ya aplicado al
+           Hunting Field real del sitio ("los iconos internos de los
+           nodos se ven genericos feos, mejoralos") -- API y Editor
+           compartian el mismo glifo "</>", el mismo problema que motivo
+           el rediseño del set real (ahi era API/Codegen, aca es
+           API/Editor, pero el bug de raiz es identico: 2 categorias
+           distintas con el mismo icono). API ahora es un conector de 2
+           piezas encastrando (misma metafora que el sitio real). -->
       <g>
         <circle cx="290.0" cy="183.8" r="29.1" fill="#3FA2FF"/>
         <circle cx="290.0" cy="183.8" r="29.1" fill="none" stroke="#FFFFFF" stroke-width="2" opacity="0.85"/>
         <g transform="translate(276.0, 169.8)" stroke="#0B1220" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="9,4 3,14 9,24"/>
-          <polyline points="19,4 25,14 19,24"/>
+          <path d="M8 3v6M13 3v6M4 9h11a4 4 0 0 1 4 4v2a4 4 0 0 0 4 4h3M24 25v-6M19 25v-6M28 19H17a4 4 0 0 1-4-4v-2a4 4 0 0 0-4-4H6"/>
         </g>
       </g>
       <g>
@@ -257,24 +283,37 @@
           <path d="M5 14 C5 16 9 18 14 18 C19 18 23 16 23 14" stroke-linecap="round"/>
         </g>
       </g>
+      <!-- Code Quality: balanza (medir/evaluar), no un check generico
+           que antes se confundia visualmente con Testing (mismo bug de
+           colision de iconos que motivo el rediseño del set real). -->
       <g>
         <circle cx="290.0" cy="519.8" r="29.1" fill="#FFB020"/>
         <circle cx="290.0" cy="519.8" r="29.1" fill="none" stroke="#FFFFFF" stroke-width="2" opacity="0.85"/>
-        <polyline transform="translate(276.0, 505.8)" points="4,15 11,22 24,7" stroke="#0B1220" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <g transform="translate(276.0, 505.8)" stroke="#0B1220" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M14 3v22M5 9h18M5 9 2 15M5 9l3 6M23 9l-3 6M23 9l3 6M2 15a3 3 0 0 0 6 0M20 15a3 3 0 0 0 6 0M9 27h10"/>
+        </g>
       </g>
+      <!-- Codegen: rayo dentro de corchetes angulares (generacion
+           automatica DENTRO de codigo), reemplaza el mismo "</>" que
+           API tenia antes -- ambos categorias compartian el glifo. -->
       <g>
         <circle cx="161.2" cy="463.8" r="29.1" fill="#01B3FD"/>
         <circle cx="161.2" cy="463.8" r="29.1" fill="none" stroke="#FFFFFF" stroke-width="2" opacity="0.85"/>
         <g transform="translate(147.2, 449.8)" stroke="#0B1220" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="9,4 3,14 9,24"/>
-          <polyline points="19,4 25,14 19,24"/>
+          <path d="M9 4 3 14l6 10M19 4l6 10-6 10M16.8 1 12.5 13.5h4.6L13.2 27"/>
         </g>
       </g>
+      <!-- Testing: tubo de ensayo -- metafora mas literal y distinta de
+           Code Quality (antes ambos eran el mismo checkmark generico). -->
       <g>
         <circle cx="99.6" cy="346.2" r="29.1" fill="#34D5C7"/>
         <circle cx="99.6" cy="346.2" r="29.1" fill="none" stroke="#FFFFFF" stroke-width="2" opacity="0.85"/>
-        <polyline transform="translate(85.6, 332.2)" points="4,15 11,22 24,7" stroke="#0B1220" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <g transform="translate(85.6, 332.2)" stroke="#0B1220" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10 2v9l-7 13a3.2 3.2 0 0 0 2.8 4.7h16.4a3.2 3.2 0 0 0 2.8-4.7L18 11V2M7 2h14M8 15h12"/>
+        </g>
       </g>
+      <!-- Editor: ventana de codigo con lineas + cursor, mas especifico
+           que el rect+linea generico anterior. -->
       <g>
         <circle cx="161.2" cy="234.2" r="29.1" fill="#8894B8"/>
         <circle cx="161.2" cy="234.2" r="29.1" fill="none" stroke="#FFFFFF" stroke-width="2" opacity="0.85"/>
