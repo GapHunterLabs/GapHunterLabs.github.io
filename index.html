@@ -554,6 +554,16 @@
     cursor: pointer;
   }
 
+  /* 2026-08-28 (lista de 25 fixes visuales, #6): el markup nunca tenia
+     un <span> hijo real -- esta regla existia pero nunca se aplicaba a
+     nada, dejando el icono con solo 2 barras (::before/::after) en vez
+     de 3. Se agrego el <span> al markup (ver <button class="topbar-
+     burger">) para que la regla deje de ser codigo muerto y el icono
+     se vea como un burger de verdad. transition agregada aca tambien
+     para que las 3 barras roten/se desvanezcan en X al abrir (ver
+     .topbar.nav-open .topbar-burger mas abajo), en vez de quedarse
+     fijas sin ninguna confirmacion visual del estado mas alla de
+     aria-expanded (que un usuario vidente no puede leer). */
   .topbar-burger span,
   .topbar-burger::before,
   .topbar-burger::after {
@@ -563,10 +573,20 @@
     height: 1.85px;
     background: var(--text-dim);
     position: relative;
+    transition: transform 0.2s ease, opacity 0.2s ease;
   }
 
   .topbar-burger::before { position: absolute; transform: translateY(-5.75px); }
   .topbar-burger::after { position: absolute; transform: translateY(5.75px); }
+
+  .topbar.nav-open .topbar-burger span { opacity: 0; }
+  .topbar.nav-open .topbar-burger::before { transform: translateY(0) rotate(45deg); }
+  .topbar.nav-open .topbar-burger::after { transform: translateY(0) rotate(-45deg); }
+  @media (prefers-reduced-motion: reduce) {
+    .topbar-burger span,
+    .topbar-burger::before,
+    .topbar-burger::after { transition: none; }
+  }
 
   @media (max-width: 760px) {
     .topbar-ext-label { display: none; }
@@ -599,6 +619,13 @@
     .topbar-inner { gap: 12px; }
     .topbar-nav { display: none; }
     .topbar-burger { display: flex; }
+    /* 2026-08-28 (lista de 25 fixes visuales, #3): pasaba de display:none
+       a flex sin transicion -- aparecia de golpe, unico panel de la
+       pagina sin ningun tipo de entrada animada. animation en vez de
+       transition por el mismo motivo que .no-results (#4, ver esa
+       regla): display:none no es animable via transition, pero SI
+       reinicia una animation cada vez que el elemento vuelve a
+       mostrarse. */
     .topbar.nav-open .topbar-nav {
       display: flex;
       position: absolute;
@@ -609,6 +636,15 @@
       border-bottom: 1px solid var(--border);
       padding: 6px;
       gap: 2px;
+      animation: navDropIn 0.18s ease;
+      transform-origin: top;
+    }
+    @keyframes navDropIn {
+      from { opacity: 0; transform: scaleY(0.94); }
+      to   { opacity: 1; transform: scaleY(1); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .topbar.nav-open .topbar-nav { animation: none; }
     }
     .topbar.nav-open .topbar-link { padding: 10px 12px; }
     .topbar.nav-open .topbar-link.active::before { display: none; }
@@ -1547,6 +1583,10 @@
     transform: rotate(45deg);
   }
 
+  /* 2026-08-28 (lista de 25 fixes visuales, #5): sin hover/focus ni
+     transition -- unico par de controles interactivos del filtro-bar
+     sin ningun feedback visual al pasar el mouse o enfocar, mientras
+     #searchInput y el resto de botones/cards del sitio si lo tienen. */
   select#pricingFilter, select#categoryFilter {
     background: var(--surface);
     border: 1px solid var(--border);
@@ -1555,6 +1595,13 @@
     color: var(--text);
     font-family: var(--sans);
     font-size: 13.5px;
+    transition: border-color 0.15s ease;
+  }
+  select#pricingFilter:hover, select#categoryFilter:hover { border-color: var(--accent); }
+  select#pricingFilter:focus-visible, select#categoryFilter:focus-visible {
+    border-color: var(--accent);
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
   }
 
   /* Below ~640px, .search's own flex-shrink was letting it and
@@ -1885,6 +1932,18 @@
     animation: pulseGlow 1.8s ease-in-out infinite;
   }
   .hunting-svg .node.hack circle.dot { animation: hackFlickerNode 0.5s steps(6); }
+  /* 2026-08-28 (lista de 25 fixes visuales, #21): pulseGlow corre
+     INFINITO mientras un nodo esta activo -- exactamente el tipo de
+     movimiento continuo que prefers-reduced-motion existe para evitar,
+     y a diferencia de line.spoke (ver el @media un poco mas abajo en
+     este archivo) nunca tuvo su propio guard. hackFlickerNode se
+     incluye tambien aunque solo dispare una vez (no infinito) porque
+     es un flicker de brillo/hue rapido, el tipo de efecto que las
+     guias de reduced-motion tratan igual que el movimiento continuo. */
+  @media (prefers-reduced-motion: reduce) {
+    .hunting-svg .node.active circle.dot,
+    .hunting-svg .node.hack circle.dot { animation: none; }
+  }
   /* 2026-08-27: texto de nodo agrandado (12px->14px resting, 18px->21px
      active) pedido explicito del usuario junto con el +5% de tamano de
      nodo de arriba. OJO: sizeNodeTag()/setNodeMerged() calculan el ancho
@@ -1948,7 +2007,7 @@
      causing the drift. Same anchor pattern applied to text.count-inline
      via its own inline transform-origin. */
   .hunting-svg .node .dot-icon-anchor {
-    transition: transform 0.15s ease;
+    transition: transform 0.15s ease, opacity 0.15s ease;
   }
   .hunting-svg .node .dot-icon {
     color: #fff;
@@ -1969,7 +2028,16 @@
      the dot into a plain background disc behind the hub (see
      .node.active circle.dot above) with its own label+count plate
      doing the identifying work, so the icon would just clutter it. */
-  .hunting-svg .node.active .dot-icon-anchor { opacity: 0; transition: opacity 0.15s ease; }
+  /* 2026-08-28 (lista de 25 fixes visuales, #16): esta regla ANTES
+     traia su propio `transition: opacity 0.15s ease` -- como transition
+     es un shorthand, eso pisaba por completo el `transform 0.15s ease`
+     que la regla base de arriba (.dot-icon-anchor) ya declaraba,
+     dejando el icono SIN transicion de transform en el momento exacto
+     en que el nodo se vuelve activo (justo cuando mas se nota, porque
+     coincide con el nodo creciendo). Fix: la base ahora declara ambas
+     propiedades juntas, esta regla solo necesita el valor final de
+     opacity, sin re-declarar transition. */
+  .hunting-svg .node.active .dot-icon-anchor { opacity: 0; }
 
   /* Connector stub + name tag, 2026-08-21 round 3: user's explicit
      follow-up -- "si el nombre de la categoria queda por fuera almenos
@@ -2205,7 +2273,24 @@
      already part of the brand palette (the logo's second blue), unused
      by any other chip/badge, so this doesn't introduce a new color. */
   .chip.paid { background: color-mix(in srgb, var(--cyan) 22%, transparent); color: var(--cyan); }
-  .chip.pending { background: var(--pending-bg); color: var(--pending); }
+  /* 2026-08-28 (lista de 25 fixes visuales, #12): "Pending" solo se
+     diferenciaba de un tier final (Free/Freemium/Paid) por el color --
+     se agrega un pulso MUY sutil (solo opacity, la propiedad mas
+     barata de animar, sin tocar layout/paint de nada mas) para que se
+     lea como un estado transitorio, no un tier permanente mas. Deliberadamente
+     lento (2.4s) y de rango chico (0.75-1) para que no distraiga si
+     aparece repetido varias veces en la grilla (hasta 31 plugins
+     pending a la vez hoy) -- opacity-only es mucho mas barato que el
+     rAF loop de decodeNumber() (#23 arriba), pero igual se mantiene
+     conservador por el mismo motivo. */
+  .chip.pending { background: var(--pending-bg); color: var(--pending); animation: pendingPulse 2.4s ease-in-out infinite; }
+  @keyframes pendingPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.75; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .chip.pending { animation: none; }
+  }
 
   .growth { font-size: 12px; margin-left: 6px; }
   .growth.up { color: var(--good); }
@@ -2223,6 +2308,18 @@
   }
 
   .dossier-back:hover { color: var(--accent); }
+
+  /* 2026-08-28 (lista de 25 fixes visuales, #2, ver renderDossier() en
+     el JS): entrada del dossier completo (Field mode) -- un solo
+     elemento animando, no una lista repetida por item. */
+  .dossier-enter { animation: dossierIn 0.25s ease; }
+  @keyframes dossierIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .dossier-enter { animation: none; }
+  }
 
   .dossier-head {
     display: flex;
@@ -2277,11 +2374,22 @@
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    transition: border-color 0.15s ease, opacity 0.15s ease, transform 0.1s ease;
   }
 
   .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
   .btn:hover { border-color: var(--accent); }
   .btn.primary:hover { opacity: 0.9; }
+  /* 2026-08-28 (lista de 25 fixes visuales, #17): ningun boton del
+     sitio tenia :active -- en mobile, donde no existe un hover real
+     antes del tap, un boton sin feedback en el instante del clic se
+     siente "muerto". Scale sutil, mismo lenguaje que .plugin-card y
+     .dossier-close ya usan en hover. */
+  .btn:active { transform: scale(0.97); }
+  @media (prefers-reduced-motion: reduce) {
+    .btn { transition: border-color 0.15s ease, opacity 0.15s ease; }
+    .btn:active { transform: none; }
+  }
   /* 2026-08-28: +30% pedido explicito del usuario, corregido en vivo --
      el pedido era sobre el ICONO recien reemplazado (el logo de
      JetBrains por el de puzzle), no sobre el boton completo. Un primer
@@ -2393,6 +2501,36 @@
   .facts-list .fk { color: var(--text-faint); font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; flex: none; }
   .facts-list .fv { color: var(--text); text-align: right; overflow-wrap: anywhere; }
   .facts-list .fv code { background: var(--surface-2); padding: 1px 6px; border-radius: 4px; font-size: 0.9em; }
+  /* 2026-08-28 (lista de 25 fixes visuales, #8): boton de copiar del
+     repo slug -- compartido entre .facts-list (Field mode) y
+     .tbl-details-list (Table mode), ambos ya escritos como <code> +
+     <button> hermanos dentro del mismo .fv (inline, no flex -- solo
+     el <li> padre es flex). vertical-align:middle para alinear con el
+     <code> vecino en vez de sentarse en la baseline del texto. */
+  .copy-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    width: 22px;
+    height: 22px;
+    margin-left: 4px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--text-faint);
+    cursor: pointer;
+    border-radius: 5px;
+    transition: color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+  }
+  .copy-btn svg { width: 13px; height: 13px; }
+  .copy-btn:hover { color: var(--text); background: var(--surface-2); }
+  .copy-btn:active { transform: scale(0.9); }
+  .copy-btn.copied { color: var(--good); }
+  .copy-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  @media (prefers-reduced-motion: reduce) {
+    .copy-btn:active { transform: none; }
+  }
 
   .similar-section { margin-top: 22px; }
   .similar-title { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 10px; }
@@ -2455,9 +2593,35 @@
     user-select: none;
   }
 
-  thead th:hover { color: var(--text); }
+  /* 2026-08-28 (lista de 25 fixes visuales, #20): un <th> ordenable no
+     se leia como boton -- el hover solo cambiaba el color del texto,
+     senal debil para algo clickeable dentro del encabezado de una
+     tabla (que visualmente no tiene la forma de un boton). Se suma un
+     background sutil, mismo tono que tbody tr.row:hover usa, para que
+     el affordance sea consistente entre header y filas. transition
+     agregada tambien aca (#1, ver tr.row de abajo) por la misma razon:
+     sin ella el cambio de color de texto tambien era un corte
+     instantaneo, inconsistente con el resto de hovers del sitio. */
+  thead th { transition: color 0.15s ease, background 0.15s ease; }
+  thead th:hover { color: var(--text); background: var(--surface-2); }
   thead th.sorted { color: var(--accent); }
-  thead th .arrow { font-size: 9px; margin-left: 3px; opacity: 0.7; }
+  /* 2026-08-28 (lista de 25 fixes visuales, #7): el JS remueve/recrea
+     este elemento en cada sort (nunca reutiliza el mismo nodo, ver
+     el listener 'sort' -- t.querySelector('.arrow').remove()) en vez
+     de solo rotar un glifo existente -- asi que una transition normal
+     de transform no dispararia de forma confiable (nodo nuevo = sin
+     estado previo del que transicionar). animation en su lugar: entra
+     con un fade+scale corto cada vez que se crea, mismo efecto
+     percibido (deja de ser un swap 100% instantaneo) sin reestructurar
+     la logica JS existente. */
+  thead th .arrow { font-size: 9px; margin-left: 3px; opacity: 0.7; display: inline-block; animation: arrowIn 0.2s ease; }
+  @keyframes arrowIn {
+    from { opacity: 0; transform: scale(0.5); }
+    to   { opacity: 0.7; transform: scale(1); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    thead th .arrow { animation: none; }
+  }
   /* 2026-08-28 (auditoria, hallazgo alto #8): mismo lenguaje visual de
      foco ya usado por tbody tr.row:focus-visible (ver esa regla) --
      inset, no outline-offset, mismo motivo (un <th> ocupa una columna
@@ -2465,8 +2629,32 @@
      con la celda vecina). */
   thead th:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
 
-  tbody tr.row { cursor: pointer; border-bottom: 1px solid var(--border); }
+  /* 2026-08-28 (lista de 25 fixes visuales, #1): tr.row:hover cambiaba
+     de fondo sin transition -- corte brusco, inconsistente con
+     .plugin-card:hover (que si es suave) en la misma pagina. */
+  tbody tr.row { cursor: pointer; border-bottom: 1px solid var(--border); transition: background 0.15s ease; }
   tbody tr.row:hover { background: var(--surface-2); }
+  /* 2026-08-28 (lista de 25 fixes visuales, #19): reordenar por columna
+     era 100% instantaneo -- las filas saltan a su nueva posicion sin
+     ninguna senal de "esto se acaba de reordenar". Un highlight
+     POR FILA (tipo FLIP animation, comparando posicion antes/despues)
+     se descarto a proposito por costo/riesgo: hasta 101 filas
+     recalculando posiciones seria el mismo tipo de problema de
+     performance que ya causo remover spokeFlow (ver ese comentario en
+     el CSS del Hunting Field) y decodeNumber() en la grilla completa
+     (#23 arriba). En su lugar, un fade sutil sobre TODO #tbody de una
+     sola vez -- 1 elemento, 1 transition -- disparado SOLO desde el
+     handler de sort (no en cada renderTable(), que tambien corre en
+     cada tecla del buscador -- ver el listener 'sort' mas abajo en el
+     JS para donde se agrega/quita esta clase). */
+  #tbody.just-sorted { animation: tbodySortFlash 0.3s ease; }
+  @keyframes tbodySortFlash {
+    from { opacity: 0.4; }
+    to   { opacity: 1; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #tbody.just-sorted { animation: none; }
+  }
   tbody tr.row:last-child { border-bottom: none; }
   /* Added 2026-08-21 alongside making rows keyboard-focusable -- same
      reasoning as .plugin-card:focus-visible above: an unstyled default
@@ -2654,8 +2842,16 @@
     font-size: 14px;
     cursor: pointer;
     z-index: 1;
+    transition: border-color 0.15s ease, color 0.15s ease, transform 0.15s ease;
   }
-  .dossier-close:hover { border-color: var(--accent); color: var(--text); }
+  /* 2026-08-28 (lista de 25 fixes visuales, #10): solo cambiaba color,
+     sensacion menos tactil que .plugin-card:hover (que si escala) en
+     la misma pagina -- se suma un scale sutil, mismo tratamiento. */
+  .dossier-close:hover { border-color: var(--accent); color: var(--text); transform: scale(1.08); }
+  @media (prefers-reduced-motion: reduce) {
+    .dossier-close { transition: border-color 0.15s ease, color 0.15s ease; }
+    .dossier-close:hover { transform: none; }
+  }
 
   /* Forward-looking, noted 2026-08-23 audit: no plugin in the current
      catalog-data JSON carries a `verified` field yet (0 of 43,
@@ -2666,12 +2862,28 @@
      concept actually gets data behind it, not accidental dead code. */
   .verified-mark { color: var(--accent); font-size: 11px; margin-left: 4px; }
 
+  /* 2026-08-28 (lista de 25 fixes visuales, #4): aparecia de golpe al
+     filtrar a cero resultados, sin ningun fade -- unico bloque de
+     contenido de la pagina que hace un swap 100% instantaneo (el resto
+     ya tiene algun tipo de transicion/animacion propia). animation en
+     vez de una transition porque el elemento pasa de display:none a
+     visible (toggleado en JS via style.display, ver #noResults) --
+     una transition normal no dispara sobre ese cambio, necesita un
+     @keyframes que arranque en el propio mount. */
   .no-results {
     padding: 40px;
     text-align: center;
     color: var(--text-faint);
     font-family: var(--mono);
     font-size: 13px;
+    animation: noResultsIn 0.25s ease;
+  }
+  @keyframes noResultsIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .no-results { animation: none; }
   }
 
   /* Element changed 2026-08-21: was <footer class="notes">, but this
@@ -3231,7 +3443,7 @@
          ese breakpoint), pero nunca comunicaba su propio estado
          abierto/cerrado a un lector de pantalla -- aria-expanded se
          actualiza en el handler de click mas abajo. -->
-    <button type="button" class="topbar-burger" id="topbarBurger" aria-label="Toggle navigation" aria-expanded="false" aria-controls="topbarNav"></button>
+    <button type="button" class="topbar-burger" id="topbarBurger" aria-label="Toggle navigation" aria-expanded="false" aria-controls="topbarNav"><span></span></button>
   </div>
 </nav>
 <!-- Added 2026-08-21: this was a plain <div> wrapping the page's ENTIRE
@@ -3676,6 +3888,13 @@
     reviews: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M3 4.5h14a1 1 0 0 1 1 1V13a1 1 0 0 1-1 1H8l-4 3.5V14H3a1 1 0 0 1-1-1V5.5a1 1 0 0 1 1-1Z"/></svg>',
     rating: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"><path d="M10 2.2 12.4 7.4 18 8.1 13.9 12 15 17.6 10 14.8 5 17.6 6.1 12 2 8.1 7.6 7.4Z"/></svg>',
     github: '<svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>',
+    // 2026-08-28 (lista de 25 fixes visuales, #8): boton de copiar del
+    // Repository fact row -- mismo estilo outline stroke=currentColor
+    // que el resto de ICONS. checkmark de confirmacion es un icono
+    // separado (copyCheck), swapeado por JS al copiar con exito (ver
+    // el listener 'click' de .copy-btn en wireDossierInteractions).
+    copy: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><rect x="5.5" y="5.5" width="8.5" height="8.5" rx="1.3"/><path d="M10.5 5.5V3.3a1.3 1.3 0 0 0-1.3-1.3H3.3A1.3 1.3 0 0 0 2 3.3v5.9a1.3 1.3 0 0 0 1.3 1.3h2.2"/></svg>',
+    copyCheck: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5 6.2 12 13 4"/></svg>',
     // 2026-08-28: reemplazado -- el logo oficial real de JetBrains (fetch
     // directo de su brand-assets CDN, ver comentario historico mas abajo)
     // fue una decision deliberada de fidelidad de marca, pero en la
@@ -5077,7 +5296,7 @@
     html += '</div>';
 
     html += '<div class="dossier-stats">';
-    html += '<div class="stat"><div class="num">' + (isPending ? '—' : p.downloads.toLocaleString('en-US')) + '</div><div class="label">Downloads' + (isPending ? '' : ' ' + growthMarkup(p)) + '</div></div>';
+    html += '<div class="stat"><div class="num" id="dossierDlNum">' + (isPending ? '—' : p.downloads.toLocaleString('en-US')) + '</div><div class="label">Downloads' + (isPending ? '' : ' ' + growthMarkup(p)) + '</div></div>';
     html += '<div class="stat"><div class="num">' + (p.reviews == null ? '—' : p.reviews) + '</div><div class="label">Reviews</div></div>';
     html += '<div class="stat"><div class="num">' + (p.rating != null ? p.rating.toFixed(2) : '—') + '</div><div class="label">Rating</div></div>';
     html += '<div class="stat"><div class="num">' + (p.stars != null ? p.stars : '—') + '</div><div class="label">GitHub ★</div></div>';
@@ -5107,7 +5326,7 @@
       '<li><span class="fk">Platform</span><span class="fv">' + esc(platformOf(p)) + '</span></li>' +
       '<li><span class="fk">First published</span><span class="fv">' + (p.firstPublished || '—') + '</span></li>' +
       '<li><span class="fk">Marketplace ID</span><span class="fv">' + (mpId ? '#' + esc(mpId) : (isPending ? 'Pending' : '—')) + '</span></li>' +
-      '<li><span class="fk">Repository</span><span class="fv"><code>' + esc(p.repo) + '</code></span></li>' +
+      '<li><span class="fk">Repository</span><span class="fv"><code>' + esc(p.repo) + '</code><button type="button" class="copy-btn" data-copy="' + esc(p.repo) + '" aria-label="Copy repository name">' + ICONS.copy + '</button></span></li>' +
       '<li><span class="fk">Growth</span><span class="fv">' + esc(growthFactLine(p)) + '</span></li>' +
       '</ul></div>';
     html += '</div></div>';
@@ -5183,7 +5402,7 @@
       '<li><span class="fk">Platform</span><span class="fv">' + esc(platformOf(p)) + '</span></li>' +
       '<li><span class="fk">First published</span><span class="fv">' + (p.firstPublished || '—') + '</span></li>' +
       '<li><span class="fk">Marketplace ID</span><span class="fv">' + (mpId ? '#' + esc(mpId) : (isPending ? 'Pending' : '—')) + '</span></li>' +
-      '<li><span class="fk">Repository</span><span class="fv"><code>' + esc(p.repo) + '</code></span></li>' +
+      '<li><span class="fk">Repository</span><span class="fv"><code>' + esc(p.repo) + '</code><button type="button" class="copy-btn" data-copy="' + esc(p.repo) + '" aria-label="Copy repository name">' + ICONS.copy + '</button></span></li>' +
       '<li><span class="fk">Growth</span><span class="fv">' + esc(growthFactLine(p)) + '</span></li>' +
       '</ul></div>';
     html += '</div></div>';
@@ -5212,7 +5431,7 @@
   // selectedRepo and re-renders in the CURRENT mode, so from a table
   // row it re-opens as a different table row rather than jumping the
   // user into Field mode.
-  function wireDossierInteractions(container) {
+  function wireDossierInteractions(container, p) {
     // 2026-08-28 (auditoria, hallazgo bajo #21): reemplaza el
     // onerror="this.remove()" inline que vivia en el string de
     // dossierBodyHtml() -- mismo comportamiento (la imagen desaparece
@@ -5221,6 +5440,47 @@
     // 'unsafe-inline' en la CSP.
     var gif = container.querySelector('.dossier-gif');
     if (gif) gif.addEventListener('error', function () { gif.remove(); });
+    // 2026-08-28 (lista de 25 fixes visuales, #23): el numero grande de
+    // descargas del dossier no tenia la misma animacion decodeNumber()
+    // que los stats del hero -- inconsistencia entre "el numero de
+    // arriba se anima" y "este numero identico no". Escopado A PROPOSITO
+    // solo al dossier individual (1 elemento, 1 loop de rAF), nunca a
+    // la grilla completa (101 .card-dl simultaneos seria el mismo tipo
+    // de jank que ya hizo remover spokeFlow -- ver ese comentario mas
+    // arriba en el CSS del Hunting Field).
+    if (p && p.downloads !== null) {
+      var dlNum = container.querySelector('#dossierDlNum');
+      if (dlNum) decodeNumber(dlNum, p.downloads.toLocaleString('en-US'));
+    }
+    // 2026-08-28 (lista de 25 fixes visuales, #8): boton de copiar del
+    // repo slug -- un solo listener delegado sobre el container (mismo
+    // patron que el resto de esta funcion), no uno por boton, aunque
+    // hoy solo haya 1 en el DOM a la vez (mismo razonamiento que
+    // #dossierDlNum: field/table mode nunca tienen 2 dossiers abiertos
+    // a la vez). navigator.clipboard puede no existir (contexto no
+    // seguro/navegador viejo) -- fallback silencioso, el boton
+    // simplemente no hace nada visible en vez de tirar un error, no
+    // hay nada critico detras de esta accion como para justificar un
+    // mensaje de error.
+    var copyBtn = container.querySelector('.copy-btn');
+    if (copyBtn && navigator.clipboard && navigator.clipboard.writeText) {
+      copyBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        var text = copyBtn.getAttribute('data-copy');
+        navigator.clipboard.writeText(text).then(function () {
+          if (copyBtn.dataset.copied) return; // ya en medio de la confirmacion, no reiniciar el timeout
+          var original = copyBtn.innerHTML;
+          copyBtn.innerHTML = ICONS.copyCheck;
+          copyBtn.classList.add('copied');
+          copyBtn.dataset.copied = '1';
+          setTimeout(function () {
+            copyBtn.innerHTML = original;
+            copyBtn.classList.remove('copied');
+            delete copyBtn.dataset.copied;
+          }, 1400);
+        }).catch(function () {}); // permiso denegado u otro fallo -- silencioso, mismo criterio que la ausencia de la API
+      });
+    }
     Array.prototype.forEach.call(container.querySelectorAll('.similar-card, .tbl-similar-card'), function (card) {
       var open = function (e) {
         if (e) e.stopPropagation(); // don't also trigger the table row's own click-to-toggle
@@ -5245,7 +5505,15 @@
   }
 
   function renderDossier(p) {
-    var html = '<a class="dossier-back" id="dossierBack">← Back to catalog</a>' + dossierBodyHtml(p);
+    // 2026-08-28 (lista de 25 fixes visuales, #2): abrir/cerrar un
+    // dossier es un main.innerHTML = html directo -- swap 100%
+    // instantaneo, unico "cambio de vista" grande del sitio sin
+    // ninguna transicion (el resto de componentes chicos ya la
+    // tienen). El wrapper .dossier-enter recibe la animation (1 solo
+    // elemento, costo minimo, nada que ver con el riesgo de animar
+    // 101 cards a la vez que ya se evito en otros fixes de esta
+    // misma lista).
+    var html = '<div class="dossier-enter"><a class="dossier-back" id="dossierBack">← Back to catalog</a>' + dossierBodyHtml(p) + '</div>';
     var main = document.getElementById('fieldMain');
     main.innerHTML = html;
 
@@ -5253,7 +5521,7 @@
       selectedRepo = null;
       renderAll();
     });
-    wireDossierInteractions(main);
+    wireDossierInteractions(main, p);
   }
 
   function renderField() {
@@ -5331,7 +5599,13 @@
         renderTable();
       });
     });
-    wireDossierInteractions(tbody);
+    // 2026-08-28 (lista de 25 fixes visuales, #23 continuado): modo
+    // tabla tambien puede tener un dossier expandido inline (misma
+    // .dossier-stats markup) -- selectedRepo es un solo valor global
+    // (nunca un set, confirmado arriba), asi que en cualquier momento
+    // hay como mucho UN #dossierDlNum en el DOM aca tambien, mismo
+    // razonamiento de costo que el modo field.
+    wireDossierInteractions(tbody, selectedRepo ? byRepo(selectedRepo) : null);
   }
 
   // ---- top-level render ------------------------------------------------
@@ -5594,6 +5868,17 @@
       arrow.textContent = sortDir === 1 ? '▲' : '▼';
       th.appendChild(arrow);
       renderAll();
+      // 2026-08-28 (lista de 25 fixes visuales, #19, ver el comentario
+      // de #tbody.just-sorted en el CSS): dispara el fade SOLO aca, no
+      // en cada renderTable() -- la clase se quita al terminar la
+      // animation para poder re-agregarla en el proximo sort (una
+      // animation con la clase ya presente no reinicia sola).
+      var tbody = document.getElementById('tbody');
+      if (tbody) {
+        tbody.classList.remove('just-sorted');
+        void tbody.offsetWidth; // forzar reflow, mismo truco que reinicia CSS animations
+        tbody.classList.add('just-sorted');
+      }
     };
     th.addEventListener('click', sort);
     // Mismo gap de activacion por teclado que tr.row/.plugin-card ya
