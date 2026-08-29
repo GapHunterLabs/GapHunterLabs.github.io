@@ -1642,11 +1642,17 @@
         "dev.gaphunter.ansiblecompanion": {
           "downloads": 158
         },
+        "dev.gaphunter.apachehttpclientreusecompanion": {
+          "downloads": 1
+        },
         "dev.gaphunter.apideprecationheadercompanion": {
           "downloads": 7
         },
         "dev.gaphunter.apisecuritycompanion": {
           "downloads": 104
+        },
+        "dev.gaphunter.asyncselfinvocationcompanion": {
+          "downloads": 1
         },
         "dev.gaphunter.asyncapicompanion": {
           "downloads": 50
@@ -1657,11 +1663,20 @@
         "dev.gaphunter.beancopycompanion": {
           "downloads": 19
         },
+        "dev.gaphunter.bindingresultpositioncompanion": {
+          "downloads": 1
+        },
+        "dev.gaphunter.cassandracqlsessionreusecompanion": {
+          "downloads": 1
+        },
         "dev.gaphunter.certcompanion": {
           "downloads": 82
         },
         "dev.gaphunter.changecasecompanion": {
           "downloads": 22
+        },
+        "dev.gaphunter.changelogfragmentcompanion": {
+          "downloads": 1
         },
         "dev.gaphunter.circulardependencycompanion": {
           "downloads": 26
@@ -1690,6 +1705,9 @@
         "dev.gaphunter.dockerfileunusedstagecompanion": {
           "downloads": 10
         },
+        "dev.gaphunter.elasticsearchclientreusecompanion": {
+          "downloads": 1
+        },
         "dev.gaphunter.envdiffcompanion": {
           "downloads": 23
         },
@@ -1702,6 +1720,9 @@
         "dev.gaphunter.featureflagreferencecompanion": {
           "downloads": 18
         },
+        "dev.gaphunter.feignfallbackconfigcompanion": {
+          "downloads": 1
+        },
         "dev.gaphunter.firestorecompanion": {
           "downloads": 79
         },
@@ -1711,17 +1732,29 @@
         "dev.gaphunter.formatconvertercompanion": {
           "downloads": 47
         },
+        "dev.gaphunter.gcpclientreusecompanion": {
+          "downloads": 1
+        },
         "dev.gaphunter.githygienecompanion": {
           "downloads": 43
         },
         "dev.gaphunter.gitlabcicompanion": {
           "downloads": 104
         },
+        "dev.gaphunter.gotimerleakcompanion": {
+          "downloads": 1
+        },
+        "dev.gaphunter.gradletaskgraphcompanion": {
+          "downloads": 1
+        },
         "dev.gaphunter.graphqlcompanion": {
           "downloads": 35
         },
         "dev.gaphunter.grpcerrorstatuscompanion": {
           "downloads": 7
+        },
+        "dev.gaphunter.grpcstreamobservercontractcompanion": {
+          "downloads": 1
         },
         "dev.gaphunter.highlightcompanion": {
           "downloads": 63
@@ -1737,6 +1770,9 @@
         },
         "dev.gaphunter.jenkinsfilecompanion": {
           "downloads": 38
+        },
+        "dev.gaphunter.jsonpathbuildercompanion": {
+          "downloads": 1
         },
         "dev.gaphunter.jsonschemacompanion": {
           "downloads": 26
@@ -1759,6 +1795,12 @@
         "dev.gaphunter.kafkaproducerreusecompanion": {
           "downloads": 8
         },
+        "dev.gaphunter.kafkatopicschemacompanion": {
+          "downloads": 1
+        },
+        "dev.gaphunter.ktorhttpclientreusecompanion": {
+          "downloads": 1
+        },
         "dev.gaphunter.logformatstringcompanion": {
           "downloads": 26
         },
@@ -1770,6 +1812,18 @@
         },
         "dev.gaphunter.mermaidcompanion": {
           "downloads": 202
+        },
+        "dev.gaphunter.micrometertimersamplecompanion": {
+          "downloads": 1
+        },
+        "dev.gaphunter.micronauthttpclientcreatecompanion": {
+          "downloads": 1
+        },
+        "dev.gaphunter.mongoclientreusecompanion": {
+          "downloads": 1
+        },
+        "dev.gaphunter.nplusonequerycompanion": {
+          "downloads": 1
         },
         "dev.gaphunter.nginxcompanion": {
           "downloads": 53
@@ -1792,6 +1846,21 @@
         "dev.gaphunter.phpcomposerscriptcompanion": {
           "downloads": 34
         },
+        "dev.gaphunter.phpfileinclusioncompanion": {
+          "downloads": 1
+        },
+        "dev.gaphunter.phpfunctioninjectioncompanion": {
+          "downloads": 1
+        },
+        "dev.gaphunter.phpopenredirectcompanion": {
+          "downloads": 1
+        },
+        "dev.gaphunter.phpshellinjectioncompanion": {
+          "downloads": 1
+        },
+        "dev.gaphunter.phpsqlinjectioncompanion": {
+          "downloads": 1
+        },
         "dev.gaphunter.piifieldannotationcompanion": {
           "downloads": 7
         },
@@ -1801,11 +1870,23 @@
         "dev.gaphunter.prometheusmetricnamingcompanion": {
           "downloads": 26
         },
+        "dev.gaphunter.prometheusmetricregistrationcompanion": {
+          "downloads": 1
+        },
+        "dev.gaphunter.rabbitmqchannelreusecompanion": {
+          "downloads": 1
+        },
+        "dev.gaphunter.railsmassassignmentcompanion": {
+          "downloads": 1
+        },
         "dev.gaphunter.ratelimiterfallbackcompanion": {
           "downloads": 8
         },
         "dev.gaphunter.reactnativecompanion": {
           "downloads": 200
+        },
+        "dev.gaphunter.redissonclientreusecompanion": {
+          "downloads": 1
         },
         "dev.gaphunter.refactorsimulator": {
           "downloads": 70
@@ -1816,11 +1897,23 @@
         "dev.gaphunter.regexpreviewcompanion": {
           "downloads": 50
         },
+        "dev.gaphunter.resilienceselfinvocationcompanion": {
+          "downloads": 1
+        },
         "dev.gaphunter.reviewcompanion": {
           "downloads": 23
         },
         "dev.gaphunter.rubygemfilegroupcompanion": {
           "downloads": 10
+        },
+        "dev.gaphunter.rubynethttpreusecompanion": {
+          "downloads": 1
+        },
+        "dev.gaphunter.rubyshellinjectioncompanion": {
+          "downloads": 1
+        },
+        "dev.gaphunter.rxjavadisposableleakcompanion": {
+          "downloads": 1
         },
         "dev.gaphunter.semverbumpmismatchcompanion": {
           "downloads": 31
