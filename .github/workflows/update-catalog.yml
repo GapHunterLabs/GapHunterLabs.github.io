@@ -97,16 +97,22 @@ jobs:
           import json
           json.loads(m.group(1))
           print("catalog-data JSON OK")
+          m2 = re.search(r'<script type="application/ld\+json" id="catalog-jsonld">(.*?)</script>', html, re.S)
+          if not m2:
+              sys.exit("catalog-jsonld script block not found")
+          ld = json.loads(m2.group(1))
+          n = ld.get("mainEntity", {}).get("numberOfItems")
+          print("catalog-jsonld JSON OK (%s items)" % n)
           PYEOF
 
       - name: Commit and push if data changed
         run: |
           git config user.name "Gap Hunter Labs"
           git config user.email "gaphunterlabs@gmail.com"
-          if git diff --quiet -- index.html pipeline/catalog_daily_history.json pipeline/catalog_latest_data.json; then
+          if git diff --quiet -- index.html sitemap.xml pipeline/catalog_daily_history.json pipeline/catalog_latest_data.json; then
             echo "sin cambios reales en los datos, no se commitea nada"
           else
-            git add index.html pipeline/catalog_daily_history.json pipeline/catalog_latest_data.json
+            git add index.html sitemap.xml pipeline/catalog_daily_history.json pipeline/catalog_latest_data.json
             git commit -m "Auto-update catalog data ($(date -u +%Y-%m-%d))"
             git push
           fi
