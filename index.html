@@ -13,8 +13,8 @@
      on a brand-first opener. -->
 <meta name="description" content="Real, evidence-based JetBrains/IntelliJ plugin gaps, fixed. Browse the catalog by category, growth, and the exact competitor problem each plugin solves.">
 <!-- Locked down deliberately, not a boilerplate copy-paste: this page is
-     100% inline HTML/CSS/JS (no build step, no external script/style/font
-     host) plus one live JSON data island swapped in by pipeline/
+     100% inline HTML/CSS/JS (no build step, no external script/style
+     host; fonts are self-hosted under fonts/, SIL OFL) plus one live JSON data island swapped in by pipeline/
      auto_update_catalog.py from JetBrains Marketplace + GitHub API
      responses. That data island is the actual untrusted-input surface on
      this page (see esc()/safeUrl() below for the render-time half of this
@@ -56,7 +56,7 @@
      served from something other than GitHub Pages' static hosting with
      real response headers) but should not be read as active defenses
      today. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://gc.zgo.at; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://raw.githubusercontent.com; manifest-src 'self'; connect-src https://gaphunterlabs.goatcounter.com; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://gc.zgo.at; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://raw.githubusercontent.com; manifest-src 'self'; connect-src https://gaphunterlabs.goatcounter.com; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%201024%201024%22%20width%3D%22100%25%22%20height%3D%22100%25%22%3E%20%3C%21--%20White%20background%3A%20keeps%20the%20mark%20legible%20in%20light%20theme%20and%20on%20the%20Marketplace%20listing%20card%20--%3E%20%3Crect%20width%3D%221024%22%20height%3D%221024%22%20fill%3D%22%23FFFFFF%22/%3E%20%3Cpath%20d%3D%22%20M%20511%2C81%20L%20847%2C283%20L%20725%2C351%20L%20508%2C223%20L%20296%2C348%20L%20296%2C588%20L%20463%2C691%20L%20342%2C765%20L%20173%2C665%20L%20172%2C281%20Z%22%20fill%3D%22%230151FC%22%20/%3E%20%3Cpath%20d%3D%22%20M%20846%2C412%20L%20844%2C668%20L%20518%2C863%20L%20393%2C795%20L%20724%2C589%20L%20721%2C540%20L%20567%2C538%20L%20568%2C412%20Z%22%20fill%3D%22%2301B3FD%22%20/%3E%20%3Cpolygon%20points%3D%22569%2C413%20695%2C413%20695%2C539%20569%2C539%22%20fill%3D%22%2302F172%22%20/%3E%20%3C/svg%3E">
@@ -220,6 +220,25 @@
 }
 </script>
 <style>
+  /* Self-hosted OFL families (IBM Plex Sans + JetBrains Mono).
+     default-src is 'none', so font-src 'self' on the CSP meta is
+     required for these files to load. font-display: swap keeps the
+     existing system-font stack visible until the files arrive. */
+  @font-face {
+    font-family: "IBM Plex Sans";
+    src: url("fonts/IBMPlexSans-Variable.ttf") format("truetype");
+    font-weight: 100 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "JetBrains Mono";
+    src: url("fonts/JetBrainsMono-Variable.ttf") format("truetype");
+    font-weight: 100 800;
+    font-style: normal;
+    font-display: swap;
+  }
+
   /* Deliberately single-theme (always dark) -- a brand-consistency
      choice made explicitly by the team, not an omission: every
      visitor sees the same look regardless of their own system
@@ -267,8 +286,8 @@
     --purple: #B98CFF;
     --amber: #FFB020;
     --teal: #34D5C7;
-    --mono: ui-monospace, "JetBrains Mono", "Cascadia Code", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
-    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --mono: "JetBrains Mono", ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    --sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
     --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 8px 24px rgba(0,0,0,0.4);
     --radius: 10px;
   }
