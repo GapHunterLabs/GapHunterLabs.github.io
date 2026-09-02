@@ -51,6 +51,7 @@ import re
 import sys
 import subprocess
 import urllib.request
+import html
 from datetime import date, datetime, timezone
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -136,6 +137,174 @@ def earliest_datapoint(history, xml_id):
         if xml_id in snap.get("plugins", {}):
             return snap["date"], snap["plugins"][xml_id]["downloads"]
     return None, None
+
+
+SITE = "https://gaphunterlabs.github.io/"
+
+JSONLD_RE = re.compile(
+    r'(<script type="application/ld\+json" id="catalog-jsonld">)(.*?)(</script>)',
+    re.S,
+)
+NOSCRIPT_RE = re.compile(
+    r'(<noscript id="catalog-crawler">)(.*?)(</noscript>)',
+    re.S,
+)
+CATALOG_DATA_RE = re.compile(
+    r'(<script id="catalog-data" type="application/json">)(.*?)(</script>)',
+    re.S,
+)
+
+
+def plain_text(s):
+    s = "" if s is None else str(s)
+    s = re.sub(r"`+", "", s)
+    s = re.sub(r"\*\*([^*]+)\*\*", r"\1", s)
+    s = re.sub(r"\*([^*]+)\*", r"\1", s)
+    s = re.sub(r"\s+", " ", s).strip()
+    return s
+
+
+def build_catalog_jsonld(rows, generated_at):
+    elements = []
+    for i, p in enumerate(rows, 1):
+        url = p.get("marketplaceUrl") or p.get("githubUrl") or SITE
+        item = {
+            "@type": "SoftwareApplication",
+            "name": p.get("name") or p.get("repo"),
+            "url": url,
+            "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "IntelliJ Platform",
+        }
+        desc = plain_text(p.get("pitch"))
+        if desc:
+            item["description"] = desc
+        if p.get("githubUrl"):
+            item["sameAs"] = p["githubUrl"]
+        if p.get("marketplaceUrl"):
+            item["downloadUrl"] = p["marketplaceUrl"]
+        if p.get("firstPublished"):
+            item["datePublished"] = p["firstPublished"]
+        if p.get("pricing") == "FREE":
+            item["offers"] = {
+                "@type": "Offer",
+                "price": "0",
+                "priceCurrency": "USD",
+            }
+        reviews = p.get("reviews") or 0
+        rating = p.get("rating")
+        if reviews > 0 and rating:
+            item["aggregateRating"] = {
+                "@type": "AggregateRating",
+                "ratingValue": str(rating),
+                "ratingCount": str(int(reviews)),
+                "bestRating": "5",
+                "worstRating": "1",
+            }
+        elements.append({
+            "@type": "ListItem",
+            "position": i,
+            "item": item,
+        })
+    payload = {
+        "@context": "https://schema.org",
+        "@type": "CollectionPage",
+        "name": "Gap Hunter Labs Plugin Catalog",
+        "url": SITE,
+        "description": "A catalog of IntelliJ/JetBrains-family IDE plugins, each built from a documented, evidence-based gap in an existing tool.",
+        "inLanguage": "en",
+        "isPartOf": {"@id": SITE + "#org"},
+        "mainEntity": {
+            "@type": "ItemList",
+            "numberOfItems": len(rows),
+            "itemListOrder": "https://schema.org/ItemListUnordered",
+            "itemListElement": elements,
+        },
+    }
+    if generated_at:
+        payload["dateModified"] = generated_at[:10]
+    raw = json.dumps(payload, ensure_ascii=False, separators=(",", ":"))
+    return raw.replace("</script>", "<\\/script>")
+
+
+def build_catalog_noscript(rows):
+    items = []
+    for p in rows:
+        name = html.escape(p.get("name") or p.get("repo") or "Plugin")
+        pitch = html.escape(plain_text(p.get("pitch")))
+        mp = p.get("marketplaceUrl")
+        gh = p.get("githubUrl")
+        if mp:
+            title = '<a href="%s">%s</a>' % (html.escape(mp, quote=True), name)
+        else:
+            title = name
+        parts = [title]
+        if pitch:
+            parts.append(" — " + pitch)
+        if gh:
+            parts.append(
+                ' <a href="%s">Source</a>' % html.escape(gh, quote=True)
+            )
+        items.append("<li>" + "".join(parts) + "</li>")
+    n = str(len(rows))
+    return (
+        '\n  <div style="max-width:720px;margin:40px auto;padding:24px;'
+        "font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;"
+        'color:#E9EDF8;background:#090D16;">\n'
+        '    <p style="font-size:22px;font-weight:700;margin:0 0 12px;">'
+        "Gap Hunter Labs — IntelliJ &amp; JetBrains Plugin Catalog</p>\n"
+        '    <p style="color:#9AA6C4;line-height:1.6;margin:0 0 16px;">'
+        + n
+        + " IntelliJ-family plugins, each built from a documented gap in existing tooling. "
+        '<a href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" style="color:#3FA2FF;">JetBrains Marketplace</a>'
+        ' · <a href="https://github.com/GapHunterLabs" style="color:#3FA2FF;">GitHub</a></p>\n'
+        '    <ol style="color:#E9EDF8;line-height:1.55;padding-left:1.3em;">\n      '
+        + "\n      ".join(items)
+        + "\n    </ol>\n  </div>\n"
+    )
+
+
+def _replace_inner(page_html, pattern, inner, label):
+    if not pattern.search(page_html):
+        sys.exit("[auto_update] ERROR: missing %s block in index.html" % label)
+
+    def repl(mm):
+        return mm.group(1) + inner + mm.group(3)
+
+    return pattern.sub(repl, page_html, count=1)
+
+
+def apply_seo_blocks(page_html, rows, generated_at):
+    page_html = _replace_inner(
+        page_html, JSONLD_RE, build_catalog_jsonld(rows, generated_at), "catalog-jsonld"
+    )
+    page_html = _replace_inner(
+        page_html, NOSCRIPT_RE, build_catalog_noscript(rows), "catalog-crawler"
+    )
+    mld = JSONLD_RE.search(page_html)
+    ld = json.loads(mld.group(2))
+    if ld.get("mainEntity", {}).get("numberOfItems") != len(rows):
+        sys.exit("[auto_update] ERROR: catalog-jsonld numberOfItems does not match plugin count")
+    ns = NOSCRIPT_RE.search(page_html)
+    if not ns or "<ol" not in ns.group(2) or "</ol>" not in ns.group(2):
+        sys.exit("[auto_update] ERROR: catalog-crawler list did not render")
+    return page_html
+
+
+def refresh_seo_from_index():
+    with open(INDEX_PATH, encoding="utf-8") as f:
+        page = f.read()
+    m = CATALOG_DATA_RE.search(page)
+    if not m:
+        sys.exit("[auto_update] ERROR: catalog-data not found")
+    data = json.loads(m.group(2))
+    rows = data["plugins"]
+    generated_at = data.get("generatedAt") or datetime.now(timezone.utc).strftime(
+        "%Y-%m-%d %H:%M:%S UTC"
+    )
+    page = apply_seo_blocks(page, rows, generated_at)
+    with open(INDEX_PATH, "w", encoding="utf-8") as f:
+        f.write(page)
+    print("[auto_update] SEO blocks refreshed from catalog-data (%d plugins)" % len(rows))
 
 
 def main():
@@ -334,10 +503,12 @@ def main():
             "con estos regex. Abortando antes de escribir a disco." % (len(swaps), swap_count)
         )
 
+    new_html = apply_seo_blocks(new_html, rows, generated_at)
+
     with open(INDEX_PATH, "w", encoding="utf-8") as f:
         f.write(new_html)
 
-    print(f"[auto_update] index.html actualizado (catalog-data + {swap_count} literales estaticos), "
+    print(f"[auto_update] index.html actualizado (catalog-data + {swap_count} literales estaticos + SEO), "
           f"JSON re-parseado limpio antes y despues del swap")
 
     # sitemap.xml <lastmod>, 2026-08-23 (audit finding): the page's real
@@ -363,4 +534,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    if len(sys.argv) > 1 and sys.argv[1] == "--seo-from-index":
+        refresh_seo_from_index()
+    else:
+        main()
