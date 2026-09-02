@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="boot">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -82,6 +82,8 @@
      size preferences (manifest.json). -->
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="theme-color" content="#090D16">
+<link rel="preload" as="image" href="lab-loading.jpg">
+<noscript><style>.site-loader{display:none!important}html.boot{overflow:auto!important}</style></noscript>
 <link rel="manifest" href="/manifest.json">
 <!-- Added 2026-08-21: raw.githubusercontent.com is the only external
      host this page ever fetches from (dossier demo images/GIFs, lazy-
@@ -243,6 +245,11 @@
     --sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
     --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 8px 24px rgba(0,0,0,0.4);
     --radius: 10px;
+    --page-max: 1280px;
+    --page-pad: 24px;
+    --page-pad-sm: 16px;
+    --control-h: 44px;
+    --section-gap: 20px;
   }
 
   * { box-sizing: border-box; }
@@ -283,9 +290,9 @@
   }
 
   .wrap {
-    max-width: 1280px;
+    max-width: var(--page-max);
     margin: 0 auto;
-    padding: 32px 24px 40px;
+    padding: 16px var(--page-pad) 32px;
   }
 
   /* ==================== TOP BAR ====================
@@ -294,16 +301,14 @@
      it, so it reads as chrome/wayfinding rather than another content
      block. Sticky, not fixed: it should get out of the way of nothing
      on a one-page site, but stay reachable while scrolling the (long)
-     Table view or the footer. content-visibility isn't needed -- it's
-     a single row -- but z-index has to clear the mode-transition
-     overlay's own children, hence the explicit stacking context. */
-  #top, #fieldView, #tableView, #methodology, #contentStage, #fieldMain, tr.row { scroll-margin-top: 68px; }
+     Table view or the footer. */
+  #top, #fieldView, #tableView, #methodology, #contentStage, #fieldMain, tr.row { scroll-margin-top: 72px; }
 
   .topbar {
     position: sticky;
     top: 0;
     z-index: 40;
-    background: rgba(9,13,22,0.88);
+    background: rgba(9,13,22,0.94);
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--border);
@@ -333,18 +338,32 @@
   }
 
   .topbar-inner {
-    max-width: 1280px;
+    max-width: var(--page-max);
     margin: 0 auto;
-    padding: 0 24px;
-    height: 51px;
-    display: flex;
+    padding: 0 var(--page-pad);
+    height: 56px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
     align-items: center;
-    gap: 25px;
+    gap: 16px;
     min-width: 0;
   }
 
-  /* Mark: the real brand SVG (same paths as the footer .brand-mark
-     and the mode-lock overlay), sized for this 51px strip. */
+  .topbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-self: start;
+    min-width: 0;
+    text-decoration: none;
+    color: inherit;
+    border-radius: 8px;
+  }
+  .topbar-brand:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
   .topbar-mark {
     display: flex;
     align-items: center;
@@ -352,15 +371,43 @@
     flex: none;
     width: 32px;
     height: 32px;
-    text-decoration: none;
   }
-  .topbar-mark svg { width: 28px; height: 28px; display: block; }
+  .topbar-mark svg { width: 32px; height: 32px; display: block; }
+
+  .topbar-wordmark {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+  }
+  .tw-name {
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1.15;
+    white-space: nowrap;
+  }
+  .tw-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    line-height: 1.2;
+  }
 
   .topbar-nav {
     display: flex;
     align-items: center;
-    gap: 2px;
-    flex: 1;
+    justify-self: center;
+    gap: 0;
+    flex: none;
+    padding: 3px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
   }
 
   .topbar-link {
@@ -369,7 +416,7 @@
     align-items: center;
     gap: 7px;
     font-family: var(--mono);
-    font-size: 13.25px;
+    font-size: 12.5px;
     font-weight: 600;
     letter-spacing: 0.04em;
     color: var(--text-faint);
@@ -383,29 +430,25 @@
   }
 
   .topbar-link .idx {
-    font-size: 11px;
+    font-size: 10.5px;
     color: var(--text-faint);
     opacity: 0.6;
   }
 
   .topbar-link:hover {
     color: var(--text);
-    background: var(--surface);
+    background: var(--surface-2);
   }
 
   .topbar-link:hover .idx { color: var(--accent); opacity: 1; }
 
-  /* Active section: underline grows from center (not a static border)
-     and the link gets the same glow language as .stat.decoding uses
-     elsewhere, so "you are here" reads as the same visual vocabulary
-     as the rest of the page, not a bolted-on nav skin. */
-  .topbar-link.active { color: var(--text); }
+  .topbar-link.active { color: var(--text); background: var(--surface-2); }
 
   .topbar-link.active::before {
     content: "";
     position: absolute;
-    left: 11.5px; right: 11.5px; bottom: 1px;
-    height: 2.3px;
+    left: 10px; right: 10px; bottom: 3px;
+    height: 2px;
     background: var(--accent);
     border-radius: 2px;
     box-shadow: 0 0 6px rgba(63,162,255,0.7);
@@ -420,63 +463,68 @@
 
   .topbar-link.active .idx { color: var(--accent); opacity: 1; }
 
-  .topbar-ext {
+  .topbar-actions {
     display: flex;
     align-items: center;
-    gap: 7px;
+    justify-self: end;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .topbar-ext {
+    display: flex;
+    align-items: stretch;
+    height: 36px;
     flex: none;
-    margin-left: auto;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
   }
 
   .topbar-ext-link {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 7px;
     font-family: var(--mono);
-    font-size: 12.5px;
+    font-size: 12px;
     font-weight: 600;
     letter-spacing: 0.03em;
     color: var(--text-dim);
     text-decoration: none;
-    padding: 7px 11.5px;
-    border-radius: 7px;
-    border: 1px solid var(--border);
-    background: var(--surface);
-    transition: border-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease, transform 0.12s ease;
+    padding: 0 12px;
+    border: 0;
+    border-left: 1px solid var(--border);
+    background: transparent;
+    border-radius: 0;
+    transition: color 0.15s ease, background 0.15s ease;
   }
 
   .topbar-ext-link:hover {
     color: var(--text);
-    border-color: var(--accent);
-    box-shadow: 0 0 0 1px rgba(63,162,255,0.25), 0 0 10px rgba(63,162,255,0.25);
-    transform: translateY(-1px);
+    background: var(--surface-2);
+  }
+  .topbar-ext-link:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+    color: var(--text);
   }
 
-  .topbar-ext-link svg { width: 14px; height: 14px; flex: none; }
+  .topbar-ext-link svg { width: 15px; height: 15px; flex: none; }
 
-  /* Live status pill: quiet "system nominal" heartbeat -- reuses --good
-     (already the brand's growth-up color) so it doesn't introduce a
-     new meaning for a new hue. Real content (plugin count), not a
-     decorative fake metric. */
-  /* 2026-08-28: color de texto subido de --text-faint (leia como
-     "apagado", mismo problema ya corregido en el rail-status del hero
-     y en las etiquetas del Hunting Field el mismo dia) a --text-dim, un
-     paso mas de presencia sin competir con el propio dot --good que ya
-     es el elemento con mas jerarquia visual del pill. Fondo tenue
-     agregado para que el pill entero tenga una superficie propia en vez
-     de ser solo un borde + texto flotando sobre el fondo de la pagina. */
   .topbar-status {
     display: inline-flex;
     align-items: center;
     gap: 7px;
     font-family: var(--mono);
     font-size: 12px;
-    letter-spacing: 0.05em;
+    letter-spacing: 0.04em;
     color: var(--text-dim);
-    padding: 7px 11.5px 7px 9px;
-    border-radius: 100px;
-    border: 1px solid var(--border);
-    background: rgba(17, 23, 38, 0.5);
+    padding: 0 12px 0 10px;
+    background: transparent;
+    border: 0;
+    white-space: nowrap;
   }
 
   .topbar-status .dot {
@@ -496,19 +544,21 @@
   .topbar-burger {
     display: none;
     flex: none;
-    /* 44x44 (2026-08-23, audit finding): was 35x35, under the 44px
-       touch-target guideline -- and unlike most controls on this page,
-       this one is the SOLE path to primary navigation once .topbar-nav
-       collapses below 620px (see the media query further down), not a
-       supplementary control with another way in. */
     width: 44px;
-    height: 44px;
-    border-radius: 7px;
-    border: 1px solid var(--border);
-    background: var(--surface);
+    height: auto;
+    align-self: stretch;
+    border-radius: 0;
+    border: 0;
+    border-left: 1px solid var(--border);
+    background: transparent;
     align-items: center;
     justify-content: center;
     cursor: pointer;
+  }
+  .topbar-burger:hover { background: var(--surface-2); }
+  .topbar-burger:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
   }
 
   /* 2026-08-28 (lista de 25 fixes visuales, #6): el markup nunca tenia
@@ -546,51 +596,34 @@
   }
 
   @media (max-width: 900px) {
+    .tw-tag { display: none; }
     .topbar-ext-label { display: none; }
-    .topbar-status span:not(.dot) { display: none; }
-    /* 2026-08-28 (auditoria, hallazgo medio #12): .topbar-ext-link
-       (JetBrains/GitHub) medía ~31px de alto real (font-size 12.5px +
-       padding 7px arriba/abajo), bajo el minimo tactil de 44px (WCAG
-       2.5.5 / HIG) -- inconsistente con .topbar-burger, que ya se subio
-       a 44x44 explicitamente el 2026-08-23 citando ese mismo umbral,
-       pero estos 2 links quedaron afuera de ese pase. Justo en este
-       breakpoint es donde mas importa: el label de texto ya se oculto
-       arriba, asi que el link queda como un icono chico sin la
-       superficie extra del texto para compensar un toque impreciso. */
-    .topbar-ext-link { min-height: 44px; padding-left: 13px; padding-right: 13px; }
+    .topbar-status-unit { display: none; }
+    .topbar-ext { height: 44px; }
+    .topbar-ext-link { min-width: 44px; padding: 0 12px; }
   }
 
   @media (max-width: 840px) {
-    /* 2026-08-28 (auditoria, hallazgo medio #38): .topbar-nav-labels
-       (el texto "Overview"/"Table"/"Methodology") se ocultaba a 760px,
-       pero .topbar-nav en si (la barra que los contiene) recien se
-       oculta detras del burger aca, a 620px -- una franja real de 140px
-       de ancho donde la barra INLINE seguia visible mostrando solo
-       "01 02 03" desnudos, sin ningun texto que dijera que representan.
-       Confirmado real con captura a 680px CSS. Movido aca (mismo
-       breakpoint donde el burger toma el control), en vez de 760px --
-       ahora la barra inline SIEMPRE muestra el texto completo mientras
-       sea la barra inline, nunca queda en un estado intermedio
-       criptico. */
+    /* Nav collapses into the burger at the same width the inline
+       labels would otherwise disappear, so the bar never shows bare
+       01/02/03 with no names. */
     .topbar-nav-labels { display: none; }
-    .topbar-inner { gap: 12px; }
+    .topbar-inner {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+    }
+    .topbar-actions { gap: 6px; }
     .topbar-nav { display: none; }
     .topbar-burger { display: flex; }
-    /* 2026-08-28 (lista de 25 fixes visuales, #3): pasaba de display:none
-       a flex sin transicion -- aparecia de golpe, unico panel de la
-       pagina sin ningun tipo de entrada animada. animation en vez de
-       transition por el mismo motivo que .no-results (#4, ver esa
-       regla): display:none no es animable via transition, pero SI
-       reinicia una animation cada vez que el elemento vuelve a
-       mostrarse. */
     .topbar.nav-open .topbar-nav {
       display: flex;
       position: absolute;
-      top: 51px; left: 0; right: 0;
+      top: 56px; left: 0; right: 0;
       flex-direction: column;
       align-items: stretch;
       background: var(--bg);
       border-bottom: 1px solid var(--border);
+      border-radius: 0;
       padding: 6px;
       gap: 2px;
       animation: navDropIn 0.18s ease;
@@ -603,15 +636,9 @@
     @media (prefers-reduced-motion: reduce) {
       .topbar.nav-open .topbar-nav { animation: none; }
     }
-    .topbar.nav-open .topbar-link { padding: 10px 12px; }
+    .topbar.nav-open .topbar-link { padding: 12px 14px; }
     .topbar.nav-open .topbar-link.active::before { display: none; }
     .topbar.nav-open .topbar-link.active { background: var(--surface-2); }
-    /* The open dropdown has the whole viewport width to work with --
-       the earlier 760px rule hiding .topbar-nav-labels was only meant
-       for the cramped INLINE bar before the burger takes over, not
-       this fully-expanded list. Without this override the dropdown
-       showed bare "01/02/03" with no "Overview"/"Table"/"Methodology"
-       text at all. */
     .topbar.nav-open .topbar-nav-labels { display: inline; }
   }
 
@@ -639,7 +666,7 @@
      sliding highlight "thumb" instead of a static border -- the one
      bit of motion the user asked for, nothing louder. The thumb's
      position is driven declaratively by :has(), reading whichever
-     button openModeLock() already marked .active -- no extra JS. */
+     button switchMode() already marked .active -- no extra JS. */
   .view-toggle {
     position: relative;
     display: inline-flex;
@@ -649,7 +676,7 @@
     border-radius: 8px;
     padding: 3px;
     flex: none;
-    height: 44px; /* 2026-08-23 audit finding: was 38px, under the 44px touch-target guideline */
+    height: var(--control-h);
   }
 
   .view-toggle .vt-thumb {
@@ -670,6 +697,8 @@
   .view-toggle button {
     position: relative;
     z-index: 1;
+    flex: 1 1 0;
+    min-width: 0;
     font-family: var(--mono);
     font-size: 11px;
     letter-spacing: 0.06em;
@@ -679,7 +708,7 @@
     border-radius: 6px;
     border: none;
     background: transparent;
-    color: var(--text-faint);
+    color: var(--text);
     cursor: pointer;
     transition: color 0.2s ease 0.05s;
   }
@@ -694,12 +723,7 @@
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    /* -30% per explicit user request, 2026-08-23 (Field-mode dossier
-       stat row felt oversized) -- padding, .num/.label font-sizes and
-       .dossier-stats .num below all scaled down together the same
-       ~30%, keeping their relative proportions instead of shrinking
-       just one dimension. */
-    padding: 10px 11px;
+    padding: 6px 8px;
     box-shadow: var(--shadow);
     transition: border-color 0.25s ease;
   }
@@ -716,18 +740,19 @@
   .stat .num {
     font-family: var(--mono);
     font-variant-numeric: tabular-nums;
-    font-size: 17px;
+    font-size: 13px;
     font-weight: 700;
-    line-height: 1;
+    line-height: 1.15;
     min-height: 1em;
+    overflow-wrap: anywhere;
   }
 
   .stat .num.accent { color: var(--accent); }
   .stat .num .stat-growth { font-size: 10px; margin-left: 5px; color: var(--good); vertical-align: 2px; }
 
   .stat .label {
-    margin-top: 6px;
-    font-size: 9px;
+    margin-top: 3px;
+    font-size: 8px;
     letter-spacing: 0.06em;
     text-transform: uppercase;
     color: var(--text-faint);
@@ -739,135 +764,77 @@
      Methodology and fought the header. */
   .hero {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(260px, 1.15fr) 260px;
-    grid-template-areas: "brand slider stats";
-    gap: 28px;
-    padding: 36px 0 28px;
-    align-items: start;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    grid-template-areas: "brand slider";
+    gap: var(--section-gap);
+    padding: 20px 0 24px;
+    align-items: stretch;
+    min-width: 0;
   }
 
-  /* ---- brand: hero-scale editorial identity, replacing the old
-     compact icon+wordmark .brand-row ---- */
-  /* align-self:start (not the row's default stretch) -- box-height was
-     previously matching the telemetry column's full height, which left
-     a lot of dead air below the subtitle with only the corner-frame
-     mark to show for it. Now sized to its own content, plus a fixed,
-     modest bottom pad for some breathing room against its neighbors
-     rather than none at all. */
   .hero-brand {
     grid-area: brand;
-    align-self: start;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
     position: relative;
-    padding: 4px 0 8px 20px;
+    padding: 4px 0 0;
+    min-width: 0;
   }
-  /* The guide line is its own pseudo-element, not a literal
-     `border-left` -- a border's box-shadow radiates around the WHOLE
-     box (all 4 sides), which made the entire brand block read as
-     "boxed in" with the corner-frame marks looking like cut segments
-     of that same rectangle. This way the glow is confined to the thin
-     line itself. */
-  /* 2026-08-28: reporte explicito del usuario ("mejora esa linea que
-     esta al lado de Gap Hunter Labs") -- el color plano var(--border)
-     con un glow generico de 7px se veia chato/sin intencion de diseño.
-     Reemplazado por un degrade vertical de 3 paradas (accent en el
-     tercio superior -> border en el medio -> transparente en la base),
-     mismo lenguaje de "energia que se apaga hacia abajo" ya usado en
-     otras zonas del sitio (ej. los spokes del Hunting Field). Ancho
-     subido 2px->3px para que el degrade sea perceptible, glow reforzado
-     y con doble capa (uno ajustado, uno mas ancho y tenue) para dar
-     mas presencia sin volverse un bloque solido. */
-  .hero-brand::before {
-    content: "";
-    position: absolute;
-    left: 0; top: 0; bottom: 0;
-    width: 3px;
-    background: linear-gradient(180deg,
-      var(--accent) 0%,
-      var(--border) 45%,
-      transparent 100%);
-    box-shadow: 0 0 4px rgba(63,162,255,0.55), 0 0 12px rgba(63,162,255,0.25);
-  }
-  /* Removed the .corner-frame class from .hero-brand entirely,
-     2026-08-21 -- two prior attempts to nudge the offset (targeting the
-     wrong pseudo-element, then targeting the right one with a
-     different offset) both still read as a broken/floating fragment in
-     real screenshots, because the actual root cause was never the
-     offset: .hero-brand has NO visible box (no background, no border)
-     for that corner mark to visually belong to -- unlike .footer-brand
-     and .telemetry, which both have a real surface/border the mark sits
-     against. A corner bracket floating near a bare heading with nothing
-     to "frame" reads as noise no matter where it's placed. Dropping the
-     class entirely instead of continuing to chase an offset fix that
-     was never going to work. */
 
   .hero-title {
     margin: 0;
+    min-width: 0;
+    max-width: 100%;
     font-family: var(--mono);
     font-weight: 800;
-    font-size: clamp(38px, 5.6vw, 64px);
-    line-height: 0.94;
-    letter-spacing: -0.01em;
-  }
-  /* Entrance is transform-only, never opacity -- the brand name is
-     primary content, so it must never render invisible if a headless
-     tool or an odd paint-timing edge case catches a frame before an
-     opacity keyframe would have resolved. Worst case with transform
-     alone: the text is simply not yet slid into place, never blank. */
-  .hero-title .ht-line {
-    display: block;
+    font-size: clamp(22px, 3.4vw, 42px);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
     text-transform: uppercase;
-    transform: translateY(10px);
-    animation: heroLineIn 0.5s ease forwards;
+    white-space: nowrap;
   }
-  .hero-title .ht-line:nth-child(1) { animation-delay: 0.05s; }
-  .hero-title .ht-line:nth-child(2) { animation-delay: 0.16s; }
-  .hero-title .ht-line:nth-child(3) { animation-delay: 0.27s; }
-  .hero-title .ht-line.accent { color: var(--accent); }
+  .hero-title .accent { color: var(--accent); }
 
-  @keyframes heroLineIn { to { transform: translateY(0); } }
-
-  @media (prefers-reduced-motion: reduce) {
-    .hero-title .ht-line { animation: none; transform: none; }
-    /* 2026-08-23 (audit finding): these selectors share ONE thing --
-       every one of them runs an `infinite` CSS animation with no prior
-       reduced-motion coverage at all, unlike the two cases already
-       handled (this hero-title reveal, and the hunting-field spoke
-       lines further down). Grouped here as one addition rather than
-       scattered inline so it's obvious at a glance which infinite
-       animations on this page are and aren't covered. */
-    .topbar-status .dot,
-    .hf-live-dot,
-    .footer-status .dot,
-    .log-head::after,
-    .mt-lock-input {
-      animation: none;
-    }
-  }
-
-  .hero-caption {
-    margin-top: 10px;
+  .hero-kicker {
+    margin: 8px 0 0;
     font-family: var(--mono);
-    font-size: 10.5px;
+    font-size: 12px;
+    font-weight: 600;
     letter-spacing: 0.14em;
     text-transform: uppercase;
-    color: var(--text-faint);
+    color: var(--good);
+    line-height: 1.3;
   }
 
-  .hero-subtitle { margin: 8px 0 0; color: var(--text-dim); font-size: 13.5px; max-width: 42ch; line-height: 1.5; }
+  .hero-spine { display: none; }
 
-  .hero-more {
-    margin-top: 16px;
-    min-height: 44px;
-    width: fit-content;
+  .hero-subtitle { margin: 10px 0 0; color: var(--text-dim); font-size: 13.5px; max-width: 42ch; line-height: 1.5; }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 20px;
+    padding-bottom: 8px;
+    width: 100%;
+    flex-shrink: 0;
+  }
+  .hero-actions .btn {
+    min-height: var(--control-h);
     cursor: pointer;
     appearance: none;
     -webkit-appearance: none;
   }
 
-  /* Featured-plugin carousel — replaces the static thesis tick-bar. */
+  /* Featured-plugin carousel — the secondary focal point. */
   .hero-slider {
     grid-area: slider;
     min-width: 0;
+    min-height: 0;
+    height: 100%;
     display: flex;
     flex-direction: column;
     background: rgba(17, 23, 38, 0.45);
@@ -878,10 +845,13 @@
   .hs-viewport {
     position: relative;
     overflow: hidden;
-    min-height: 188px;
+    flex: 1 1 auto;
+    min-height: 200px;
   }
   .hs-track {
     display: flex;
+    height: 100%;
+    align-items: stretch;
     transition: transform 0.45s cubic-bezier(.65, 0, .35, 1);
   }
   .hs-slide {
@@ -905,13 +875,32 @@
     outline: 2px solid var(--accent);
     outline-offset: -2px;
   }
-  .hs-slide img {
-    width: 100%;
-    height: 168px;
-    object-fit: cover;
-    object-position: top left;
+  .hs-media {
+    position: relative;
     display: block;
+    overflow: hidden;
+    flex: 1 1 auto;
+    min-height: 200px;
     background: var(--surface-2);
+    --hs-ox: 50%;
+    --hs-oy: 18%;
+  }
+  .hs-slide img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 0%;
+    display: block;
+    transform-origin: var(--hs-ox) var(--hs-oy);
+    transition: transform 0.35s ease;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .hs-slide:hover img,
+    .hs-slide:focus-visible img {
+      transform: scale(1.5);
+    }
   }
   .hs-copy {
     display: flex;
@@ -943,6 +932,8 @@
     gap: 4px;
     padding: 4px 6px 8px;
     border-top: 1px solid var(--border);
+    flex-shrink: 0;
+    min-width: 0;
   }
   .hs-nav {
     flex: none;
@@ -1006,6 +997,15 @@
   }
   @media (prefers-reduced-motion: reduce) {
     .hs-track { transition: none; }
+    .hs-slide img { transition: none; }
+    .hs-slide:hover img,
+    .hs-slide:focus-visible img { transform: none; }
+    .topbar-status .dot,
+    .hf-live-dot,
+    .footer-status .dot,
+    .log-head::after {
+      animation: none;
+    }
   }
 
   /* ---- telemetry: continuous instrumentation column. Deliberately
@@ -1013,46 +1013,30 @@
      stay exactly as they were for the Plugin Dossier, see the comment
      above .stat. ---- */
   .telemetry {
-    grid-area: stats;
-    display: flex;
-    flex-direction: column;
-    align-self: start;
-    /* min-height added 2026-08-23 (indexing audit, CLS/Core Web Vitals):
-       #stats renders empty until the inline script parses the
-       catalog-data JSON and injects the 5 .tele-row stat tiles -- with
-       no reserved space, that injection was a real layout shift the
-       instant it happened. Estimated from 5 rows x (~21px .tele-num +
-       ~13px .tele-label + 13px*2 padding + 1px border) -- a rough
-       floor, not a pixel-exact match; real content can still exceed it
-       without breaking anything, this only prevents the empty-state
-       collapse. */
-    min-height: 180px;
-    /* Faint panel background added 2026-08-21 -- previously this whole
-       column sat directly on --bg with no visual grouping, so the
-       4 stat rows read as loose text floating in space rather than one
-       instrument panel. --surface at low opacity (not --surface at full
-       strength, which would compete with the real .info-block/.tele-row
-       surfaces already used elsewhere) plus a hairline border in the
-       same low-key style as .corner-frame nearby. Padding compensates
-       for the new visual edge so the numbers don't sit flush against it. */
-    background: rgba(17, 23, 38, 0.45);
-    border: 1px solid rgba(41, 51, 74, 0.6);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    max-width: 28rem;
+    margin-top: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 10px 14px;
+    padding: 0;
+    min-width: 0;
   }
+  .tele-row { display: flex; flex-direction: row; align-items: center; gap: 10px; padding: 10px 12px; border-right: 1px solid var(--border); min-width: 0; }
+  .tele-row:last-child { border-right: none; border-bottom: none; }
 
-  /* min-width:0 -- .tele-row is the actual GRID ITEM once .telemetry
-     switches to display:grid on mobile (see the 760px breakpoint
-     below), a separate default min-width:auto from .tele-body's own
-     (fixed above) one level further in. Missing this specific one was
-     the real remaining cause of "DOWNLOADS TOTAL" still clipping at a
-     real ~360 CSS px width even after .tele-body was fixed -- found by
-     re-reading the actual DOM nesting top to bottom instead of
-     guessing another fix blind. */
-  .tele-row { display: flex; align-items: center; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--border); min-width: 0; }
-  .tele-row:last-child { border-bottom: none; }
-
-  .tele-icon { flex: none; width: 18px; height: 18px; display: flex; align-items: center; justify-content: center; }
+  .tele-icon {
+    flex: none;
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+    background: var(--surface-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
   .tele-icon svg { width: 14px; height: 14px; }
 
   /* min-width:0 -- a flex item's default min-width:auto refuses to
@@ -1067,15 +1051,13 @@
 
   .tele-body.decoding .tele-num {
     color: var(--accent);
-    text-shadow: 0 0 8px rgba(63,162,255,0.6);
-    transition: color 0.3s ease 0.25s, text-shadow 0.3s ease 0.25s;
   }
 
-  .tele-num { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 18px; font-weight: 700; line-height: 1; min-height: 1em; }
+  .tele-num { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 15px; font-weight: 650; line-height: 1.15; min-height: 1em; overflow-wrap: anywhere; color: var(--text); }
   .tele-num.accent { color: var(--accent); }
-  .tele-num .stat-growth { font-size: 12px; margin-left: 6px; color: var(--good); vertical-align: 2px; }
+  .tele-num .stat-growth { font-size: 11px; margin-left: 4px; color: var(--good); vertical-align: 1px; }
 
-  .tele-label { margin-top: 3px; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-faint); }
+  .tele-label { margin-top: 3px; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-faint); overflow-wrap: break-word; }
 
   /* ---- shared corner-mark accent: small L-shaped technical markers --
      the brief's "experimental geometry through layout", not a
@@ -1096,24 +1078,8 @@
   @media (max-width: 1080px) {
     .hero {
       grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
-      grid-template-areas: "brand slider" "stats stats";
-      row-gap: 28px;
-    }
-    /* Stats span the full remaining width here — 2 columns with the
-       last tile full-width, so 5 items don't leave an empty hole. */
-    .telemetry {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      column-gap: 0;
-      min-height: 0;
-      padding: 8px 10px;
-    }
-    .tele-row { padding: 8px 12px; }
-    .tele-row:nth-child(odd) { border-right: 1px solid var(--border); }
-    .tele-row:last-child {
-      grid-column: 1 / -1;
-      border-right: none;
-      padding-right: 12px;
+      grid-template-areas: "brand slider";
+      row-gap: var(--section-gap);
     }
   }
 
@@ -1129,26 +1095,13 @@
          (right-edge text silently clipped, not wrapped). Same fix
          applied to .telemetry/.process-steps/.footer-grid below. */
       grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      grid-template-areas: "brand slider" "stats stats";
+      grid-template-areas: "brand slider";
       row-gap: 22px;
       column-gap: 24px;
-      padding: 24px 0 20px;
+      padding: 20px 0 16px;
     }
     .hero-brand { padding-left: 0; padding-bottom: 4px; }
-    .hero-brand::before { display: none; }
-    /* Stats already go 2-column at 1080px (last tile full-width). Keep
-       readable type/icons here — only tighten padding. */
-    .telemetry { padding: 8px 10px; min-height: 0; }
-    .tele-row { padding: 8px 10px; gap: 8px; }
-    .tele-icon { width: 18px; height: 18px; }
-    .tele-icon svg { width: 14px; height: 14px; }
-    /* hero-title's desktop clamp() floor (38px) stays ABOVE its own
-       5.6vw component for this entire range (5.6vw only exceeds 38px
-       past ~679px), so without this override "HUNTER" etc. render at a
-       fixed 38px no matter how narrow the half-width column gets below
-       that -- measured as a real overflow risk on a real ~411 CSS px
-       phone, not a guess. Lower floor scoped to just this breakpoint. */
-    .hero-title { font-size: clamp(26px, 7vw, 42px); }
+    .hero-title { font-size: clamp(18px, 3.2vw, 28px); }
   }
 
   /* Below this, 2 columns gets too tight for the number+label pairs --
@@ -1161,9 +1114,9 @@
      enough now that a single column there is a reasonable floor. */
   @media (max-width: 340px) {
     .telemetry { grid-template-columns: 1fr; }
-    .tele-row:nth-child(odd) { border-right: none; }
-    .tele-row:last-child { grid-column: auto; }
+    .tele-row { border-right: none; border-bottom: 1px solid var(--border); }
     .tele-row:last-child { border-bottom: none; }
+    .hero-title { font-size: clamp(16px, 6.4vw, 22px); }
   }
 
   /* Same real-phone-width finding as .telemetry above: stacking brand
@@ -1173,302 +1126,142 @@
   @media (max-width: 640px) {
     .hero {
       grid-template-columns: minmax(0, 1fr);
-      grid-template-areas: "brand" "slider" "stats";
+      grid-template-areas: "brand" "slider";
       column-gap: 0;
     }
-    .hs-slide img { height: 148px; }
+    .hero-title { font-size: clamp(18px, 5.6vw, 26px); }
+    .hero-actions { margin-top: 16px; padding-bottom: 0; }
+    .hs-media, .hs-viewport { min-height: 148px; }
+    .hs-nav { width: 40px; height: 40px; }
+    .tele-row { padding: 8px 10px; gap: 8px; }
+    .tele-num .stat-growth { display: block; margin-left: 0; }
+    .hs-copy { padding: 8px 10px 10px; }
+    .hs-name { font-size: 14px; }
+    .telemetry { max-width: none; }
+    .process-strip {
+      width: auto;
+      max-width: none;
+    }
+    .telemetry { justify-self: stretch; }
   }
 
-  /* ==================== PROCESS STRIP ====================
-     2026-08-17 audit pass: the 4 stages now read as an actual
-     instrument track -- numbered circular badges (echoing the rail's
-     own 01..04 idx language) sitting on a connector line, rather than
-     plain text separated by arrow glyphs. The line fills in and each
-     badge lights up in sequence the first time the strip scrolls into
-     view -- the "illuminate from OBSERVE to BUILD" behavior the brief
-     asked for, not implemented until this pass. One-shot, mirrors the
-     .log-entry reveal pattern already used lower on the page. */
-  /* Second full redesign, 2026-08-21 -- the terminal-log version (thin
-     single row, small brackets, a narrow side panel) still left most of
-     the block's own height/width as visual dead air and read as
-     cramped rather than deliberate; user asked specifically to use the
-     block's own real interior space, not just restyle the same thin
-     strip again. New structure: a real 4-column GRID (not flex-wrap) of
-     full-height step CARDS, each with a large translucent number
-     watermark filling its own background, so every card's real
-     available area carries content instead of being mostly padding
-     around a small icon+label pair. Mission moves from a narrow 224px
-     side column to its own full-width band under the grid -- same
-     total footprint, but now sized to its own real content instead of
-     being squeezed into whatever height the steps row happened to be.
-     HTML changed to match (added .process-top wrapper, .ps-icon
-     watermark span, ex-.ps-num until 2026-08-28) -- .lit/.process-step/.process-connector classes
-     and their color custom-properties (--step-color/--seg-color/
-     --delay) kept exactly as the IntersectionObserver JS already
-     expects, so that stagger-reveal logic still needed zero changes. */
   .process-strip {
     border: 1px solid var(--border);
     border-radius: var(--radius);
     background: var(--surface);
-    margin-bottom: 20px;
+    margin-top: var(--section-gap);
+    margin-bottom: var(--section-gap);
     overflow: hidden;
+    width: 50%;
+    max-width: 100%;
+    min-width: 0;
   }
-  .process-top { display: flex; align-items: stretch; }
-  .process-label {
-    writing-mode: vertical-rl;
-    transform: rotate(180deg);
+  .process-head {
+    margin: 0;
+    padding: 8px 12px 0;
     font-family: var(--mono);
-    font-size: 9.5px;
-    letter-spacing: 0.16em;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--text-faint);
-    opacity: 0.55;
-    padding: 10px 6px;
-    border-right: 1px solid var(--border);
-    flex: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
-
   .process-steps {
     list-style: none;
     margin: 0;
-    padding: 0;
+    padding: 4px 0 8px;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    flex: 1;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     min-width: 0;
-    /* Real bug caught before shipping: .process-connector below is
-       position:absolute, and without this the browser would position
-       it against whatever ancestor happens to be the nearest
-       positioned one (not necessarily this grid), putting the seam
-       chevrons in the wrong place entirely rather than glued to the
-       gap between two step cards. */
-    position: relative;
   }
-
-  /* Each step is a real card filling its own grid cell -- border
-     between cards (not a gap) so the row reads as one continuous
-     instrument rather than 4 floating chips, same principle
-     .tele-row's dividers already use in the stats column. */
   .process-step {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 2px;
-    padding: 10px 14px 10px 12px;
-    overflow: hidden;
-    border-right: 1px solid var(--border);
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    column-gap: 10px;
+    row-gap: 2px;
+    align-items: start;
+    padding: 8px 10px;
     min-width: 0;
+    border-right: 1px solid var(--border);
   }
   .process-step:last-child { border-right: none; }
-
-  /* Large background watermark icon -- this is what actually fills the
-     card's own real estate instead of leaving it empty; low opacity at
-     rest so it never competes with the readable text sitting on top of
-     it, brightens slightly once lit. Was a big "01"/"02" number
-     (redundant with .ps-badge above), replaced 2026-08-28 with a
-     per-step themed icon -- see the doc comment on the <li> markup. */
   .ps-icon {
-    position: absolute;
-    right: 8px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 40px;
-    height: 40px;
-    color: var(--step-color, var(--text-faint));
-    opacity: 0.09;
-    pointer-events: none;
-    transition: opacity 0.4s ease;
-  }
-  .process-step.lit .ps-icon { opacity: 0.16; }
-
-  /* Small bracketed index above the step name -- the terminal-log
-     vocabulary from the prior pass kept here at a smaller scale,
-     secondary to the name/desc now instead of being the card's main
-     visual anchor. */
-  .ps-badge {
-    position: relative;
-    z-index: 1;
-    font-family: var(--mono);
-    font-size: 10px;
-    font-weight: 700;
-    color: var(--text-faint);
-    transition: color 0.3s ease, text-shadow 0.3s ease;
-  }
-  .ps-badge::before { content: "["; }
-  .ps-badge::after { content: "]"; }
-
-  .process-step:hover .ps-badge,
-  .process-step.lit .ps-badge {
-    color: var(--step-color, var(--accent));
-    text-shadow: 0 0 8px color-mix(in srgb, var(--step-color, var(--accent)) 55%, transparent);
-  }
-
-  .ps-text { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 3px; min-width: 0; }
-  .ps-name {
-    font-family: var(--mono);
-    font-size: 13px;
-    font-weight: 700;
-    letter-spacing: 0.03em;
-    text-transform: uppercase;
-    color: var(--step-color, var(--text));
-    transition: text-shadow 0.3s ease;
-  }
-  .process-step:hover .ps-name,
-  .process-step.lit .ps-name { text-shadow: 0 0 8px color-mix(in srgb, var(--step-color, var(--accent)) 45%, transparent); }
-  .ps-desc { font-size: 11px; color: var(--text-faint); }
-
-  /* Connector arrows: kept as real elements (a thin flex sliver between
-     cards would break the grid's equal-width columns) but rendered as
-     a small chevron glued to the seam between two cards, only visible
-     once lit -- a quiet "flows into" cue instead of the prior row's
-     dedicated ">" column eating horizontal space. */
-  /* Real layout bug caught before shipping: .process-steps is a 4-column
-     GRID now (not the old flex row), and .process-connector is a
-     sibling <li> in the same list -- 4 .process-step + 3
-     .process-connector is 7 items, which a naive grid auto-places into
-     TWO rows of 4 instead of leaving them overlaid on the seams between
-     columns. Explicit grid-row:1 keeps every connector pinned to the
-     SAME row as the 4 real step cards (never creating a phantom second
-     row), and grid-column spans exactly the 2 step columns it sits
-     between -- e.g. the first connector (between step 1 and step 2)
-     spans columns 1-3, so its own box straddles that seam without
-     stealing a column of its own from the 4 real cards. Each connector
-     ends up stacked in the SAME grid cell as its two neighboring steps
-     (grid allows overlap by design), positioned absolutely within that
-     shared area via inset:0 + flex centering. nth-of-type keys off
-     .process-connector's own position among connector siblings (1st,
-     2nd, 3rd), independent of the .process-step siblings interleaved
-     between them in the DOM. */
-  .process-connector {
-    grid-row: 1;
-    position: relative;
-    z-index: 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    pointer-events: none;
-  }
-  /* nth-child (not nth-of-type) -- every step AND every connector is
-     the same <li> tag, so nth-of-type can't tell them apart; nth-child
-     counts real DOM position among ALL siblings, and the markup's fixed
-     interleaving (step,connector,step,connector,step,connector,step)
-     puts the 3 connectors at literal positions 2, 4, 6. */
-  .process-connector:nth-child(2) { grid-column: 1 / 3; }
-  .process-connector:nth-child(4) { grid-column: 2 / 4; }
-  .process-connector:nth-child(6) { grid-column: 3 / 5; }
-  /* Fixed alongside the grid-column rework above: the connector's own
-     box now spans a real 2-column-wide area (the seam it straddles),
-     not a 0-width sliver -- centered at 50%/50% of THAT area (which
-     lands it visually on the seam between the two cards) instead of a
-     fixed -9px offset that assumed the old zero-width layout. */
-  .process-connector::before {
-    content: "→";
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    font-family: var(--mono);
-    font-size: 13px;
-    font-weight: 700;
-    color: var(--surface);
-    background: var(--surface);
-    border-radius: 50%;
-    width: 18px; height: 18px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transition: opacity 0.4s ease, color 0.4s ease;
-    transition-delay: var(--delay, 0s);
-  }
-  .process-strip.lit .process-connector::before {
-    color: var(--seg-color, var(--accent));
-    opacity: 1;
-  }
-  .pc-line, .pc-arrow { display: none; }
-
-  /* Mission: was a narrow 224px side column competing with the steps
-     row's own height; now a full-width band under the grid, sized to
-     its own real content, using the block's full available width
-     instead of a fixed slice of it. */
-  /* 2026-08-28: reporte del usuario ("utiliza todo el espacio del
-     box"). Un primer intento agrego un CTA a la derecha
-     (justify-content:space-between + .pm-main/.pm-cta) pero el usuario
-     pidio explicitamente quitarlo -- revertido a la estructura simple
-     label+frase, sin justify-content especial (default flex-start
-     sigue siendo correcto para 2 items en linea). El espacio se
-     aprovecha SOLO con el font-size de la frase agrandado (ver
-     .process-mission p mas abajo), sin agregar ningun elemento nuevo. */
-  .process-mission {
-    display: flex;
-    align-items: baseline;
-    gap: 12px;
-    flex-wrap: wrap;
-    padding: 8px 16px;
+    grid-row: 1 / span 2;
+    align-self: center;
+    width: 24px;
+    height: 24px;
+    padding: 5px;
+    border-radius: 8px;
     background: var(--surface-2);
-    border-top: 1px solid var(--border);
+    color: var(--text-dim);
+    box-sizing: border-box;
+    transition: color 0.35s ease;
   }
-  .pm-label {
-    display: flex;
-    align-items: center;
-    gap: 6px;
+  .process-step.lit .ps-icon { color: var(--step-color, var(--text-dim)); }
+  .ps-idx {
+    grid-column: 2;
     font-family: var(--mono);
     font-size: 10px;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.08em;
+    color: var(--text-faint);
+  }
+  .ps-text {
+    grid-column: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  .ps-name {
+    font-size: 12px;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+  }
+  .ps-desc { font-size: 12px; color: var(--text-dim); line-height: 1.35; overflow-wrap: anywhere; }
+  .process-mission {
+    margin: 0;
+    padding: 8px 12px;
+    border-top: 1px solid var(--border);
+    background: var(--surface-2);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.45;
+  }
+  .process-mission span {
+    display: block;
+    margin-bottom: 4px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--text-faint);
-    flex: none;
   }
-  .pm-label svg { width: 12px; height: 12px; flex: none; opacity: 0.85; }
-  /* font-size 13px->15px + font-weight 600 -- la frase de mision es
-     ahora el elemento con MAS presencia del box (antes competia en pie
-     de igualdad con el label chico), llenando el espacio real que
-     antes quedaba vacio con mas peso visual, no solo mas ancho. */
-  .process-mission p {
-    margin: 0;
-    font-family: var(--mono);
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text-dim);
-    line-height: 1.5;
-    position: relative;
-    padding-left: 16px;
-    min-width: 0;
-    flex: 1 1 12rem;
+  @media (prefers-reduced-motion: reduce) {
+    .process-step .ps-icon { color: var(--step-color, var(--text-dim)); }
   }
-  .process-mission p::before {
-    content: "»";
-    position: absolute;
-    left: 0; top: -1px;
-    color: var(--accent);
-    font-size: 15px;
+  @media (max-width: 1080px) {
+    .ps-name { font-size: 12px; }
   }
-
-  @media (max-width: 760px) {
-    .process-top { flex-direction: column; }
-    .process-label { writing-mode: horizontal-tb; transform: none; border-right: none; border-bottom: 1px solid var(--border); padding: 8px 14px; justify-content: flex-start; }
-    .process-steps { grid-template-columns: repeat(2, 1fr); }
-    .process-step { border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-    /* Real bug caught before shipping: the DOM has 4 .process-step +
-       3 .process-connector interleaved (step,connector,step,connector,
-       step,connector,step), so the steps sit at literal child positions
-       1, 3, 5, 7 -- NOT 1,2,3,4. A naive nth-child(4n+2) (correct only
-       if steps were 4 consecutive siblings) would target position 2,
-       which is a connector, not the 2nd VISIBLE step card, and the
-       right-column steps would keep their border instead of losing it.
-       nth-child(4n+3) hits the real 2nd/4th step (positions 3 and 7). */
-    .process-step:nth-child(4n+3) { border-right: none; }
-    .process-connector { display: none; }
-    .ps-icon { width: 36px; height: 36px; }
-    .process-step { padding: 10px 12px; }
+  .field-sidebar .process-strip {
+    width: 100%;
+    margin-top: 14px;
+    margin-bottom: 0;
   }
+  .field-sidebar .process-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .field-sidebar .process-step {
+    border-bottom: 1px solid var(--border);
+  }
+  .field-sidebar .process-step:nth-child(2n) { border-right: none; }
+  .field-sidebar .process-step:nth-child(n+3) { border-bottom: none; }
   @media (max-width: 340px) {
-    .process-steps { grid-template-columns: 1fr; }
-    .process-step { border-right: none !important; }
+    .process-steps { grid-template-columns: minmax(0, 1fr); }
+    .process-step { border-right: none; border-bottom: 1px solid var(--border); }
+    .process-step:last-child { border-bottom: none; }
   }
 
   /* ---- controls ---- */
@@ -1477,7 +1270,7 @@
     flex-wrap: wrap;
     gap: 10px;
     align-items: center;
-    margin-bottom: 18px;
+    margin-bottom: var(--section-gap);
   }
 
   .search {
@@ -1487,10 +1280,11 @@
 
   .search input {
     width: 100%;
+    height: var(--control-h);
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 9px 12px 9px 32px;
+    padding: 0 12px 0 32px;
     color: var(--text);
     font-family: var(--sans);
     font-size: 13.5px;
@@ -1531,10 +1325,11 @@
      sin ningun feedback visual al pasar el mouse o enfocar, mientras
      #searchInput y el resto de botones/cards del sitio si lo tienen. */
   select#pricingFilter, select#categoryFilter {
+    height: var(--control-h);
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 8px;
-    padding: 9px 10px;
+    padding: 0 10px;
     color: var(--text);
     font-family: var(--sans);
     font-size: 13.5px;
@@ -1558,7 +1353,12 @@
     .search { flex: 1 1 100%; }
     select#categoryFilter, select#pricingFilter { flex: 1 1 calc(50% - 5px); min-width: 0; }
     .view-toggle { width: 100%; }
-    .topbar-inner { padding: 0 14px; }
+    .topbar-inner { padding: 0 var(--page-pad-sm); }
+    .tw-name { font-size: 13px; letter-spacing: 0.06em; }
+  }
+
+  @media (max-width: 400px) {
+    .topbar-status { display: none; }
   }
 
   /* ---- FIELD layout ---- */
@@ -1571,7 +1371,7 @@
   .field-layout {
     display: grid;
     grid-template-columns: 360px minmax(0, 1fr);
-    gap: 20px;
+    gap: var(--section-gap);
     align-items: start;
   }
   .field-main { min-width: 0; }
@@ -1772,6 +1572,9 @@
   .plugin-card {
     position: relative;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 96px;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
@@ -1830,7 +1633,7 @@
 
   .plugin-card .card-name { font-weight: 700; font-size: 12.5px; line-height: 1.25; overflow-wrap: anywhere; min-width: 0; }
   .plugin-card .card-niche { font-size: 10px; color: var(--text-faint); margin-top: 1px; overflow-wrap: anywhere; }
-  .plugin-card .card-cat {
+  .card-cat {
     position: absolute;
     top: 6px;
     right: 6px;
@@ -1845,7 +1648,7 @@
     border-radius: 5px;
     pointer-events: none;
   }
-  .plugin-card .card-cat svg {
+  .card-cat svg {
     width: 13px;
     height: 13px;
     stroke: currentColor;
@@ -1858,7 +1661,8 @@
     align-items: center;
     justify-content: space-between;
     gap: 6px;
-    margin-top: 8px;
+    margin-top: auto;
+    padding-top: 8px;
     font-family: var(--mono);
   }
 
@@ -1942,45 +1746,51 @@
     .dossier-enter { animation: none; }
   }
 
-  .dossier-head {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 20px;
-    flex-wrap: wrap;
-  }
+  .dossier-sheet { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
 
-  .dossier-intro { flex: 1 1 360px; min-width: 0; }
+  .dossier-top {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.95fr);
+    grid-template-areas: "intro side" "stats side";
+    gap: 14px;
+    align-items: stretch;
+  }
+  .dossier-intro { grid-area: intro; min-width: 0; }
+  .dossier-stats { grid-area: stats; }
+  .dossier-side { grid-area: side; }
+
   .dossier-title-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-  .dossier-title-row h2 { font-family: var(--mono); font-size: 24px; margin: 0; }
+  .dossier-title-row h2 { font-family: var(--mono); font-size: 24px; margin: 0; overflow-wrap: anywhere; }
   .dossier-niche { color: var(--text-dim); font-size: 13.5px; margin-top: 4px; }
-  .dossier-pitch { color: var(--text); font-size: 14.5px; margin-top: 11px; max-width: 70ch; line-height: 1.6; }
+  .dossier-pitch { color: var(--text); font-size: 14.5px; margin-top: 11px; line-height: 1.6; }
   .dossier-pitch code { background: var(--surface-2); padding: 1px 5px; border-radius: 4px; font-size: 0.92em; }
 
-  /* Right side of the dossier head: demo GIF (if this plugin has one)
-     stacked directly above the action buttons, both right-aligned --
-     2026-08-15 request ("GIFs at the top-right of the expandable"). */
-  .dossier-side { display: flex; flex-direction: column; align-items: stretch; gap: 10px; flex: none; width: 240px; max-width: 100%; }
-  /* 2026-08-28 (auditoria, hallazgo medio #17): aspect-ratio agregado
-     -- sin dimensiones intrinsecas declaradas, el espacio para esta
-     imagen no se reservaba hasta que terminaba de cargar desde
-     raw.githubusercontent.com, empujando el resto del contenido del
-     dossier hacia abajo (CLS real). 16/9 es una aproximacion razonable
-     (no exacta -- cada GIF real puede variar) para screenshots/
-     screencasts de IDE, que es el contenido real de estos assets; sigue
-     siendo mejor que reservar 0px. object-fit:cover evita distorsion
-     si el GIF real no calza exacto en 16/9. */
+  .dossier-side {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    min-width: 0;
+    min-height: 0;
+  }
+  /* Demo GIF fills the stretched right column (height comes from
+     title + stats on the left), so the image box is reserved without
+     waiting on the remote file. object-fit:cover keeps IDE captures
+     from distorting if they are not exactly 16/9. */
   .dossier-gif {
     width: 100%;
-    aspect-ratio: 16 / 9;
+    flex: 1 1 auto;
+    min-height: 168px;
     object-fit: cover;
+    object-position: top left;
     border-radius: 10px;
     border: 1px solid var(--border);
     box-shadow: var(--shadow);
     display: block;
+    background: var(--surface-2);
   }
-  .dossier-links { display: flex; gap: 10px; flex-wrap: wrap; }
-  .dossier-links .btn { flex: 1 1 auto; text-align: center; }
+  .dossier-links { display: flex; flex-direction: column; gap: 8px; }
+  .dossier-links .btn { flex: none; text-align: center; justify-content: center; }
 
   .btn {
     font-family: var(--mono);
@@ -1991,6 +1801,7 @@
     text-decoration: none;
     white-space: nowrap;
     border: 1px solid var(--border);
+    background: var(--surface);
     color: var(--text);
     display: inline-flex;
     align-items: center;
@@ -2038,25 +1849,48 @@
 
   .dossier-stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(78px, 1fr));
-    gap: 8px;
-    margin: 20px 0;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0;
+    margin: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    min-width: 0;
   }
+  .dossier-stats .stat {
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    border-right: 1px solid var(--border);
+    padding: 6px 8px;
+    min-width: 0;
+  }
+  .dossier-stats .stat:last-child { border-right: 0; }
+  .dossier-stats .stat .num { font-size: 12px; }
   @media (max-width: 640px) {
     .dossier-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .dossier-stats .stat:last-child { grid-column: 1 / -1; }
+    .dossier-stats .stat {
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .dossier-stats .stat:nth-child(2n) { border-right: 0; }
+    .dossier-stats .stat:last-child {
+      grid-column: 1 / -1;
+      border-right: 0;
+      border-bottom: 0;
+    }
   }
 
-  .dossier-stats .stat .num { font-size: 14px; }
-
-  .dossier-grid {
+  .dossier-body {
     display: grid;
-    grid-template-columns: 1.3fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 14px;
-    align-items: start;
+    align-items: stretch;
   }
-
-  @media (max-width: 760px) { .dossier-grid { grid-template-columns: 1fr; } }
+  .dossier-body .info-block { min-width: 0; height: 100%; }
 
   /* Fixed 2026-08-23, explicit user request + screenshot: Install/View
      wrapped to 2 separate rows on phone -- .dossier-links is already
@@ -2083,7 +1917,6 @@
     .dossier-links .btn.primary .btn-icon { width: 17px; height: 17px; }
   }
 
-  .dossier-col { display: flex; flex-direction: column; gap: 14px; height: 100%; }
 
   .info-block {
     background: var(--surface);
@@ -2111,18 +1944,33 @@
   .info-block .ib-body { font-size: 13.5px; color: var(--text-dim); line-height: 1.7; }
   .info-block .ib-body code { background: var(--surface-2); padding: 1px 5px; border-radius: 4px; font-size: 0.92em; color: var(--text); }
 
-  /* Facts is now the only panel in the right column (Traction removed
-     2026-08-15) -- grown to fill that space with more rows instead of
-     sitting half-empty next to a taller Gap+Fix column. */
-  .facts-block { flex: 1; display: flex; flex-direction: column; }
-  .facts-list { list-style: none; margin: 0; padding: 0; font-size: 13.5px; flex: 1; }
+  .facts-block { min-width: 0; }
+  .facts-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 13.5px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 20px;
+  }
   .facts-list li {
     display: flex; justify-content: space-between; align-items: baseline;
     gap: 12px;
-    padding: 9px 0;
+    padding: 8px 0;
     border-bottom: 1px solid var(--border);
+    min-width: 0;
   }
-  .facts-list li:last-child { border-bottom: none; }
+  @media (max-width: 900px) {
+    .facts-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 640px) {
+    .facts-list { grid-template-columns: 1fr; }
+  }
+  .facts-list li:last-child {
+    border-bottom: none;
+    grid-column: 1 / -1;
+  }
   .facts-list .fk { color: var(--text-faint); font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; flex: none; }
   .facts-list .fv { color: var(--text); text-align: right; overflow-wrap: anywhere; }
   .facts-list .fv code { background: var(--surface-2); padding: 1px 6px; border-radius: 4px; font-size: 0.9em; }
@@ -2157,12 +2005,13 @@
     .copy-btn:active { transform: none; }
   }
 
-  .similar-section { margin-top: 22px; }
+  .similar-section { margin-top: 0; }
   .similar-title { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 10px; }
   .similar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
   .similar-card {
+    position: relative;
     background: var(--surface); border: 1px solid var(--border); border-radius: 9px;
-    padding: 12px 14px; cursor: pointer; font-size: 12.5px;
+    padding: 12px 32px 12px 14px; cursor: pointer; font-size: 12.5px;
   }
   .similar-card:hover { border-color: var(--accent); }
   /* Keyboard focus state added 2026-08-23 (audit finding) -- these
@@ -2172,6 +2021,31 @@
   .similar-card .sc-name { font-weight: 600; color: var(--text); margin-bottom: 2px; }
   .similar-card .sc-niche { color: var(--text-faint); font-size: 11px; }
   .similar-card .sc-dl { margin-top: 8px; font-family: var(--mono); font-size: 12px; color: var(--text-dim); }
+
+  .catalog-pager {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px 12px;
+    margin-top: var(--section-gap);
+  }
+  .catalog-pager-btn {
+    min-height: var(--control-h);
+    min-width: var(--control-h);
+    padding: 10px 16px;
+  }
+  .catalog-pager-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .catalog-pager-status {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    min-width: 8em;
+    text-align: center;
+  }
 
   /* ---- TABLE mode (unchanged behavior, restyled to match) ---- */
   /* 2026-08-28 (auditoria, hallazgo medio #39): la tabla (min-width
@@ -2300,97 +2174,108 @@
 
   .expand-row td { padding: 0; border-bottom: 1px solid var(--border); }
 
-  /* ==================== TABLE ROW EXPAND (own compact layout) ====================
-     2026-08-16: the row expand used to share dossierBodyHtml() 1:1 with
-     the Field-mode full-page dossier (2026-08-15 unification) -- same
-     markup, same type scale. Reverted per explicit request: a table row
-     is a dense list context, not a standalone page, so this is now its
-     OWN function (tableDossierBodyHtml, see JS) and its OWN class
-     prefix (.tbl-*) with a visibly smaller scale throughout (13px name
-     vs. the Field dossier's 24px h2, compact stat tiles instead of full
-     .dossier-stats, etc.) -- built to match a supplied reference image:
-     inline header row, a Details panel pinned to the right, Gap/Fix as
-     two aligned blocks on the left, small stat tiles in a row. Only
-     real data fields are used (name/niche/pitch/chips/links/downloads/
-     reviews/rating/stars/published/category/pricing/marketplace id/
-     repo/growth/similar) -- the reference image also showed tags,
-     a screenshot, "Key Features" checklist, and Resources links, none
-     of which exist as real curated data in this catalog, so none of
-     those are faked here. Field-mode's own dossier-* classes/function
-     are untouched by this -- the two views intentionally look
-     different now. */
-  .tbl-dossier { font-size: 13px; }
-
-  .tbl-head {
+  /* Table row expand — compact type scale (list context, not the
+     Field full-page dossier). Same real fields only; no GIF. Layout
+     matches Field: header, one stats bar, Gap | Fix side by side,
+     Details as a full-width grid, similar plugins spanning the row. */
+  .tbl-dossier {
+    font-size: 13px;
     display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 20px;
-    flex-wrap: wrap;
-    padding-right: 34px; /* clears the ✕ close button */
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
   }
 
-  .tbl-intro { flex: 1 1 320px; min-width: 0; }
+  .tbl-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 16px 20px;
+    padding-right: 34px; /* clears the close button */
+  }
+
+  .tbl-intro { min-width: 0; }
   .tbl-title-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
-  .tbl-title-row h3 { font-family: var(--mono); font-size: 16px; margin: 0; font-weight: 700; }
+  .tbl-title-row h3 { font-family: var(--mono); font-size: 16px; margin: 0; font-weight: 700; overflow-wrap: anywhere; }
   .tbl-niche { color: var(--text-dim); font-size: 12px; margin-top: 3px; }
-  .tbl-pitch { color: var(--text-dim); font-size: 12.5px; margin-top: 8px; max-width: 68ch; line-height: 1.6; }
+  .tbl-pitch { color: var(--text-dim); font-size: 12.5px; margin-top: 8px; line-height: 1.6; }
   .tbl-pitch code { background: var(--surface-2); padding: 1px 5px; border-radius: 4px; font-size: 0.92em; color: var(--text); }
 
-  .tbl-links { display: flex; gap: 8px; flex-wrap: wrap; flex: none; }
-  .tbl-links .btn { padding: 8px 13px; font-size: 11.5px; }
+  .tbl-links { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .tbl-links .btn { padding: 8px 13px; font-size: 11.5px; justify-content: center; }
 
-  /* Compact stat tiles: icon + number + label, all left-aligned in a
-     column so the row reads top-to-bottom instead of the wide Field
-     dossier's centered big-number tiles -- deliberately smaller
-     footprint, this is a list-density context. */
   .tbl-stats {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(108px, 1fr));
-    gap: 8px;
-    margin: 16px 0;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0;
+    margin: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+    min-width: 0;
   }
 
   .tbl-stat {
     display: flex;
     align-items: center;
-    gap: 9px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 9px 11px;
+    gap: 6px;
+    background: transparent;
+    border: 0;
+    border-right: 1px solid var(--border);
+    border-radius: 0;
+    padding: 5px 8px;
+    min-width: 0;
   }
+  .tbl-stat:last-child { border-right: 0; }
 
   .tbl-stat .ts-icon {
     flex: none;
-    width: 26px; height: 26px;
-    border-radius: 7px;
+    width: 20px; height: 20px;
+    border-radius: 5px;
     background: var(--surface-3);
     color: var(--text-dim);
     display: flex; align-items: center; justify-content: center;
-    font-size: 12px;
+    font-size: 10px;
   }
 
   .tbl-stat .ts-num {
     font-family: var(--mono);
     font-variant-numeric: tabular-nums;
-    font-size: 14.5px;
+    font-size: 12px;
     font-weight: 700;
     line-height: 1.2;
+    overflow-wrap: anywhere;
   }
 
-  .tbl-stat .ts-label { font-size: 10px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-faint); margin-top: 1px; }
+  .tbl-stat .ts-label { font-size: 8px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-faint); margin-top: 1px; }
 
-  .tbl-grid {
+  .tbl-body {
     display: grid;
-    grid-template-columns: 1.4fr 1fr;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
-    align-items: start;
+    align-items: stretch;
   }
+  .tbl-body .tbl-block { min-width: 0; height: 100%; }
 
-  @media (max-width: 760px) { .tbl-grid { grid-template-columns: 1fr; } }
-
-  .tbl-col { display: flex; flex-direction: column; gap: 10px; height: 100%; }
+  @media (max-width: 760px) {
+    .tbl-head { grid-template-columns: minmax(0, 1fr); }
+    .tbl-links { flex-direction: row; flex-wrap: wrap; }
+    .tbl-body { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .tbl-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .tbl-stat {
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .tbl-stat:nth-child(2n) { border-right: 0; }
+    .tbl-stat:last-child {
+      grid-column: 1 / -1;
+      border-right: 0;
+      border-bottom: 0;
+    }
+  }
 
   /* Same info-block/ib-icon language as the Field dossier (kept
      identical on purpose -- Gap=red, Fix=green is already a learned
@@ -2407,26 +2292,50 @@
   .tbl-block .ib-body { font-size: 12.5px; line-height: 1.65; color: var(--text-dim); }
   .tbl-block .ib-body code { background: var(--surface-2); padding: 1px 5px; border-radius: 4px; font-size: 0.9em; color: var(--text); }
 
-  .tbl-details { flex: 1; display: flex; flex-direction: column; }
-  .tbl-details-list { list-style: none; margin: 0; padding: 0; font-size: 12px; flex: 1; }
+  .tbl-details { min-width: 0; }
+  .tbl-details-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 16px;
+  }
   .tbl-details-list li {
     display: flex; justify-content: space-between; align-items: baseline;
     gap: 10px;
     padding: 7px 0;
     border-bottom: 1px solid var(--border);
+    min-width: 0;
   }
-  .tbl-details-list li:last-child { border-bottom: none; }
+  @media (max-width: 900px) {
+    .tbl-details-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 640px) {
+    .tbl-details-list { grid-template-columns: 1fr; }
+  }
+  .tbl-details-list li:last-child {
+    border-bottom: none;
+    grid-column: 1 / -1;
+  }
   .tbl-details-list .fk { color: var(--text-faint); font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; flex: none; }
   .tbl-details-list .fv { color: var(--text); text-align: right; overflow-wrap: anywhere; }
   .tbl-details-list .fv code { background: var(--surface-2); padding: 1px 6px; border-radius: 4px; font-size: 0.88em; }
 
-  .tbl-similar { margin-top: 16px; }
+  .tbl-similar { margin-top: 0; }
   .tbl-similar-title { font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 8px; }
-  .tbl-similar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 8px; }
-  .tbl-similar-card {
-    background: var(--surface); border: 1px solid var(--border); border-radius: 7px;
-    padding: 9px 11px; cursor: pointer; font-size: 11.5px;
+  .tbl-similar-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+  @media (max-width: 760px) {
+    .tbl-similar-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
+  .tbl-similar-card {
+    position: relative;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 7px;
+    padding: 9px 28px 9px 11px; cursor: pointer; font-size: 11.5px;
+  }
+  .tbl-similar-card .card-cat { top: 5px; right: 5px; width: 20px; height: 20px; }
+  .tbl-similar-card .card-cat svg { width: 12px; height: 12px; }
   .tbl-similar-card:hover { border-color: var(--accent); }
   .tbl-similar-card:focus-visible { border-color: var(--accent); outline: 2px solid var(--accent); outline-offset: 2px; }
   .tbl-similar-card .sc-name { font-weight: 600; color: var(--text); margin-bottom: 1px; font-size: 12px; }
@@ -2518,8 +2427,8 @@
      <footer> landmark here was misleading for screen-reader users
      navigating by landmark; <section> matches what it actually is. */
   section.notes {
-    margin-top: 28px;
-    padding-top: 20px;
+    margin-top: var(--section-gap);
+    padding-top: var(--section-gap);
     border-top: 1px solid var(--border);
     font-size: 12.5px;
     color: var(--text-faint);
@@ -2635,8 +2544,6 @@
   }
 
   .log-points li {
-    display: flex;
-    gap: 8px;
     font-size: 12.5px;
     color: var(--text-faint);
     line-height: 1.7;
@@ -2644,17 +2551,52 @@
 
   .log-points li::before {
     content: "›";
-    flex: none;
+    display: inline;
     font-family: var(--mono);
     font-size: 13px;
     font-weight: 700;
     color: var(--good);
     opacity: 0.8;
-    margin-top: 0.1em;
+    margin-right: 8px;
   }
 
   .log-points li b { color: var(--text-dim); font-weight: 600; }
   .log-points li code { color: var(--accent); }
+
+  .method-facts {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    margin-top: 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--surface-2);
+  }
+  .method-fact {
+    padding: 10px 12px;
+    border-right: 1px solid var(--border);
+    min-width: 0;
+  }
+  .method-fact:last-child { border-right: none; }
+  .method-fact-num {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 16px;
+    font-weight: 650;
+    color: var(--text);
+  }
+  .method-fact-label {
+    margin-top: 4px;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+  @media (max-width: 640px) {
+    .method-facts { grid-template-columns: 1fr; }
+    .method-fact { border-right: none; border-bottom: 1px solid var(--border); }
+    .method-fact:last-child { border-bottom: none; }
+  }
 
   /* ==================== SITE FOOTER ====================
      Closes the same brand frame the topbar opens -- own full-width
@@ -2662,7 +2604,7 @@
      but as a quiet close rather than active chrome: no sticky, no
      boot-scan, hover glow only (nothing animates on its own). */
   .site-footer {
-    margin-top: 28px;
+    margin-top: var(--section-gap);
     border-top: 1px solid var(--border);
     background: var(--surface);
     position: relative;
@@ -2681,9 +2623,9 @@
   }
 
   .footer-inner {
-    max-width: 1280px;
+    max-width: var(--page-max);
     margin: 0 auto;
-    padding: 32px 24px 28px;
+    padding: 28px var(--page-pad) 24px;
   }
 
   /* ==================== FOOTER, 2026-08-17 experimental pass ====================
@@ -2698,7 +2640,7 @@
      closing at the bottom, not two unrelated chrome strips. */
   .footer-grid {
     display: grid;
-    grid-template-columns: 1.5fr 0.85fr 0.85fr;
+    grid-template-columns: minmax(0, 360px) minmax(0, 1fr) minmax(0, 1fr);
     gap: 40px;
     padding-bottom: 26px;
     border-bottom: 1px solid var(--border);
@@ -2727,7 +2669,7 @@
     font-size: 10px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--text-faint);
+    color: var(--good);
     margin-top: 1px;
   }
 
@@ -2869,155 +2811,183 @@
     .footer-bottom { flex-direction: column; align-items: flex-start; }
   }
 
+  @media (max-width: 760px) {
+    .dossier-top {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: "intro" "side" "stats";
+    }
+    .dossier-body { grid-template-columns: 1fr; }
+    .dossier-gif { flex: none; min-height: 0; aspect-ratio: 16 / 9; }
+    .dossier-links { flex-direction: row; flex-wrap: wrap; }
+    .dossier-links .btn { flex: 1 1 auto; }
+  }
   @media (max-width: 640px) {
-    .wrap { padding: 24px 14px 30px; }
-    .dossier-head { flex-direction: column; }
-    .dossier-side { width: 100%; }
-    /* .dossier-intro's flex-basis:360px (set for the side-by-side
-       layout, where flex-basis means WIDTH) silently became a MINIMUM
-       HEIGHT once flex-direction switches to column here -- the pitch
-       text is nowhere near 360px tall, so the box just rendered mostly
-       empty below the real content. auto lets it size to its own
-       content instead. */
-    .dossier-intro { flex-basis: auto; }
+    .wrap { padding: 16px var(--page-pad-sm) 24px; }
+    .footer-inner { padding: 24px var(--page-pad-sm) 20px; }
   }
 
-  /* ---- mode transition overlay: logo + binary lock ---- */
-  /* Positioned ancestor for the mode-switch lock -- confines it to
-     exactly the Field/Table content box (see .mode-transition-overlay
-     below), not the whole viewport, so the topbar/hero/process-strip/
-     search stay visible and usable while a mode switch is "loading". */
-  .content-stage { position: relative; }
+  .content-stage { min-width: 0; }
 
-  /* A fixed top offset alone isn't enough: .content-stage can be much
-     taller than one screen (a long plugin grid or table), and BOTH
-     Field and Table can be scrolled deep into before the other one is
-     ever clicked -- pinning the lock to the top of the (tall, mostly
-     off-screen-above) box still leaves it above the user's actual
-     current viewport. Fix: the dark backdrop covers the whole box as
-     before (position:absolute; inset:0), but the actual lock content
-     lives in .mt-sticky, position:sticky -- it tracks the CURRENT
-     viewport (top:0) while scrolling, clamped so it can never escape
-     the backdrop's own bounds (its containing block). Net effect: the
-     lock is always inside whatever part of the Field/Table box the
-     user is currently looking at, never above or below it. */
-  .mode-transition-overlay {
+  /* First-load laboratory splash. Covers the page until the catalog
+     has painted, then fades. Independent of Field/Table switching. */
+  html.boot { overflow: hidden; }
+  .site-loader {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #090D16;
+    color: var(--text);
+    isolation: isolate;
+    transition: opacity 0.55s ease, visibility 0.55s ease;
+  }
+  .site-loader.is-done {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+  .sl-bg {
     position: absolute;
     inset: 0;
-    z-index: 30;
-    display: flex;
-    justify-content: center;
-    background: rgba(6,9,16,0.94);
-    border-radius: var(--radius);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.25s ease;
+    background: #090D16 url("lab-loading.jpg") center / cover no-repeat;
+    transform: scale(1.04);
+    animation: slDrift 9s ease-out forwards;
   }
-
-  .mode-transition-overlay.show { opacity: 1; pointer-events: all; }
-
-  .mt-sticky {
-    position: sticky;
-    top: 0;
-    align-self: flex-start;
+  .sl-veil {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgba(9,13,22,0.18) 0%, rgba(9,13,22,0.28) 36%, rgba(9,13,22,0.78) 100%),
+      radial-gradient(ellipse 75% 58% at 50% 40%, rgba(9,13,22,0.08), rgba(9,13,22,0.48));
+  }
+  .sl-corner {
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    border: 1.5px solid color-mix(in srgb, var(--accent) 55%, transparent);
+    pointer-events: none;
+  }
+  .sl-tl { top: 22px; left: 22px; border-right: none; border-bottom: none; }
+  .sl-tr { top: 22px; right: 22px; border-left: none; border-bottom: none; }
+  .sl-bl { bottom: 22px; left: 22px; border-right: none; border-top: none; }
+  .sl-br { bottom: 22px; right: 22px; border-left: none; border-top: none; }
+  .sl-center {
+    position: relative;
+    z-index: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 16px;
-    padding: 56px 24px 32px;
+    text-align: center;
+    gap: 12px;
+    padding: 24px;
+    max-width: min(420px, calc(100% - 48px));
   }
-
-  .mode-transition-overlay .mt-logo {
-    width: 108px;
-    height: 108px;
-    filter: drop-shadow(0 0 22px rgba(63,162,255,0.5));
-  }
-
-  .mode-transition-overlay.show .mt-logo { animation: mtLogoIn 0.5s cubic-bezier(.34,1.56,.64,1); }
-
-  @keyframes mtLogoIn {
-    0% { opacity: 0; transform: scale(0.45) rotate(-10deg); filter: brightness(2.6) blur(5px); }
-    55% { opacity: 1; transform: scale(1.08) rotate(2deg); filter: brightness(1.35) blur(0); }
-    100% { opacity: 1; transform: scale(1) rotate(0deg); filter: brightness(1) blur(0); }
-  }
-
-  .mt-label {
-    font-family: var(--mono);
-    font-size: 12px;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--accent);
-  }
-
-  .mt-lock { display: flex; flex-direction: column; align-items: center; gap: 10px; }
-
-  .mt-lock-ref {
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--text-faint);
-    letter-spacing: 0.03em;
-  }
-
-  .mt-lock-ref-code { color: var(--good); font-weight: 700; letter-spacing: 0.2em; }
-
-  .mt-lock-row { display: flex; gap: 6px; }
-
-  .mt-lock-bit {
-    width: 30px;
-    height: 36px;
+  .sl-mark {
+    width: 88px;
+    height: 88px;
+    border-radius: 20px;
+    background: rgba(17, 23, 38, 0.88);
+    border: 1px solid color-mix(in srgb, var(--accent) 38%, var(--border));
     display: flex;
     align-items: center;
     justify-content: center;
+    box-shadow: 0 12px 40px rgba(0,0,0,0.45), 0 0 32px rgba(63,162,255,0.12);
+  }
+  .sl-mark svg { width: 58px; height: 58px; display: block; }
+  .sl-name {
+    margin-top: 6px;
     font-family: var(--mono);
-    font-size: 16px;
     font-weight: 700;
-    border-radius: 4px;
-    border: 1px solid var(--border);
-    background: var(--surface);
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    line-height: 1.2;
     color: var(--text);
   }
-
-  .mt-lock-input {
-    width: 30px;
-    height: 36px;
-    text-align: center;
+  .sl-tag {
     font-family: var(--mono);
-    font-size: 16px;
-    font-weight: 700;
-    border-radius: 4px;
-    border: 1px solid var(--accent);
-    background: rgba(63,162,255,0.08);
-    color: var(--accent);
-    outline: none;
-    caret-color: var(--accent);
-    animation: mtBitPulse 1.1s ease-in-out infinite;
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-top: -6px;
   }
-
-  .mt-lock-input.wrong { border-color: var(--bad); background: rgba(255,110,122,0.14); animation: mtShake 0.3s ease; }
-  .mt-lock-input.right { border-color: var(--good); background: rgba(2,241,114,0.14); color: var(--good); animation: none; }
-
-  @keyframes mtBitPulse {
-    0%, 100% { box-shadow: 0 0 0 rgba(63,162,255,0); }
-    50% { box-shadow: 0 0 8px rgba(63,162,255,0.55); }
+  .sl-bar {
+    width: 180px;
+    height: 3px;
+    margin-top: 8px;
+    border-radius: 2px;
+    background: rgba(41, 51, 74, 0.9);
+    overflow: hidden;
   }
-
-  @keyframes mtShake {
-    0%, 100% { transform: translateX(0); }
-    25% { transform: translateX(-4px); }
-    75% { transform: translateX(4px); }
+  .sl-bar-fill {
+    display: block;
+    height: 100%;
+    width: 0;
+    border-radius: inherit;
+    background: linear-gradient(90deg, var(--accent), var(--cyan), var(--good));
+    box-shadow: 0 0 10px rgba(63,162,255,0.55);
+    animation: slLoad 1.35s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
   }
-
-  .mt-lock-hint {
+  .site-loader.is-done .sl-bar-fill {
+    width: 100%;
+    animation: none;
+  }
+  .sl-status {
     font-family: var(--mono);
-    font-size: 11px;
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
     color: var(--text-faint);
-    text-align: center;
   }
-
-  .mt-lock-hint b { color: var(--accent); }
+  @keyframes slDrift {
+    from { transform: scale(1.04); }
+    to   { transform: scale(1.0); }
+  }
+  @keyframes slLoad {
+    from { width: 0; }
+    to   { width: 92%; }
+  }
+  @media (max-width: 640px) {
+    .sl-mark { width: 76px; height: 76px; border-radius: 16px; }
+    .sl-mark svg { width: 48px; height: 48px; }
+    .sl-corner { width: 20px; height: 20px; }
+    .sl-tl, .sl-tr { top: 14px; }
+    .sl-bl, .sl-br { bottom: 14px; }
+    .sl-tl, .sl-bl { left: 14px; }
+    .sl-tr, .sl-br { right: 14px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .sl-bg { animation: none; transform: none; }
+    .sl-bar-fill { animation: none; width: 70%; }
+    .site-loader { transition: none; }
+  }
 </style>
 </head>
 <body>
+<div id="siteLoader" class="site-loader" role="status" aria-live="polite" aria-busy="true">
+  <div class="sl-bg" aria-hidden="true"></div>
+  <div class="sl-veil" aria-hidden="true"></div>
+  <span class="sl-corner sl-tl" aria-hidden="true"></span>
+  <span class="sl-corner sl-tr" aria-hidden="true"></span>
+  <span class="sl-corner sl-bl" aria-hidden="true"></span>
+  <span class="sl-corner sl-br" aria-hidden="true"></span>
+  <div class="sl-center">
+    <div class="sl-mark" aria-hidden="true">
+      <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+        <path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#0151FC"/>
+        <path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z" fill="#01B3FD"/>
+        <polygon points="569,413 695,413 695,539 569,539" fill="#02F172"/>
+      </svg>
+    </div>
+    <div class="sl-name">Gap Hunter Labs</div>
+    <div class="sl-tag">Plugin Intelligence</div>
+    <div class="sl-bar" aria-hidden="true"><span class="sl-bar-fill"></span></div>
+    <div class="sl-status">Opening the laboratory</div>
+  </div>
+</div>
 <!-- Crawler fallback: the interactive catalog is drawn client-side.
      This list is the same plugins, readable without JavaScript. -->
 <noscript id="catalog-crawler">
@@ -3131,38 +3101,40 @@
 </noscript>
 <nav class="topbar" id="topbar">
   <div class="topbar-inner">
-    <a class="topbar-mark" href="#top" aria-label="Gap Hunter Labs">
-      <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#0151FC"/>
-        <path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z" fill="#01B3FD"/>
-        <polygon points="569,413 695,413 695,539 569,539" fill="#02F172"/>
-      </svg>
+    <a class="topbar-brand" href="#top" aria-label="Gap Hunter Labs">
+      <span class="topbar-mark" aria-hidden="true">
+        <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#0151FC"/>
+          <path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z" fill="#01B3FD"/>
+          <polygon points="569,413 695,413 695,539 569,539" fill="#02F172"/>
+        </svg>
+      </span>
+      <span class="topbar-wordmark">
+        <span class="tw-name">Gap Hunter Labs</span>
+        <span class="tw-tag">Plugin Intelligence</span>
+      </span>
     </a>
     <div class="topbar-nav" id="topbarNav">
       <a class="topbar-link" href="#top" data-target="top"><span class="idx">01</span><span class="topbar-nav-labels">Overview</span></a>
       <button type="button" class="topbar-link" id="topbarModeNavLink"><span class="idx">02</span><span class="topbar-nav-labels" id="topbarModeNavLabel">Table</span></button>
       <a class="topbar-link" href="#methodology" data-target="methodology"><span class="idx">03</span><span class="topbar-nav-labels">Methodology</span></a>
     </div>
-    <div class="topbar-ext">
-      <span class="topbar-status" title="Live catalog size, from the same data as the stat tiles below">
-        <span class="dot"></span><span id="topbarStatusText">101 plugins</span>
-      </span>
-      <a class="topbar-ext-link" href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" target="_blank" rel="noopener" title="Gap Hunter Labs on JetBrains Marketplace">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M2.345 23.997A2.347 2.347 0 0 1 0 21.652V10.988C0 9.665.535 8.37 1.473 7.433l5.965-5.961A5.01 5.01 0 0 1 10.989 0h10.666A2.347 2.347 0 0 1 24 2.345v10.664a5.056 5.056 0 0 1-1.473 3.554l-5.965 5.965A5.017 5.017 0 0 1 13.007 24v-.003H2.345Zm8.969-6.854H5.486v1.371h5.828v-1.371ZM3.963 6.514h13.523v13.519l4.257-4.257a3.936 3.936 0 0 0 1.146-2.767V2.345c0-.678-.552-1.234-1.234-1.234H10.989a3.897 3.897 0 0 0-2.767 1.145L3.963 6.514Zm-.192.192L2.256 8.22a3.944 3.944 0 0 0-1.145 2.768v10.664c0 .678.552 1.234 1.234 1.234h10.666a3.9 3.9 0 0 0 2.767-1.146l1.512-1.511H3.771V6.706Z"/></svg>
-        <span class="topbar-ext-label">JetBrains</span>
-      </a>
-      <a class="topbar-ext-link" href="https://github.com/GapHunterLabs" target="_blank" rel="noopener">
-        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-        <span class="topbar-ext-label">GitHub</span>
-      </a>
+    <div class="topbar-actions">
+      <div class="topbar-ext">
+        <span class="topbar-status" title="Live catalog size, from the same data as the stat tiles below">
+          <span class="dot"></span><span id="topbarStatusCount">101</span><span class="topbar-status-unit"> plugins</span>
+        </span>
+        <a class="topbar-ext-link" href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" target="_blank" rel="noopener" aria-label="JetBrains Marketplace" title="Gap Hunter Labs on JetBrains Marketplace">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2.345 23.997A2.347 2.347 0 0 1 0 21.652V10.988C0 9.665.535 8.37 1.473 7.433l5.965-5.961A5.01 5.01 0 0 1 10.989 0h10.666A2.347 2.347 0 0 1 24 2.345v10.664a5.056 5.056 0 0 1-1.473 3.554l-5.965 5.965A5.017 5.017 0 0 1 13.007 24v-.003H2.345Zm8.969-6.854H5.486v1.371h5.828v-1.371ZM3.963 6.514h13.523v13.519l4.257-4.257a3.936 3.936 0 0 0 1.146-2.767V2.345c0-.678-.552-1.234-1.234-1.234H10.989a3.897 3.897 0 0 0-2.767 1.145L3.963 6.514Zm-.192.192L2.256 8.22a3.944 3.944 0 0 0-1.145 2.768v10.664c0 .678.552 1.234 1.234 1.234h10.666a3.9 3.9 0 0 0 2.767-1.146l1.512-1.511H3.771V6.706Z"/></svg>
+          <span class="topbar-ext-label">JetBrains</span>
+        </a>
+        <a class="topbar-ext-link" href="https://github.com/GapHunterLabs" target="_blank" rel="noopener" aria-label="GitHub" title="Gap Hunter Labs on GitHub">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          <span class="topbar-ext-label">GitHub</span>
+        </a>
+        <button type="button" class="topbar-burger" id="topbarBurger" aria-label="Toggle navigation" aria-expanded="false" aria-controls="topbarNav"><span></span></button>
+      </div>
     </div>
-    <!-- aria-expanded/aria-controls agregados 2026-08-28 (auditoria,
-         hallazgo alto #7): este boton es el UNICO camino a la
-         navegacion primaria bajo 620px (ver .topbar-nav display:none en
-         ese breakpoint), pero nunca comunicaba su propio estado
-         abierto/cerrado a un lector de pantalla -- aria-expanded se
-         actualiza en el handler de click mas abajo. -->
-    <button type="button" class="topbar-burger" id="topbarBurger" aria-label="Toggle navigation" aria-expanded="false" aria-controls="topbarNav"><span></span></button>
   </div>
 </nav>
 <!-- Added 2026-08-21: this was a plain <div> wrapping the page's ENTIRE
@@ -3177,10 +3149,14 @@
 <main class="wrap">
   <div class="hero" id="top">
     <div class="hero-brand">
-      <h1 class="hero-title"><span class="ht-line">Gap</span><span class="ht-line">Hunter</span><span class="ht-line accent">Labs</span></h1>
-      <div class="hero-caption">Plugin Intelligence / Catalog Report</div>
+      <h1 class="hero-title">Gap Hunter <span class="accent">Labs</span></h1>
+      <p class="hero-kicker">Plugin Intelligence</p>
       <p class="hero-subtitle" id="heroSubtitle">Real state of the 101-plugin catalog — every product exists because of a documented, evidence-based gap in existing tooling, not a guess.</p>
-      <button type="button" class="btn primary hero-more" id="heroMore" aria-label="Browse the plugin catalog">More</button>
+      <section class="telemetry" id="stats" aria-label="Catalog metrics"></section>
+      <div class="hero-actions">
+        <button type="button" class="btn primary" id="heroMore">Explore the Catalog</button>
+        <button type="button" class="btn" id="heroReport">Catalog Report</button>
+      </div>
     </div>
 
     <div class="hero-slider" id="heroSlider" aria-roledescription="carousel" aria-label="Featured plugins">
@@ -3196,61 +3172,6 @@
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
       </div>
-    </div>
-
-    <section class="telemetry corner-frame" id="stats"></section>
-  </div>
-
-  <div class="process-strip" id="processStrip">
-    <div class="process-top">
-      <div class="process-label" aria-hidden="true">Process</div>
-      <ol class="process-steps">
-        <!-- 2026-08-28: .ps-num (numero gigante "01"/"02"/etc de fondo)
-             reemplazado por un icono tematico por etapa -- reporte del
-             usuario ("hay elementos que se ven genericos... el espacio
-             podria usarse de una manera mas apropiada"). El numero
-             watermark era literalmente redundante con .ps-badge (que ya
-             muestra "[01]" arriba del nombre) y no comunicaba nada
-             nuevo -- 4 cards con el mismo "01/02/03/04" en gris grande
-             no se distinguen entre si de un vistazo, mientras que un
-             icono especifico de la etapa (ojo=observar, radar=detectar,
-             check-doc=validar, llave=construir) SI aporta significado
-             propio a cada card. Mismo lenguaje visual outline
-             stroke=currentColor ya usado en el Hunting Field. -->
-        <li class="process-step" style="--step-color:var(--text)"><svg class="ps-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3.2"/></svg><span class="ps-badge">01</span><span class="ps-text"><span class="ps-name">Observe</span><span class="ps-desc">Identify friction</span></span></li>
-        <li class="process-connector" aria-hidden="true" style="--seg-color:var(--good);--delay:0.15s"><span class="pc-line"></span><span class="pc-arrow"></span></li>
-        <li class="process-step" style="--step-color:var(--good)"><svg class="ps-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="11" cy="11" r="7"/><circle cx="11" cy="11" r="3.2"/><path d="M16.2 16.2 21 21" stroke-linecap="round"/></svg><span class="ps-badge">02</span><span class="ps-text"><span class="ps-name">Detect</span><span class="ps-desc">Find real gaps</span></span></li>
-        <li class="process-connector" aria-hidden="true" style="--seg-color:var(--purple);--delay:0.33s"><span class="pc-line"></span><span class="pc-arrow"></span></li>
-        <li class="process-step" style="--step-color:var(--purple)"><svg class="ps-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M6 3h9l4 4v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M15 3v4h4"/><path d="M8 14.5 10.3 17 16 10.5" stroke-linecap="round"/></svg><span class="ps-badge">03</span><span class="ps-text"><span class="ps-name">Validate</span><span class="ps-desc">Evidence &amp; impact</span></span></li>
-        <li class="process-connector" aria-hidden="true" style="--seg-color:var(--amber);--delay:0.51s"><span class="pc-line"></span><span class="pc-arrow"></span></li>
-        <li class="process-step" style="--step-color:var(--amber)"><svg class="ps-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L2 19l3 3 7.3-7.3a4 4 0 0 0 5.4-5.4l-2.8 2.8-2.6-2.6Z"/></svg><span class="ps-badge">04</span><span class="ps-text"><span class="ps-name">Build</span><span class="ps-desc">Ship the missing tool</span></span></li>
-      </ol>
-    </div>
-    <div class="process-mission">
-      <!-- 2026-08-28: icono de bandera corregido -- reporte del usuario
-           ("este texto... se ve roto"). El path viejo dibujaba la
-           banderola con un M3 2h9...H3 que no cerraba la forma de modo
-           limpio, produciendo un trazo con una muesca irregular en vez
-           de una bandera reconocible (confirmado visualmente
-           comparando ambas versiones antes de aplicar este cambio).
-           Redibujado como 2 subpaths separados con stroke-linecap
-           round -- mastil vertical + banderola triangular abierta
-           limpia, misma forma clasica de icono de "bandera/mission". -->
-      <!-- 2026-08-28: barra rediseñada -- reporte del usuario ("mejora
-           la parte de abajo... utiliza todo el espacio del box"). Antes
-           label+frase quedaban pegados a la izquierda con flex-start
-           (default), dejando todo el resto del ancho del box vacio en
-           viewports anchos. Un primer intento agrego un boton CTA a la
-           derecha (toggle Field/Table) para llenar ese espacio, pero el
-           usuario pidio explicitamente quitarlo ("el boton View Field
-           que agregaste no lo quiero, eliminalo") -- removido junto con
-           todo su mecanismo (wireModeNavToggle/updateModeNavLabels, ver
-           <script>). El espacio se sigue aprovechando SOLO con el texto
-           de la frase agrandado (13px->15px, font-weight 600, ver
-           .process-mission p mas abajo) y centrado verticalmente en
-           todo el alto del box -- sin agregar ningun elemento nuevo. -->
-      <div class="pm-label"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"><path d="M3 1.5v13"/><path d="M3 2.5h7.5L9 5l1.5 2.5H3"/></svg>Mission</div>
-      <p>Eliminate friction. Empower builders.</p>
     </div>
   </div>
 
@@ -3285,11 +3206,6 @@
     </select>
   </div>
 
-  <!-- The mode-switch lock (see .mode-transition-overlay below) is
-       positioned absolute inside THIS wrapper, not fixed to the
-       viewport, so it only ever covers the Field/Table content itself
-       -- topbar, hero, process strip and search stay visible and
-       interactive during the transition. -->
   <div class="content-stage" id="contentStage">
     <!-- ==================== FIELD MODE ==================== -->
     <div id="fieldView" class="field-layout">
@@ -3350,6 +3266,32 @@
           <h2 class="panel-title">We hunt gaps others miss</h2>
           <p>Every plugin here started as a documented, evidence-based complaint about an existing tool — not a feature guess. Real reviews, real competitors, real numbers.</p>
         </div>
+        <section class="process-strip" id="processStrip" aria-label="How we work">
+          <p class="process-head">Process</p>
+          <ol class="process-steps">
+            <li class="process-step" style="--step-color:var(--text)">
+              <svg class="ps-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3.2"/></svg>
+              <span class="ps-idx">01</span>
+              <span class="ps-text"><span class="ps-name">Observe</span><span class="ps-desc">Identify friction</span></span>
+            </li>
+            <li class="process-step" style="--step-color:var(--good)">
+              <svg class="ps-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.2 16.2 21 21" stroke-linecap="round"/></svg>
+              <span class="ps-idx">02</span>
+              <span class="ps-text"><span class="ps-name">Detect</span><span class="ps-desc">Find real gaps</span></span>
+            </li>
+            <li class="process-step" style="--step-color:var(--purple)">
+              <svg class="ps-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M6 3h9l4 4v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M15 3v4h4"/><path d="M8 14.5 10.3 17 16 10.5" stroke-linecap="round"/></svg>
+              <span class="ps-idx">03</span>
+              <span class="ps-text"><span class="ps-name">Validate</span><span class="ps-desc">Evidence &amp; impact</span></span>
+            </li>
+            <li class="process-step" style="--step-color:var(--amber)">
+              <svg class="ps-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L2 19l3 3 7.3-7.3a4 4 0 0 0 5.4-5.4l-2.8 2.8-2.6-2.6Z"/></svg>
+              <span class="ps-idx">04</span>
+              <span class="ps-text"><span class="ps-name">Build</span><span class="ps-desc">Ship the missing tool</span></span>
+            </li>
+          </ol>
+          <p class="process-mission"><span>Mission</span>Eliminate friction. Empower builders.</p>
+        </section>
       </aside>
       <!-- aria-live agregado directo en el DIV PADRE, no en el hijo que
            renderGrid() crea/destruye via innerHTML (2026-08-28,
@@ -3396,32 +3338,7 @@
         </table>
         <div class="no-results" id="noResults" style="display:none" aria-live="polite">No results for that filter.</div>
       </div>
-    </div>
-
-    <!-- role="dialog"/aria-modal + aria-hidden toggle added 2026-08-23
-         (audit finding): this overlay appears on EVERY Field<->Table
-         toggle click, not a one-time thing, and had no dialog semantics
-         at all -- a screen-reader user got no announcement that a
-         full-screen gate just appeared, and it stayed in the a11y tree
-         even while visually hidden (opacity/pointer-events only). Starts
-         aria-hidden="true"; openModeLock()/finishSwitch() toggle it
-         alongside the existing .show class. aria-labelledby/describedby
-         point at the two text elements that already explain what this
-         is, no new copy needed. -->
-    <div class="mode-transition-overlay" id="modeOverlay" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="modeOverlayLabel" aria-describedby="modeLockHint">
-      <div class="mt-sticky">
-        <svg class="mt-logo" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#0151FC"/>
-          <path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z" fill="#01B3FD"/>
-          <polygon points="569,413 695,413 695,539 569,539" fill="#02F172"/>
-        </svg>
-        <div class="mt-label" id="modeOverlayLabel">ACCESS REQUIRED</div>
-        <div class="mt-lock">
-          <div class="mt-lock-ref">REFERENCE KEY: <span class="mt-lock-ref-code" id="modeLockRef"></span></div>
-          <div class="mt-lock-row" id="modeLockRow"></div>
-          <div class="mt-lock-hint" id="modeLockHint"></div>
-        </div>
-      </div>
+      <div id="tablePager"></div>
     </div>
   </div>
 
@@ -3443,6 +3360,13 @@
         </ul>
       </div>
       <div class="log-entry" data-idx="03">
+        <h3 class="log-head">Reviews, rating, and stars</h3>
+        <ul class="log-points">
+          <li>Reviews, Marketplace rating, and GitHub stars use the same public sources as downloads. This catalog is still early and product-focused, so those figures live here — not in the hero — until they describe the work rather than empty cells.</li>
+        </ul>
+        <div class="method-facts" id="methodFacts"></div>
+      </div>
+      <div class="log-entry" data-idx="04">
         <h3 class="log-head">What's Never Stored Here</h3>
         <ul class="log-points">
           <li>We never publish a competitor's private marketplace identifiers or a vendor's personal contact details (email, phone, address) — even when the public API we read from happens to expose them alongside the data we do use.</li>
@@ -3838,6 +3762,8 @@
   var filterPricing = '';
   var filterCategory = '';
   var selectedRepo = null;
+  var PAGE_SIZE = 24;
+  var catalogPage = 1;
   // ---- shared helpers ---------------------------------------------
   function esc(s) {
     if (s == null) return '';
@@ -3958,6 +3884,62 @@
       return 0;
     });
     return rows;
+  }
+
+  function catalogPageCount(n) {
+    return Math.max(1, Math.ceil(n / PAGE_SIZE));
+  }
+  function clampCatalogPage(n) {
+    var pages = catalogPageCount(n);
+    if (catalogPage > pages) catalogPage = pages;
+    if (catalogPage < 1) catalogPage = 1;
+    return pages;
+  }
+  function ensurePageForRepo(rows, repo) {
+    if (!repo) return;
+    var i;
+    for (i = 0; i < rows.length; i++) {
+      if (rows[i].repo === repo) {
+        catalogPage = Math.floor(i / PAGE_SIZE) + 1;
+        return;
+      }
+    }
+  }
+  function pagedRows(rows) {
+    clampCatalogPage(rows.length);
+    var start = (catalogPage - 1) * PAGE_SIZE;
+    return rows.slice(start, start + PAGE_SIZE);
+  }
+  function pagerHtml(total) {
+    var pages = catalogPageCount(total);
+    if (pages <= 1) return '';
+    return '<nav class="catalog-pager" aria-label="Catalog pages">' +
+      '<button type="button" class="btn catalog-pager-btn" data-page-dir="-1" aria-label="Previous page"' + (catalogPage <= 1 ? ' disabled' : '') + '>Previous</button>' +
+      '<span class="catalog-pager-status" aria-live="polite">Page ' + catalogPage + ' of ' + pages + '</span>' +
+      '<button type="button" class="btn catalog-pager-btn" data-page-dir="1" aria-label="Next page"' + (catalogPage >= pages ? ' disabled' : '') + '>Next</button>' +
+      '</nav>';
+  }
+  function wirePager(container, total) {
+    if (!container) return;
+    Array.prototype.forEach.call(container.querySelectorAll('[data-page-dir]'), function (btn) {
+      btn.addEventListener('click', function () {
+        var dir = parseInt(btn.getAttribute('data-page-dir'), 10);
+        var pages = catalogPageCount(total);
+        catalogPage = Math.min(pages, Math.max(1, catalogPage + dir));
+        selectedRepo = null;
+        renderAll();
+        scrollCatalogIntoView();
+      });
+    });
+  }
+
+  function similarCardHtml(s, cls) {
+    var sCat = CAT_BY_KEY[s.categoryKey] || CAT_BY_KEY.other;
+    return '<div class="' + cls + '" data-repo="' + esc(s.repo) + '" role="button" tabindex="0" aria-label="' + esc(s.name) + ' details">' +
+      '<span class="card-cat" style="--cat:' + sCat.color + '" title="' + esc(sCat.label) + '" aria-hidden="true">' + catIconHtml(s.categoryKey) + '</span>' +
+      '<div class="sc-name">' + esc(s.name) + '</div>' +
+      '<div class="sc-niche">' + esc(s.niche) + '</div>' +
+      '<div class="sc-dl">' + (s.downloads == null ? 'Pending' : s.downloads.toLocaleString('en-US') + ' downloads') + '</div></div>';
   }
 
   // ---- stats bar -----------------------------------------------------
@@ -4112,31 +4094,17 @@
 
     var statDefs = [
       { icon: ICONS.plugins, color: 'var(--accent)', plain: String(data.totalPlugins), extra: '', label: 'Plugins active', accent: true },
-      { icon: ICONS.downloads, color: 'var(--good)', plain: data.totalDownloads.toLocaleString('en-US'), extra: dlGrowthHtml, label: 'Downloads total' },
-      // "Visitors today" hidden from the header, 2026-08-23, explicit
-      // user request ("esconde... de forma visual") -- GoatCounter
-      // tracking itself stays wired (script tag + fetchVisitorCount()
-      // untouched), only this row's render is skipped so the header
-      // has one less stat instead of leaving a live counter empty/dead.
-      // { icon: ICONS.visitors, color: 'var(--purple)', plain: visitorCountText(), extra: '', label: 'Visitors today', live: true },
-      { icon: ICONS.reviews, color: 'var(--amber)', plain: String(data.totalReviews), extra: '', label: 'Reviews total' },
-      { icon: ICONS.rating, color: 'var(--text-faint)', plain: data.avgRating != null ? data.avgRating.toFixed(2) : '—', extra: '', label: 'Avg rating' },
-      { icon: ICONS.github, color: 'var(--text)', plain: String(data.totalStars), extra: '', label: 'GitHub stars' }
+      { icon: ICONS.downloads, color: 'var(--good)', plain: data.totalDownloads.toLocaleString('en-US'), extra: dlGrowthHtml, label: 'Downloads' }
     ];
+    // Visitors stay off the hero. Reviews, rating, and GitHub stars
+    // render into #methodFacts until they describe real traction.
     var statsEl = document.getElementById('stats');
     statsEl.innerHTML = statDefs.map(function (s, i) {
-      // Visitors' own value arrives asynchronously (fetchVisitorCount()
-      // resolves after the initial render, then calls renderStats()
-      // again) -- gating its own text on visitorCountValue rather than
-      // the shared statsDecoded flag means it never gets stuck showing
-      // stale "—" text after the real count comes in, and never skips
-      // its own reveal animation just because the OTHER 5 stats already
-      // played theirs on the first render (see below).
-      var alreadyKnown = s.live ? visitorCountValue != null : statsDecoded;
+      var alreadyKnown = statsDecoded;
       return '<div class="tele-row">' +
         '<span class="tele-icon" style="color:' + s.color + '">' + s.icon + '</span>' +
         '<div class="tele-body" id="tele-body-' + i + '">' +
-          '<div class="tele-num' + (s.accent ? ' accent' : '') + '" id="stat-num-' + i + '"' + (s.live ? ' aria-live="polite"' : '') + '>' +
+          '<div class="tele-num' + (s.accent ? ' accent' : '') + '" id="stat-num-' + i + '">' +
             (alreadyKnown ? s.plain + s.extra : '') +
           '</div>' +
           '<div class="tele-label">' + s.label + '</div>' +
@@ -4144,25 +4112,29 @@
       '</div>';
     }).join('');
 
-    // The 5 static stats only ever need their reveal animation once
-    // (statsDecoded latches true after the first pass); "Visitors
-    // today" gets its OWN independent one-shot the moment its real
-    // value actually arrives, whichever render call that turns out to
-    // be -- decoupled from statsDecoded specifically so it still plays
-    // its reveal animation instead of just popping in silently once
-    // fetchVisitorCount() resolves after that shared flag already
-    // latched true.
+    var methodFacts = document.getElementById('methodFacts');
+    if (methodFacts) {
+      var ratingPlain = data.avgRating != null ? data.avgRating.toFixed(2) : '—';
+      methodFacts.innerHTML =
+        '<div class="method-fact">' +
+          '<div class="method-fact-num">' + String(data.totalReviews) + '</div>' +
+          '<div class="method-fact-label">Reviews total</div>' +
+        '</div>' +
+        '<div class="method-fact">' +
+          '<div class="method-fact-num">' + ratingPlain + '</div>' +
+          '<div class="method-fact-label">Avg rating</div>' +
+        '</div>' +
+        '<div class="method-fact">' +
+          '<div class="method-fact-num">' + String(data.totalStars) + '</div>' +
+          '<div class="method-fact-label">GitHub stars</div>' +
+        '</div>';
+    }
+
     if (!statsDecoded) {
       statDefs.forEach(function (s, i) {
-        if (s.live) return; // handled separately below
         decodeNumber(document.getElementById('stat-num-' + i), s.plain, s.extra);
       });
       statsDecoded = true;
-    }
-    if (visitorCountValue != null && !visitorStatDecoded) {
-      var liveIdx = statDefs.findIndex(function (s) { return s.live; });
-      if (liveIdx !== -1) decodeNumber(document.getElementById('stat-num-' + liveIdx), statDefs[liveIdx].plain, statDefs[liveIdx].extra);
-      visitorStatDecoded = true;
     }
   }
 
@@ -4196,6 +4168,7 @@
     sel.addEventListener('change', function (e) {
       filterCategory = e.target.value;
       selectedRepo = null;
+      catalogPage = 1;
       renderAll();
       scrollCatalogIntoView();
     });
@@ -4242,6 +4215,7 @@
       var cat = btn.getAttribute('data-cat') || '';
       filterCategory = (!cat || filterCategory === cat) ? '' : cat;
       selectedRepo = null;
+      catalogPage = 1;
       renderAll();
       scrollCatalogIntoView();
     });
@@ -4277,7 +4251,9 @@
       main.innerHTML = '<div class="no-results" aria-live="polite">No results for that filter.</div>';
       return;
     }
-    main.innerHTML = '<div class="plugin-grid">' + rows.map(pluginCardHtml).join('') + '</div>';
+    var pageRows = pagedRows(rows);
+    main.innerHTML = '<div class="plugin-grid">' + pageRows.map(pluginCardHtml).join('') + '</div>' + pagerHtml(rows.length);
+    wirePager(main, rows.length);
     Array.prototype.forEach.call(main.querySelectorAll('.plugin-card'), function (card) {
       var open = function () {
         selectedRepo = card.getAttribute('data-repo');
@@ -4323,7 +4299,7 @@
       .sort(function (a, b) { return (b.downloads || 0) - (a.downloads || 0); })
       .slice(0, 4);
 
-    var html = '<div class="dossier-head">';
+    var html = '<div class="dossier-sheet"><div class="dossier-top">';
     html += '<div class="dossier-intro"><div class="dossier-title-row"><h2>' + esc(p.name) + '</h2>' +
       '<span class="chip ' + pr.cls + '">' + esc(pr.text) + '</span>' +
       '<span class="chip" style="background:color-mix(in srgb, ' + cat.color + ' 20%, transparent); color:' + cat.color + '">' + esc(cat.label) + '</span></div>' +
@@ -4331,46 +4307,31 @@
       '<div class="dossier-pitch">' + mdInline(p.pitch || '—') + '</div></div>';
     html += '<div class="dossier-side">';
     if (gifUrl) {
-      // onerror movido a un addEventListener real en
-      // wireDossierInteractions() 2026-08-28 (auditoria, hallazgo bajo
-      // #21) -- el atributo onerror="..." inline es un consumidor real
-      // de 'unsafe-inline' en script-src de la CSP; quitarlo de aca
-      // (mas el mismo patron para cualquier otro onXxx inline futuro)
-      // es un paso real hacia poder eliminar esa entrada de la CSP
-      // algun dia.
+      // onerror moved to a real addEventListener in
+      // wireDossierInteractions() so this markup stays free of inline
+      // handlers (script-src unsafe-inline).
       html += '<img class="dossier-gif" src="' + esc(gifUrl) + '" alt="' + esc(p.name) + ' in action" loading="lazy">';
     }
     html += '<div class="dossier-links">';
     if (p.marketplaceUrl) html += '<a class="btn primary" href="' + esc(safeUrl(p.marketplaceUrl)) + '" target="_blank" rel="noopener"><span class="btn-icon">' + ICONS.jetbrains + '</span>Install on JetBrains ↗</a>';
     html += '<a class="btn" href="' + esc(safeUrl(p.githubUrl)) + '" target="_blank" rel="noopener"><span class="btn-icon">' + ICONS.github + '</span>View on GitHub ↗</a>';
     html += '</div></div>';
-    html += '</div>';
 
     html += '<div class="dossier-stats">';
     html += '<div class="stat"><div class="num" id="dossierDlNum">' + (isPending ? '—' : p.downloads.toLocaleString('en-US')) + '</div><div class="label">Downloads' + (isPending ? '' : ' ' + growthMarkup(p)) + '</div></div>';
     html += '<div class="stat"><div class="num">' + (p.reviews == null ? '—' : p.reviews) + '</div><div class="label">Reviews</div></div>';
     html += '<div class="stat"><div class="num">' + (p.rating != null ? p.rating.toFixed(2) : '—') + '</div><div class="label">Rating</div></div>';
     html += '<div class="stat"><div class="num">' + (p.stars != null ? p.stars : '—') + '</div><div class="label">GitHub ★</div></div>';
-    html += '<div class="stat"><div class="num" style="font-size:15px">' + (p.firstPublished || '—') + '</div><div class="label">Published</div></div>';
-    html += '</div>';
+    html += '<div class="stat"><div class="num">' + (p.firstPublished || '—') + '</div><div class="label">Published</div></div>';
+    html += '</div></div>';
 
-    html += '<div class="dossier-grid"><div class="dossier-col">';
+    html += '<div class="dossier-body">';
     html += '<div class="info-block"><div class="ib-head"><span class="ib-icon gap">!</span><span class="ib-title">The Gap</span></div>' +
       '<div class="ib-body">' + mdInline(gapText(p)) + '</div></div>';
     html += '<div class="info-block"><div class="ib-head"><span class="ib-icon fix">✓</span><span class="ib-title">The Fix</span></div>' +
       '<div class="ib-body">' + mdInline(p.pitch || '—') + '</div></div>';
     html += '</div>';
 
-    // Facts: technical/reference details only, no repeated marketing
-    // copy and no "Verified vendor" line (2026-08-15 -- removed per
-    // request, it read as an unexplained trust badge with no context).
-    // No separate "Evidence"/"Traction" panels either -- Gap already
-    // carries the competitor evidence, and Traction's growth number is
-    // folded in here as a plain text row instead of a whole chart of
-    // its own (both decisions made and verified earlier this same day,
-    // carried forward here rather than reintroduced by a newer proposal
-    // that didn't know about that history).
-    html += '<div class="dossier-col">';
     html += '<div class="info-block facts-block"><div class="ib-head"><span class="ib-icon facts">⚙</span><span class="ib-title">Facts</span></div><ul class="facts-list">' +
       '<li><span class="fk">Category</span><span class="fv">' + esc(cat.label) + '</span></li>' +
       '<li><span class="fk">Pricing</span><span class="fv">' + esc(pr.text) + '</span></li>' +
@@ -4380,18 +4341,15 @@
       '<li><span class="fk">Repository</span><span class="fv"><code>' + esc(p.repo) + '</code><button type="button" class="copy-btn" data-copy="' + esc(p.repo) + '" aria-label="Copy repository name">' + ICONS.copy + '</button></span></li>' +
       '<li><span class="fk">Growth</span><span class="fv">' + esc(growthFactLine(p)) + '</span></li>' +
       '</ul></div>';
-    html += '</div></div>';
 
     if (similar.length) {
       html += '<div class="similar-section"><div class="similar-title">Similar plugins you might like</div><div class="similar-grid">';
       similar.forEach(function (s) {
-        html += '<div class="similar-card" data-repo="' + esc(s.repo) + '" role="button" tabindex="0" aria-label="' + esc(s.name) + ' details">' +
-          '<div class="sc-name">' + esc(s.name) + '</div>' +
-          '<div class="sc-niche">' + esc(s.niche) + '</div>' +
-          '<div class="sc-dl">' + (s.downloads == null ? 'Pending' : s.downloads.toLocaleString('en-US') + ' downloads') + '</div></div>';
+        html += similarCardHtml(s, 'similar-card');
       });
       html += '</div></div>';
     }
+    html += '</div>';
     return html;
   }
 
@@ -4436,17 +4394,16 @@
     html += '<div class="tbl-stat"><div class="ts-icon">☆</div><div><div class="ts-num">' + (p.reviews == null ? '—' : p.reviews) + '</div><div class="ts-label">Reviews</div></div></div>';
     html += '<div class="tbl-stat"><div class="ts-icon">★</div><div><div class="ts-num">' + (p.rating != null ? p.rating.toFixed(2) : '—') + '</div><div class="ts-label">Rating</div></div></div>';
     html += '<div class="tbl-stat"><div class="ts-icon">⌥</div><div><div class="ts-num">' + (p.stars != null ? p.stars : '—') + '</div><div class="ts-label">GitHub ★</div></div></div>';
-    html += '<div class="tbl-stat"><div class="ts-icon">▤</div><div><div class="ts-num" style="font-size:12px">' + (p.firstPublished || '—') + '</div><div class="ts-label">Published</div></div></div>';
+    html += '<div class="tbl-stat"><div class="ts-icon">▤</div><div><div class="ts-num">' + (p.firstPublished || '—') + '</div><div class="ts-label">Published</div></div></div>';
     html += '</div>';
 
-    html += '<div class="tbl-grid"><div class="tbl-col">';
+    html += '<div class="tbl-body">';
     html += '<div class="tbl-block"><div class="ib-head"><span class="ib-icon gap">!</span><span class="ib-title">The Gap</span></div>' +
       '<div class="ib-body">' + mdInline(gapText(p)) + '</div></div>';
     html += '<div class="tbl-block"><div class="ib-head"><span class="ib-icon fix">✓</span><span class="ib-title">The Fix</span></div>' +
       '<div class="ib-body">' + mdInline(p.pitch || '—') + '</div></div>';
     html += '</div>';
 
-    html += '<div class="tbl-col">';
     html += '<div class="tbl-block tbl-details"><div class="ib-head"><span class="ib-icon facts">⚙</span><span class="ib-title">Details</span></div><ul class="tbl-details-list">' +
       '<li><span class="fk">Category</span><span class="fv">' + esc(cat.label) + '</span></li>' +
       '<li><span class="fk">Pricing</span><span class="fv">' + esc(pr.text) + '</span></li>' +
@@ -4456,15 +4413,11 @@
       '<li><span class="fk">Repository</span><span class="fv"><code>' + esc(p.repo) + '</code><button type="button" class="copy-btn" data-copy="' + esc(p.repo) + '" aria-label="Copy repository name">' + ICONS.copy + '</button></span></li>' +
       '<li><span class="fk">Growth</span><span class="fv">' + esc(growthFactLine(p)) + '</span></li>' +
       '</ul></div>';
-    html += '</div></div>';
 
     if (similar.length) {
       html += '<div class="tbl-similar"><div class="tbl-similar-title">Similar plugins you might like</div><div class="tbl-similar-grid">';
       similar.forEach(function (s) {
-        html += '<div class="tbl-similar-card" data-repo="' + esc(s.repo) + '" role="button" tabindex="0" aria-label="' + esc(s.name) + ' details">' +
-          '<div class="sc-name">' + esc(s.name) + '</div>' +
-          '<div class="sc-niche">' + esc(s.niche) + '</div>' +
-          '<div class="sc-dl">' + (s.downloads == null ? 'Pending' : s.downloads.toLocaleString('en-US') + ' downloads') + '</div></div>';
+        html += similarCardHtml(s, 'tbl-similar-card');
       });
       html += '</div></div>';
     }
@@ -4588,16 +4541,20 @@
     var rows = sortedFiltered();
     var tbody = document.getElementById('tbody');
     var noResults = document.getElementById('noResults');
+    var pagerHost = document.getElementById('tablePager');
 
     if (rows.length === 0) {
       tbody.innerHTML = '';
       noResults.style.display = 'block';
+      if (pagerHost) pagerHost.innerHTML = '';
       return;
     }
     noResults.style.display = 'none';
+    if (selectedRepo) ensurePageForRepo(rows, selectedRepo);
+    var pageRows = pagedRows(rows);
 
     var html = '';
-    rows.forEach(function (p) {
+    pageRows.forEach(function (p) {
       var isPending = p.downloads === null;
       var pr = pricingLabel(p.pricing, isPending);
       var isOpen = selectedRepo === p.repo;
@@ -4656,6 +4613,10 @@
     // hay como mucho UN #dossierDlNum en el DOM aca tambien, mismo
     // razonamiento de costo que el modo field.
     wireDossierInteractions(tbody, selectedRepo ? byRepo(selectedRepo) : null);
+    if (pagerHost) {
+      pagerHost.innerHTML = pagerHtml(rows.length);
+      wirePager(pagerHost, rows.length);
+    }
   }
 
   // ---- top-level render ------------------------------------------------
@@ -4707,7 +4668,7 @@
     // element is judged off-screen, and even then doesn't promise the
     // element's own top lands under the sticky topbar; it can stop
     // wherever "nearest" happens to be. 'start' + the scroll-margin-top
-    // above (68px, matching .topbar's real height) is what actually
+    // above (72px, matching .topbar's real height) is what actually
     // guarantees the opened dossier/row's top sits flush under the
     // header on both desktop and phone, every time -- the exact
     // alignment bug reported live via screenshot. 2026-08-23.
@@ -4793,116 +4754,23 @@
     else renderTable();
   }
 
-  // ---- mode switch: binary-lock transition overlay ---------------------
-  var modeLockActive = false;
-
-  function openModeLock(newMode, btn) {
-    modeLockActive = true;
-    var overlay = document.getElementById('modeOverlay');
-    var refEl = document.getElementById('modeLockRef');
-    var rowEl = document.getElementById('modeLockRow');
-    var hintEl = document.getElementById('modeLockHint');
-    var labelEl = document.getElementById('modeOverlayLabel');
-
-    var bits = '';
-    for (var i = 0; i < 5; i++) bits += Math.round(Math.random());
-    var blankIdx = Math.floor(Math.random() * bits.length);
-    var correctDigit = bits.charAt(blankIdx);
-
-    labelEl.textContent = newMode === 'field' ? 'ENTERING THE HUNTING FIELD' : 'LOADING TABLE VIEW';
-    refEl.textContent = bits;
-    rowEl.innerHTML = '';
-    for (var j = 0; j < bits.length; j++) {
-      if (j === blankIdx) {
-        var input = document.createElement('input');
-        input.type = 'text';
-        input.className = 'mt-lock-input';
-        input.maxLength = 1;
-        input.inputMode = 'numeric';
-        input.autocomplete = 'off';
-        input.id = 'modeLockInput';
-        // aria-label added 2026-08-23 (audit finding): this input had
-        // no accessible name at all -- neither a <label> nor an
-        // aria-label -- so a screen reader announced it as a bare,
-        // unlabeled text field with no connection to the instruction
-        // text in .mt-lock-hint sitting right next to it.
-        input.setAttribute('aria-label', 'Enter the digit at position ' + (blankIdx + 1) + ' of the reference key');
-        rowEl.appendChild(input);
-      } else {
-        var bit = document.createElement('div');
-        bit.className = 'mt-lock-bit';
-        bit.textContent = bits.charAt(j);
-        rowEl.appendChild(bit);
-      }
-    }
-    hintEl.innerHTML = 'Fill in position <b>' + (blankIdx + 1) + '</b> with the bit shown in the reference key above';
-
-    overlay.classList.add('show');
-    overlay.setAttribute('aria-hidden', 'false');
-
-    var input = document.getElementById('modeLockInput');
-    var unlocked = false;
-
-    function finishSwitch() {
-      Array.prototype.forEach.call(document.querySelectorAll('#modeToggle button'), function (b) {
-        var isActive = b === btn;
-        b.classList.toggle('active', isActive);
-        b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
-      });
-      mode = newMode;
-      renderAll();
-      // Bug fixed 2026-08-23: switching Table -> Field (or back) while a
-      // plugin is already open never called scrollSelectedIntoView() --
-      // every OTHER path that opens/changes a dossier does (see the
-      // other 3 call sites), this one was just missed. Without it, the
-      // newly-rendered Field dossier / Table row could land off-screen
-      // with no scroll to bring it under the header, unlike every other
-      // way of opening a plugin.
-      if (selectedRepo) scrollSelectedIntoView();
-      setTimeout(function () {
-        overlay.classList.remove('show');
-        overlay.setAttribute('aria-hidden', 'true');
-        modeLockActive = false;
-      }, 250);
-    }
-
-    function onInput() {
-      if (unlocked) return;
-      var v = input.value.replace(/[^01]/g, '');
-      input.value = v;
-      if (v.length === 0) return;
-      if (v === correctDigit) {
-        unlocked = true;
-        input.classList.remove('wrong');
-        input.classList.add('right');
-        input.disabled = true;
-        setTimeout(finishSwitch, 320);
-      } else {
-        input.classList.add('wrong');
-        setTimeout(function () {
-          input.classList.remove('wrong');
-          input.value = '';
-        }, 300);
-      }
-    }
-
-    input.addEventListener('input', onInput);
-    // preventScroll: true -- the overlay lives inside .content-stage now
-    // (scoped to the Field/Table box, not a viewport-fixed overlay
-    // anymore), so a plain .focus() here could otherwise force the page
-    // to scroll the input into view whenever that box isn't already
-    // fully on-screen. The lock is always visually right where the
-    // user just clicked (Field/Table toggle sits directly above it), so
-    // it doesn't need the browser's help finding it.
-    setTimeout(function () { input.focus({ preventScroll: true }); }, 60);
+  // Field <-> Table: switch immediately. No loading overlay.
+  function switchMode(newMode, btn) {
+    if (newMode === mode) return;
+    Array.prototype.forEach.call(document.querySelectorAll('#modeToggle button'), function (b) {
+      var isActive = b === btn || b.getAttribute('data-mode') === newMode;
+      b.classList.toggle('active', isActive);
+      b.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+    });
+    mode = newMode;
+    renderAll();
+    if (selectedRepo) scrollSelectedIntoView();
   }
 
   document.getElementById('modeToggle').addEventListener('click', function (e) {
     var btn = e.target.closest('button[data-mode]');
-    if (!btn || modeLockActive) return;
-    var newMode = btn.getAttribute('data-mode');
-    if (newMode === mode) return;
-    openModeLock(newMode, btn);
+    if (!btn) return;
+    switchMode(btn.getAttribute('data-mode'), btn);
   });
 
   Array.prototype.forEach.call(document.querySelectorAll('thead th'), function (th) {
@@ -4967,11 +4835,13 @@
     if (searchDebounceTimer) clearTimeout(searchDebounceTimer);
     searchDebounceTimer = setTimeout(function () {
       filterText = val.trim().toLowerCase();
+      catalogPage = 1;
       renderAll();
     }, 120);
   });
   document.getElementById('pricingFilter').addEventListener('change', function (e) {
     filterPricing = e.target.value;
+    catalogPage = 1;
     renderAll();
   });
 
@@ -5030,6 +4900,48 @@
       if (selectedRepo) scrollSelectedIntoView(true);
     });
   }
+
+  // First-load splash: hide after the catalog has painted. Never tied
+  // to Field/Table. Failsafe timeout so a hung render cannot trap the page.
+  (function dismissSiteLoader() {
+    var el = document.getElementById('siteLoader');
+    if (!el) {
+      document.documentElement.classList.remove('boot');
+      return;
+    }
+    var hidden = false;
+    var minMs = PREFERS_REDUCED_MOTION ? 400 : 1400;
+    function hide() {
+      if (hidden) return;
+      hidden = true;
+      el.classList.add('is-done');
+      el.setAttribute('aria-busy', 'false');
+      el.setAttribute('aria-hidden', 'true');
+      document.documentElement.classList.remove('boot');
+      var drop = function () {
+        if (el.parentNode) el.parentNode.removeChild(el);
+      };
+      if (PREFERS_REDUCED_MOTION) drop();
+      else {
+        el.addEventListener('transitionend', drop, { once: true });
+        setTimeout(drop, 700);
+      }
+    }
+    var armed = false;
+    function arm() {
+      if (armed) return;
+      armed = true;
+      setTimeout(hide, minMs);
+    }
+    var img = new Image();
+    img.onload = img.onerror = arm;
+    img.src = 'lab-loading.jpg';
+    if (img.complete) arm();
+    setTimeout(hide, PREFERS_REDUCED_MOTION ? 800 : 3500);
+    window.addEventListener('pageshow', function (e) {
+      if (e.persisted) hide();
+    });
+  })();
   // 2026-08-28 (auditoria, hallazgo medio #50): llamada comentada, no
   // eliminada -- mismo criterio "reactivar = descomentar 1 linea" que
   // ya aplica al resto de esta feature (ver el comentario "Orphaned as
@@ -5069,8 +4981,8 @@
     track.innerHTML = featured.map(function (p, i) {
       return '<button type="button" class="hs-slide" data-repo="' + esc(p.repo) +
         '" aria-label="Open ' + esc(p.name) + '"' + (i === 0 ? '' : ' tabindex="-1"') + '>' +
-        '<img src="' + esc(GIF_URL[p.repo]) + '" alt="" width="640" height="360" loading="' +
-        (i === 0 ? 'eager' : 'lazy') + '">' +
+        '<span class="hs-media"><img src="' + esc(GIF_URL[p.repo]) + '" alt="" width="640" height="360" loading="' +
+        (i === 0 ? 'eager' : 'lazy') + '"></span>' +
         '<span class="hs-copy"><span class="hs-kicker">Featured</span>' +
         '<span class="hs-name">' + esc(p.name) + '</span>' +
         '<span class="hs-niche">' + esc(p.niche || '') + '</span></span></button>';
@@ -5085,6 +4997,32 @@
     Array.prototype.forEach.call(track.querySelectorAll('img'), function (img) {
       img.addEventListener('error', function () { img.remove(); });
     });
+
+    // Zoom origin follows the pointer inside the GIF frame. Scale is
+    // still CSS :hover; origin is updated here so the point under the
+    // cursor stays put. Fine-pointer only, same as the scale rule.
+    var canFollowPointer = !PREFERS_REDUCED_MOTION &&
+      window.matchMedia &&
+      window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+    if (canFollowPointer) {
+      function setGifOrigin(e) {
+        var media = e.target.closest('.hs-media');
+        if (!media || !track.contains(media)) return;
+        var r = media.getBoundingClientRect();
+        if (!r.width || !r.height) return;
+        var x = Math.max(0, Math.min(100, ((e.clientX - r.left) / r.width) * 100));
+        var y = Math.max(0, Math.min(100, ((e.clientY - r.top) / r.height) * 100));
+        media.style.setProperty('--hs-ox', x.toFixed(2) + '%');
+        media.style.setProperty('--hs-oy', y.toFixed(2) + '%');
+      }
+      track.addEventListener('pointermove', setGifOrigin);
+      track.addEventListener('pointerout', function (e) {
+        var media = e.target.closest('.hs-media');
+        if (!media || (e.relatedTarget && media.contains(e.relatedTarget))) return;
+        media.style.removeProperty('--hs-ox');
+        media.style.removeProperty('--hs-oy');
+      });
+    }
 
     function go(n) {
       index = (n + featured.length) % featured.length;
@@ -5144,26 +5082,18 @@
 
   (function initTopbar() {
     var topbarEl = document.getElementById('topbar');
-    var statusText = document.getElementById('topbarStatusText');
-    if (statusText) statusText.textContent = data.totalPlugins + ' plugins';
+    var statusCount = document.getElementById('topbarStatusCount');
+    if (statusCount) statusCount.textContent = data.totalPlugins;
     var footerStatusText = document.getElementById('footerStatusText');
     if (footerStatusText) footerStatusText.textContent = data.totalPlugins + ' plugins tracked';
 
-    // The merged "02" nav slot (topbar/rail/footer -- see
-    // #topbarModeNavLink/#railModeNavLink/#footerModeNavLink) is never
-    // a second source of truth for mode -- it drives the SAME
-    // #modeToggle buttons the controls row already has, so the
-    // existing binary-lock transition (openModeLock) is the one and
-    // only place mode-switching logic lives. It always targets the
-    // OTHER mode from whatever is current (label kept in sync by
-    // updateModeNavLabels(), called from renderAll()).
-    //
-    // Also scrolls #contentStage into view. The lock overlay is
-    // scoped+sticky to that box (see openModeLock / .mt-sticky), which
-    // only helps once the box is actually ON screen -- clicking this
-    // from way up at the hero, or from the Methodology footer,
-    // previously left the lock rendered below the fold with nothing
-    // visibly happening.
+    // The merged "02" nav slot (topbar/footer) is never a second
+    // source of truth for mode -- it clicks the SAME #modeToggle
+    // buttons, so switchMode() is the only place mode-switching
+    // logic lives. It always targets the OTHER mode from whatever
+    // is current (label kept in sync by updateModeNavLabels()).
+    // Also scrolls #contentStage into view so a click from the hero
+    // or footer lands on the catalog, not above the fold.
     function scrollToStage() {
       var stage = document.getElementById('contentStage');
       if (stage) stage.scrollIntoView({
@@ -5188,6 +5118,17 @@
 
     var moreBtn = document.getElementById('heroMore');
     if (moreBtn) moreBtn.addEventListener('click', scrollToStage);
+
+    var reportBtn = document.getElementById('heroReport');
+    if (reportBtn) {
+      reportBtn.addEventListener('click', function () {
+        var notes = document.getElementById('methodology');
+        if (notes) notes.scrollIntoView({
+          behavior: PREFERS_REDUCED_MOTION ? 'auto' : 'smooth',
+          block: 'start'
+        });
+      });
+    }
 
     // Mobile burger: plain show/hide, no animation library -- consistent
     // with how little chrome the rest of the page's controls carry.
@@ -5260,30 +5201,29 @@
       logEntries.forEach(function (el) { el.classList.add('in-view'); });
     }
 
-    // Process strip: the connector line fills in and each stage badge
-    // lights up in sequence, once, the first time it scrolls into view
-    // -- the "illuminate from OBSERVE to BUILD" behavior called for in
-    // the original brief. Same one-shot IntersectionObserver primitive
-    // as the log entries above, kept separate since it drives 2 things
-    // at once (the strip-level line fill + a staggered per-step class).
     var processStrip = document.getElementById('processStrip');
     var processSteps = Array.prototype.slice.call(document.querySelectorAll('.process-step'));
-    if (processStrip && 'IntersectionObserver' in window && processSteps.length) {
+    function lightProcess() {
+      processStrip.classList.add('lit');
+      processSteps.forEach(function (el) { el.classList.add('lit'); });
+    }
+    if (processStrip && PREFERS_REDUCED_MOTION) {
+      lightProcess();
+    } else if (processStrip && 'IntersectionObserver' in window && processSteps.length) {
       var processIo = new IntersectionObserver(function (entries, obs) {
         entries.forEach(function (entry) {
           if (entry.isIntersecting) {
             processStrip.classList.add('lit');
             processSteps.forEach(function (el, i) {
-              setTimeout(function () { el.classList.add('lit'); }, 150 + i * 180);
+              setTimeout(function () { el.classList.add('lit'); }, 80 + i * 90);
             });
             obs.unobserve(entry.target);
           }
         });
-      }, { threshold: 0.4 });
+      }, { threshold: 0.35 });
       processIo.observe(processStrip);
     } else if (processStrip) {
-      processStrip.classList.add('lit');
-      processSteps.forEach(function (el) { el.classList.add('lit'); });
+      lightProcess();
     }
   })();
   initHeroSlider();
