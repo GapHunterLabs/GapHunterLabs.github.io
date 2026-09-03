@@ -485,13 +485,20 @@ def main():
     # 2026-09-02: topbarStatusText dropped from this list -- the hero/
     # topbar rework removed that element entirely (no replacement, the
     # topbar no longer carries a live plugin count). Confirmed absent
-    # via grep before removing the swap, not assumed. heroSubtitle and
-    # footerStatusText are unchanged and still real elements.
+    # via grep before removing the swap, not assumed.
+    #
+    # 2026-09-03: footerStatusText's own tag changed from
+    # `<span id="footerStatusText">` to `<div class="footer-status"
+    # id="footerStatusText">` (footer/contact-page rework) -- the old
+    # pattern anchored on the literal `<span id=...` substring, which
+    # no longer exists. Anchored on `id="footerStatusText">` alone
+    # instead of the surrounding tag, so a future tag-name/attribute-
+    # order change doesn't silently break this again the same way.
     total = len(rows)
     swaps = [
         (re.compile(r'(id="heroSubtitle">Real state of the )\d+(-plugin catalog)'),
          r"\g<1>%d\g<2>" % total),
-        (re.compile(r'(<span id="footerStatusText">)\d+( plugins tracked</span>)'),
+        (re.compile(r'(id="footerStatusText">)\d+( plugins tracked)'),
          r"\g<1>%d\g<2>" % total),
     ]
     swap_count = 0
