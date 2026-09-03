@@ -1,6 +1,6 @@
 {
   "_comment": "Metadatos FIJOS por plugin (pitch/why/niche/xmlId) -- NO se regeneran automaticamente por el workflow diario, que solo trae metricas en vivo (descargas/reviews/stars/pricing). Si el pitch/why/niche de un plugin cambia, re-generar este archivo a mano corriendo el snippet documentado en README_AUTO_UPDATE.md del mismo directorio.",
-  "generatedAt": "2026-08-25 07:23:46 UTC",
+  "generatedAt": "2026-09-02 23:54:55 UTC",
   "plugins": {
     "ansible-companion": {
       "xmlId": "dev.gaphunter.ansiblecompanion",
@@ -910,6 +910,204 @@
       "niche": "XSD/WSDL Tooling",
       "githubUrl": "https://github.com/GapHunterLabs/xsd-companion",
       "firstPublished": "2026-08-20"
+    },
+    "k8s-readiness-liveness-probe-companion": {
+      "xmlId": "dev.gaphunter.k8sreadinesslivenessprobecompanion",
+      "name": "Kubernetes Missing Readiness/Liveness Probe Companion",
+      "pitch": "Warning on any container entry in a Kubernetes workload manifest (Deployment, Pod, StatefulSet, DaemonSet) with no `readinessProbe:` and/or no `livenessProbe:`. Without a readiness probe, Kubernetes can't take a sick pod out of the load balancer — real traffic keeps being routed to a broken instance. Without a liveness probe, a hung (not crashed) process is never automatically restarted. Both are ",
+      "why": "Kubernetes never requires either probe — a manifest with neither is perfectly valid YAML and deploys without a single warning, but it's a well-documented anti-pattern with real production consequences. Nothing in the IDE flags it today.",
+      "niche": "Kubernetes Tooling",
+      "githubUrl": "https://github.com/GapHunterLabs/k8s-readiness-liveness-probe-companion",
+      "firstPublished": "2026-09-02"
+    },
+    "environment-specific-constant-companion": {
+      "xmlId": "dev.gaphunter.environmentspecificconstantcompanion",
+      "name": "Environment-Specific Constant Companion",
+      "pitch": "IntelliJ-family plugin that flags a hardcoded URL or `host:port` string literal in Java source that also appears, textually, as a value in one of the project's own config files (`.properties`/`.yml`/`.yaml`/`.env`) -- the value clearly belongs to config, and the code copy can now silently drift out of sync with it.",
+      "why": "Config drift is a real, recurring source of production incidents: a value that gets updated one day only in the config file (the \"correct\" place to change it) leaves a hardcoded copy in source code still pointing at the old endpoint, host, or port -- with no compile error, no test failure, and often no symptom until that specific code path runs against production. Adjacent to this catalog's own `config-secrets-file-companion` (which flags real secrets hardcoded in config files) and `env-diff-companion` (which diffs keys across `.env` files), but neither checks specifically for code-vs-config v",
+      "niche": "Env Config Tooling",
+      "githubUrl": "https://github.com/GapHunterLabs/environment-specific-constant-companion",
+      "firstPublished": "2026-09-02"
+    },
+    "completablefuture-cancellation-companion": {
+      "xmlId": "dev.gaphunter.completablefuturecancellationcompanion",
+      "name": "CompletableFuture Cancellation Propagation Companion",
+      "pitch": "IntelliJ-family plugin that flags a `.thenCompose(...)` chain whose result future can be cancelled, but whose inner future -- constructed directly inside the lambda -- never receives that cancellation, so the orphaned work keeps running and consuming resources after the caller believes the whole operation stopped.",
+      "why": "`CompletableFuture.thenCompose` never propagates cancellation into the stage it returns -- calling `.cancel(true)` on the outer/chained future only marks that future as cancelled; it does not touch the inner `CompletableFuture` the lambda constructed and is still waiting on. This is a real, repeatedly-reported gap: it shows up in GitHub issues against Reactor Core, Failsafe, and OpenTelemetry's Java instrumentation, each describing the same shape -- a caller cancels what it thinks is the whole async operation, but a `supplyAsync`/ `runAsync` stage buried inside a `thenCompose` lambda keeps exe",
+      "niche": "Concurrency / Async Bugs",
+      "githubUrl": "https://github.com/GapHunterLabs/completablefuture-cancellation-companion",
+      "firstPublished": "2026-09-02"
+    },
+    "pii-tostring-leak-companion": {
+      "xmlId": "dev.gaphunter.piitostringleakcompanion",
+      "name": "PII via toString() Leak Companion",
+      "pitch": "Warning on a logging/print call passed an instance of a class whose `toString()` exposes a PII field (email, SSN, phone, date of birth, credit card...) -- `toString()` on a user object often serializes the whole model, unlike `log.info(user.getEmail())` which explicitly picks only what should be logged.",
+      "why": "A well-documented pattern of real incidents (Piiano, New Relic, Guidewire Security): `toString()` on a user object often serializes the entire model, including email, phone, and SSN. Different angle from `pii-field-annotation-companion` (this catalog): that plugin flags a PII field itself passed directly to a logger; here the field never appears textually at the call site at all -- it leaks implicitly through `toString()`'s serialization of the whole object.",
+      "niche": "PII / Compliance",
+      "githubUrl": "https://github.com/GapHunterLabs/pii-tostring-leak-companion",
+      "firstPublished": "2026-09-02"
+    },
+    "cache-invalidation-companion": {
+      "xmlId": "dev.gaphunter.cacheinvalidationcompanion",
+      "name": "Cache-Invalidation Companion",
+      "pitch": "Warning on a `.save(...)` call inside a method whose class also has a hand-rolled `Map`-backed cache field (populated by a `computeIfAbsent`/manual `containsKey`+`put` \"get-or-compute\" pattern), when that method never touches the cache field.",
+      "why": "Stale data served after a real update -- a silent inconsistency between what's written and what's read. No Marketplace plugin found dedicated to hand-rolled cache invalidation gaps, outside the `@Cacheable` ecosystem (which already has its own declarative invalidation mechanism).",
+      "niche": "Caching Bugs",
+      "githubUrl": "https://github.com/GapHunterLabs/cache-invalidation-companion",
+      "firstPublished": "2026-09-02"
+    },
+    "exception-escape-chain-companion": {
+      "xmlId": "dev.gaphunter.exceptionescapechaincompanion",
+      "name": "Exception-Escape Chain Companion",
+      "pitch": "Warning on a `catch (Exception e)` (the broad type, not a narrower specific exception) that silently swallows -- no rethrow, no logging -- a specific CHECKED exception that a call inside its `try` block can actually throw, directly or transitively through a bounded same-class call chain.",
+      "why": "A real business exception (e.g. `PaymentDeclinedException`) caught this way leaves the system in an inconsistent state with no trace to diagnose the real incident. \"Exception Catcher\" (Marketplace) solves the opposite problem (where is X caught); no plugin found that computes the real escape set through a call chain.",
+      "niche": "Exception Handling",
+      "githubUrl": "https://github.com/GapHunterLabs/exception-escape-chain-companion",
+      "firstPublished": "2026-09-02"
+    },
+    "ssrf-unsanitized-url-companion": {
+      "xmlId": "dev.gaphunter.ssrfunsanitizedurlcompanion",
+      "name": "SSRF via Unsanitized URL Companion",
+      "pitch": "Warning on an HTTP call (`HttpRequest.newBuilder(...)`/Spring `RestTemplate`/OkHttp's `Request.Builder`) whose URL/host argument traces back (within the same method, one direct hop) to an untrusted Spring MVC/JAX-RS controller parameter, with no allowlist validation found in the same method -- CWE-918, Server-Side Request Forgery.",
+      "why": "An attacker uses the server itself as a proxy toward internal resources -- cloud metadata endpoints, internal services with no perimeter authentication. This category has a dedicated CodeQL query and a dedicated AWS CodeGuru Detector Library detector; no Marketplace plugin found doing it as an inline IDE inspection.",
+      "niche": "SSRF Detection",
+      "githubUrl": "https://github.com/GapHunterLabs/ssrf-unsanitized-url-companion",
+      "firstPublished": "2026-09-02"
+    },
+    "unsafe-deserialization-sink-companion": {
+      "xmlId": "dev.gaphunter.unsafedeserializationsinkcompanion",
+      "name": "Unsafe Deserialization Sink Companion",
+      "pitch": "Warning on a `new ObjectInputStream(...).readObject()` call inside a Spring MVC/JAX-RS endpoint method whose constructor argument traces back (within the same method, one direct hop) to an untrusted parameter -- CWE-502, Deserialization of Untrusted Data.",
+      "why": "One of the most-cited OWASP Top 10 categories for Java, and a real path to remote code execution via gadget chains. CodeQL covers this exact source-to-sink category as a batch/CI query; no dedicated Marketplace plugin does it as an inline IDE inspection.",
+      "niche": "Deserialization Security",
+      "githubUrl": "https://github.com/GapHunterLabs/unsafe-deserialization-sink-companion",
+      "firstPublished": "2026-09-02"
+    },
+    "kafka-premature-offset-commit-companion": {
+      "xmlId": "dev.gaphunter.kafkaprematureoffsetcommitcompanion",
+      "name": "Kafka Premature Offset Commit Companion",
+      "pitch": "Warning on a Kafka consumer poll-loop (`while (true) { ... poll(...) ... }`) that dispatches asynchronous work (`ExecutorService.submit(...)`, `CompletableFuture.runAsync(...)`/`.supplyAsync(...)`) without waiting for it to finish BEFORE the consumer commits offsets -- either explicitly (`commitSync()`/`commitAsync()` called right there) or implicitly (no manual commit at all, relying on Kafka's o",
+      "why": "If the consumer crashes between the commit and the real completion of that work, the message is lost silently -- no error, no retry, nothing visible. Extensively documented as a real, common Kafka consumer bug (Medium, Conduktor, official offset-management guides); no Marketplace plugin found dedicated to this.",
+      "niche": "Kafka / Messaging Bugs",
+      "githubUrl": "https://github.com/GapHunterLabs/kafka-premature-offset-commit-companion",
+      "firstPublished": "2026-09-02"
+    },
+    "retry-backoff-jitter-companion": {
+      "xmlId": "dev.gaphunter.retrybackoffjittercompanion",
+      "name": "Retry Without Backoff+Jitter Companion",
+      "pitch": "Warning on a retry mechanism with a FIXED interval between attempts instead of exponential backoff + jitter: a manual `for`/`while` retry loop that `Thread.sleep(constant)`s in its `catch`, Spring `@Retryable` with no real exponential `@Backoff`, or Resilience4j's `RetryConfig` built with a fixed `.waitDuration(...)` and no `.intervalFunction(...)`.",
+      "why": "The \"thundering herd\" anti-pattern -- synchronized retries from multiple instances of a service saturate the downstream exactly at the same instant, documented in distributed-systems literature (AWS Architecture Blog, Google SRE Book) as a real cause of cascading availability incidents. JOptimize (Marketplace, confirmed) flags only the ABSENCE of any retry on an HTTP call -- this is a deeper granularity: the QUALITY of a retry mechanism that already exists.",
+      "niche": "Resilience Tooling",
+      "githubUrl": "https://github.com/GapHunterLabs/retry-backoff-jitter-companion",
+      "firstPublished": "2026-09-02"
+    },
+    "enum-ordinal-persistence-companion": {
+      "xmlId": "dev.gaphunter.enumordinalpersistencecompanion",
+      "name": "Enum-Ordinal Persistence Companion",
+      "pitch": "Warning on a JPA `@Enumerated` field with no explicit `EnumType.STRING`, on a real `@Entity` class -- JPA's own default is `ORDINAL`.",
+      "why": "Reordering or inserting a value in the middle of the enum after data has already been persisted silently corrupts existing records (the stored ordinal no longer corresponds to the same constant) -- a well-documented fragility (Baeldung and official JPA persistence guides). No Marketplace plugin found that flags it, despite several enum-tooling plugins existing.",
+      "niche": "JPA / ORM Pitfalls",
+      "githubUrl": "https://github.com/GapHunterLabs/enum-ordinal-persistence-companion",
+      "firstPublished": "2026-09-02"
+    },
+    "integer-overflow-widening-companion": {
+      "xmlId": "dev.gaphunter.integeroverflowwideningcompanion",
+      "name": "Integer-Overflow-on-Widening Companion",
+      "pitch": "Warning on an `int * int`/`int + int` expression assigned/passed directly to a `long`-typed destination (a local variable's initializer, an assignment, a method parameter, or a method return) with no widening cast on either operand.",
+      "why": "CWE-190 (Integer Overflow or Wraparound) -- the operation happens in 32-bit `int` arithmetic FIRST, silently truncating the result (often to a negative value) before the already-wrong value is widened to `long`. Integer overflow analysis for Java has few dedicated tooling options in general; this narrow, syntactically unambiguous form has no dedicated Marketplace plugin found.",
+      "niche": "Numeric Safety",
+      "githubUrl": "https://github.com/GapHunterLabs/integer-overflow-widening-companion",
+      "firstPublished": "2026-09-02"
+    },
+    "grpc-missing-deadline-companion": {
+      "xmlId": "dev.gaphunter.grpcmissingdeadlinecompanion",
+      "name": "gRPC Missing Deadline Companion",
+      "pitch": "Warning on an RPC call made through a generated gRPC blocking stub (`XxxGrpc.newBlockingStub(channel)....call(request)`) whose stub-construction chain never passes through `.withDeadline(...)`/`.withDeadlineAfter(...)`.",
+      "why": "gRPC's own documentation states plainly that \"by default, gRPC does not set a deadline... a client can end up waiting for a response effectively forever\" -- a slow or unreachable downstream service hangs the caller's thread indefinitely, propagating failures in cascade. The official gRPC Marketplace plugin gives protobuf/RPC execution support, not a correctness check for deadlines; no Marketplace plugin found dedicated to this.",
+      "niche": "gRPC Tooling",
+      "githubUrl": "https://github.com/GapHunterLabs/grpc-missing-deadline-companion",
+      "firstPublished": "2026-09-02"
+    },
+    "redis-lock-missing-ttl-companion": {
+      "xmlId": "dev.gaphunter.redislockmissingttlcompanion",
+      "name": "Redis/Redisson Distributed Lock Missing TTL Companion",
+      "pitch": "Warning on a `SET ... NX` call (Jedis's `SetParams.nx()`/Lettuce's `SetArgs.Builder.nx()` manual distributed-lock pattern) with no `EX`/`PX` expiry chained onto the same builder.",
+      "why": "A lock acquired this way never expires on its own if the process holding it crashes before releasing it, permanently blocking the resource for every other caller -- a documented risk in Redisson's own distributed-lock guide.",
+      "niche": "Distributed Locking",
+      "githubUrl": "https://github.com/GapHunterLabs/redis-lock-missing-ttl-companion",
+      "firstPublished": "2026-09-02"
+    },
+    "dockerfile-missing-user-companion": {
+      "xmlId": "dev.gaphunter.dockerfilemissingusercompanion",
+      "name": "Dockerfile Missing USER Instruction Companion",
+      "pitch": "Warning when a Dockerfile's FINAL build stage never sets a non-root `USER` -- Docker runs a container as root by default when `USER` is absent.",
+      "why": "A real risk documented explicitly by Docker's own guide for the instruction: container escape/privilege escalation if a volume mount is misconfigured. Confirmed with the strongest evidence available: an open issue in hadolint's own repository (`hadolint/hadolint#1089`) asking for exactly this rule, unresolved -- not even the standard Dockerfile CLI linter has it implemented yet.",
+      "niche": "Docker / DevOps",
+      "githubUrl": "https://github.com/GapHunterLabs/dockerfile-missing-user-companion",
+      "firstPublished": "2026-09-02"
+    },
+    "terraform-iam-wildcard-companion": {
+      "xmlId": "dev.gaphunter.terraformiamwildcardcompanion",
+      "name": "Terraform IAM Wildcard Companion",
+      "pitch": "Warning on an IAM policy statement (inside a Terraform `aws_iam_policy`/`aws_iam_role_policy` resource's `jsonencode({...})` block) whose `Action` or `Resource` is `\"*\"` with no `Condition` scoping it down.",
+      "why": "A direct violation of least-privilege, documented as a dedicated check by tfsec (`no-policy-wildcards`) and Tenable -- a real vector for privilege escalation in cloud incidents. tfsec/Policy Sentry are external CLI tools; no dedicated Marketplace plugin does this as an inline IDE inspection.",
+      "niche": "IAM / Cloud Security",
+      "githubUrl": "https://github.com/GapHunterLabs/terraform-iam-wildcard-companion",
+      "firstPublished": "2026-09-02"
+    },
+    "kubernetes-rbac-wildcard-companion": {
+      "xmlId": "dev.gaphunter.kubernetesrbacwildcardcompanion",
+      "name": "Kubernetes RBAC Wildcard Companion",
+      "pitch": "Warning on a `Role`/`ClusterRole` rule that combines a wildcard (`\"*\"`) in `verbs` or `resources` with a sensitive resource — `secrets`, `pods/exec`, `clusterrolebindings`. This is the most common path to privilege escalation after a single pod is compromised in a cluster (OWASP Kubernetes Top 10, K03 — Overly Permissive RBAC Configurations).",
+      "why": "RBAC manifests are hand-written YAML with no compiler and no built-in warning for an overly broad grant — `resources: [\"*\"]` or `verbs: [\"*\"]` next to `secrets`/`pods/exec`/`clusterrolebindings` is valid, deploys cleanly, and silently hands out cluster-wide privilege-escalation potential. The \"Kubernetes Control Center\" plugin on Marketplace covers 5 other manifest checkers (RunAsNonRoot, ReadOnlyRootFilesystem, PrivilegeEscalation, HostNamespace, DockerSock) but RBAC is confirmed absent from its published checker list.",
+      "niche": "Kubernetes Security",
+      "githubUrl": "https://github.com/GapHunterLabs/kubernetes-rbac-wildcard-companion",
+      "firstPublished": "2026-09-02"
+    },
+    "deadlock-lock-order-companion": {
+      "xmlId": "dev.gaphunter.deadlocklockordercompanion",
+      "name": "Deadlock Lock-Order Companion",
+      "pitch": "IntelliJ-family plugin. Flags a real lock acquisition-order cycle inside a single Java class -- the classic static-deadlock shape -- before it ever happens at runtime.",
+      "why": "Static deadlock detection via a lock-order graph and cycle search is well-established research (MIT/ECOOP 2005 \"Static Deadlock Detection for Java Libraries\"; refined for scale by Peahen, FSE 2022), but no dedicated JetBrains Marketplace plugin was found doing this ahead of time, inline, as you write code. IntelliJ IDEA's own tooling only shows a deadlock *after* it happens, via thread dumps of a running or hung process (Help > Diagnostic Tools > Analyze/Capture Thread Dump). There is no built-in or third-party static check that a lock-order cycle exists in your own code before you ever run it",
+      "niche": "Concurrency / Async Bugs",
+      "githubUrl": "https://github.com/GapHunterLabs/deadlock-lock-order-companion",
+      "firstPublished": "2026-09-02"
+    },
+    "jwt-webhook-timing-safe-companion": {
+      "xmlId": "dev.gaphunter.jwtwebhooktimingsafecompanion",
+      "name": "JWT Webhook Signature Timing-Safe Comparison Companion",
+      "pitch": "Warning on a webhook/HMAC signature comparison that uses `.equals()`/ `Arrays.equals()` (short-circuits on the first differing byte) instead of `MessageDigest.isEqual(...)` (constant-time). An attacker can reconstruct a valid HMAC signature byte-by-byte by measuring response times, forging webhook events.",
+      "why": "CWE-208 (Observable Timing Discrepancy) -- a documented, well-known vulnerability pattern (Svix, Stripe-style HMAC guides, OWASP all cover it explicitly). `webhook-signature-companion` (this catalog) verifies that a signature-verification mechanism exists at all; this plugin checks a different, deeper angle -- whether the comparison itself is actually constant-time.",
+      "niche": "API Security",
+      "githubUrl": "https://github.com/GapHunterLabs/jwt-webhook-timing-safe-companion",
+      "firstPublished": "2026-09-02"
+    },
+    "module-boundary-leak-companion": {
+      "xmlId": "dev.gaphunter.moduleboundaryleakcompanion",
+      "name": "Module Boundary Leak Companion",
+      "pitch": "Warning on an `import` of an `internal` package (project convention: a `.internal.` segment in the package path) from a DIFFERENT Gradle/Maven module than the one that declares it -- hidden architecture coupling that, in large monorepos/microservices, precedes cascading-deployment incidents.",
+      "why": "A module's \"private\" internals changing and breaking an undeclared consumer that should never have had access is a well-known source of cascading-deployment failures in multi-module projects. The bundled Package Checker analyzes CVEs of declared dependencies, not internal module architecture; no dedicated Marketplace plugin for this specific check was found.",
+      "niche": "Build Tooling / Architecture",
+      "githubUrl": "https://github.com/GapHunterLabs/module-boundary-leak-companion",
+      "firstPublished": "2026-09-02"
+    },
+    "aws-s3-public-acl-sdk-companion": {
+      "xmlId": "dev.gaphunter.awss3publicaclsdkcompanion",
+      "name": "AWS S3 Public ACL via SDK Companion",
+      "pitch": "Warning on a real AWS SDK for Java call (application code, not infrastructure-as-code) that sets a PUBLIC ACL on an S3 bucket or object: SDK 1.x's `AmazonS3.setBucketAcl(bucket, CannedAccessControlList.PublicRead)`/`PutObjectRequest.withCannedAcl(...)`/ `.setCannedAcl(...)`, and SDK 2.x's fluent `.acl(ObjectCannedACL.PUBLIC_READ)`/`.acl(\"public-read\")`.",
+      "why": "Public exposure of data via application code, not just infrastructure configuration -- a category with its own dedicated detector in the AWS CodeGuru Detector Library (a real reference for the mechanism, not a competing IDE product). Different angle from IaC-level S3 misconfig, already covered by CLI tools like Checkov/tfsec; no dedicated Marketplace plugin found for this specific application-code category.",
+      "niche": "AWS Security",
+      "githubUrl": "https://github.com/GapHunterLabs/aws-s3-public-acl-sdk-companion",
+      "firstPublished": "2026-09-02"
+    },
+    "redos-catastrophic-backtracking-companion": {
+      "xmlId": "dev.gaphunter.redoscatastrophicbacktrackingcompanion",
+      "name": "ReDoS Catastrophic-Backtracking Companion",
+      "pitch": "Warning on a `Pattern.compile(\"...\")`/`\"...\".matches(\"...\")` call in Java whose literal regex argument has a structural catastrophic-backtracking pattern: a nested unbounded quantifier (`(a+)+`), or an unbounded-quantified alternation with overlapping branches (`(a|a)*`). A single crafted input against either pattern can hang a server thread indefinitely.",
+      "why": "CWE-400 (Uncontrolled Resource Consumption) via Regular Expression Denial of Service — a regex compiled from a plain string literal with one of these two well-documented structural shapes turns a single HTTP request with a crafted input into an indefinite hang on whatever thread runs it. Standalone academic tooling (RegexStaticAnalysis) and a SonarQube rule cover this category; no dedicated plugin was found on the JetBrains Marketplace across two search passes (short name + descriptive phrase).",
+      "niche": "ReDoS Detection",
+      "githubUrl": "https://github.com/GapHunterLabs/redos-catastrophic-backtracking-companion",
+      "firstPublished": "2026-09-02"
     }
   }
 }

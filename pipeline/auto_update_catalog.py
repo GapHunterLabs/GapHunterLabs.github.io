@@ -482,10 +482,13 @@ def main():
     # reemplazos anclados por el ID real del elemento (nunca un regex
     # generico "43 plugins" suelto, que podria matchear texto no
     # relacionado en el futuro si el copy cambia).
+    # 2026-09-02: topbarStatusText dropped from this list -- the hero/
+    # topbar rework removed that element entirely (no replacement, the
+    # topbar no longer carries a live plugin count). Confirmed absent
+    # via grep before removing the swap, not assumed. heroSubtitle and
+    # footerStatusText are unchanged and still real elements.
     total = len(rows)
     swaps = [
-        (re.compile(r'(<span id="topbarStatusText">)\d+( plugins</span>)'),
-         r"\g<1>%d\g<2>" % total),
         (re.compile(r'(id="heroSubtitle">Real state of the )\d+(-plugin catalog)'),
          r"\g<1>%d\g<2>" % total),
         (re.compile(r'(<span id="footerStatusText">)\d+( plugins tracked</span>)'),
@@ -498,7 +501,7 @@ def main():
     if swap_count != len(swaps):
         sys.exit(
             "[auto_update] ERROR: se esperaban %d swaps de literales estaticos "
-            "(topbarStatusText/heroSubtitle/footerStatusText), se aplicaron %d -- "
+            "(heroSubtitle/footerStatusText), se aplicaron %d -- "
             "el markup de index.html probablemente cambio de forma incompatible "
             "con estos regex. Abortando antes de escribir a disco." % (len(swaps), swap_count)
         )

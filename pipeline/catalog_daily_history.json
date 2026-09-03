@@ -2889,6 +2889,9 @@
         "dev.gaphunter.asyncapicompanion": {
           "downloads": 67
         },
+        "dev.gaphunter.awss3publicaclsdkcompanion": {
+          "downloads": 0
+        },
         "dev.gaphunter.awssdkclientreusecompanion": {
           "downloads": 17
         },
@@ -2897,6 +2900,9 @@
         },
         "dev.gaphunter.bindingresultpositioncompanion": {
           "downloads": 9
+        },
+        "dev.gaphunter.cacheinvalidationcompanion": {
+          "downloads": 0
         },
         "dev.gaphunter.cassandracqlsessionreusecompanion": {
           "downloads": 10
@@ -2919,6 +2925,9 @@
         "dev.gaphunter.commitmessageconventioncompanion": {
           "downloads": 15
         },
+        "dev.gaphunter.completablefuturecancellationcompanion": {
+          "downloads": 0
+        },
         "dev.gaphunter.configsecretsfilecompanion": {
           "downloads": 12
         },
@@ -2931,8 +2940,14 @@
         "dev.gaphunter.corspolicycompanion": {
           "downloads": 36
         },
+        "dev.gaphunter.deadlocklockordercompanion": {
+          "downloads": 0
+        },
         "dev.gaphunter.dockerfilelayersizecompanion": {
           "downloads": 30
+        },
+        "dev.gaphunter.dockerfilemissingusercompanion": {
+          "downloads": 0
         },
         "dev.gaphunter.dockerfileunusedstagecompanion": {
           "downloads": 15
@@ -2940,14 +2955,23 @@
         "dev.gaphunter.elasticsearchclientreusecompanion": {
           "downloads": 9
         },
+        "dev.gaphunter.enumordinalpersistencecompanion": {
+          "downloads": 0
+        },
         "dev.gaphunter.envdiffcompanion": {
           "downloads": 26
         },
         "dev.gaphunter.envvarmissingcompanion": {
           "downloads": 44
         },
+        "dev.gaphunter.environmentspecificconstantcompanion": {
+          "downloads": 0
+        },
         "dev.gaphunter.errorlenscompanion": {
           "downloads": 29
+        },
+        "dev.gaphunter.exceptionescapechaincompanion": {
+          "downloads": 0
         },
         "dev.gaphunter.featureflagreferencecompanion": {
           "downloads": 32
@@ -2985,6 +3009,9 @@
         "dev.gaphunter.grpcerrorstatuscompanion": {
           "downloads": 10
         },
+        "dev.gaphunter.grpcmissingdeadlinecompanion": {
+          "downloads": 0
+        },
         "dev.gaphunter.grpcstreamobservercontractcompanion": {
           "downloads": 9
         },
@@ -2999,6 +3026,9 @@
         },
         "dev.gaphunter.importcostcompanion": {
           "downloads": 27
+        },
+        "dev.gaphunter.integeroverflowwideningcompanion": {
+          "downloads": 0
         },
         "dev.gaphunter.jenkinsfilecompanion": {
           "downloads": 56
@@ -3018,11 +3048,20 @@
         "dev.gaphunter.jwtsignatureverificationcompanion": {
           "downloads": 11
         },
+        "dev.gaphunter.jwtwebhooktimingsafecompanion": {
+          "downloads": 0
+        },
         "dev.gaphunter.k6companion": {
           "downloads": 73
         },
+        "dev.gaphunter.k8sreadinesslivenessprobecompanion": {
+          "downloads": 0
+        },
         "dev.gaphunter.k8sresourcelimitcompanion": {
           "downloads": 15
+        },
+        "dev.gaphunter.kafkaprematureoffsetcommitcompanion": {
+          "downloads": 0
         },
         "dev.gaphunter.kafkaproducerreusecompanion": {
           "downloads": 11
@@ -3032,6 +3071,9 @@
         },
         "dev.gaphunter.ktorhttpclientreusecompanion": {
           "downloads": 11
+        },
+        "dev.gaphunter.kubernetesrbacwildcardcompanion": {
+          "downloads": 0
         },
         "dev.gaphunter.logformatstringcompanion": {
           "downloads": 41
@@ -3050,6 +3092,9 @@
         },
         "dev.gaphunter.micronauthttpclientcreatecompanion": {
           "downloads": 9
+        },
+        "dev.gaphunter.moduleboundaryleakcompanion": {
+          "downloads": 0
         },
         "dev.gaphunter.mongoclientreusecompanion": {
           "downloads": 9
@@ -3096,6 +3141,9 @@
         "dev.gaphunter.piifieldannotationcompanion": {
           "downloads": 10
         },
+        "dev.gaphunter.piitostringleakcompanion": {
+          "downloads": 0
+        },
         "dev.gaphunter.postmanopenapidriftcompanion": {
           "downloads": 18
         },
@@ -3117,8 +3165,14 @@
         "dev.gaphunter.reactnativecompanion": {
           "downloads": 220
         },
+        "dev.gaphunter.redislockmissingttlcompanion": {
+          "downloads": 0
+        },
         "dev.gaphunter.redissonclientreusecompanion": {
           "downloads": 9
+        },
+        "dev.gaphunter.redoscatastrophicbacktrackingcompanion": {
+          "downloads": 0
         },
         "dev.gaphunter.refactorsimulator": {
           "downloads": 73
@@ -3131,6 +3185,9 @@
         },
         "dev.gaphunter.resilienceselfinvocationcompanion": {
           "downloads": 9
+        },
+        "dev.gaphunter.retrybackoffjittercompanion": {
+          "downloads": 0
         },
         "dev.gaphunter.reviewcompanion": {
           "downloads": 41
@@ -3156,6 +3213,12 @@
         "dev.gaphunter.sqlconcatenationcompanion": {
           "downloads": 69
         },
+        "dev.gaphunter.ssrfunsanitizedurlcompanion": {
+          "downloads": 0
+        },
+        "dev.gaphunter.terraformiamwildcardcompanion": {
+          "downloads": 0
+        },
         "dev.gaphunter.testscaffoldcompanion": {
           "downloads": 31
         },
@@ -3164,6 +3227,9 @@
         },
         "dev.gaphunter.turbologcompanion": {
           "downloads": 22
+        },
+        "dev.gaphunter.unsafedeserializationsinkcompanion": {
+          "downloads": 0
         },
         "dev.gaphunter.unusednpmscriptcompanion": {
           "downloads": 39
