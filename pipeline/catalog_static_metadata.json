@@ -1,6 +1,6 @@
 {
   "_comment": "Metadatos FIJOS por plugin (pitch/why/niche/xmlId) -- NO se regeneran automaticamente por el workflow diario, que solo trae metricas en vivo (descargas/reviews/stars/pricing). Si el pitch/why/niche de un plugin cambia, re-generar este archivo a mano corriendo el snippet documentado en README_AUTO_UPDATE.md del mismo directorio.",
-  "generatedAt": "2026-09-03 20:15:09 UTC",
+  "generatedAt": "2026-09-03 20:24:55 UTC",
   "plugins": {
     "ansible-companion": {
       "xmlId": "dev.gaphunter.ansiblecompanion",
