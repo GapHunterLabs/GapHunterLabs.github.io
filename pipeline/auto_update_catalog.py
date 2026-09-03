@@ -349,7 +349,17 @@ def main():
             continue
 
         numeric_id = p.get("id")
-        downloads = p.get("downloads")
+        # -1, floored at 0: JetBrains' own review/approval step
+        # registers exactly 1 phantom download per plugin (their team
+        # installing it once during manual review), counted in the raw
+        # API `downloads` figure from day one -- confirmed real by the
+        # user 2026-09-03, consistent with many freshly-approved
+        # plugins in this catalog sitting at exactly 1 raw download
+        # with zero real users yet. Never applied retroactively to
+        # already-recorded history snapshots (catalog_daily_history.json)
+        # -- only the live figure going forward.
+        raw_downloads = p.get("downloads")
+        downloads = max(0, raw_downloads - 1) if raw_downloads is not None else None
         pricing = p.get("pricingModel")
         reviews, rating = fetch_reviews(numeric_id)
         stars = github_stars(repo)
