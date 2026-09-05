@@ -17,10 +17,11 @@ transcribe literally.
 
 ## Hard constraints — read before writing any copy
 
-- **Never** name any internal process, pipeline stage, or document by name
-  anywhere in code comments or visible copy — no "Workstream 1/2/3/4", no
-  internal script names, no internal doc names (`CONSTITUTION.md`,
-  `ARCHITECTURE.md`, etc.).
+- **Never** name any internal process, pipeline stage, script, or
+  governance document anywhere in code comments or visible copy — no
+  "Workstream 1/2/3/4", no internal script names, no filename that isn't
+  part of this public repo's own visible structure. If you're not sure
+  whether a name counts as internal, leave it out.
 - **Never** publish a case study, finding, or story about a third party's
   repo, org, or exposed secret — anonymized or not. The only real-world
   "finding" content allowed on this site is the Background ReadAction
