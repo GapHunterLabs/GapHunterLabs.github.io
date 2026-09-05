@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Contact Gap Hunter Labs. Plugin support, catalog questions, and partnerships — via GitHub, JetBrains Marketplace, email, and LinkedIn.">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://gc.zgo.at; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; manifest-src 'self'; connect-src https://gaphunterlabs.goatcounter.com; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
+<meta name="theme-color" content="#090D16">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%201024%201024%22%20width%3D%22100%25%22%20height%3D%22100%25%22%3E%20%3Crect%20width%3D%221024%22%20height%3D%221024%22%20fill%3D%22%23FFFFFF%22/%3E%20%3Cpath%20d%3D%22%20M%20511%2C81%20L%20847%2C283%20L%20725%2C351%20L%20508%2C223%20L%20296%2C348%20L%20296%2C588%20L%20463%2C691%20L%20342%2C765%20L%20173%2C665%20L%20172%2C281%20Z%22%20fill%3D%22%230151FC%22%20/%3E%20%3Cpath%20d%3D%22%20M%20846%2C412%20L%20844%2C668%20L%20518%2C863%20L%20393%2C795%20L%20724%2C589%20L%20721%2C540%20L%20567%2C538%20L%20568%2C412%20Z%22%20fill%3D%22%2301B3FD%22%20/%3E%20%3Cpolygon%20points%3D%22569%2C413%20695%2C413%20695%2C539%20569%2C539%22%20fill%3D%22%2302F172%22%20/%3E%20%3C/svg%3E">
+<link rel="canonical" href="https://gaphunterlabs.github.io/contact.html">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="preconnect" href="https://gc.zgo.at" crossorigin>
+<link rel="preconnect" href="https://gaphunterlabs.goatcounter.com" crossorigin>
+<title>Contact — Gap Hunter Labs</title>
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Gap Hunter Labs">
+<meta property="og:url" content="https://gaphunterlabs.github.io/contact.html">
+<meta property="og:title" content="Contact — Gap Hunter Labs">
+<meta property="og:description" content="Contact Gap Hunter Labs. Plugin support, catalog questions, and partnerships — via GitHub, JetBrains Marketplace, email, and LinkedIn.">
+<meta property="og:image" content="https://gaphunterlabs.github.io/og-image.png">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Contact — Gap Hunter Labs">
+<meta name="twitter:description" content="Contact Gap Hunter Labs. Plugin support, catalog questions, and partnerships — via GitHub, JetBrains Marketplace, email, and LinkedIn.">
+<meta name="twitter:image" content="https://gaphunterlabs.github.io/og-image.png">
+<style>
+  @font-face {
+    font-family: "IBM Plex Sans";
+    src: url("fonts/IBMPlexSans-Variable.ttf") format("truetype");
+    font-weight: 100 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "JetBrains Mono";
+    src: url("fonts/JetBrainsMono-Variable.ttf") format("truetype");
+    font-weight: 100 800;
+    font-style: normal;
+    font-display: swap;
+  }
+  :root {
+    --bg: #090D16;
+    --surface: #111726;
+    --surface-2: #1A2235;
+    --border: #29334A;
+    --text: #E9EDF8;
+    --text-dim: #9AA6C4;
+    --text-faint: #8894B8;
+    --accent: #3FA2FF;
+    --good: #02F172;
+    --cyan: #01B3FD;
+    --mono: "JetBrains Mono", ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    --sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --page-max: 1280px;
+    --page-pad: 24px;
+    --section-gap: 20px;
+  }
+  * { box-sizing: border-box; }
+  html { scrollbar-color: var(--border) var(--bg); scrollbar-width: thin; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg);
+    background-image:
+      radial-gradient(ellipse 1200px 640px at 50% 0%, rgba(63,162,255,0.07), transparent 60%),
+      radial-gradient(var(--border) 1px, transparent 1.6px);
+    background-size: auto, 34px 34px;
+    background-repeat: no-repeat, repeat;
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); }
+  a:hover { color: var(--text); }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: rgba(9,13,22,0.94);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .topbar::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: -1px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), var(--cyan), var(--good), transparent);
+    opacity: 0.55;
+  }
+  .topbar-inner {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    padding: 0 var(--page-pad);
+    height: 56px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+  }
+  .topbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-self: start;
+    min-width: 0;
+    text-decoration: none;
+    color: inherit;
+    border-radius: 8px;
+  }
+  .topbar-brand:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .topbar-mark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 32px;
+    height: 32px;
+  }
+  .topbar-mark svg { width: 32px; height: 32px; display: block; }
+  .topbar-wordmark {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+  }
+  .tw-name {
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1.15;
+    white-space: nowrap;
+  }
+  .tw-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    line-height: 1.2;
+  }
+  .topbar-nav {
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    gap: 0;
+    flex: none;
+    padding: 3px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .topbar-link {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--text-faint);
+    text-decoration: none;
+    padding: 7px 14px;
+    border-radius: 7px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+  .topbar-link:hover {
+    color: var(--text);
+    background: var(--surface-2);
+  }
+  .topbar-link.active {
+    color: var(--text);
+    background: var(--surface-2);
+  }
+  .topbar-link:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .topbar-actions {
+    display: flex;
+    align-items: center;
+    justify-self: end;
+    gap: 8px;
+    min-width: 0;
+  }
+  .topbar-ext {
+    display: flex;
+    align-items: stretch;
+    height: 36px;
+    flex: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .topbar-ext-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 0 12px;
+    border-left: 1px solid var(--border);
+    background: transparent;
+  }
+  .topbar-ext-link:first-child { border-left: 0; }
+  .topbar-ext-link:hover {
+    color: var(--text);
+    background: var(--surface-2);
+  }
+  .topbar-ext-link:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+    color: var(--text);
+  }
+  .topbar-ext-link svg { width: 15px; height: 15px; flex: none; }
+  .topbar-burger {
+    display: none;
+    flex: none;
+    width: 44px;
+    height: auto;
+    align-self: stretch;
+    border-radius: 0;
+    border: 0;
+    border-left: 1px solid var(--border);
+    background: transparent;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .topbar-burger:hover { background: var(--surface-2); }
+  .topbar-burger:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+  }
+  .topbar-burger span,
+  .topbar-burger::before,
+  .topbar-burger::after {
+    content: "";
+    display: block;
+    width: 16px;
+    height: 1.85px;
+    background: var(--text-dim);
+    position: relative;
+  }
+  .topbar-burger::before { position: absolute; transform: translateY(-5.75px); }
+  .topbar-burger::after { position: absolute; transform: translateY(5.75px); }
+  .topbar.nav-open .topbar-burger span { opacity: 0; }
+  .topbar.nav-open .topbar-burger::before { transform: translateY(0) rotate(45deg); }
+  .topbar.nav-open .topbar-burger::after { transform: translateY(0) rotate(-45deg); }
+
+  @media (max-width: 900px) {
+    .tw-tag { display: none; }
+    .topbar-ext-label { display: none; }
+    .topbar-ext { height: 44px; }
+    .topbar-ext-link { min-width: 44px; padding: 0 12px; }
+  }
+  @media (max-width: 840px) {
+    .topbar-inner {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+    }
+    .topbar-nav { display: none; }
+    .topbar-burger { display: flex; }
+    .topbar.nav-open .topbar-nav {
+      display: flex;
+      position: absolute;
+      top: 56px; left: 0; right: 0;
+      flex-direction: column;
+      align-items: stretch;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      border-radius: 0;
+      padding: 6px;
+      gap: 2px;
+    }
+    .topbar.nav-open .topbar-link { padding: 12px 14px; }
+  }
+
+  .contact-main {
+    flex: 1;
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 40px var(--page-pad) 56px;
+  }
+  .contact-kicker {
+    margin: 0 0 8px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+  .contact-main h1 {
+    margin: 0 0 16px;
+    font-size: 32px;
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  .contact-lead {
+    margin: 0 0 36px;
+    font-size: 17px;
+    color: var(--text-dim);
+    line-height: 1.65;
+  }
+  .contact-section {
+    margin: 0 0 32px;
+    padding: 0;
+    border: 0;
+  }
+  .contact-section h2 {
+    margin: 0 0 10px;
+    font-size: 18px;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+  }
+  .contact-section p,
+  .contact-section li {
+    color: var(--text-dim);
+    line-height: 1.65;
+  }
+  .contact-section p { margin: 0 0 10px; }
+  .contact-section ul {
+    margin: 0;
+    padding-left: 1.2em;
+  }
+  .contact-section li { margin: 0 0 8px; }
+  .contact-section li:last-child { margin-bottom: 0; }
+  .channel-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .channel-list li {
+    margin: 0;
+    padding: 14px 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--text-dim);
+  }
+  .channel-list strong {
+    display: block;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .back-link {
+    display: inline-block;
+    margin-top: 8px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .back-link:hover { text-decoration: underline; }
+
+  .brand-mark {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+  }
+  .brand-mark svg { width: 19px; height: 19px; }
+
+  .site-footer {
+    margin-top: auto;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .footer-inner {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    padding: 36px var(--page-pad) 28px;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.75fr) minmax(0, 0.9fr);
+    gap: 40px 48px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+  .footer-brand { max-width: 400px; }
+  .footer-brand-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .footer-brand-name {
+    font-weight: 650;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+  }
+  .footer-brand-tagline {
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--text-faint);
+    margin-top: 2px;
+  }
+  .footer-brand p {
+    margin: 14px 0 0;
+    font-size: 13.5px;
+    color: var(--text-dim);
+    line-height: 1.65;
+  }
+  .footer-col-title {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 12px;
+  }
+  .footer-nav { display: flex; flex-direction: column; gap: 2px; }
+  .footer-nav a {
+    display: block;
+    font-size: 14px;
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 6px 0;
+    border-radius: 4px;
+  }
+  .footer-nav a:hover { color: var(--text); }
+  .footer-nav a:focus-visible {
+    color: var(--text);
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .footer-elsewhere { display: flex; flex-direction: column; gap: 2px; }
+  .fe-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 6px 0;
+    border-radius: 4px;
+  }
+  .fe-link svg { width: 15px; height: 15px; flex: none; opacity: 0.85; }
+  .fe-link:hover { color: var(--text); }
+  .fe-link:focus-visible {
+    color: var(--text);
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .footer-bottom {
+    margin-top: 18px;
+    font-size: 12.5px;
+    color: var(--text-faint);
+    line-height: 1.5;
+  }
+  @media (max-width: 760px) {
+    .footer-grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-areas: "brand brand" "nav elsewhere";
+      gap: 28px 24px;
+    }
+    .footer-brand { grid-area: brand; max-width: none; }
+    .footer-nav { grid-area: nav; }
+    .footer-elsewhere { grid-area: elsewhere; }
+    .contact-main { padding-top: 28px; }
+    .contact-main h1 { font-size: 26px; }
+  }
+  @media (max-width: 640px) {
+    .footer-grid {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: "brand" "nav" "elsewhere";
+    }
+  }
+</style>
+</head>
+<body>
+<nav class="topbar" id="topbar">
+  <div class="topbar-inner">
+    <a class="topbar-brand" href="index.html" aria-label="Gap Hunter Labs catalog">
+      <span class="topbar-mark" aria-hidden="true">
+        <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#0151FC"/>
+          <path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z" fill="#01B3FD"/>
+          <polygon points="569,413 695,413 695,539 569,539" fill="#02F172"/>
+        </svg>
+      </span>
+      <span class="topbar-wordmark">
+        <span class="tw-name">Gap Hunter Labs</span>
+        <span class="tw-tag">Plugin Intelligence</span>
+      </span>
+    </a>
+    <div class="topbar-nav" id="topbarNav">
+      <a class="topbar-link" href="index.html">Catalog</a>
+      <a class="topbar-link" href="index.html#methodology">Methodology</a>
+      <a class="topbar-link active" href="contact.html" aria-current="page">Contact</a>
+    </div>
+    <div class="topbar-actions">
+      <div class="topbar-ext">
+        <a class="topbar-ext-link" href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" target="_blank" rel="noopener" aria-label="JetBrains Marketplace" title="Gap Hunter Labs on JetBrains Marketplace">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2.345 23.997A2.347 2.347 0 0 1 0 21.652V10.988C0 9.665.535 8.37 1.473 7.433l5.965-5.961A5.01 5.01 0 0 1 10.989 0h10.666A2.347 2.347 0 0 1 24 2.345v10.664a5.056 5.056 0 0 1-1.473 3.554l-5.965 5.965A5.017 5.017 0 0 1 13.007 24v-.003H2.345Zm8.969-6.854H5.486v1.371h5.828v-1.371ZM3.963 6.514h13.523v13.519l4.257-4.257a3.936 3.936 0 0 0 1.146-2.767V2.345c0-.678-.552-1.234-1.234-1.234H10.989a3.897 3.897 0 0 0-2.767 1.145L3.963 6.514Zm-.192.192L2.256 8.22a3.944 3.944 0 0 0-1.145 2.768v10.664c0 .678.552 1.234 1.234 1.234h10.666a3.9 3.9 0 0 0 2.767-1.146l1.512-1.511H3.771V6.706Z"/></svg>
+          <span class="topbar-ext-label">JetBrains</span>
+        </a>
+        <a class="topbar-ext-link" href="https://github.com/GapHunterLabs" target="_blank" rel="noopener" aria-label="GitHub" title="Gap Hunter Labs on GitHub">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          <span class="topbar-ext-label">GitHub</span>
+        </a>
+        <button type="button" class="topbar-burger" id="topbarBurger" aria-label="Toggle navigation" aria-expanded="false" aria-controls="topbarNav"><span></span></button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<main class="contact-main">
+  <p class="contact-kicker">Gap Hunter Labs</p>
+  <h1>Contact</h1>
+  <p class="contact-lead">Gap Hunter Labs hunts real, evidence-based gaps in developer tooling and ships focused IntelliJ-family plugins to fix them. This page lists the public channels we actually publish — not a form that goes nowhere, and not a made-up office or phone number.</p>
+
+  <section class="contact-section">
+    <h2>Who this is for</h2>
+    <ul>
+      <li><strong style="color:var(--text);font-weight:600">Plugin support.</strong> If a plugin misbehaves, fails to install, or you have a concrete bug or feature request, use that plugin’s own GitHub repository or its JetBrains Marketplace listing. Those are the per-product public channels.</li>
+      <li><strong style="color:var(--text);font-weight:600">Catalog or site questions.</strong> If something on this catalog looks wrong (a listing, a metric, methodology copy), email us or open an issue on the relevant GitHub repo when the question is about a specific plugin.</li>
+      <li><strong style="color:var(--text);font-weight:600">Partnerships and press.</strong> Use the email below or the LinkedIn profile linked from this site. We do not publish a company phone number or a street address.</li>
+    </ul>
+  </section>
+
+  <section class="contact-section">
+    <h2>How to reach us</h2>
+    <ul class="channel-list">
+      <li>
+        <strong>GitHub organization</strong>
+        Each plugin is a public repository under <a href="https://github.com/GapHunterLabs" target="_blank" rel="noopener">github.com/GapHunterLabs</a>. Open an issue on the plugin’s repo. The catalog on the homepage links each product to its repository.
+      </li>
+      <li>
+        <strong>JetBrains Marketplace</strong>
+        Vendor page: <a href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" target="_blank" rel="noopener">plugins.jetbrains.com/vendor/gap-hunter-labs</a>. Reviews and comments on a plugin’s Marketplace listing are a public channel for that product.
+      </li>
+      <li>
+        <strong>Email</strong>
+        The address published on this site is <a href="mailto:gaphunterlabs@gmail.com">gaphunterlabs@gmail.com</a>. Use it for catalog questions, partnerships, and anything that is not tied to a single plugin repo.
+      </li>
+      <li>
+        <strong>LinkedIn</strong>
+        The public profile linked from this site: <a href="https://www.linkedin.com/in/joel-diaz-82687b428/?locale=en" target="_blank" rel="noopener">linkedin.com/in/joel-diaz-82687b428</a>. There is no separate company LinkedIn page that we publish.
+      </li>
+    </ul>
+  </section>
+
+  <section class="contact-section">
+    <h2>If you are reporting a plugin issue</h2>
+    <p>Please include enough to reproduce it. A useful report usually has:</p>
+    <ul>
+      <li>Plugin name (and version, from Settings → Plugins)</li>
+      <li>IDE name and version (for example IntelliJ IDEA 2024.3, or Android Studio)</li>
+      <li>What you expected, what happened instead</li>
+      <li>Steps to reproduce, and whether it happens in a fresh project</li>
+      <li>Any stack trace or idea.log excerpt that is safe to share (no secrets, license keys, or private source)</li>
+    </ul>
+  </section>
+
+  <section class="contact-section">
+    <h2>What to expect</h2>
+    <p>We do not publish a response-time SLA. GitHub issues stay on the plugin’s repository; Marketplace reviews and comments stay on that listing. Email is the address this site already publishes in its organization metadata. We have not published a phone number, a mailing address, or a web form with a backend — none of those are omitted by accident.</p>
+  </section>
+
+  <p><a class="back-link" href="index.html">← Back to the catalog</a></p>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-brand-row">
+          <div class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+              <path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#0151FC"/>
+              <path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z" fill="#01B3FD"/>
+              <polygon points="569,413 695,413 695,539 569,539" fill="#02F172"/>
+            </svg>
+          </div>
+          <div>
+            <div class="footer-brand-name">Gap Hunter Labs</div>
+            <div class="footer-brand-tagline">Plugin Intelligence</div>
+          </div>
+        </div>
+        <p>We hunt real, evidence-based gaps in developer tooling and ship focused IntelliJ-family plugins to fix them. Every product in this catalog exists because of a documented complaint, not a guess.</p>
+      </div>
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <div class="footer-col-title">Explore</div>
+        <a href="index.html">Catalog</a>
+        <a href="index.html#methodology">Methodology</a>
+        <a href="contact.html" aria-current="page">Contact</a>
+      </nav>
+      <div class="footer-elsewhere">
+        <div class="footer-col-title">Elsewhere</div>
+        <a class="fe-link" href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2.345 23.997A2.347 2.347 0 0 1 0 21.652V10.988C0 9.665.535 8.37 1.473 7.433l5.965-5.961A5.01 5.01 0 0 1 10.989 0h10.666A2.347 2.347 0 0 1 24 2.345v10.664a5.056 5.056 0 0 1-1.473 3.554l-5.965 5.965A5.017 5.017 0 0 1 13.007 24v-.003H2.345Zm8.969-6.854H5.486v1.371h5.828v-1.371ZM3.963 6.514h13.523v13.519l4.257-4.257a3.936 3.936 0 0 0 1.146-2.767V2.345c0-.678-.552-1.234-1.234-1.234H10.989a3.897 3.897 0 0 0-2.767 1.145L3.963 6.514Zm-.192.192L2.256 8.22a3.944 3.944 0 0 0-1.145 2.768v10.664c0 .678.552 1.234 1.234h10.666a3.9 3.9 0 0 0 2.767-1.146l1.512-1.511H3.771V6.706Z"/></svg>
+          JetBrains Marketplace
+        </a>
+        <a class="fe-link" href="https://github.com/GapHunterLabs" target="_blank" rel="noopener">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          GitHub
+        </a>
+        <a class="fe-link" href="https://www.linkedin.com/in/joel-diaz-82687b428/?locale=en" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          LinkedIn
+        </a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      Data: plugins.jetbrains.com/api + GitHub API — nothing here is estimated.
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var topbar = document.getElementById('topbar');
+  var burger = document.getElementById('topbarBurger');
+  if (!topbar || !burger) return;
+  burger.addEventListener('click', function () {
+    var open = topbar.classList.toggle('nav-open');
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  topbar.querySelectorAll('#topbarNav a').forEach(function (link) {
+    link.addEventListener('click', function () {
+      topbar.classList.remove('nav-open');
+      burger.setAttribute('aria-expanded', 'false');
+    });
+  });
+})();
+</script>
+<script data-goatcounter="https://gaphunterlabs.goatcounter.com/count"
+        async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

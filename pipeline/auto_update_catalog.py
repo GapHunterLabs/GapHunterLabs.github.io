@@ -349,7 +349,17 @@ def main():
             continue
 
         numeric_id = p.get("id")
-        downloads = p.get("downloads")
+        # -1, floored at 0: JetBrains' own review/approval step
+        # registers exactly 1 phantom download per plugin (their team
+        # installing it once during manual review), counted in the raw
+        # API `downloads` figure from day one -- confirmed real by the
+        # user 2026-09-03, consistent with many freshly-approved
+        # plugins in this catalog sitting at exactly 1 raw download
+        # with zero real users yet. Never applied retroactively to
+        # already-recorded history snapshots (catalog_daily_history.json)
+        # -- only the live figure going forward.
+        raw_downloads = p.get("downloads")
+        downloads = max(0, raw_downloads - 1) if raw_downloads is not None else None
         pricing = p.get("pricingModel")
         reviews, rating = fetch_reviews(numeric_id)
         stars = github_stars(repo)
@@ -482,13 +492,23 @@ def main():
     # reemplazos anclados por el ID real del elemento (nunca un regex
     # generico "43 plugins" suelto, que podria matchear texto no
     # relacionado en el futuro si el copy cambia).
+    # 2026-09-02: topbarStatusText dropped from this list -- the hero/
+    # topbar rework removed that element entirely (no replacement, the
+    # topbar no longer carries a live plugin count). Confirmed absent
+    # via grep before removing the swap, not assumed.
+    #
+    # 2026-09-03: footerStatusText's own tag changed from
+    # `<span id="footerStatusText">` to `<div class="footer-status"
+    # id="footerStatusText">` (footer/contact-page rework) -- the old
+    # pattern anchored on the literal `<span id=...` substring, which
+    # no longer exists. Anchored on `id="footerStatusText">` alone
+    # instead of the surrounding tag, so a future tag-name/attribute-
+    # order change doesn't silently break this again the same way.
     total = len(rows)
     swaps = [
-        (re.compile(r'(<span id="topbarStatusText">)\d+( plugins</span>)'),
-         r"\g<1>%d\g<2>" % total),
         (re.compile(r'(id="heroSubtitle">Real state of the )\d+(-plugin catalog)'),
          r"\g<1>%d\g<2>" % total),
-        (re.compile(r'(<span id="footerStatusText">)\d+( plugins tracked</span>)'),
+        (re.compile(r'(id="footerStatusText">)\d+( plugins tracked)'),
          r"\g<1>%d\g<2>" % total),
     ]
     swap_count = 0
@@ -498,7 +518,7 @@ def main():
     if swap_count != len(swaps):
         sys.exit(
             "[auto_update] ERROR: se esperaban %d swaps de literales estaticos "
-            "(topbarStatusText/heroSubtitle/footerStatusText), se aplicaron %d -- "
+            "(heroSubtitle/footerStatusText), se aplicaron %d -- "
             "el markup de index.html probablemente cambio de forma incompatible "
             "con estos regex. Abortando antes de escribir a disco." % (len(swaps), swap_count)
         )
