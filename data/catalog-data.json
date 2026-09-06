@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-05 10:24:06 UTC",
+  "generatedAt": "2026-09-06 03:55:39 UTC",
   "totalPlugins": 145,
   "totalDownloads": 4132,
   "pending": 0,
@@ -2359,9 +2359,9 @@
       "reviews": 0,
       "rating": null,
       "stars": 0,
-      "growth": null,
+      "growth": 0.0,
       "growthSince": "2026-09-05",
-      "growthFrom": 0
+      "growthFrom": 4
     },
     {
       "xmlId": "dev.gaphunter.interproceduralresourceleakcompanion",
@@ -2378,9 +2378,9 @@
       "reviews": 0,
       "rating": null,
       "stars": 0,
-      "growth": null,
+      "growth": 0.0,
       "growthSince": "2026-09-05",
-      "growthFrom": 0
+      "growthFrom": 3
     },
     {
       "xmlId": "dev.gaphunter.loginjectioncompanion",
@@ -2397,9 +2397,9 @@
       "reviews": 0,
       "rating": null,
       "stars": 0,
-      "growth": null,
+      "growth": 0.0,
       "growthSince": "2026-09-05",
-      "growthFrom": 0
+      "growthFrom": 3
     },
     {
       "xmlId": "dev.gaphunter.githubactionspwnrequestcompanion",
@@ -2416,9 +2416,9 @@
       "reviews": 0,
       "rating": null,
       "stars": 0,
-      "growth": null,
+      "growth": 0.0,
       "growthSince": "2026-09-05",
-      "growthFrom": 0
+      "growthFrom": 1
     },
     {
       "xmlId": "dev.gaphunter.interfaceexceptiondivergencecompanion",
@@ -2435,9 +2435,9 @@
       "reviews": 0,
       "rating": null,
       "stars": 0,
-      "growth": null,
+      "growth": 0.0,
       "growthSince": "2026-09-05",
-      "growthFrom": 0
+      "growthFrom": 1
     },
     {
       "xmlId": "dev.gaphunter.interfaceresourceclosedivergencecompanion",
@@ -2454,9 +2454,9 @@
       "reviews": 0,
       "rating": null,
       "stars": 0,
-      "growth": null,
+      "growth": 0.0,
       "growthSince": "2026-09-05",
-      "growthFrom": 0
+      "growthFrom": 1
     },
     {
       "xmlId": "dev.gaphunter.interfacesinkdivergencecompanion",
@@ -2473,9 +2473,9 @@
       "reviews": 0,
       "rating": null,
       "stars": 0,
-      "growth": null,
+      "growth": 0.0,
       "growthSince": "2026-09-05",
-      "growthFrom": 0
+      "growthFrom": 1
     },
     {
       "xmlId": "dev.gaphunter.jdbcdoubleclosecompanion",
@@ -2492,9 +2492,9 @@
       "reviews": 0,
       "rating": null,
       "stars": 0,
-      "growth": null,
+      "growth": 0.0,
       "growthSince": "2026-09-05",
-      "growthFrom": 0
+      "growthFrom": 1
     },
     {
       "xmlId": "dev.gaphunter.k8slabelselectorexposurecompanion",
@@ -2511,9 +2511,9 @@
       "reviews": 0,
       "rating": null,
       "stars": 0,
-      "growth": null,
+      "growth": 0.0,
       "growthSince": "2026-09-05",
-      "growthFrom": 0
+      "growthFrom": 1
     },
     {
       "xmlId": "dev.gaphunter.kafkatopicfeedbackloopcompanion",
@@ -2530,9 +2530,9 @@
       "reviews": 0,
       "rating": null,
       "stars": 0,
-      "growth": null,
+      "growth": 0.0,
       "growthSince": "2026-09-05",
-      "growthFrom": 0
+      "growthFrom": 1
     },
     {
       "xmlId": "dev.gaphunter.ldapinjectionsinkcompanion",
@@ -2549,9 +2549,9 @@
       "reviews": 0,
       "rating": null,
       "stars": 0,
-      "growth": null,
+      "growth": 0.0,
       "growthSince": "2026-09-05",
-      "growthFrom": 0
+      "growthFrom": 1
     },
     {
       "xmlId": "dev.gaphunter.lucenequeryinjectioncompanion",
@@ -2568,9 +2568,9 @@
       "reviews": 0,
       "rating": null,
       "stars": 0,
-      "growth": null,
+      "growth": 0.0,
       "growthSince": "2026-09-05",
-      "growthFrom": 0
+      "growthFrom": 1
     },
     {
       "xmlId": "dev.gaphunter.mismatchedlockobjectcompanion",
@@ -2587,9 +2587,9 @@
       "reviews": 0,
       "rating": null,
       "stars": 0,
-      "growth": null,
+      "growth": 0.0,
       "growthSince": "2026-09-05",
-      "growthFrom": 0
+      "growthFrom": 1
     },
     {
       "xmlId": "dev.gaphunter.mutablestateleakcompanion",
@@ -2606,9 +2606,9 @@
       "reviews": 0,
       "rating": null,
       "stars": 0,
-      "growth": null,
+      "growth": 0.0,
       "growthSince": "2026-09-05",
-      "growthFrom": 0
+      "growthFrom": 1
     },
     {
       "xmlId": "dev.gaphunter.secondordersqlifieldcompanion",
@@ -2625,9 +2625,9 @@
       "reviews": 0,
       "rating": null,
       "stars": 0,
-      "growth": null,
+      "growth": 0.0,
       "growthSince": "2026-09-05",
-      "growthFrom": 0
+      "growthFrom": 1
     },
     {
       "xmlId": "dev.gaphunter.sessionattributetypeconfusioncompanion",
@@ -2644,9 +2644,9 @@
       "reviews": 0,
       "rating": null,
       "stars": 0,
-      "growth": null,
+      "growth": 0.0,
       "growthSince": "2026-09-05",
-      "growthFrom": 0
+      "growthFrom": 1
     },
     {
       "xmlId": "dev.gaphunter.spelinjectionsinkcompanion",
@@ -2663,9 +2663,9 @@
       "reviews": 0,
       "rating": null,
       "stars": 0,
-      "growth": null,
+      "growth": 0.0,
       "growthSince": "2026-09-05",
-      "growthFrom": 0
+      "growthFrom": 1
     },
     {
       "xmlId": "dev.gaphunter.ssrfallowlistbypasscompanion",
@@ -2682,9 +2682,9 @@
       "reviews": 0,
       "rating": null,
       "stars": 0,
-      "growth": null,
+      "growth": 0.0,
       "growthSince": "2026-09-05",
-      "growthFrom": 0
+      "growthFrom": 1
     },
     {
       "xmlId": "dev.gaphunter.terraformiamprivesccompanion",
@@ -2701,9 +2701,9 @@
       "reviews": 0,
       "rating": null,
       "stars": 0,
-      "growth": null,
+      "growth": 0.0,
       "growthSince": "2026-09-05",
-      "growthFrom": 0
+      "growthFrom": 1
     },
     {
       "xmlId": "dev.gaphunter.threadconfinementescapecompanion",
@@ -2720,9 +2720,9 @@
       "reviews": 0,
       "rating": null,
       "stars": 0,
-      "growth": null,
+      "growth": 0.0,
       "growthSince": "2026-09-05",
-      "growthFrom": 0
+      "growthFrom": 1
     },
     {
       "xmlId": "dev.gaphunter.trycatchconsistencycompanion",
@@ -2739,9 +2739,9 @@
       "reviews": 0,
       "rating": null,
       "stars": 0,
-      "growth": null,
+      "growth": 0.0,
       "growthSince": "2026-09-05",
-      "growthFrom": 0
+      "growthFrom": 1
     },
     {
       "xmlId": "dev.gaphunter.xpathinjectionsinkcompanion",
@@ -2758,9 +2758,9 @@
       "reviews": 0,
       "rating": null,
       "stars": 0,
-      "growth": null,
+      "growth": 0.0,
       "growthSince": "2026-09-05",
-      "growthFrom": 0
+      "growthFrom": 1
     }
   ]
 }
