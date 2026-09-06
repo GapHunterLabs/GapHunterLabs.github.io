@@ -822,6 +822,7 @@
     cursor: pointer;
     appearance: none;
     -webkit-appearance: none;
+    text-decoration: none;
   }
   .hs-slide:focus-visible {
     outline: 2px solid var(--accent);
@@ -2663,9 +2664,10 @@
   .sl-ring-inner { stroke:color-mix(in srgb, var(--accent) 55%, var(--border)); stroke-dasharray:5 8; }
   .sl-ticks { transform-origin:120px 120px; animation:slRotate 12s linear infinite; }
   .sl-ticks text { fill:var(--text-faint); font:7px var(--mono); text-anchor:middle; letter-spacing:2px; }
-  .sl-brand-mark path { fill:none; stroke:var(--accent); stroke-width:7; stroke-linejoin:miter; stroke-dasharray:260; stroke-dashoffset:260; animation:slDraw .9s ease-out forwards; }
-  .sl-brand-mark path:nth-child(2) { stroke:var(--cyan); animation-delay:.12s; }
-  .sl-brand-mark path:nth-child(3) { stroke:var(--good); animation-delay:.24s; }
+  .sl-brand-mark path,.sl-brand-mark polygon { stroke-width:12; stroke-linejoin:miter; stroke-dasharray:2400; stroke-dashoffset:2400; animation:slDraw .9s ease-out forwards; }
+  .sl-brand-mark path:nth-child(1) { fill:#0151FC; stroke:#0151FC; }
+  .sl-brand-mark path:nth-child(2) { fill:#01B3FD; stroke:#01B3FD; animation-delay:.12s; }
+  .sl-brand-mark polygon { fill:#02F172; stroke:#02F172; animation-delay:.24s; }
   .sl-name { font:700 20px var(--sans); letter-spacing:.08em; text-transform:uppercase; }
   .sl-tag,.sl-status { font:600 11px var(--mono); letter-spacing:.12em; text-transform:uppercase; color:var(--text-dim); }
   .sl-status { margin-top:6px; color:var(--accent); }
@@ -2678,7 +2680,7 @@
   @media (prefers-reduced-motion: reduce) {
     .site-loader { transition:none; }
     .sl-ticks { animation:none; }
-    .sl-brand-mark path { animation:none; stroke-dashoffset:0; }
+    .sl-brand-mark path,.sl-brand-mark polygon { animation:none; stroke-dashoffset:0; }
   }
 
   :root { --card-pad:16px; --card-pad-sm:10px; }
@@ -2701,7 +2703,8 @@
   .identity-grid { display:grid; grid-template-columns:1fr 1fr; gap:var(--section-gap); align-items:stretch; }
   .identity-card { display:flex; flex-direction:column; align-items:flex-start; gap:12px; }
   .identity-card p,.identity-card li { color:var(--text-dim); line-height:1.65; }
-  .identity-links { display:grid; gap:8px; margin-top:auto; }
+  .identity-links { display:grid; gap:8px; margin-top:auto; justify-items:start; }
+  .identity-links .btn { white-space:normal; text-align:left; }
   .method-fact,.tele-row,.plugin-card { padding:var(--card-pad-sm); }
   @media (max-width: 900px) { .category-links,.identity-process { grid-template-columns:repeat(2,1fr); } }
   @media (max-width: 620px) { .category-links,.identity-process,.identity-grid { grid-template-columns:1fr; } .section-head{align-items:flex-start;flex-direction:column;} }
@@ -2723,10 +2726,10 @@
         <path d="M120 18v12M120 210v12M18 120h12M210 120h12M48 48l9 9M183 183l9 9M192 48l-9 9M57 183l-9 9"/>
         <text x="120" y="12">101101</text><text x="120" y="236">011010</text>
       </g>
-      <g class="sl-brand-mark">
-        <path d="M120 62 166 90l-17 9-30-17-29 17v33l23 14-17 10-23-14V90Z"/>
-        <path d="M166 108v35l-45 27-17-9 45-28v-7h-21v-18Z"/>
-        <path d="M128 108h17v18h-17Z"/>
+      <g class="sl-brand-mark" transform="translate(69 67) scale(.1)">
+        <path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z"/>
+        <path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z"/>
+        <polygon points="569,413 695,413 695,539 569,539"/>
       </g>
     </svg>
     <div class="sl-name">Gap Hunter Labs</div>
@@ -2759,6 +2762,10 @@
         <a class="topbar-ext-link" href="https://github.com/GapHunterLabs" target="_blank" rel="noopener" aria-label="GitHub" title="Gap Hunter Labs on GitHub">
           <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
           <span class="topbar-ext-label">GitHub</span>
+        </a>
+        <a class="topbar-ext-link" href="https://www.linkedin.com/in/joel-diaz-82687b428/?locale=en" target="_blank" rel="noopener" aria-label="LinkedIn" title="Gap Hunter Labs on LinkedIn">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          <span class="topbar-ext-label">LinkedIn</span>
         </a>
         <button type="button" class="topbar-burger" id="topbarBurger" aria-label="Toggle navigation" aria-expanded="false" aria-controls="topbarNav"><span></span></button>
       </div>
@@ -2832,7 +2839,10 @@
         <h3>One person, one purpose per plugin</h3>
         <p>Built and maintained by one person, self-taught, with no formal software background. The catalog began with its first plugin on July 23, 2026.</p>
         <ul><li>Evidence-based, not guessed</li><li>Focused tools, not bloated suites</li><li>Transparent methodology</li><li>Free or freemium for most of the catalog</li></ul>
-        <div class="identity-links"><a href="methodology.html">Read the methodology →</a><a href="contact.html">Have a gap only your team can see? Tell us →</a></div>
+        <div class="identity-links">
+          <a class="btn primary" href="methodology.html">Read the methodology →</a>
+          <a class="btn" href="contact.html">Have a gap only your team can see? Tell us →</a>
+        </div>
       </article>
     </div>
     <div class="method-facts" id="methodFacts"></div>
@@ -2877,7 +2887,7 @@
           <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
           GitHub
         </a>
-        <a class="fe-link" href="https:
+        <a class="fe-link" href="https://www.linkedin.com/in/joel-diaz-82687b428/?locale=en" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
           LinkedIn
         </a>
