@@ -9,7 +9,7 @@ name: Update catalog data
 # eliminado 2026-08-20 a pedido explicito del usuario.
 # Trae datos EN VIVO de JetBrains Marketplace + GitHub (descargas,
 # pricing, reviews, rating, stars) para todos los plugins y actualiza
-# index.html solo -- sin intervencion manual. Los campos que casi
+# el JSON publico, el SEO del catalogo y los conteos estaticos. Los campos que casi
 # nunca cambian (pitch/why/niche/xmlId) viven congelados en
 # pipeline/catalog_static_metadata.json, no se re-generan aca; ver el
 # comentario "_comment" de ese archivo para como regenerarlo a mano si
@@ -68,7 +68,7 @@ jobs:
       # ya cubierto por el bloque `permissions: contents: write` de
       # arriba) es suficiente -- no hace falta ningun secret nuevo, `gh`
       # lo reconoce automaticamente vía esta env var estandar.
-      - name: Run auto-update (fetches live data, swaps index.html in place)
+      - name: Run auto-update
         env:
           GH_TOKEN: ${{ github.token }}
         run: python pipeline/auto_update_catalog.py
@@ -77,42 +77,36 @@ jobs:
       # adicional antes de commitear -- DOCUMENTATION.md ya documenta 2
       # chequeos manuales ("the only real safety net") pero nunca
       # estaban automatizados en el unico proceso que modifica
-      # index.html sin supervision humana. auto_update_catalog.py ya
-      # valida el JSON del bloque catalog-data 2 veces por su cuenta
-      # (antes y despues del swap, ver ese archivo) -- este paso agrega
-      # el chequeo de sintaxis del <script> PRINCIPAL como defensa
-      # adicional, aunque el script Python nunca toca ese bloque
-      # directamente (solo catalog-data + 3 literales de conteo), por
-      # si un cambio futuro al script rompe algo fuera de su alcance
-      # actual.
-      - name: Sanity-check index.html before committing
+      # Los tres consumidores deben conservar el mismo total antes de publicar.
+      - name: Sanity-check generated catalog
         run: |
           python3 - <<'PYEOF'
-          import re, sys
-          with open("index.html", encoding="utf-8") as f:
-              html = f.read()
-          m = re.search(r'<script id="catalog-data"[^>]*>(.*?)</script>', html, re.S)
+          import json, re, sys
+          with open("data/catalog-data.json", encoding="utf-8") as f:
+              data = json.load(f)
+          with open("catalog.html", encoding="utf-8") as f:
+              catalog = f.read()
+          m = re.search(r'<script type="application/ld\+json" id="catalog-jsonld">(.*?)</script>', catalog, re.S)
           if not m:
-              sys.exit("catalog-data script block not found")
-          import json
-          json.loads(m.group(1))
-          print("catalog-data JSON OK")
-          m2 = re.search(r'<script type="application/ld\+json" id="catalog-jsonld">(.*?)</script>', html, re.S)
-          if not m2:
               sys.exit("catalog-jsonld script block not found")
-          ld = json.loads(m2.group(1))
-          n = ld.get("mainEntity", {}).get("numberOfItems")
-          print("catalog-jsonld JSON OK (%s items)" % n)
+          ld = json.loads(m.group(1))
+          totals = (data.get("totalPlugins"), len(data.get("plugins", [])),
+                    ld.get("mainEntity", {}).get("numberOfItems"))
+          noscript = re.search(r'<noscript id="catalog-crawler">(.*?)</noscript>', catalog, re.S)
+          listed = len(re.findall(r"<li>", noscript.group(1))) if noscript else -1
+          if len(set(totals + (listed,))) != 1:
+              sys.exit("catalog count mismatch: data/rows/jsonld/noscript=%r" % (totals + (listed,)))
+          print("catalog JSON/SEO parity OK (%s plugins)" % totals[0])
           PYEOF
 
       - name: Commit and push if data changed
         run: |
           git config user.name "Gap Hunter Labs"
           git config user.email "gaphunterlabs@gmail.com"
-          if git diff --quiet -- index.html sitemap.xml pipeline/catalog_daily_history.json pipeline/catalog_latest_data.json; then
+          if git diff --quiet -- data/catalog-data.json catalog.html index.html sitemap.xml pipeline/catalog_daily_history.json pipeline/catalog_latest_data.json; then
             echo "sin cambios reales en los datos, no se commitea nada"
           else
-            git add index.html sitemap.xml pipeline/catalog_daily_history.json pipeline/catalog_latest_data.json
+            git add data/catalog-data.json catalog.html index.html sitemap.xml pipeline/catalog_daily_history.json pipeline/catalog_latest_data.json
             git commit -m "Auto-update catalog data ($(date -u +%Y-%m-%d))"
             git push
           fi
