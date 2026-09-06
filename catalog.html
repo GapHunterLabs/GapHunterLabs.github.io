@@ -1578,7 +1578,25 @@
 
   .plugin-card .card-top { min-width: 0; }
 
-  .plugin-card .card-name { font-weight: 700; font-size: 12.5px; line-height: 1.25; overflow-wrap: anywhere; min-width: 0; }
+  /* 2-line clamp with an ellipsis instead of a silent hard clip: at
+     narrow widths a grid row's height comes from its shortest sibling,
+     so a longer name (e.g. "Format Converter Companion") could wrap to
+     2 lines while the card itself stays sized for 1, and .plugin-card's
+     own overflow:hidden (needed for the corner-frame effect) would cut
+     the second line mid-character with no visual indication anything
+     was cut. Clamping the name itself makes the truncation visible and
+     intentional instead of an invisible bug. */
+  .plugin-card .card-name {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    font-weight: 700;
+    font-size: 12.5px;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+    min-width: 0;
+  }
   .plugin-card .card-niche { font-size: 10px; color: var(--text-faint); margin-top: 1px; overflow-wrap: anywhere; }
   .card-cat {
     position: absolute;
