@@ -57,6 +57,17 @@
     --page-max: 1280px;
     --page-pad: 24px;
     --section-gap: 20px;
+    --card-pad: 16px;
+    --card-pad-sm: 10px;
+    --duration-fast: 120ms;
+    --duration-base: 150ms;
+    --duration-slow: 300ms;
+    --ease-standard: cubic-bezier(.65,0,.35,1);
+    --ease-emphasized: cubic-bezier(.2,.7,.3,1);
+    --radius: 10px;
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
   }
   * { box-sizing: border-box; }
   html { scrollbar-color: var(--border) var(--bg); scrollbar-width: thin; }
@@ -116,7 +127,7 @@
     min-width: 0;
     text-decoration: none;
     color: inherit;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
   }
   .topbar-brand:focus-visible {
     outline: 2px solid var(--accent);
@@ -163,7 +174,7 @@
     padding: 3px;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 10px;
+    border-radius: var(--radius);
   }
   .topbar-link {
     display: inline-flex;
@@ -175,7 +186,7 @@
     color: var(--text-faint);
     text-decoration: none;
     padding: 7px 14px;
-    border-radius: 7px;
+    border-radius: var(--radius-md);
     background: transparent;
     border: none;
     cursor: pointer;
@@ -206,7 +217,7 @@
     flex: none;
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     overflow: hidden;
   }
   .topbar-ext-link {
@@ -359,10 +370,10 @@
   }
   .channel-list li {
     margin: 0;
-    padding: 14px 16px;
+    padding: var(--card-pad);
     background: var(--surface);
     border: 1px solid var(--border);
-    border-radius: 10px;
+    border-radius: var(--radius);
     color: var(--text-dim);
   }
   .channel-list strong {
@@ -382,7 +393,7 @@
   .brand-mark {
     width: 32px;
     height: 32px;
-    border-radius: 8px;
+    border-radius: var(--radius-md);
     background: var(--surface);
     border: 1px solid var(--border);
     display: flex;
@@ -448,8 +459,8 @@
     color: var(--text-dim);
     text-decoration: none;
     padding: 6px 0;
-    border-radius: 4px;
-    transition: color 0.15s ease;
+    border-radius: var(--radius-sm);
+    transition: color var(--duration-base) ease;
   }
   .footer-nav a:hover { color: var(--text); }
   .footer-nav a:focus-visible {
@@ -467,8 +478,8 @@
     color: var(--text-dim);
     text-decoration: none;
     padding: 6px 0;
-    border-radius: 4px;
-    transition: color 0.15s ease;
+    border-radius: var(--radius-sm);
+    transition: color var(--duration-base) ease;
   }
   .fe-link svg { width: 15px; height: 15px; flex: none; opacity: 0.85; }
   .fe-link:hover { color: var(--text); }
