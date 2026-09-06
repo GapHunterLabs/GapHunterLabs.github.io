@@ -163,8 +163,6 @@
   ]
 }
 </script>
-<!-- Full catalog ItemList. Regenerated with each catalog data refresh
-     so crawlers that do not execute JavaScript still see every plugin. -->
 <style>
   /* Self-hosted OFL families (IBM Plex Sans + JetBrains Mono).
      default-src is 'none', so font-src 'self' on the CSP meta is
@@ -1581,7 +1579,19 @@
 
   .plugin-card .card-top { min-width: 0; }
 
-  .plugin-card .card-name { font-weight: 700; font-size: 12.5px; line-height: 1.25; overflow-wrap: anywhere; min-width: 0; }
+  /* 2-line clamp with an ellipsis instead of a silent hard clip — see
+     the matching rule in catalog.html for the full reasoning. */
+  .plugin-card .card-name {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    font-weight: 700;
+    font-size: 12.5px;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+    min-width: 0;
+  }
   .plugin-card .card-niche { font-size: 10px; color: var(--text-faint); margin-top: 1px; overflow-wrap: anywhere; }
   .card-cat {
     position: absolute;
