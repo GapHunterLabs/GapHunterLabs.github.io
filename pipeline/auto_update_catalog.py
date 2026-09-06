@@ -1,49 +1,15 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-Actualizacion automatica diaria del catalogo -- corre DENTRO de este
-repo (GapHunterLabs.github.io), disparado por
-.github/workflows/update-catalog.yml (cron diario). No depende de
-ningun archivo local de los 34 repos de plugins -- a diferencia del
-pipeline original (../pipeline/28_catalog_report.py +
-29_catalog_artifact_data.py, que viven en el repo raiz "Gap Hunter
-Labs" y leen plugin.xml/README.md locales de cada repo hermano), este
-script es standalone: solo necesita `pipeline/catalog_static_metadata.json`
-(los campos que casi nunca cambian -- pitch/why/niche/xmlId, congelados
-a mano la ultima vez que alguien corrio el pipeline original) mas 2
-APIs publicas en vivo:
+"""Refresh the public plugin catalog from Marketplace and GitHub data.
 
-1. JetBrains Marketplace (`searchPlugins` + `/plugins/<id>/comments`)
-   -- descargas, pricing, reviews/rating. Mismos endpoints que el
-   pipeline original.
-2. GitHub (`gh repo view <owner>/<repo> --json stargazerCount`) --
-   estrellas. `gh` CLI viene preinstalada en runners `ubuntu-latest`,
-   sin necesitar autenticacion extra para leer repos publicos.
+The generated browser data is written to ``data/catalog-data.json``.
+The catalog page's JSON-LD and no-script listing are then regenerated
+from that same file, while static counts on the home and catalog pages
+are kept in sync for first paint and non-JavaScript visitors.
 
-Que hace:
-1. Lee `pipeline/catalog_static_metadata.json` (34 entradas fijas).
-2. Para cada plugin: resuelve el id numerico real via `searchPlugins`
-   (nunca asumir el id -- confirmado que puede cambiar), trae
-   descargas/pricing/reviews/rating en vivo, trae stars via `gh`.
-3. Calcula growth-desde-baseline igual que el pipeline original,
-   usando el MISMO `out/catalog_history.json` versionado en el repo
-   raiz -- pero como este script vive en un repo separado, la
-   comparacion de growth usa el ultimo snapshot que este propio repo
-   ya tiene guardado (`pipeline/catalog_daily_history.json`, propio de
-   ESTE repo, se va acumulando dia a dia desde que el workflow arranco
-   -- no es el mismo archivo que el pipeline manual, serian historias
-   distintas si se mezclaran).
-4. Escribe el JSON compacto listo para inyectar
-   (`pipeline/catalog_latest_data.json`) y hace el swap-in-place
-   dentro de `index.html` (mismo mecanismo ya usado en cada refresh
-   manual: regex sobre `<script id="catalog-data">`, valida JSON antes
-   y despues).
-5. Imprime un resumen -- el workflow hace `git diff --stat` despues y
-   solo commitea si de verdad cambio algo (evita commits vacios todos
-   los dias si las metricas no se movieron).
-
-Uso:  python pipeline/auto_update_catalog.py
-      (pensado para correr con cwd = raiz de este repo, ver el workflow)
+Usage:
+    python pipeline/auto_update_catalog.py
+    python pipeline/auto_update_catalog.py --seo-from-data
 """
 import json
 import os
@@ -51,6 +17,7 @@ import re
 import sys
 import subprocess
 import urllib.request
+import urllib.parse
 import html
 from datetime import date, datetime, timezone
 
@@ -59,7 +26,9 @@ PIPELINE_DIR = os.path.join(ROOT, "pipeline")
 STATIC_PATH = os.path.join(PIPELINE_DIR, "catalog_static_metadata.json")
 HISTORY_PATH = os.path.join(PIPELINE_DIR, "catalog_daily_history.json")
 LATEST_PATH = os.path.join(PIPELINE_DIR, "catalog_latest_data.json")
+DATA_PATH = os.path.join(ROOT, "data", "catalog-data.json")
 INDEX_PATH = os.path.join(ROOT, "index.html")
+CATALOG_PATH = os.path.join(ROOT, "catalog.html")
 SITEMAP_PATH = os.path.join(ROOT, "sitemap.xml")
 
 API = "https://plugins.jetbrains.com/api"
@@ -72,7 +41,7 @@ def get(url):
 
 
 def resolve_numeric_id(xml_id, name):
-    url = "%s/searchPlugins?search=%s" % (API, urllib.request.quote(name))
+    url = "%s/searchPlugins?search=%s" % (API, urllib.parse.quote(name))
     try:
         data = get(url)
     except Exception as e:
@@ -81,7 +50,7 @@ def resolve_numeric_id(xml_id, name):
     for p in data.get("plugins", []):
         if p.get("xmlId") == xml_id:
             # Defense in depth: `id` becomes the numeric segment of
-            # marketplaceUrl below, which index.html's safeUrl() already
+            # marketplaceUrl below, which the catalog's safeUrl() already
             # gates to http(s)-only before ever using it in an href -- but
             # validating the *shape* here too means a malformed/non-numeric
             # `id` (a JetBrains API bug, or a compromised response) never
@@ -140,6 +109,7 @@ def earliest_datapoint(history, xml_id):
 
 
 SITE = "https://gaphunterlabs.github.io/"
+CATALOG_URL = SITE + "catalog.html"
 
 JSONLD_RE = re.compile(
     r'(<script type="application/ld\+json" id="catalog-jsonld">)(.*?)(</script>)',
@@ -149,12 +119,6 @@ NOSCRIPT_RE = re.compile(
     r'(<noscript id="catalog-crawler">)(.*?)(</noscript>)',
     re.S,
 )
-CATALOG_DATA_RE = re.compile(
-    r'(<script id="catalog-data" type="application/json">)(.*?)(</script>)',
-    re.S,
-)
-
-
 def plain_text(s):
     s = "" if s is None else str(s)
     s = re.sub(r"`+", "", s)
@@ -167,7 +131,7 @@ def plain_text(s):
 def build_catalog_jsonld(rows, generated_at):
     elements = []
     for i, p in enumerate(rows, 1):
-        url = p.get("marketplaceUrl") or p.get("githubUrl") or SITE
+        url = p.get("marketplaceUrl") or p.get("githubUrl") or CATALOG_URL
         item = {
             "@type": "SoftwareApplication",
             "name": p.get("name") or p.get("repo"),
@@ -209,7 +173,7 @@ def build_catalog_jsonld(rows, generated_at):
         "@context": "https://schema.org",
         "@type": "CollectionPage",
         "name": "Gap Hunter Labs Plugin Catalog",
-        "url": SITE,
+        "url": CATALOG_URL,
         "description": "A catalog of IntelliJ/JetBrains-family IDE plugins, each built from a documented, evidence-based gap in an existing tool.",
         "inLanguage": "en",
         "isPartOf": {"@id": SITE + "#org"},
@@ -265,7 +229,7 @@ def build_catalog_noscript(rows):
 
 def _replace_inner(page_html, pattern, inner, label):
     if not pattern.search(page_html):
-        sys.exit("[auto_update] ERROR: missing %s block in index.html" % label)
+        sys.exit("[auto_update] ERROR: missing %s block in catalog.html" % label)
 
     def repl(mm):
         return mm.group(1) + inner + mm.group(3)
@@ -290,21 +254,39 @@ def apply_seo_blocks(page_html, rows, generated_at):
     return page_html
 
 
-def refresh_seo_from_index():
-    with open(INDEX_PATH, encoding="utf-8") as f:
-        page = f.read()
-    m = CATALOG_DATA_RE.search(page)
-    if not m:
-        sys.exit("[auto_update] ERROR: catalog-data not found")
-    data = json.loads(m.group(2))
+def refresh_seo_from_data():
+    with open(DATA_PATH, encoding="utf-8") as f:
+        data = json.load(f)
     rows = data["plugins"]
     generated_at = data.get("generatedAt") or datetime.now(timezone.utc).strftime(
         "%Y-%m-%d %H:%M:%S UTC"
     )
+    with open(CATALOG_PATH, encoding="utf-8") as f:
+        page = f.read()
     page = apply_seo_blocks(page, rows, generated_at)
-    with open(INDEX_PATH, "w", encoding="utf-8") as f:
+    with open(CATALOG_PATH, "w", encoding="utf-8") as f:
         f.write(page)
-    print("[auto_update] SEO blocks refreshed from catalog-data (%d plugins)" % len(rows))
+    print("[auto_update] catalog SEO refreshed from external data (%d plugins)" % len(rows))
+
+
+def update_static_counts(path, rows, include_hero=False):
+    with open(path, encoding="utf-8") as f:
+        page = f.read()
+    total = len(rows)
+    swaps = [
+        (re.compile(r'(id="footerStatusText">)\d+( plugins tracked)'), r"\g<1>%d\g<2>" % total),
+    ]
+    if include_hero:
+        swaps.append((
+            re.compile(r'(id="heroSubtitle">Real state of the )\d+(-plugin catalog)'),
+            r"\g<1>%d\g<2>" % total,
+        ))
+    for rx, repl in swaps:
+        page, count = rx.subn(repl, page, count=1)
+        if count != 1:
+            sys.exit("[auto_update] ERROR: expected static count marker in %s" % os.path.basename(path))
+    with open(path, "w", encoding="utf-8") as f:
+        f.write(page)
 
 
 def main():
@@ -395,7 +377,6 @@ def main():
     # vez de duplicar.
     history["snapshots"] = [s for s in history["snapshots"] if s["date"] != today]
     history["snapshots"].append({"date": today, "plugins": snapshot_for_history})
-    save_history(history)
 
     rows = list(results.values())
     rows.sort(key=lambda r: (r["downloads"] is None, -(r["downloads"] or 0)))
@@ -419,9 +400,6 @@ def main():
         "plugins": rows,
     }
 
-    with open(LATEST_PATH, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, separators=(",", ":"))
-
     print(f"[auto_update] plugins: {len(rows)} | descargas totales: {total_downloads} "
           f"| pendientes: {pending} | stars: {total_stars}")
     print(f"[auto_update] github_stars(): {stars_succeeded}/{stars_attempted} llamadas exitosas")
@@ -442,94 +420,22 @@ def main():
             "[auto_update] ERROR: 0/%d llamadas a github_stars() tuvieron exito -- "
             "esto casi siempre significa que GH_TOKEN no esta seteado o no tiene "
             "permisos (ver el paso 'Run auto-update' en update-catalog.yml). "
-            "Abortando ANTES del swap de index.html para no publicar stars en "
+            "Abortando antes de publicar datos con stars en "
             "cero silenciosamente." % stars_attempted
         )
 
-    # Swap-in-place dentro de index.html -- mismo mecanismo ya usado en
-    # cada refresh manual: regex sobre el bloque <script id="catalog-data">,
-    # valida como JSON real antes Y despues de escribir.
-    with open(INDEX_PATH, encoding="utf-8") as f:
-        html = f.read()
+    save_history(history)
+    with open(LATEST_PATH, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, separators=(",", ":"))
+    os.makedirs(os.path.dirname(DATA_PATH), exist_ok=True)
+    with open(DATA_PATH, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+        f.write("\n")
 
-    pattern = re.compile(
-        r'(<script id="catalog-data" type="application/json">)(.*?)(</script>)', re.S
-    )
-    m = pattern.search(html)
-    if not m:
-        sys.exit("[auto_update] ERROR: no se encontro el bloque <script id=\"catalog-data\"> en index.html")
-
-    json.loads(m.group(2))  # valida el bloque VIEJO antes de tocar nada
-
-    new_json = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
-    # json.dumps() nunca escapa "</script>" -- si cualquier campo de texto
-    # (pitch/why en catalog_static_metadata.json, en teoria tambien algo
-    # devuelto por la API de JetBrains) llegara a contener ese substring
-    # literal, cerraria el <script id="catalog-data"> antes de tiempo y el
-    # resto del documento se interpretaria fuera de contexto. "\/" es un
-    # escape JSON valido (a diferencia de "\!", que NO lo es y rompe
-    # json.loads -- confirmado antes de fijar este approach) que JSON.parse
-    # revierte a "/" sin cambiar el valor decodificado, asi que este fix es
-    # transparente para el JS que lo lee.
-    new_json = new_json.replace("</script>", "<\\/script>")
-    new_html = pattern.sub(lambda mm: mm.group(1) + new_json + mm.group(3), html, count=1)
-
-    m2 = pattern.search(new_html)
-    reparsed = json.loads(m2.group(2))  # valida el bloque NUEVO antes de escribir a disco
-    assert reparsed["totalPlugins"] == len(rows)
-
-    # 2026-08-28 (fix del hallazgo alto #32 de la auditoria): 3 literales
-    # estaticos del HTML seguian codificados a mano como "43 plugins" --
-    # numero real del catalogo cuando se escribieron por primera vez
-    # (2026-08-14), nunca actualizado pese a que el catalogo crecio a 101.
-    # El JS SI los sobrescribe en runtime con el numero real
-    # (updateHeroSubtitle()/initTopbar(), ver index.html), pero:
-    # (a) un crawler sin JS (la mayoria, ver hallazgo #31 relacionado) lee
-    #     el valor estatico desactualizado como el numero real del sitio,
-    # (b) durante la ventana entre first-paint y que el JS termine de
-    #     parsear ~380KB de JSON, un usuario real ve "43" tambien.
-    # Mismo swap-in-place que el bloque catalog-data de arriba -- 3
-    # reemplazos anclados por el ID real del elemento (nunca un regex
-    # generico "43 plugins" suelto, que podria matchear texto no
-    # relacionado en el futuro si el copy cambia).
-    # 2026-09-02: topbarStatusText dropped from this list -- the hero/
-    # topbar rework removed that element entirely (no replacement, the
-    # topbar no longer carries a live plugin count). Confirmed absent
-    # via grep before removing the swap, not assumed.
-    #
-    # 2026-09-03: footerStatusText's own tag changed from
-    # `<span id="footerStatusText">` to `<div class="footer-status"
-    # id="footerStatusText">` (footer/contact-page rework) -- the old
-    # pattern anchored on the literal `<span id=...` substring, which
-    # no longer exists. Anchored on `id="footerStatusText">` alone
-    # instead of the surrounding tag, so a future tag-name/attribute-
-    # order change doesn't silently break this again the same way.
-    total = len(rows)
-    swaps = [
-        (re.compile(r'(id="heroSubtitle">Real state of the )\d+(-plugin catalog)'),
-         r"\g<1>%d\g<2>" % total),
-        (re.compile(r'(id="footerStatusText">)\d+( plugins tracked)'),
-         r"\g<1>%d\g<2>" % total),
-    ]
-    swap_count = 0
-    for rx, repl in swaps:
-        new_html, n = rx.subn(repl, new_html, count=1)
-        swap_count += n
-    if swap_count != len(swaps):
-        sys.exit(
-            "[auto_update] ERROR: se esperaban %d swaps de literales estaticos "
-            "(heroSubtitle/footerStatusText), se aplicaron %d -- "
-            "el markup de index.html probablemente cambio de forma incompatible "
-            "con estos regex. Abortando antes de escribir a disco." % (len(swaps), swap_count)
-        )
-
-    new_html = apply_seo_blocks(new_html, rows, generated_at)
-
-    with open(INDEX_PATH, "w", encoding="utf-8") as f:
-        f.write(new_html)
-
-    print(f"[auto_update] index.html actualizado (catalog-data + {swap_count} literales estaticos + SEO), "
-          f"JSON re-parseado limpio antes y despues del swap")
+    update_static_counts(INDEX_PATH, rows, include_hero=True)
+    update_static_counts(CATALOG_PATH, rows)
+    refresh_seo_from_data()
+    print("[auto_update] external catalog JSON and static page counts updated")
 
     # sitemap.xml <lastmod>, 2026-08-23 (audit finding): the page's real
     # content changes twice a day via this same script, but the sitemap
@@ -541,20 +447,25 @@ def main():
         with open(SITEMAP_PATH, encoding="utf-8") as f:
             sitemap = f.read()
         lastmod_date = generated_at[:10]  # YYYY-MM-DD from the ISO timestamp
-        if "<lastmod>" in sitemap:
-            sitemap = re.sub(r"<lastmod>.*?</lastmod>", f"<lastmod>{lastmod_date}</lastmod>", sitemap)
-        else:
-            sitemap = sitemap.replace(
-                "<changefreq>daily</changefreq>",
-                f"<lastmod>{lastmod_date}</lastmod>\n    <changefreq>daily</changefreq>",
-            )
+        catalog_entry = re.compile(
+            r"(<loc>%scatalog\.html</loc>\s*<lastmod>).*?(</lastmod>)" % re.escape(SITE),
+            re.S,
+        )
+        sitemap, count = catalog_entry.subn(r"\g<1>%s\g<2>" % lastmod_date, sitemap, count=1)
+        if count != 1:
+            sys.exit("[auto_update] ERROR: catalog.html sitemap entry missing")
         with open(SITEMAP_PATH, "w", encoding="utf-8") as f:
             f.write(sitemap)
         print(f"[auto_update] sitemap.xml lastmod actualizado a {lastmod_date}")
 
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1 and sys.argv[1] == "--seo-from-index":
-        refresh_seo_from_index()
-    else:
+    args = sys.argv[1:]
+    if args in (["--seo-from-data"], ["--seo-from-index"]):
+        refresh_seo_from_data()
+    elif not args:
         main()
+    else:
+        sys.exit(
+            "Usage: python pipeline/auto_update_catalog.py [--seo-from-data]"
+        )
