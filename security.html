@@ -3,28 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="How Gap Hunter Labs evaluates plugin ideas and reports public catalog data.">
+<meta name="description" content="What Gap Hunter Labs plugins do and don't do with your code, how vulnerabilities are reported, and why there's no formal SOC 2/ISO certification yet.">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://gc.zgo.at; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; manifest-src 'self'; connect-src https://gaphunterlabs.goatcounter.com; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
 <meta name="theme-color" content="#090D16">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%201024%201024%22%20width%3D%22100%25%22%20height%3D%22100%25%22%3E%20%3Crect%20width%3D%221024%22%20height%3D%221024%22%20fill%3D%22%23FFFFFF%22/%3E%20%3Cpath%20d%3D%22%20M%20511%2C81%20L%20847%2C283%20L%20725%2C351%20L%20508%2C223%20L%20296%2C348%20L%20296%2C588%20L%20463%2C691%20L%20342%2C765%20L%20173%2C665%20L%20172%2C281%20Z%22%20fill%3D%22%230151FC%22%20/%3E%20%3Cpath%20d%3D%22%20M%20846%2C412%20L%20844%2C668%20L%20518%2C863%20L%20393%2C795%20L%20724%2C589%20L%20721%2C540%20L%20567%2C538%20L%20568%2C412%20Z%22%20fill%3D%22%2301B3FD%22%20/%3E%20%3Cpolygon%20points%3D%22569%2C413%20695%2C413%20695%2C539%20569%2C539%22%20fill%3D%22%2302F172%22%20/%3E%20%3C/svg%3E">
-<link rel="canonical" href="https://gaphunterlabs.github.io/methodology.html">
+<link rel="canonical" href="https://gaphunterlabs.github.io/security.html">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="manifest" href="/manifest.json">
 <link rel="preconnect" href="https://gc.zgo.at" crossorigin>
 <link rel="preconnect" href="https://gaphunterlabs.goatcounter.com" crossorigin>
-<title>Methodology &mdash; Gap Hunter Labs</title>
+<title>Security &mdash; Gap Hunter Labs</title>
 <meta name="robots" content="index, follow">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Gap Hunter Labs">
-<meta property="og:url" content="https://gaphunterlabs.github.io/methodology.html">
-<meta property="og:title" content="Methodology — Gap Hunter Labs">
-<meta property="og:description" content="How Gap Hunter Labs evaluates plugin ideas and reports public catalog data.">
+<meta property="og:url" content="https://gaphunterlabs.github.io/security.html">
+<meta property="og:title" content="Security — Gap Hunter Labs">
+<meta property="og:description" content="What Gap Hunter Labs plugins do and don't do with your code, how vulnerabilities are reported, and why there's no formal SOC 2/ISO certification yet.">
 <meta property="og:image" content="https://gaphunterlabs.github.io/og-image.png">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Methodology — Gap Hunter Labs">
-<meta name="twitter:description" content="How Gap Hunter Labs evaluates plugin ideas and reports public catalog data.">
+<meta name="twitter:title" content="Security — Gap Hunter Labs">
+<meta name="twitter:description" content="What Gap Hunter Labs plugins do and don't do with your code, how vulnerabilities are reported, and why there's no formal SOC 2/ISO certification yet.">
 <meta name="twitter:image" content="https://gaphunterlabs.github.io/og-image.png">
 <style>
   @font-face {
@@ -52,6 +52,7 @@
     --accent: #3FA2FF;
     --good: #02F172;
     --cyan: #01B3FD;
+    --warn: #FFB020;
     --mono: "JetBrains Mono", ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
     --sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
     --page-max: 1280px;
@@ -337,50 +338,30 @@
     color: var(--text-dim);
     line-height: 1.65;
   }
-  .contact-section {
-    margin: 0 0 32px;
-    padding: 0;
-    border: 0;
-  }
-  .contact-section h2 {
-    margin: 0 0 10px;
-    font-size: 18px;
-    font-weight: 650;
-    letter-spacing: -0.01em;
-  }
-  .contact-section p,
-  .contact-section li {
-    color: var(--text-dim);
-    line-height: 1.65;
-  }
-  .contact-section p { margin: 0 0 10px; }
-  .contact-section ul {
-    margin: 0;
-    padding-left: 1.2em;
-  }
-  .contact-section li { margin: 0 0 8px; }
-  .contact-section li:last-child { margin-bottom: 0; }
-  .channel-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-  }
-  .channel-list li {
-    margin: 0;
+  .disclosure-list { display: grid; gap: var(--section-gap); }
+  .disclosure {
     padding: var(--card-pad);
     background: var(--surface);
     border: 1px solid var(--border);
+    border-left: 2px solid var(--accent);
     border-radius: var(--radius);
-    color: var(--text-dim);
   }
-  .channel-list strong {
-    display: block;
+  .disclosure.disclosure-warn { border-left-color: var(--warn); }
+  .disclosure h2 { margin: 0 0 10px; font-size: 18px; }
+  .disclosure p { margin: 0 0 10px; color: var(--text-dim); line-height: 1.65; }
+  .disclosure p:last-child { margin-bottom: 0; }
+  .disclosure ul { margin: 0; padding-left: 1.25em; }
+  .disclosure li { color: var(--text-dim); line-height: 1.65; margin-bottom: 8px; }
+  .disclosure li:last-child { margin-bottom: 0; }
+  .disclosure b { color: var(--text); }
+  .disclosure code {
+    font-family: var(--mono);
+    font-size: 0.92em;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1px 5px;
     color: var(--text);
-    font-weight: 600;
-    margin-bottom: 4px;
   }
   .back-link {
     display: inline-block;
@@ -514,50 +495,6 @@
       grid-template-areas: "brand" "nav" "elsewhere";
     }
   }
-
-  .methodology-main { max-width: var(--page-max); }
-  .method-intro { max-width: 760px; }
-  .decision-figure {
-    margin: 0 0 36px;
-    padding: var(--card-pad);
-    min-width: 0;
-    max-width: 100%;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-  }
-  .decision-figure h2 { margin: 0 0 6px; font-size: 20px; }
-  .decision-figure > p { margin: 0 0 16px; color: var(--text-dim); }
-  .diagram-scroll {
-    max-width: 100%;
-    overflow-x: auto;
-    overscroll-behavior-inline: contain;
-    padding-bottom: 4px;
-  }
-  .decision-diagram { display: block; width: 100%; min-width: 720px; height: auto; }
-  .decision-diagram .node { fill: var(--surface-2); stroke: var(--border); stroke-width: 2; }
-  .decision-diagram .node-built { stroke: var(--good); }
-  .decision-diagram .connector { fill: none; stroke: var(--border); stroke-width: 2; stroke-linecap: square; stroke-linejoin: miter; }
-  .decision-diagram .label { fill: var(--text); font: 600 16px var(--sans); text-anchor: middle; }
-  .decision-diagram .small { fill: var(--text-dim); font: 14px var(--sans); text-anchor: middle; }
-  .decision-diagram .branch { fill: var(--text-faint); font: 600 13px var(--mono); }
-  .decision-diagram .built { fill: var(--good); }
-  .disclosure-list { display: grid; gap: var(--section-gap); }
-  .disclosure {
-    padding: var(--card-pad);
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-left: 2px solid var(--accent);
-    border-radius: var(--radius);
-  }
-  .disclosure h2 { margin: 0 0 10px; font-size: 18px; }
-  .disclosure ul { margin: 0; padding-left: 1.25em; }
-  .disclosure li { color: var(--text-dim); line-height: 1.65; margin-bottom: 8px; }
-  .disclosure li:last-child { margin-bottom: 0; }
-  .disclosure b { color: var(--text); }
-  @media (max-width: 760px) {
-    .decision-figure { padding: var(--card-pad); }
-  }
 </style>
 </head>
 <body>
@@ -578,7 +515,7 @@
     </a>
     <div class="topbar-nav" id="topbarNav">
       <a class="topbar-link" href="catalog.html">Catalog</a>
-      <a class="topbar-link active" href="methodology.html" aria-current="page">Methodology</a>
+      <a class="topbar-link" href="methodology.html">Methodology</a>
       <a class="topbar-link" href="contact.html">Contact</a>
     </div>
     <div class="topbar-actions">
@@ -602,74 +539,42 @@
 </nav>
 
 <main class="methodology-main">
-  <div class="method-intro">
-    <p class="contact-kicker">Gap Hunter Labs</p>
-    <h1>Methodology</h1>
-    <p class="contact-lead">How plugin ideas are evaluated, what the catalog&rsquo;s figures mean, and what this site deliberately leaves out.</p>
-  </div>
-
-  <figure class="decision-figure" aria-labelledby="greenlit-title">
-    <h2 id="greenlit-title">How a plugin gets greenlit</h2>
-    <p>A focused plugin moves forward only when each public, evidence-based question has a clear answer.</p>
-    <div class="diagram-scroll" role="region" tabindex="0" aria-label="Scrollable decision diagram. Use the Left and Right Arrow keys to explore.">
-      <svg class="decision-diagram" viewBox="0 0 900 720" role="img" aria-labelledby="diagram-title diagram-desc" xmlns="http://www.w3.org/2000/svg">
-        <title id="diagram-title">How a plugin gets greenlit</title>
-        <desc id="diagram-desc">A recurring documented complaint is checked for a repeated pattern, an existing focused Marketplace fix, and whether it can become one narrow plugin. A failing branch is not built. Passing all checks leads to a built, tested, published plugin with its evidence attached.</desc>
-        <defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="var(--border)"/></marker></defs>
-        <path class="node" d="M250 24 H650 L680 54 V126 L650 156 H250 L220 126 V54 Z"/>
-        <text class="label" x="450" y="72"><tspan x="450">Documented, recurring complaint found</tspan><tspan class="small" x="450" dy="25">Marketplace reviews, ratings, bug reports</tspan></text>
-        <path class="connector" marker-end="url(#arrow)" d="M450 156 V190"/>
-
-        <path class="node" d="M270 196 H630 L658 224 V280 L630 308 H270 L242 280 V224 Z"/>
-        <text class="label" x="450" y="247"><tspan x="450">Is it a real, repeated pattern?</tspan></text>
-        <path class="connector" marker-end="url(#arrow)" d="M658 252 H758"/>
-        <text class="branch" x="685" y="241">NO</text>
-        <path class="node" d="M760 218 H876 V286 H760 L744 252 Z"/>
-        <text class="small" x="814" y="257">Not built</text>
-        <path class="connector" marker-end="url(#arrow)" d="M450 308 V342"/>
-        <text class="branch" x="462" y="330">YES</text>
-
-        <path class="node" d="M270 348 H630 L658 376 V442 L630 470 H270 L242 442 V376 Z"/>
-        <text class="label" x="450" y="397"><tspan x="450">Does a focused fix already exist</tspan><tspan x="450" dy="23">on the Marketplace?</tspan></text>
-        <path class="connector" marker-end="url(#arrow)" d="M658 409 H758"/>
-        <text class="branch" x="682" y="398">YES</text>
-        <path class="node" d="M760 371 H884 V447 H760 L744 409 Z"/>
-        <text class="small" x="818" y="405"><tspan x="818">Not built</tspan><tspan x="818" dy="20">(redundant)</tspan></text>
-        <path class="connector" marker-end="url(#arrow)" d="M450 470 V504"/>
-        <text class="branch" x="462" y="492">NO</text>
-
-        <path class="node" d="M270 510 H630 L658 538 V594 L630 622 H270 L242 594 V538 Z"/>
-        <text class="label" x="450" y="555"><tspan x="450">Buildable as one narrow,</tspan><tspan x="450" dy="23">single-purpose plugin?</tspan></text>
-        <path class="connector" marker-end="url(#arrow)" d="M658 566 H748"/>
-        <text class="branch" x="680" y="555">NO</text>
-        <path class="node" d="M750 520 H890 V612 H750 L734 566 Z"/>
-        <text class="small" x="815" y="550"><tspan x="815">Documented as a</tspan><tspan x="815" dy="19">known limit,</tspan><tspan x="815" dy="19">not built</tspan></text>
-        <path class="connector" marker-end="url(#arrow)" d="M450 622 V650"/>
-        <text class="branch" x="462" y="644">YES</text>
-
-        <path class="node node-built" d="M220 656 H680 L704 680 L680 710 H220 L196 680 Z"/>
-        <text class="label built" x="450" y="678"><tspan x="450">Built, tested, published</tspan><tspan class="small" x="450" dy="21">evidence stays attached to the listing</tspan></text>
-      </svg>
-    </div>
-  </figure>
+  <p class="contact-kicker">Gap Hunter Labs</p>
+  <h1>Security</h1>
+  <p class="contact-lead">What our plugins actually touch, what they never send anywhere, how to report a vulnerability, and an honest answer on formal certification &mdash; not a compliance page written to sound reassuring.</p>
 
   <div class="disclosure-list">
-    <section class="disclosure" aria-labelledby="method-data"><h2 id="method-data">Methodology</h2><ul>
-      <li>Every number on this page &mdash; downloads, pricing, rating, first-published date, GitHub &#9733; &mdash; comes straight from JetBrains Marketplace and GitHub's own public data. Nothing here is estimated or made up.</li>
-      <li><b>Growth</b> compares each plugin's current downloads against the earliest point we have real data for it, not just the last time this page was refreshed &mdash; that's why the baseline date under the % can vary from plugin to plugin. A plugin with no earlier data point yet shows "&mdash;" instead of a guess.</li>
-      <li>A plugin marked <b>Pending</b> was recently submitted to Marketplace and is still in moderation &mdash; its listing exists, it just isn't indexed for search yet. That's normal review turnaround, not a problem with the plugin.</li>
-    </ul></section>
-    <section class="disclosure" aria-labelledby="method-gap"><h2 id="method-gap">The Gap / The Fix</h2><ul>
-      <li><b>The Gap</b> is the real, cited evidence that this plugin needed to exist &mdash; a documented pattern of complaints about an existing tool (reviews, ratings, recurring bug reports), not a guess about what developers might want.</li>
-      <li><b>The Fix</b> is the plugin's own real, published description of what it actually does. Neither side is generated or embellished &mdash; every claim traces back to something publicly verifiable.</li>
-    </ul></section>
-    <section class="disclosure" aria-labelledby="method-signals"><h2 id="method-signals">Reviews, rating, and stars</h2><ul>
-      <li>Reviews, Marketplace rating, and GitHub stars use the same public sources as downloads. This catalog is still early and product-focused, so those figures live here &mdash; not in the hero &mdash; until they describe the work rather than empty cells.</li>
-    </ul></section>
-    <section class="disclosure" aria-labelledby="method-privacy"><h2 id="method-privacy">What's Never Stored Here</h2><ul>
-      <li>We never publish a competitor's private marketplace identifiers or a vendor's personal contact details (email, phone, address) &mdash; even when the public API we read from happens to expose them alongside the data we do use.</li>
-      <li>"Visitors today" counts real visits via GoatCounter &mdash; cookie-free, no IP address stored, no individual visitor ever identifiable. It counts sessions, not raw pageviews, so reloading this page or browsing multiple sections doesn't inflate the number.</li>
-    </ul></section>
+    <section class="disclosure" aria-labelledby="sec-arch">
+      <h2 id="sec-arch">How these plugins are built</h2>
+      <p>Every plugin in this catalog runs as a normal IntelliJ Platform extension: inspections, annotators, and intentions that execute inside your own IDE process, on your own machine, using the IDE's own <code>PsiElement</code>/AST APIs or plain text/regex checks over files already open in your project.</p>
+      <p>There is no Gap Hunter Labs backend. We don't operate a server that plugin code calls out to &mdash; there's nothing to send your source to, because nothing was built to send it anywhere. Detection logic (pattern matching, entropy checks, structural analysis) runs locally and its output goes straight to the editor: a warning, a gutter icon, a quick-fix. That's the full round trip.</p>
+    </section>
+
+    <section class="disclosure" aria-labelledby="sec-network">
+      <h2 id="sec-network">Network activity</h2>
+      <ul>
+        <li>Plugin installation and update checks go through JetBrains' own Marketplace infrastructure &mdash; the same channel every plugin on the platform uses, not something we operate.</li>
+        <li>A small number of plugins call an external API by design because that's the plugin's stated job (for example, a spec-validation plugin that checks a schema against a public registry). Each of those calls goes to the third-party service the plugin's own listing names, never to us.</li>
+        <li>This marketing site (the one you're reading now) uses GoatCounter for visit counts &mdash; cookie-free, no IP address stored, sessions rather than raw pageviews. See <a href="methodology.html#method-privacy">Methodology</a> for the exact wording. This has nothing to do with what plugins do inside your IDE.</li>
+      </ul>
+    </section>
+
+    <section class="disclosure" aria-labelledby="sec-open">
+      <h2 id="sec-open">Open by default</h2>
+      <p>Every plugin's source is a public repository under <a href="https://github.com/GapHunterLabs" target="_blank" rel="noopener">github.com/GapHunterLabs</a>. Nothing described above is a promise you have to take on faith &mdash; the inspection/annotator code that decides what runs and what it does with a match is readable in full, plugin by plugin.</p>
+    </section>
+
+    <section class="disclosure" aria-labelledby="sec-report">
+      <h2 id="sec-report">Reporting a vulnerability</h2>
+      <p>Found something real &mdash; a plugin doing more than its listing says, an insecure default, a dependency with a known CVE we haven't picked up yet? Email <a href="mailto:gaphunterlabs@gmail.com">gaphunterlabs@gmail.com</a> with the plugin name/version and repro steps. We aim to acknowledge within 5 business days, the same response window we hold ourselves to on outbound disclosures to other maintainers.</p>
+      <p>Please don't open a public GitHub issue for a security report until we've had a chance to respond &mdash; everything else (bugs, feature requests) is fine in the open as usual.</p>
+    </section>
+
+    <section class="disclosure disclosure-warn" aria-labelledby="sec-cert">
+      <h2 id="sec-cert">What we don't have (yet)</h2>
+      <p>Gap Hunter Labs does not hold a SOC 2, ISO 27001, or any other third-party security certification. We're a small, focused catalog, not a company with a dedicated compliance team, and we'd rather say that plainly than imply a level of formal assurance that isn't there.</p>
+      <p>The sections above describe our actual architecture and practice, not a substitute for certification &mdash; if your organization's procurement process requires SOC 2 specifically, that's a real gap today, not a checkbox we're quietly skipping.</p>
+    </section>
   </div>
 </main>
 
@@ -695,14 +600,14 @@
       <nav class="footer-nav" aria-label="Footer navigation">
         <div class="footer-col-title">Explore</div>
         <a href="catalog.html">Catalog</a>
-        <a href="methodology.html" aria-current="page">Methodology</a>
-        <a href="security.html">Security</a>
+        <a href="methodology.html">Methodology</a>
+        <a href="security.html" aria-current="page">Security</a>
         <a href="contact.html">Contact</a>
       </nav>
       <div class="footer-elsewhere">
         <div class="footer-col-title">Elsewhere</div>
         <a class="fe-link" href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2.345 23.997A2.347 2.347 0 0 1 0 21.652V10.988C0 9.665.535 8.37 1.473 7.433l5.965-5.961A5.01 5.01 0 0 1 10.989 0h10.666A2.347 2.347 0 0 1 24 2.345v10.664a5.056 5.056 0 0 1-1.473 3.554l-5.965 5.965A5.017 5.017 0 0 1 13.007 24v-.003H2.345Zm8.969-6.854H5.486v1.371h5.828v-1.371ZM3.963 6.514h13.523v13.519l4.257-4.257a3.936 3.936 0 0 0 1.146-2.767V2.345c0-.678-.552-1.234-1.234-1.234H10.989a3.897 3.897 0 0 0-2.767 1.145L3.963 6.514Zm-.192.192L2.256 8.22a3.944 3.944 0 0 0-1.145 2.768v10.664c0 .678.552 1.234 1.234h10.666a3.9 3.9 0 0 0 2.767-1.146l1.512-1.511H3.771V6.706Z"/></svg>
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2.345 23.997A2.347 2.347 0 0 1 0 21.652V10.988C0 9.665.535 8.37 1.473 7.433l5.965-5.961A5.01 5.01 0 0 1 10.989 0h10.666A2.347 2.347 0 0 1 24 2.345v10.664a5.056 5.056 0 0 1-1.473 3.554l-5.965 5.965A5.017 5.017 0 0 1 13.007 24v-.003H2.345Zm8.969-6.854H5.486v1.371h5.828v-1.371ZM3.963 6.514h13.523v13.519l4.257-4.257a3.936 3.936 0 0 0 1.146-2.767V2.345c0-.678-.552-1.234-1.234-1.234H10.989a3.897 3.897 0 0 0-2.767 1.145L3.963 6.514Zm-.192.192L2.256 8.22a3.944 3.944 0 0 0-1.145 2.768v10.664c0 .678.552 1.234 1.234 1.234h10.666a3.9 3.9 0 0 0 2.767-1.146l1.512-1.511H3.771V6.706Z"/></svg>
           JetBrains Marketplace
         </a>
         <a class="fe-link" href="https://github.com/GapHunterLabs" target="_blank" rel="noopener">
@@ -736,10 +641,6 @@
         burger.setAttribute('aria-expanded', 'false');
       });
     });
-  }
-  var diagram = document.querySelector('.diagram-scroll');
-  if (diagram && diagram.scrollWidth > diagram.clientWidth) {
-    diagram.scrollLeft = (diagram.scrollWidth - diagram.clientWidth) / 2;
   }
 })();
 </script>
