@@ -1,0 +1,132 @@
+{
+  "_comment": "Curated fields per VS Code extension -- displayName/pitch/niche/repo. Mirrors the shape of catalog_static_metadata.json but is a fully separate namespace (kept apart so the JetBrains-only parity checks in update-catalog.yml never see these entries). Live metrics (installs/rating/version/publishedDate) are NOT stored here -- pipeline/auto_update_vscode_catalog.py fetches those from the VS Code Marketplace public gallery API and merges them in at generation time.",
+  "generatedAt": "2026-09-09",
+  "extensions": {
+    "android-unused-permission-companion": {
+      "displayName": "Android Unused Permission Companion",
+      "pitch": "Flags a permission declared in AndroidManifest.xml that no Kotlin/Java source actually uses.",
+      "niche": "Android / Mobile",
+      "repo": "vscode-android-unused-permission-companion"
+    },
+    "cargo-audit-companion": {
+      "displayName": "Cargo Audit Companion",
+      "pitch": "Wraps `cargo audit --json` as inline VS Code diagnostics on Cargo.toml -- RustSec advisories at the exact dependency line.",
+      "niche": "Rust Tooling",
+      "repo": "vscode-cargo-audit-companion"
+    },
+    "codeowners-validator-companion": {
+      "displayName": "CODEOWNERS Validator Companion",
+      "pitch": "Validates a CODEOWNERS file -- duplicated patterns, unmatched patterns, invalid owners, syntax errors.",
+      "niche": "VCS / Git Workflow",
+      "repo": "vscode-codeowners-validator-companion"
+    },
+    "config-secrets-file-companion": {
+      "displayName": "Config Secrets File Companion",
+      "pitch": "Flags a hardcoded secret (AWS key, GitHub/Slack token, JWT, PEM key, or high-entropy value) in config and env files.",
+      "niche": "Secrets Detection",
+      "repo": "vscode-config-secrets-file-companion"
+    },
+    "dependency-license-companion": {
+      "displayName": "Dependency License Companion",
+      "pitch": "Reads each node_modules dependency's SPDX license locally and flags copyleft or missing licenses.",
+      "niche": "License Compliance",
+      "repo": "vscode-dependency-license-companion"
+    },
+    "embedded-stack-usage-companion": {
+      "displayName": "Embedded Stack Usage Companion",
+      "pitch": "Parses GCC .su stack-usage files (-fstack-usage) and flags any function over a configurable stack budget.",
+      "niche": "Embedded / C Tooling",
+      "repo": "vscode-embedded-stack-usage-companion"
+    },
+    "flaky-test-history-companion": {
+      "displayName": "Flaky Test History Companion",
+      "pitch": "Tracks pass/fail history per test across JUnit XML report runs and flags tests with mixed outcomes.",
+      "niche": "Testing Tooling",
+      "repo": "vscode-flaky-test-history-companion"
+    },
+    "infoplist-usage-description-companion": {
+      "displayName": "Info.plist Usage Description Companion",
+      "pitch": "Cross-checks Swift/Objective-C imports (CoreLocation, Contacts, Photos, etc.) against required Info.plist usage-description keys.",
+      "niche": "iOS / Mobile",
+      "repo": "vscode-infoplist-usage-description-companion"
+    },
+    "jwt-companion": {
+      "displayName": "JWT Companion",
+      "pitch": "Decode and inspect JSON Web Tokens on hover or via command -- no data leaves your editor.",
+      "niche": "JWT / Auth Tooling",
+      "repo": "vscode-jwt-companion"
+    },
+    "mlflow-companion": {
+      "displayName": "MLflow Companion",
+      "pitch": "Browses local MLflow tracking-store runs (params, metrics, tags) in a sidebar tree, reading the store directly.",
+      "niche": "ML / Data Tooling",
+      "repo": "vscode-mlflow-companion"
+    },
+    "n-plus-one-query-companion": {
+      "displayName": "N+1 Query Companion",
+      "pitch": "Flags a TypeORM/Sequelize/Drizzle find/query call inside a loop -- the classic N+1 query pattern.",
+      "niche": "ORM / Query Tooling",
+      "repo": "vscode-n-plus-one-query-companion"
+    },
+    "node-version-drift-companion": {
+      "displayName": "Node Version Drift Companion",
+      "pitch": "Flags when .nvmrc/.node-version/package.json engines.node/Dockerfile/CI disagree on the Node.js version.",
+      "niche": "Node.js / npm Tooling",
+      "repo": "vscode-node-version-drift-companion"
+    },
+    "oauth2-oidc-flow-companion": {
+      "displayName": "OAuth2/OIDC Flow Companion",
+      "pitch": "Builds and decodes OAuth2 authorization-code+PKCE URLs -- generates code_verifier/challenge pairs and decodes callback params.",
+      "niche": "JWT / Auth Tooling",
+      "repo": "vscode-oauth2-oidc-flow-companion"
+    },
+    "pact-contract-companion": {
+      "displayName": "Pact Contract Companion",
+      "pitch": "Lists consumer-provider Pact contract files in your workspace and flags interactions with no matching provider state.",
+      "niche": "API Contract Testing",
+      "repo": "vscode-pact-contract-companion"
+    },
+    "prometheus-alert-rule-companion": {
+      "displayName": "Prometheus Alert Rule Companion",
+      "pitch": "Lints Prometheus alert rule YAML -- duplicate alert names, missing 'for', missing annotations.",
+      "niche": "Observability Tooling",
+      "repo": "vscode-prometheus-alert-rule-companion"
+    },
+    "turborepo-graph-companion": {
+      "displayName": "Turborepo Graph Companion",
+      "pitch": "Shows your Turborepo workspace dependency graph as a sidebar tree -- parses turbo.json + package.json workspaces.",
+      "niche": "Build Tooling / Architecture",
+      "repo": "vscode-turborepo-graph-companion"
+    },
+    "typosquat-dependency-companion": {
+      "displayName": "Typosquat Dependency Companion",
+      "pitch": "Flags a package.json dependency whose name is a near-miss (edit distance 1-2) of a much more popular package.",
+      "niche": "Supply Chain Security",
+      "repo": "vscode-typosquat-dependency-companion"
+    },
+    "unleash-flag-usage-companion": {
+      "displayName": "Unleash Flag Usage Companion",
+      "pitch": "Inventories Unleash feature flag usage across your codebase -- naming check, find-all-usages, stale-flag detection.",
+      "niche": "Feature Flag Tooling",
+      "repo": "vscode-unleash-flag-usage-companion"
+    },
+    "unreal-uht-macro-companion": {
+      "displayName": "Unreal UHT Macro Companion",
+      "pitch": "Flags common UnrealHeaderTool macro mistakes in C++ headers: missing .generated.h include and related UPROPERTY/UFUNCTION issues.",
+      "niche": "Game Dev / Unreal",
+      "repo": "vscode-unreal-uht-macro-companion"
+    },
+    "webhook-signature-companion": {
+      "displayName": "Webhook Signature Companion",
+      "pitch": "Computes and verifies HMAC webhook signatures (GitHub/generic sha1/sha256/sha512) against a payload and secret.",
+      "niche": "API Security",
+      "repo": "vscode-webhook-signature-companion"
+    },
+    "wrangler-config-companion": {
+      "displayName": "Wrangler Config Companion",
+      "pitch": "Validates wrangler.toml -- required fields (name/main/compatibility_date), and missing bindings.",
+      "niche": "Cloudflare / DevOps",
+      "repo": "vscode-wrangler-config-companion"
+    }
+  }
+}
