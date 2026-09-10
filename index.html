@@ -2812,14 +2812,32 @@
   .identity-step h3,.identity-step p,.identity-card h3 { margin:0; }
   .identity-step h3 { color:var(--text); font-size:14px; }
   .identity-step p { font-size:11.5px; color:var(--text-dim); }
-  /* 900px (no 700px) -- mismo umbral que .category-links/.identity-grid
-     ya usan más abajo para este bloque; el sidebar (248px) angosta la
-     columna real bastante antes de que el viewport "se sienta" chico,
-     así que el layout absoluto necesita más margen del que parece. */
+  /* 900px (no 700px) -- mismo umbral que .category-links ya usa más
+     abajo; el sidebar (248px) angosta la columna real bastante antes
+     de que el viewport "se sienta" chico. El SVG en diagonal no cabe
+     en una columna angosta -- en vez de ocultarlo sin más (bug real
+     reportado 2026-09-10: "no se ve el svg"), se reemplaza por una
+     timeline VERTICAL propia: una barra con el mismo gradiente de 4
+     colores corriendo detrás de los puntos, apilados en una sola
+     columna siempre (ya no 2x1 a 900px / 1x1 a 620px -- esas reglas
+     viejas más abajo se sacaron de .identity-process para no pisar
+     esto). */
   @media (max-width:900px) {
-    .identity-process { position:static; height:auto; display:grid; grid-template-columns:1fr 1fr; gap:20px 16px; }
+    .identity-process {
+      position:relative; height:auto; overflow:visible; padding-top:0;
+      display:flex; flex-direction:column; gap:20px;
+    }
     .identity-process .roadmap-svg { display:none; }
+    /* Línea corre por donde ya caen los puntos (izquierda del stack,
+       nada de indent nuevo -- acá el punto va ARRIBA del texto, no al
+       lado, así que ya comparten la misma x). */
+    .identity-process::before {
+      content:""; position:absolute; left:3px; top:4px; bottom:4px; width:2px; border-radius:2px;
+      background:linear-gradient(to bottom, var(--accent), var(--good), var(--purple), var(--amber));
+      opacity:0.6;
+    }
     .identity-step { position:static; width:auto; }
+    .rm-dot { position:relative; z-index:1; }
   }
   .identity-card { padding:var(--card-pad); border:1px solid var(--border); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow); transition:border-color var(--duration-base) ease; }
   .identity-card:hover { border-color:var(--accent); }
@@ -2854,8 +2872,11 @@
   .case-meta-note { display: block; margin-top: 2px; font-size: 11px; font-weight: 500; color: var(--text-faint); }
   @media (max-width: 760px) { .case-meta { flex-basis: 100%; border-left: 0; padding-left: 0; border-top: 1px solid var(--border); padding-top: var(--section-gap); flex-direction: row; flex-wrap: wrap; } .case-meta-row { flex: 1 1 140px; } }
 
-  @media (max-width: 900px) { .category-links,.identity-process { grid-template-columns:repeat(2,1fr); } }
-  @media (max-width: 620px) { .category-links,.identity-process,.identity-grid { grid-template-columns:1fr; } .section-head{align-items:flex-start;flex-direction:column;} }
+  /* .identity-process sacado de estas 2 reglas (a pedido explícito
+     2026-09-10) -- ya no es un grid en mobile, es la timeline vertical
+     de abajo; dejarlo acá pisaba ese layout sin avisar. */
+  @media (max-width: 900px) { .category-links { grid-template-columns:repeat(2,1fr); } }
+  @media (max-width: 620px) { .category-links,.identity-grid { grid-template-columns:1fr; } .section-head{align-items:flex-start;flex-direction:column;} }
 
 </style>
 <link rel="stylesheet" href="css/shell.css">
