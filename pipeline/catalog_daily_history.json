@@ -6197,19 +6197,19 @@
           "downloads": 175
         },
         "dev.gaphunter.apachehttpclientreusecompanion": {
-          "downloads": 16
+          "downloads": 18
         },
         "dev.gaphunter.apideprecationheadercompanion": {
           "downloads": 10
         },
         "dev.gaphunter.apisecuritycompanion": {
-          "downloads": 138
+          "downloads": 139
         },
         "dev.gaphunter.asyncselfinvocationcompanion": {
           "downloads": 11
         },
         "dev.gaphunter.asyncapicompanion": {
-          "downloads": 77
+          "downloads": 78
         },
         "dev.gaphunter.awss3publicaclsdkcompanion": {
           "downloads": 17
@@ -6233,7 +6233,7 @@
           "downloads": 12
         },
         "dev.gaphunter.certcompanion": {
-          "downloads": 93
+          "downloads": 94
         },
         "dev.gaphunter.changecasecompanion": {
           "downloads": 29
@@ -6248,7 +6248,7 @@
           "downloads": 52
         },
         "dev.gaphunter.commitmessageconventioncompanion": {
-          "downloads": 17
+          "downloads": 20
         },
         "dev.gaphunter.completablefuturecancellationcompanion": {
           "downloads": 14
@@ -6293,7 +6293,7 @@
           "downloads": 12
         },
         "dev.gaphunter.errorlenscompanion": {
-          "downloads": 34
+          "downloads": 37
         },
         "dev.gaphunter.exceptionescapechaincompanion": {
           "downloads": 12
@@ -6320,7 +6320,7 @@
           "downloads": 48
         },
         "dev.gaphunter.githubactionspwnrequestcompanion": {
-          "downloads": 10
+          "downloads": 11
         },
         "dev.gaphunter.gitlabcicompanion": {
           "downloads": 147
@@ -6386,7 +6386,7 @@
           "downloads": 26
         },
         "dev.gaphunter.jwtcompanion": {
-          "downloads": 105
+          "downloads": 108
         },
         "dev.gaphunter.jwtsignatureverificationcompanion": {
           "downloads": 15
@@ -6413,7 +6413,7 @@
           "downloads": 14
         },
         "dev.gaphunter.kafkatopicfeedbackloopcompanion": {
-          "downloads": 11
+          "downloads": 12
         },
         "dev.gaphunter.kafkatopicschemacompanion": {
           "downloads": 19
@@ -6443,7 +6443,7 @@
           "downloads": 51
         },
         "dev.gaphunter.mermaidcompanion": {
-          "downloads": 301
+          "downloads": 312
         },
         "dev.gaphunter.micrometertimersamplecompanion": {
           "downloads": 13
@@ -6527,7 +6527,7 @@
           "downloads": 13
         },
         "dev.gaphunter.reactnativecompanion": {
-          "downloads": 240
+          "downloads": 245
         },
         "dev.gaphunter.redislockmissingttlcompanion": {
           "downloads": 12
@@ -6590,16 +6590,16 @@
           "downloads": 9
         },
         "dev.gaphunter.ssrfunsanitizedurlcompanion": {
-          "downloads": 13
+          "downloads": 14
         },
         "dev.gaphunter.terraformiamprivesccompanion": {
-          "downloads": 13
+          "downloads": 14
         },
         "dev.gaphunter.terraformiamwildcardcompanion": {
-          "downloads": 17
+          "downloads": 18
         },
         "dev.gaphunter.testscaffoldcompanion": {
-          "downloads": 40
+          "downloads": 41
         },
         "dev.gaphunter.themecompanion": {
           "downloads": 57
