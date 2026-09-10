@@ -2835,22 +2835,44 @@
      depender de que el contenedor "adivine" su alto -- alterna
      izquierda/derecha bajando, para que la curva entrelace los 4
      hasta el último de verdad. */
+  /* Bug real encontrado con captura headless propia (2026-09-10,
+     4ta vuelta): position:absolute en los 4 .identity-step sacaba TODO
+     el contenido del flujo normal -- .identity-process quedaba sin
+     ningún hijo en flujo del que derivar su height:auto, así que el
+     box entero se veía vacío (no solo la línea corta, esta vez
+     desaparecía todo: puntos y texto). Vuelta a flujo normal (flex
+     column) para los pasos -- el zigzag se logra con align-self, no
+     con coordenadas a mano -- y con eso .identity-process SÍ tiene un
+     height real del que la línea (position:absolute; inset:0) puede
+     derivar su propio 100%. */
   @media (max-width:900px) {
+    /* width:100% agregado (bug real medido a nivel de píxel, 5ta vuelta
+       2026-09-10): .identity-process es un grid item de .identity-section
+       (display:grid); un margin:0 auto en un grid item hace que Grid
+       IGNORE justify-items:stretch y encoja el item a shrink-to-fit en
+       vez de estirarlo a max-width -- como sus hijos flex tenían
+       width:165px fijo, el contenedor se achicaba a ~165px también
+       (confirmado midiendo el outline: contenedor 170px, item 164px, 0
+       espacio libre), por eso margin-left:auto/align-self:flex-end en
+       los pasos "pares" no tenían dónde empujar. width:100% fuerza el
+       ancho explícito, max-width sigue funcionando como techo. */
     .identity-process {
-      position:relative; height:360px; overflow:hidden; padding-top:0;
-      max-width:360px; margin:0 auto;
+      position:relative; height:auto; overflow:visible; padding-top:0;
+      width:100%; max-width:360px; margin:0 auto;
+      display:flex; flex-direction:column; gap:30px;
     }
     .identity-process .roadmap-svg { display:none; }
     .identity-process .roadmap-svg-v {
       display:block; position:absolute; inset:0; width:100%; height:100%; overflow:visible; pointer-events:none;
     }
     .identity-step {
-      left:var(--mx); top:var(--my); width:165px; gap:5px;
+      position:static; width:165px; gap:5px;
     }
-    .identity-step:nth-child(3) { --mx:0%;  --my:0px; }
-    .identity-step:nth-child(4) { --mx:38%; --my:95px; }
-    .identity-step:nth-child(5) { --mx:0%;  --my:190px; }
-    .identity-step:nth-child(6) { --mx:38%; --my:285px; }
+    /* margin-left:auto en vez de align-self:flex-end -- técnica de
+       margen automático de flexbox, más a prueba de balas para "empujar
+       al extremo opuesto" que align-self (que no se notaba en la
+       primera prueba real, causa no confirmada). */
+    .identity-step:nth-child(4), .identity-step:nth-child(6) { margin-left:auto; }
     .identity-step h3 { font-size:15px; }
     .identity-step p { font-size:12.5px; line-height:1.5; }
     .rm-dot { position:relative; z-index:1; }
@@ -3052,17 +3074,17 @@
       <!-- Versión mobile del mismo campo de streamlines, solo visible
            debajo de 900px (ver CSS .roadmap-svg-v) -- mismo mecanismo
            (1 curva base + 2 copias <use>/translate + dash-flow
-           animado) que el de escritorio, con viewBox en PÍXELES REALES
-           (0 0 100 360, igual que .identity-process's height:360px acá
-           abajo) en vez de una escala 0-100 aparte -- así los 4 puntos
-           del path calzan exacto con --mx/--my de cada paso sin
-           depender de que el contenedor "adivine" un alto (esa fue la
-           causa real de que la línea se viera cortada). Gradiente
-           propio (roadmapGradV) en vertical para que los 4 colores se
-           lean de arriba a abajo. -->
-      <svg class="roadmap-svg-v" viewBox="0 0 100 360" preserveAspectRatio="none" aria-hidden="true">
+           animado) que el de escritorio. viewBox abstracto 0-100 (los
+           pasos vuelven a flujo normal, su alto real ya no se puede
+           calcular a mano) -- preserveAspectRatio="none" lo estira al
+           alto real que el flex column termine ocupando, ondulando
+           aproximado cerca de donde cae cada punto (izquierda/derecha
+           alternado vía align-self) sin necesitar coincidir exacto.
+           Gradiente propio (roadmapGradV) en vertical para que los 4
+           colores se lean de arriba a abajo. -->
+      <svg class="roadmap-svg-v" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
         <defs>
-          <path id="flowPathV" d="M2,4 C22,4 22,99 40,99 S18,194 2,194 S22,289 40,289"/>
+          <path id="flowPathV" d="M15,5 C35,5 35,32 55,32 S35,60 15,60 S35,92 55,92"/>
           <linearGradient id="roadmapGradV" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stop-color="var(--accent)"/>
             <stop offset="35%" stop-color="var(--good)"/>
