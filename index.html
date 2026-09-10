@@ -2761,28 +2761,50 @@
   .identity-section { display:grid; gap:var(--section-gap); }
   .identity-lead { max-width:780px; }
   .identity-lead>p:last-child,.catalog-heading>p:last-child { color:var(--text-dim); line-height:1.7; }
-  /* Roadmap conectado por una línea en vez de 4 boxes sueltos (a pedido
-     explícito 2026-09-10) -- sin números, sin color por texto (el color
-     vive solo en el punto/la línea, nunca en el <h3>). La curva SVG es
-     puramente decorativa (gradiente que atraviesa los 4 colores
-     originales, trazo animado sugiriendo flujo -- "minimalista, tipo
-     streamline") -- no necesita tocar exacto cada punto para leerse
-     como "los 4 pasos conectados". */
-  .identity-process { position:relative; display:grid; grid-template-columns:repeat(4,1fr); gap:var(--section-gap); align-items:start; padding-top:26px; }
-  .identity-process .roadmap-line { position:absolute; top:0; left:0; width:100%; height:26px; overflow:visible; pointer-events:none; }
-  .identity-process .roadmap-line path { fill:none; stroke:url(#roadmapGrad); stroke-width:1.5; stroke-linecap:round; opacity:0.8; }
+  /* Roadmap en diagonal 2x2 intercalada, integrada a un campo de líneas
+     de flujo (a pedido explícito 2026-09-10, iteración 2) -- 4 puntos
+     alternan de altura (alto/bajo/alto/bajo, la "diagonal intercalada")
+     posicionados en absoluto para que el trazo SVG principal pase
+     EXACTO por el centro de cada punto en vez de ser decoración suelta
+     encima. 3 curvas superpuestas (1 principal + 2 más finas y tenues,
+     desfasadas) en vez de una sola línea -- referencia visual a un
+     campo de streamlines (solución de Navier-Stokes, versión
+     minimalista: sin vórtices ni densidad real, solo la idea de varias
+     líneas de flujo paralelas fluyendo juntas). Sin números, sin color
+     por texto -- el color vive solo en el punto/la línea. */
+  .identity-process { position:relative; height:150px; }
+  .identity-process .roadmap-svg { position:absolute; inset:0; width:100%; height:100%; overflow:visible; pointer-events:none; }
+  .identity-process .flow-line { fill:none; stroke-linecap:round; }
+  .identity-process .flow-line-1 { stroke:url(#roadmapGrad); stroke-width:1.6; opacity:0.85; }
+  .identity-process .flow-line-2 { stroke:var(--cyan); stroke-width:1; opacity:0.2; }
+  .identity-process .flow-line-3 { stroke:var(--purple); stroke-width:1; opacity:0.16; }
   @media (prefers-reduced-motion: no-preference) {
-    .identity-process .roadmap-line path { stroke-dasharray:6 8; animation:roadmapFlow 16s linear infinite; }
-    @keyframes roadmapFlow { to { stroke-dashoffset:-280; } }
+    .identity-process .flow-line-1 { stroke-dasharray:5 7; animation:roadmapFlow 15s linear infinite; }
+    .identity-process .flow-line-2 { stroke-dasharray:4 6; animation:roadmapFlow 19s linear infinite; }
+    .identity-process .flow-line-3 { stroke-dasharray:4 6; animation:roadmapFlow 23s linear infinite reverse; }
+    @keyframes roadmapFlow { to { stroke-dashoffset:-220; } }
   }
-  .identity-step { display:grid; align-content:start; gap:6px; justify-items:start; }
-  .identity-step:nth-child(2) { --dot:var(--accent); }
-  .identity-step:nth-child(3) { --dot:var(--good); }
-  .identity-step:nth-child(4) { --dot:var(--purple); }
-  .identity-step:nth-child(5) { --dot:var(--amber); }
-  .rm-dot { width:9px; height:9px; border-radius:50%; background:var(--dot,var(--accent)); box-shadow:0 0 0 4px color-mix(in srgb, var(--dot,var(--accent)) 16%, transparent); }
+  .identity-step {
+    position:absolute; left:var(--sx); top:var(--sy); width:105px;
+    display:grid; align-content:start; gap:3px; justify-items:start;
+  }
+  .identity-step:nth-child(2) { --dot:var(--accent); --sx:0%;  --sy:0px; }
+  .identity-step:nth-child(3) { --dot:var(--good);   --sx:25%; --sy:78px; }
+  .identity-step:nth-child(4) { --dot:var(--purple); --sx:50%; --sy:0px; }
+  .identity-step:nth-child(5) { --dot:var(--amber);  --sx:74%; --sy:78px; }
+  .rm-dot { width:7px; height:7px; border-radius:50%; background:var(--dot,var(--accent)); box-shadow:0 0 0 3px color-mix(in srgb, var(--dot,var(--accent)) 16%, transparent); }
   .identity-step h3,.identity-step p,.identity-card h3 { margin:0; }
-  .identity-step h3 { color:var(--text); }
+  .identity-step h3 { color:var(--text); font-size:14px; }
+  .identity-step p { font-size:11.5px; color:var(--text-dim); }
+  /* 900px (no 700px) -- mismo umbral que .category-links/.identity-grid
+     ya usan más abajo para este bloque; el sidebar (248px) angosta la
+     columna real bastante antes de que el viewport "se sienta" chico,
+     así que el layout absoluto necesita más margen del que parece. */
+  @media (max-width:900px) {
+    .identity-process { position:static; height:auto; display:grid; grid-template-columns:1fr 1fr; gap:20px 16px; }
+    .identity-process .roadmap-svg { display:none; }
+    .identity-step { position:static; width:auto; }
+  }
   .identity-card { padding:var(--card-pad); border:1px solid var(--border); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow); transition:border-color var(--duration-base) ease; }
   .identity-card:hover { border-color:var(--accent); }
   .identity-grid { display:grid; grid-template-columns:1fr 1fr; gap:var(--section-gap); align-items:stretch; }
@@ -2960,8 +2982,9 @@
       <p>We hunt real, evidence-based gaps in developer tooling and ship focused IntelliJ-family plugins to fix them. Every product in this catalog exists because of a documented complaint, not a guess.</p>
     </div>
     <div class="identity-process" aria-label="How we work">
-      <svg class="roadmap-line" viewBox="0 0 1000 26" preserveAspectRatio="none" aria-hidden="true">
+      <svg class="roadmap-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
         <defs>
+          <path id="flowPath" d="M2,3 C14,3 18,54 27,54 S39,3 52,3 S64,54 76,54"/>
           <linearGradient id="roadmapGrad" x1="0" y1="0" x2="1" y2="0">
             <stop offset="0%" stop-color="var(--accent)"/>
             <stop offset="35%" stop-color="var(--good)"/>
@@ -2969,7 +2992,9 @@
             <stop offset="100%" stop-color="var(--amber)"/>
           </linearGradient>
         </defs>
-        <path d="M10 13 C 130 -1, 200 27, 320 13 S 450 -1, 520 13 S 650 27, 770 13 S 900 -1, 990 13"/>
+        <use class="flow-line flow-line-3" href="#flowPath" transform="translate(2,10)"/>
+        <use class="flow-line flow-line-2" href="#flowPath" transform="translate(-2,-8)"/>
+        <use class="flow-line flow-line-1" href="#flowPath"/>
       </svg>
       <article class="identity-step"><span class="rm-dot" aria-hidden="true"></span><h3>Observe</h3><p>Identify friction</p></article>
       <article class="identity-step"><span class="rm-dot" aria-hidden="true"></span><h3>Detect</h3><p>Find real gaps</p></article>
