@@ -1228,6 +1228,16 @@
     margin-bottom: var(--section-gap);
   }
 
+  /* Envoltorios nuevos del rediseño mobile (ver @media 640px más abajo)
+     -- en escritorio no deben existir visualmente: .ctl-rest y
+     .ctl-filters-panel usan display:contents para que sus hijos
+     (view-toggle, ambos <select>) sigan siendo hijos directos del flex
+     de .controls, exactamente el layout de siempre; el ícono de lupa y
+     el botón "Filters" (que en mobile reemplazan/agrupan esos
+     controles) se ocultan del todo. */
+  .ctl-search-icon, .ctl-filters-btn { display: none; }
+  .ctl-rest, .ctl-filters-panel { display: contents; }
+
   .search {
     flex: 1 1 260px;
     position: relative;
@@ -1294,31 +1304,63 @@
     outline-offset: 1px;
   }
 
-  /* Los 4 controles agrupados en 1 solo elemento (a pedido explícito
-     2026-09-10, 3ra vuelta) -- antes eran 4 boxes sueltos apilados,
-     cada uno con su propio borde/fondo/radio. Ahora .controls ES la
-     única caja visible (borde+fondo+radio una vez), cada control
-     pierde el suyo propio y se separan con una línea divisoria fina
-     en vez de un hueco entre cards. .view-toggle conserva su propio
-     padding/.vt-thumb (el pill azul activo) -- solo se le saca el
-     borde/fondo exterior, que ahora lo pone .controls. */
+  /* Rediseño completo del control bar mobile (a pedido explícito
+     2026-09-10, 4ta vuelta) -- ya no son 4 filas apiladas: 1 sola fila
+     compacta con la lupa a la izquierda, el toggle Field/Table + un
+     botón "Filters" que abre un popover con los 2 <select> reales
+     (mismos elementos/ids que ya usa el JS de filtrado, solo
+     envueltos distinto -- category/pricingFilter no cambiaron). Click
+     en la lupa: el resto (.ctl-rest) se desvanece y el campo de
+     búsqueda se expande a todo el ancho; click de nuevo (o Escape)
+     revierte. .ctl-search-icon/.ctl-filters-btn/.ctl-rest/
+     .ctl-filters-panel solo existen visualmente acá -- en escritorio
+     quedan con display:none o display:contents (ver regla base fuera
+     de este media query) para no tocar el layout de siempre. */
   @media (max-width: 640px) {
     .controls {
-      display: grid; grid-template-columns: 1fr; gap: 0;
+      position: relative; display: flex; align-items: center; gap: 6px;
       border: 1px solid var(--border); border-radius: var(--radius-md);
-      background: var(--surface); overflow: hidden;
+      background: var(--surface); padding: 6px;
     }
-    .search, select#categoryFilter, select#pricingFilter, .view-toggle {
-      flex: none; min-width: 0; width: auto;
-      border: 0; border-radius: 0; background: transparent;
+    .ctl-search-icon {
+      display: flex; align-items: center; justify-content: center; flex: none;
+      width: 32px; height: 32px; border: 0; border-radius: var(--radius-sm);
+      background: transparent; color: var(--text-dim); cursor: pointer;
+      transition: color var(--duration-base) ease, background var(--duration-base) ease;
     }
-    select#categoryFilter, select#pricingFilter { padding-left: 12px; padding-right: 12px; }
-    /* margin, no padding -- .view-toggle ya usa su propio padding:3px
-       para posicionar .vt-thumb (el pill azul activo); tocar ese
-       padding corriera el thumb del borde real del control. */
-    .view-toggle { margin: 6px 12px; }
-    .search input { border: 0; background: transparent; border-radius: 0; }
-    .controls > * + * { border-top: 1px solid var(--border); }
+    .ctl-search-icon svg { width: 17px; height: 17px; }
+    .ctl-search-icon:hover { color: var(--text); background: var(--surface-2); }
+    .controls.is-searching .ctl-search-icon { color: var(--accent); background: color-mix(in srgb, var(--accent) 14%, transparent); }
+    .search {
+      flex: 1 1 auto; max-width: 0; opacity: 0; overflow: hidden; min-width: 0;
+      transition: max-width var(--duration-slow) var(--ease-standard), opacity var(--duration-base) ease;
+    }
+    .controls.is-searching .search { max-width: 1000px; opacity: 1; }
+    .search input { border: 0; background: transparent; border-radius: 0; height: 32px; padding: 0 8px 0 4px; }
+    .ctl-rest {
+      display: flex; align-items: center; gap: 6px; flex: 1 1 auto; max-width: 1000px; min-width: 0;
+      overflow: hidden; transition: max-width var(--duration-slow) var(--ease-standard), opacity var(--duration-base) ease;
+    }
+    .controls.is-searching .ctl-rest { max-width: 0; opacity: 0; pointer-events: none; }
+    .view-toggle { flex: 1 1 auto; min-width: 0; height: 32px; padding: 2px; }
+    .view-toggle button { padding: 0 8px; font-size: 9.5px; }
+    .ctl-filters-btn {
+      display: inline-flex; align-items: center; gap: 4px; flex: none;
+      height: 32px; padding: 0 10px; border: 1px solid var(--border); border-radius: var(--radius-sm);
+      background: var(--surface-2); color: var(--text); font-family: var(--sans); font-size: 11.5px; font-weight: 600;
+      white-space: nowrap; cursor: pointer; transition: border-color var(--duration-base) ease;
+    }
+    .ctl-filters-btn svg { width: 9px; height: 6px; flex: none; transition: transform var(--duration-base) ease; }
+    .ctl-filters-btn:hover, .ctl-filters-btn[aria-expanded="true"] { border-color: var(--accent); }
+    .ctl-filters-btn[aria-expanded="true"] svg { transform: rotate(180deg); }
+    .ctl-filters-panel {
+      display: none; position: absolute; top: 100%; right: 6px; margin-top: 6px;
+      flex-direction: column; gap: 8px; min-width: 200px; padding: 10px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md);
+      box-shadow: var(--shadow); z-index: 20;
+    }
+    .ctl-filters-panel.is-open { display: flex; }
+    .ctl-filters-panel select { width: 100%; }
     .topbar-inner { padding: 0 var(--page-pad-sm); }
     .tw-name { font-size: 13px; letter-spacing: 0.06em; }
   }
@@ -3288,27 +3330,38 @@
 
   <div class="catalog-stats" id="catalogStats" aria-label="Catalog metrics"></div>
 
-  <div class="controls">
+  <div class="controls" id="controls">
+    <button type="button" class="ctl-search-icon" id="searchToggle" aria-label="Search" aria-expanded="false" aria-controls="searchInput">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M16 16l-3.2-3.2" stroke-linecap="round"/></svg>
+    </button>
     <div class="search" role="search">
 
       <input type="search" id="searchInput" placeholder="Search by name, niche, or repo…" aria-label="Search plugins by name, niche, or repo" autocomplete="off" />
     </div>
-    <div class="view-toggle" id="modeToggle" role="group" aria-label="Catalog view">
-      <span class="vt-thumb" aria-hidden="true"></span>
-      <button type="button" data-mode="field" class="active" aria-pressed="true">Field</button>
-      <button type="button" data-mode="table" aria-pressed="false">Table</button>
+    <div class="ctl-rest" id="ctlRest">
+      <div class="view-toggle" id="modeToggle" role="group" aria-label="Catalog view">
+        <span class="vt-thumb" aria-hidden="true"></span>
+        <button type="button" data-mode="field" class="active" aria-pressed="true">Field</button>
+        <button type="button" data-mode="table" aria-pressed="false">Table</button>
+      </div>
+      <button type="button" class="ctl-filters-btn" id="filtersToggle" aria-haspopup="true" aria-expanded="false" aria-controls="filtersPanel">
+        Filters
+        <svg viewBox="0 0 10 6" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M1 1l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
     </div>
-    <select id="categoryFilter" aria-label="Filter by category">
-      <option value="">All categories</option>
-    </select>
+    <div class="ctl-filters-panel" id="filtersPanel">
+      <select id="categoryFilter" aria-label="Filter by category">
+        <option value="">All categories</option>
+      </select>
 
-    <select id="pricingFilter" aria-label="Filter by pricing model">
-      <option value="">All pricing models</option>
-      <option value="FREE">Free</option>
-      <option value="FREEMIUM">Freemium</option>
-      <option value="PAID">Paid</option>
-      <option value="PENDING">Pending moderation</option>
-    </select>
+      <select id="pricingFilter" aria-label="Filter by pricing model">
+        <option value="">All pricing models</option>
+        <option value="FREE">Free</option>
+        <option value="FREEMIUM">Freemium</option>
+        <option value="PAID">Paid</option>
+        <option value="PENDING">Pending moderation</option>
+      </select>
+    </div>
   </div>
 
   <div class="content-stage" id="contentStage">
@@ -4242,6 +4295,58 @@ GapCatalog.ready.then(function (shared) {
     if (!btn) return;
     switchMode(btn.getAttribute('data-mode'), btn);
   });
+
+  // Control bar compacta en mobile (a pedido explícito 2026-09-10):
+  // la lupa expande/colapsa el campo de búsqueda (el resto se
+  // desvanece mientras está abierto), el botón "Filters" abre un
+  // popover con los 2 <select> reales -- ninguno de los dos hace nada
+  // en escritorio (ambos botones son display:none ahí, ver CSS), así
+  // que este bloque es inerte fuera del breakpoint mobile.
+  (function () {
+    var controls = document.getElementById('controls');
+    var searchToggle = document.getElementById('searchToggle');
+    var searchInput = document.getElementById('searchInput');
+    var filtersToggle = document.getElementById('filtersToggle');
+    var filtersPanel = document.getElementById('filtersPanel');
+    if (!controls || !searchToggle || !filtersToggle || !filtersPanel) return;
+
+    function closeFilters() {
+      filtersPanel.classList.remove('is-open');
+      filtersToggle.setAttribute('aria-expanded', 'false');
+    }
+    function closeSearch() {
+      controls.classList.remove('is-searching');
+      searchToggle.setAttribute('aria-expanded', 'false');
+    }
+
+    searchToggle.addEventListener('click', function () {
+      var opening = !controls.classList.contains('is-searching');
+      controls.classList.toggle('is-searching', opening);
+      searchToggle.setAttribute('aria-expanded', opening ? 'true' : 'false');
+      closeFilters();
+      if (opening) {
+        searchInput.focus();
+      } else {
+        searchInput.blur();
+      }
+    });
+
+    filtersToggle.addEventListener('click', function () {
+      var opening = !filtersPanel.classList.contains('is-open');
+      filtersPanel.classList.toggle('is-open', opening);
+      filtersToggle.setAttribute('aria-expanded', opening ? 'true' : 'false');
+      if (opening) closeSearch();
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!controls.contains(e.target)) closeFilters();
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      if (controls.classList.contains('is-searching')) closeSearch();
+      if (filtersPanel.classList.contains('is-open')) closeFilters();
+    });
+  })();
 
   Array.prototype.forEach.call(document.querySelectorAll('thead th'), function (th) {
     var sort = function () {
