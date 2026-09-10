@@ -2332,6 +2332,48 @@
 
   .expand-row td { padding: 0; border-bottom: 1px solid var(--border); }
 
+  /* Table mode en teléfono: cada fila se convierte en una card apilada
+     en vez de la tabla ancha con scroll horizontal (a pedido explícito
+     2026-09-10 -- "las pestañas [columnas] no se logran ver completas
+     ... no tiene orden interno", confirmado con captura real: headers
+     cortados a la mitad, look "glitcheado"). Mismo <tr>/<td> real, sin
+     tocar el JS de sort/click/expand -- solo display:flex en vez de
+     table-row, y label por celda vía data-label + ::before (agregado
+     en pluginCardHtml de la tabla) en vez de depender del <thead>
+     (oculto acá). Reviews/Rating (.tbl-optional) se ocultan -- mismo
+     criterio que ya se aplicó al dossier: siempre "—", cero dato real
+     en todo el catálogo hoy. */
+  @media (max-width: 640px) {
+    .table-scroll { overflow-x: visible; border: 0; border-radius: 0; background: none; box-shadow: none; }
+    table { min-width: 0; }
+    thead { display: none; }
+    tbody { display: block; }
+    tr.row {
+      display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 12px; margin-bottom: 10px;
+    }
+    tr.row:last-child { border-bottom: 1px solid var(--border); }
+    tr.row:has(+ tr.expand-row .expand-inner.open) {
+      margin-bottom: 0; border-bottom: 0; border-bottom-left-radius: 0; border-bottom-right-radius: 0;
+    }
+    tr.row td { display: block; padding: 0; }
+    tr.row td.name-cell {
+      flex: 1 1 100%; max-width: none; padding-bottom: 10px; margin-bottom: 2px;
+      border-bottom: 1px solid var(--border);
+    }
+    tr.row td.tbl-optional { display: none; }
+    tr.row td[data-label] { flex: 1 1 auto; min-width: 84px; }
+    tr.row td[data-label]::before {
+      content: attr(data-label); display: block; margin-bottom: 2px;
+      font-family: var(--mono); font-size: 8.5px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--text-faint);
+    }
+    td.num-cell { text-align: left; }
+    .expand-row { display: block; }
+    .expand-row td { display: block; padding: 0; border-bottom: 0; }
+    .expand-inner.open { margin-bottom: 10px; border-radius: 0 0 var(--radius) var(--radius); }
+  }
+
   /* Table row expand — compact type scale (list context, not the
      Field full-page dossier). Same real fields only; no GIF. Layout
      matches Field: header, one stats bar, Gap | Fix side by side,
@@ -4130,12 +4172,12 @@ GapCatalog.ready.then(function (shared) {
       var isOpen = selectedRepo === p.repo;
       html += '<tr class="row" data-repo="' + esc(p.repo) + '" role="button" tabindex="0" aria-expanded="' + (isOpen ? 'true' : 'false') + '" aria-label="' + esc(p.name) + ' details">';
       html += '<td class="name-cell"><div class="plugin-name">' + esc(p.name) + (p.verified ? '<span class="verified-mark" role="img" aria-label="Verified vendor" title="Verified vendor">✓</span>' : '') + '</div><div class="niche">' + esc(p.niche) + '</div></td>';
-      html += '<td class="num-cell">' + (isPending ? '—' : p.downloads.toLocaleString('en-US')) + (isPending ? '' : growthMarkup(p)) + '</td>';
-      html += '<td class="num-cell">' + (p.reviews === null ? '—' : p.reviews) + '</td>';
-      html += '<td class="num-cell">' + (p.rating != null ? p.rating.toFixed(2) : '—') + '</td>';
-      html += '<td class="num-cell">' + (p.stars != null ? p.stars : '—') + '</td>';
-      html += '<td><span class="chip ' + pr.cls + '">' + esc(pr.text) + '</span></td>';
-      html += '<td class="num-cell" style="text-align:left">' + (p.firstPublished || '—') + '</td>';
+      html += '<td class="num-cell" data-label="Downloads">' + (isPending ? '—' : p.downloads.toLocaleString('en-US')) + (isPending ? '' : growthMarkup(p)) + '</td>';
+      html += '<td class="num-cell tbl-optional" data-label="Reviews">' + (p.reviews === null ? '—' : p.reviews) + '</td>';
+      html += '<td class="num-cell tbl-optional" data-label="Rating">' + (p.rating != null ? p.rating.toFixed(2) : '—') + '</td>';
+      html += '<td class="num-cell" data-label="GitHub ★">' + (p.stars != null ? p.stars : '—') + '</td>';
+      html += '<td data-label="Pricing"><span class="chip ' + pr.cls + '">' + esc(pr.text) + '</span></td>';
+      html += '<td class="num-cell" data-label="Published" style="text-align:left">' + (p.firstPublished || '—') + '</td>';
       html += '</tr>';
       html += '<tr class="expand-row"><td colspan="7"><div class="expand-inner' + (isOpen ? ' open' : '') + '" id="exp-' + esc(p.repo) + '">';
       // Own compact layout (tableDossierBodyHtml, 2026-08-16), not the
