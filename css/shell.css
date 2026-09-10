@@ -71,13 +71,23 @@
    llega al borde derecho real. */
 .app-shell .topbar-inner { grid-template-columns: minmax(0, 1fr) auto; }
 
+/* Bug real reportado 2026-09-10 (captura del usuario): con
+   height:100vh + overflow-y:auto, el sidebar tenía su PROPIO scroll
+   interno -- si el mouse quedaba sobre él al scrollear con la rueda,
+   el navegador scrolleaba el sidebar en vez de la página, dejando
+   "Home"/"Catalog" ocultos arriba de ese scroll interno mientras la
+   página principal sí navegaba bien (se veía como "el link no
+   funciona" cuando en realidad era el sidebar el que quedaba
+   scrolleado). Con solo 5 links + el logo del pie, este contenido
+   nunca necesita scroll propio en un viewport real -- max-height (no
+   height fijo) + sin overflow-y:auto elimina la posibilidad de que
+   quede scrolleado por accidente, sin perder el position:sticky. */
 .app-sidebar {
   grid-area: shell-sidebar;
   position: sticky;
   top: var(--shell-header-h);
   align-self: start;
-  height: calc(100vh - var(--shell-header-h));
-  overflow-y: auto;
+  max-height: calc(100vh - var(--shell-header-h));
   background: var(--surface);
   border-right: 1px solid var(--border);
   padding: var(--space-5) var(--space-3);
