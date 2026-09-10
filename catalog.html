@@ -1495,16 +1495,17 @@
      Revierte a chips de ancho natural + wrap en mobile (media query
      abajo), donde 10 tiles apretadas en una sola línea ya no son
      usables como blanco de touch. */
-  /* Bug real reportado 2026-09-10 (captura + hard refresh confirmando
-     que no era caché): con 10 categorías reales (Other pasó a tener
-     plugins), el cálculo de flex-shrink no siempre alcanza a achicar
-     las 10 celdas a tiempo -- el ícono no tenía flex-shrink bloqueado
-     ni min-width propio, así que en algunos navegadores el remanente
-     empujaba la fila entera (y con ella la página) a un scroll
-     horizontal real. overflow-x:auto acá es la red de seguridad dura:
-     si algún día no entran todas, el scroll queda CONTENIDO en esta
-     fila, nunca se escapa a la página completa. */
-  .catalog-explore .cat-board { display: flex; flex-wrap: nowrap; gap: 6px; margin-top: 0; overflow-x: auto; }
+  /* 2da vuelta sobre este bug real, mismo día: el overflow-x:auto de
+     la vuelta anterior SÍ contenía el scroll (nunca se escapaba a la
+     página), pero con 10 tiles reales el último quedaba "sobresaliendo"
+     recortado a la mitad en el borde -- técnicamente contenido, pero
+     se ve roto (reportado con captura otra vez). flex-wrap:wrap (el
+     mismo comportamiento que ya usan los breakpoints angostos) en vez
+     de nowrap+scroll: cuando 10 no entran en una fila, bajan prolijos
+     a una segunda en vez de exigir scroll horizontal en un tablero de
+     filtros que nadie espera que se scrollee. overflow-x:auto queda
+     de red de seguridad extra, ya no hace falta para el caso normal. */
+  .catalog-explore .cat-board { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 0; overflow-x: auto; }
   .catalog-explore .cat-cell {
     flex: 1 1 0; min-width: 0; flex-direction: row; align-items: center; gap: 6px; min-height: auto;
     padding: 7px 8px; background: var(--surface); border-radius: var(--radius-md);
