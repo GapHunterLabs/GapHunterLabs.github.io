@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var ready = fetch('data/vscode-catalog-data.json', { credentials: 'same-origin' })
+  var ready = fetch('/data/vscode-catalog-data.json', { credentials: 'same-origin' })
     .then(function (response) {
       if (!response.ok) throw new Error('VS Code catalog request failed: ' + response.status);
       return response.json();

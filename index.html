@@ -170,14 +170,14 @@
      existing system-font stack visible until the files arrive. */
   @font-face {
     font-family: "IBM Plex Sans";
-    src: url("fonts/IBMPlexSans-Variable.ttf") format("truetype");
+    src: url("/fonts/IBMPlexSans-Variable.ttf") format("truetype");
     font-weight: 100 700;
     font-style: normal;
     font-display: swap;
   }
   @font-face {
     font-family: "JetBrains Mono";
-    src: url("fonts/JetBrainsMono-Variable.ttf") format("truetype");
+    src: url("/fonts/JetBrainsMono-Variable.ttf") format("truetype");
     font-weight: 100 800;
     font-style: normal;
     font-display: swap;
@@ -2945,7 +2945,7 @@
   @media (max-width: 620px) { .category-links,.identity-grid { grid-template-columns:1fr; } .section-head{align-items:flex-start;flex-direction:column;} }
 
 </style>
-<link rel="stylesheet" href="css/shell.css">
+<link rel="stylesheet" href="/css/shell.css">
 </head>
 <body>
 <div id="siteLoader" class="site-loader" role="status" aria-live="polite" aria-busy="true">
@@ -2976,7 +2976,7 @@
 <div class="app-shell">
 <nav class="topbar" id="topbar">
   <div class="topbar-inner">
-    <a class="topbar-brand" href="index.html" aria-label="Gap Hunter Labs">
+    <a class="topbar-brand" href="/" aria-label="Gap Hunter Labs">
       <span class="topbar-mark" aria-hidden="true">
         <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
           <path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#0151FC"/>
@@ -3015,11 +3015,11 @@
 
 <aside class="app-sidebar" id="appSidebar">
   <nav class="sidebar-nav" aria-label="Primary">
-    <a class="sidebar-link" href="index.html" aria-current="page"><svg viewBox="0 0 20 20" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10 10 3l7 7M5 8.5V17h10V8.5"/></svg>Home</a>
-    <a class="sidebar-link" href="catalog.html"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="11" y="3" width="6" height="6" rx="1"/><rect x="3" y="11" width="6" height="6" rx="1"/><rect x="11" y="11" width="6" height="6" rx="1"/></svg>Catalog</a>
-    <a class="sidebar-link" href="methodology.html"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8" cy="10" r="5.5" fill="none" stroke="currentColor" stroke-width="1.2" stroke-dasharray="1.6 1.8"/><circle cx="8" cy="10" r="2" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M8 4.7v1.3M8 14v1.3M2.7 10h1.3M12 10h1.3M4.3 6.3l.9.9M10.8 12.8l.9.9M4.3 13.7l.9-.9M10.8 7.2l.9-.9" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/><path d="M13.5 10h4.3M15.8 8l2 2-2 2" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>Methodology</a>
-    <a class="sidebar-link" href="laboratorio.html"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 2.5h5M8.5 2.5v4.3L4.8 13a1.6 1.6 0 0 0 1.4 2.4h7.6a1.6 1.6 0 0 0 1.4-2.4L11.5 6.8V2.5"/><path d="M6.2 11h7.6"/></svg>Laboratorie</a>
-    <a class="sidebar-link" href="contact.html"><svg viewBox="0 0 20 20" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="14" height="10" rx="1.5"/><path d="M3.5 6l6.5 5 6.5-5"/></svg>Contact</a>
+    <a class="sidebar-link" href="/" aria-current="page"><svg viewBox="0 0 20 20" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10 10 3l7 7M5 8.5V17h10V8.5"/></svg>Home</a>
+    <a class="sidebar-link" href="/catalog/"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="11" y="3" width="6" height="6" rx="1"/><rect x="3" y="11" width="6" height="6" rx="1"/><rect x="11" y="11" width="6" height="6" rx="1"/></svg>Catalog</a>
+    <a class="sidebar-link" href="/methodology/"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8" cy="10" r="5.5" fill="none" stroke="currentColor" stroke-width="1.2" stroke-dasharray="1.6 1.8"/><circle cx="8" cy="10" r="2" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M8 4.7v1.3M8 14v1.3M2.7 10h1.3M12 10h1.3M4.3 6.3l.9.9M10.8 12.8l.9.9M4.3 13.7l.9-.9M10.8 7.2l.9-.9" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/><path d="M13.5 10h4.3M15.8 8l2 2-2 2" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>Methodology</a>
+    <a class="sidebar-link" href="/laboratorio/"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 2.5h5M8.5 2.5v4.3L4.8 13a1.6 1.6 0 0 0 1.4 2.4h7.6a1.6 1.6 0 0 0 1.4-2.4L11.5 6.8V2.5"/><path d="M6.2 11h7.6"/></svg>Laboratorie</a>
+    <a class="sidebar-link" href="/contact/"><svg viewBox="0 0 20 20" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="14" height="10" rx="1.5"/><path d="M3.5 6l6.5 5 6.5-5"/></svg>Contact</a>
   </nav>
   <div class="sidebar-footer">
     <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -3052,7 +3052,7 @@
       <p class="hero-subtitle" id="heroSubtitle">We hunt real, evidence-based gaps in developer tooling and ship focused IntelliJ-family plugins to fix them — every product exists because of a documented complaint, not a guess.</p>
       <section class="telemetry" id="stats" aria-label="Catalog metrics"></section>
       <div class="hero-actions">
-        <a class="btn primary" href="catalog.html">Explore the Catalog</a>
+        <a class="btn primary" href="/catalog/">Explore the Catalog</a>
         <a class="btn" href="#identity">How we work</a>
       </div>
     </div>
@@ -3074,7 +3074,7 @@
   </div>
 
   <section class="category-preview" aria-labelledby="categoryPreviewTitle">
-    <div class="section-head"><div><p class="eyebrow">Hunting field</p><h2 id="categoryPreviewTitle">Explore by category</h2></div><a class="btn" href="catalog.html">Explore the full catalog →</a></div>
+    <div class="section-head"><div><p class="eyebrow">Hunting field</p><h2 id="categoryPreviewTitle">Explore by category</h2></div><a class="btn" href="/catalog/">Explore the full catalog →</a></div>
     <div class="cat-board category-links" id="categoryPreview"></div>
   </section>
 
@@ -3138,7 +3138,7 @@
         <h3>The Laboratorie</h3>
         <p>The plugins in this catalog with the strongest, most unusual real evidence behind them — JetBrains' own Platform Blog naming a freeze pattern, a compliance requirement no cloud competitor can clear.</p>
         <p class="ic-stat">2 plugin case studies &middot; 5 JetBrains Platform tickets</p>
-        <a class="btn" href="laboratorio.html">Visit the Laboratorie →</a>
+        <a class="btn" href="/laboratorio/">Visit the Laboratorie →</a>
       </article>
       <article class="identity-card">
         <div class="ic-head">
@@ -3154,8 +3154,8 @@
           <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.2 12 13 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Free or freemium for most of the catalog</li>
         </ul>
         <div class="identity-links">
-          <a class="btn primary" href="methodology.html">Read the methodology →</a>
-          <a class="btn" href="contact.html">Have a gap only your team can see? Tell us →</a>
+          <a class="btn primary" href="/methodology/">Read the methodology →</a>
+          <a class="btn" href="/contact/">Have a gap only your team can see? Tell us →</a>
         </div>
       </article>
     </div>
@@ -3188,11 +3188,11 @@
 
       <nav class="footer-nav" aria-label="Footer navigation">
         <div class="footer-col-title">Explore</div>
-        <a href="catalog.html">Catalog</a>
-        <a href="methodology.html">Methodology</a>
-        <a href="laboratorio.html">Laboratorie</a>
-        <a href="security.html">Security</a>
-        <a href="contact.html">Contact</a>
+        <a href="/catalog/">Catalog</a>
+        <a href="/methodology/">Methodology</a>
+        <a href="/laboratorio/">Laboratorie</a>
+        <a href="/security/">Security</a>
+        <a href="/contact/">Contact</a>
       </nav>
 
       <div class="footer-elsewhere">
@@ -3222,7 +3222,7 @@
   </div>
 </footer>
 
-<script src="js/catalog-shared.js"></script>
+<script src="/js/catalog-shared.js"></script>
 <script>
 (function () {
   var PREFERS_REDUCED_MOTION = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -3258,7 +3258,7 @@
       var counts = {};
       plugins.forEach(function (p) { counts[p.categoryKey] = (counts[p.categoryKey] || 0) + 1; });
       document.getElementById('categoryPreview').innerHTML = CATEGORIES.filter(function (c) { return c.key !== 'other'; }).map(function (c) {
-        return '<a class="cat-cell" href="catalog.html?category=' + c.key + '" style="--cat:' + c.color + '"><span class="cat-cell-icon">' + shared.catIconHtml(c.key) + '</span><span class="cat-cell-copy"><strong>' + esc(c.label) + '</strong><span class="cat-cell-count">' + (counts[c.key] || 0) + ' plugins</span></span><span class="cat-cell-arrow" aria-hidden="true">&rarr;</span></a>';
+        return '<a class="cat-cell" href="/catalog/?category=' + c.key + '" style="--cat:' + c.color + '"><span class="cat-cell-icon">' + shared.catIconHtml(c.key) + '</span><span class="cat-cell-copy"><strong>' + esc(c.label) + '</strong><span class="cat-cell-count">' + (counts[c.key] || 0) + ' plugins</span></span><span class="cat-cell-arrow" aria-hidden="true">&rarr;</span></a>';
       }).join('');
     }
 
@@ -3268,7 +3268,7 @@
       if (!root || !track || !dots || !prev || !next) return;
       var featured = plugins.filter(function (p) { return GIF_URL[p.repo]; }).sort(function (a,b) { return (b.downloads || 0) - (a.downloads || 0); }).slice(0,5);
       var index = 0, timer;
-      track.innerHTML = featured.map(function (p,i) { return '<a class="hs-slide" href="catalog.html#' + encodeURIComponent(p.repo) + '"' + (i ? ' tabindex="-1"' : '') + '><span class="hs-media"><img src="' + esc(GIF_URL[p.repo]) + '" alt="" width="640" height="360"></span><span class="hs-copy"><span class="hs-kicker">Featured</span><span class="hs-name">' + esc(p.name) + '</span><span class="hs-niche">' + esc(p.niche || '') + '</span></span></a>'; }).join('');
+      track.innerHTML = featured.map(function (p,i) { return '<a class="hs-slide" href="/catalog/#' + encodeURIComponent(p.repo) + '"' + (i ? ' tabindex="-1"' : '') + '><span class="hs-media"><img src="' + esc(GIF_URL[p.repo]) + '" alt="" width="640" height="360"></span><span class="hs-copy"><span class="hs-kicker">Featured</span><span class="hs-name">' + esc(p.name) + '</span><span class="hs-niche">' + esc(p.niche || '') + '</span></span></a>'; }).join('');
       dots.innerHTML = featured.map(function (p,i) { return '<button type="button" class="hs-dot' + (i ? '' : ' is-active') + '" aria-label="Show ' + esc(p.name) + '"></button>'; }).join('');
       function go(n) { index = (n + featured.length) % featured.length; track.style.transform = 'translateX(-' + index * 100 + '%)'; Array.prototype.forEach.call(track.children,function(el,i){el.tabIndex=i===index?0:-1;}); Array.prototype.forEach.call(dots.children,function(el,i){el.classList.toggle('is-active',i===index);}); }
       function play(){ clearInterval(timer); if(!PREFERS_REDUCED_MOTION) timer=setInterval(function(){go(index+1);},5500); }
