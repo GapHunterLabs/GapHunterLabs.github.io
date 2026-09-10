@@ -2801,6 +2801,20 @@
     .identity-process .flow-line-3 { stroke-dasharray:6 6; animation:roadmapFlow 23s linear infinite reverse; }
     @keyframes roadmapFlow { to { stroke-dashoffset:-216; } }
   }
+  /* Freeze real reportado en teléfonos (2026-09-10) -- 3 líneas
+     superpuestas animando stroke-dasharray/dashoffset a la vez es caro
+     de repintar en bastante hardware mobile. Bloqueado por ANCHO de
+     pantalla, no por prefers-reduced-motion -- esto es un problema de
+     rendimiento real, no una preferencia de accesibilidad, así que
+     tiene que apagarse aunque el usuario no haya pedido reduced
+     motion. Gana por orden de cascada sobre el bloque de arriba (misma
+     especificidad, declarado después). El trazo se queda quieto pero
+     visible -- no se oculta la línea, solo el movimiento. */
+  @media (max-width:600px) {
+    .identity-process .flow-line-1,
+    .identity-process .flow-line-2,
+    .identity-process .flow-line-3 { animation:none; }
+  }
   .identity-step {
     position:absolute; left:var(--sx); top:var(--sy); width:105px;
     display:grid; align-content:start; gap:3px; justify-items:start;
