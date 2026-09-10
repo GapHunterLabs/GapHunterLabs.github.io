@@ -855,7 +855,10 @@
   @media (hover: hover) and (pointer: fine) {
     .hs-slide:hover img,
     .hs-slide:focus-visible img {
-      transform: scale(1.5);
+      /* Zoom 75% (a pedido explícito 2026-09-10) -- 1.75x, con
+         transform-origin siguiendo al mouse en vez de un punto fijo
+         (ver mousemove en initHeroSlider()). */
+      transform: scale(1.75);
     }
   }
   .hs-copy {
@@ -3053,6 +3056,33 @@
       function play(){ clearInterval(timer); if(!PREFERS_REDUCED_MOTION) timer=setInterval(function(){go(index+1);},5500); }
       prev.addEventListener('click',function(){go(index-1);play();}); next.addEventListener('click',function(){go(index+1);play();});
       dots.addEventListener('click',function(e){var i=Array.prototype.indexOf.call(dots.children,e.target);if(i>=0){go(i);play();}}); play();
+      // Zoom que sigue al mouse (a pedido explícito 2026-09-10) -- el
+      // origen del scale() de arriba (--hs-ox/--hs-oy, default 50%/18%
+      // en CSS) se sobreescribe por elemento según la posición real del
+      // cursor dentro de esa imagen, para que el zoom 1.75x quede
+      // centrado donde está el mouse en vez de un punto fijo. Delegado
+      // en `track` (estable -- innerHTML solo se arma una vez arriba,
+      // go() solo cambia su transform) en vez de por-slide. Se salta
+      // por completo si el usuario pidió reduced motion, mismo criterio
+      // que play() ya usa arriba.
+      if (!PREFERS_REDUCED_MOTION) {
+        track.addEventListener('mousemove', function (e) {
+          var media = e.target.closest('.hs-media');
+          if (!media) return;
+          var rect = media.getBoundingClientRect();
+          if (!rect.width || !rect.height) return;
+          var ox = Math.min(100, Math.max(0, (e.clientX - rect.left) / rect.width * 100));
+          var oy = Math.min(100, Math.max(0, (e.clientY - rect.top) / rect.height * 100));
+          media.style.setProperty('--hs-ox', ox + '%');
+          media.style.setProperty('--hs-oy', oy + '%');
+        });
+        track.addEventListener('mouseleave', function () {
+          Array.prototype.forEach.call(track.querySelectorAll('.hs-media'), function (media) {
+            media.style.removeProperty('--hs-ox');
+            media.style.removeProperty('--hs-oy');
+          });
+        });
+      }
     }
 
     renderStats();
