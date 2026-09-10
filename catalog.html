@@ -2879,6 +2879,32 @@
      desalineado real ahora con el sidebar al lado (feedback real
      2026-09-10). */
   .category-preview,.identity-section,.catalog-heading { max-width:var(--page-max); margin:var(--section-gap) auto 0; }
+  /* Ilustración del hero de Catalog (a pedido explícito 2026-09-10) --
+     misma composición que una referencia visual del usuario (nodos
+     hexagonales conectados por líneas de circuito con glow), pero con
+     íconos GENÉRICOS en vez de logos reales de producto (ya se había
+     acordado esta regla al planificar el rediseño: "evitar logos de
+     marca, usar solo íconos propios"). Cada hexágono usa el mismo
+     ícono+color real de una categoría del catálogo (CAT_ICON_INNER/
+     --accent/--good/etc. ya definidos en este archivo) -- no es
+     decoración inventada, es la red de categorías reales del catálogo.
+     SVG hand-rolled, sin librería ni asset externo, mismo criterio que
+     el resto del sitio (sparkline, decision-diagram). */
+  .catalog-heading { display: flex; align-items: center; gap: var(--section-gap); }
+  .ch-copy { flex: 1 1 360px; min-width: 0; }
+  .ch-net { flex: 1 1 380px; min-width: 0; max-width: 480px; }
+  .ch-net svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .ch-net .ch-link { fill: none; stroke: url(#chLinkGrad); stroke-width: 2; stroke-linecap: round; opacity: 0.55; }
+  .ch-net .ch-hex { fill: color-mix(in srgb, var(--cat) 16%, var(--surface-2)); stroke: var(--cat); stroke-width: 1.6; filter: drop-shadow(0 0 7px color-mix(in srgb, var(--cat) 55%, transparent)); }
+  .ch-net .ch-icon { stroke: var(--cat); fill: none; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+  .ch-net .ch-icon.filled { fill: var(--cat); stroke: none; }
+  @media (prefers-reduced-motion: no-preference) {
+    .ch-net .ch-node { animation: chPulse 4.5s ease-in-out infinite; transform-origin: center; transform-box: fill-box; }
+  }
+  @keyframes chPulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.72; } }
+  @media (max-width: 900px) {
+    .ch-net { display: none; }
+  }
   .section-head { display:flex; align-items:end; justify-content:space-between; gap:var(--card-pad); margin-bottom:var(--section-gap); }
   .section-head h2,.identity-section h2,.catalog-heading h1 { margin:4px 0 0; }
   .eyebrow { margin:0; color:var(--accent); font:700 11px var(--mono); letter-spacing:.12em; text-transform:uppercase; }
@@ -3159,7 +3185,64 @@
      semantically confusing for the same landmark-navigation use case
      this fix is for. -->
 <main class="wrap">
-  <header class="catalog-heading page-hero" id="top"><p class="eyebrow">Plugin intelligence</p><h1>Catalog</h1><p>Search, filter, and inspect every focused IntelliJ-family plugin.</p></header>
+  <header class="catalog-heading page-hero" id="top">
+    <div class="ch-copy"><p class="eyebrow">Plugin intelligence</p><h1>Catalog</h1><p>Search, filter, and inspect every focused IntelliJ-family plugin.</p></div>
+    <div class="ch-net" aria-hidden="true">
+      <svg viewBox="0 0 480 300" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="chLinkGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="var(--accent)"/>
+            <stop offset="50%" stop-color="var(--cyan)"/>
+            <stop offset="100%" stop-color="var(--purple)"/>
+          </linearGradient>
+        </defs>
+        <g class="ch-links">
+          <path class="ch-link" d="M90 150 L170 70"/>
+          <path class="ch-link" d="M170 70 L230 160"/>
+          <path class="ch-link" d="M90 150 L230 160"/>
+          <path class="ch-link" d="M230 160 L180 240"/>
+          <path class="ch-link" d="M230 160 L300 90"/>
+          <path class="ch-link" d="M230 160 L330 200"/>
+          <path class="ch-link" d="M300 90 L400 60"/>
+          <path class="ch-link" d="M330 200 L410 190"/>
+          <path class="ch-link" d="M330 200 L400 60"/>
+          <path class="ch-link" d="M180 240 L330 200"/>
+        </g>
+        <g class="ch-node" style="--cat:var(--pending)" transform="translate(90,150)">
+          <polygon class="ch-hex" points="30,0 15,25.98 -15,25.98 -30,0 -15,-25.98 15,-25.98"/>
+          <g class="ch-icon" transform="scale(2.6)"><rect x="-6" y="-5" width="12" height="10" rx="1.5"/><path d="M-3.5-2h4M-3.5 0.5h2.5M2-2v2.5" stroke-linecap="round"/></g>
+        </g>
+        <g class="ch-node" style="--cat:var(--accent); animation-delay:.3s" transform="translate(170,70)">
+          <polygon class="ch-hex" points="30,0 15,25.98 -15,25.98 -30,0 -15,-25.98 15,-25.98"/>
+          <g class="ch-icon" transform="scale(2.6)"><path d="M-4.5-6.5v3M-1.5-6.5v3M-6-3.5h7a2 2 0 0 1 2 2v1a2 2 0 0 0 2 2h1M6 6.5v-3M1.5 6.5v-3M6 3.5H-1a2 2 0 0 1-2-2v-1a2 2 0 0 0-2-2h-1" stroke-linecap="round" stroke-linejoin="round"/></g>
+        </g>
+        <g class="ch-node" style="--cat:var(--good); animation-delay:.6s" transform="translate(230,160)">
+          <polygon class="ch-hex" points="42,0 21,36.37 -21,36.37 -42,0 -21,-36.37 21,-36.37"/>
+          <g class="ch-icon" transform="scale(4.2)"><path d="M-6 0a3 3 0 1 0 6 0 3 3 0 1 1 6 0 3 3 0 1 1-6 0 3 3 0 1 0-6 0Z" stroke-linejoin="round"/></g>
+        </g>
+        <g class="ch-node" style="--cat:var(--bad); animation-delay:.9s" transform="translate(180,240)">
+          <polygon class="ch-hex" points="30,0 15,25.98 -15,25.98 -30,0 -15,-25.98 15,-25.98"/>
+          <g class="ch-icon" transform="scale(2.6)"><path d="M0-6.5 5.5-4v4.2C5.5 3.8 2.8 6 0 6.5-2.8 6-5.5 3.8-5.5.2V-4Z" stroke-linejoin="round"/></g>
+        </g>
+        <g class="ch-node" style="--cat:var(--amber); animation-delay:1.2s" transform="translate(300,90)">
+          <polygon class="ch-hex" points="28,0 14,24.25 -14,24.25 -28,0 -14,-24.25 14,-24.25"/>
+          <g class="ch-icon" transform="scale(2.4)"><path d="M0-6.5v13M-5.5-3.5h11M-5.5-3.5 -6.5 0M-5.5-3.5-4.5 0M5.5-3.5 4.5 0M5.5-3.5 6.5 0M-6.5 0a1.5 1.5 0 0 0 3 0M3.5 0a1.5 1.5 0 0 0 3 0M-2.5 6.5h5" stroke-linecap="round" stroke-linejoin="round"/></g>
+        </g>
+        <g class="ch-node" style="--cat:var(--purple); animation-delay:1.5s" transform="translate(330,200)">
+          <polygon class="ch-hex" points="32,0 16,27.71 -16,27.71 -32,0 -16,-27.71 16,-27.71"/>
+          <g class="ch-icon" transform="scale(3)"><path d="M-5-3c0-1.4 2.2-2.5 5-2.5s5 1.1 5 2.5v6c0 1.4-2.2 2.5-5 2.5s-5-1.1-5-2.5Z"/><path d="M-5-3c0 1.4 2.2 2.5 5 2.5s5-1.1 5-2.5"/></g>
+        </g>
+        <g class="ch-node" style="--cat:var(--cyan); animation-delay:1.8s" transform="translate(400,60)">
+          <polygon class="ch-hex" points="24,0 12,20.78 -12,20.78 -24,0 -12,-20.78 12,-20.78"/>
+          <g class="ch-icon" transform="scale(2.2)"><path d="M-6-2.5-3 0-6 2.5M6-2.5 3 0 6 2.5M.8-6 -1.3-.5h2.6L-.8 6" stroke-linecap="round" stroke-linejoin="round"/></g>
+        </g>
+        <g class="ch-node" style="--cat:var(--teal); animation-delay:2.1s" transform="translate(410,190)">
+          <polygon class="ch-hex" points="26,0 13,22.52 -13,22.52 -26,0 -13,-22.52 13,-22.52"/>
+          <g class="ch-icon" transform="scale(2.4)"><path d="M-2-6.5v4.2l-3.3 6.6a1.6 1.6 0 0 0 1.4 2.2h7.8a1.6 1.6 0 0 0 1.4-2.2L1-2.3v-4.2M-3.3-6.5h6.6M-3-1.5h6" stroke-linecap="round" stroke-linejoin="round"/></g>
+        </g>
+      </svg>
+    </div>
+  </header>
 
   <div class="catalog-stats" id="catalogStats" aria-label="Catalog metrics"></div>
 
