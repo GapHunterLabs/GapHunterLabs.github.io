@@ -2779,10 +2779,17 @@
   .identity-process .flow-line-2 { stroke:var(--cyan); stroke-width:1; opacity:0.2; }
   .identity-process .flow-line-3 { stroke:var(--purple); stroke-width:1; opacity:0.16; }
   @media (prefers-reduced-motion: no-preference) {
-    .identity-process .flow-line-1 { stroke-dasharray:5 7; animation:roadmapFlow 15s linear infinite; }
-    .identity-process .flow-line-2 { stroke-dasharray:4 6; animation:roadmapFlow 19s linear infinite; }
-    .identity-process .flow-line-3 { stroke-dasharray:4 6; animation:roadmapFlow 23s linear infinite reverse; }
-    @keyframes roadmapFlow { to { stroke-dashoffset:-220; } }
+    /* Glitch real reportado 2026-09-10: el dashoffset de destino
+       (-220) no era múltiplo exacto del patrón dasharray "5 7" de
+       flow-line-1 (unidad 12; 220/12 = 18.33) -- al reiniciar el loop
+       el patrón no calzaba con su propio arranque y se veía un salto
+       una vez por ciclo. Unidad de dasharray uniforme (6+6=12) en las
+       3 líneas + offset -216 (múltiplo exacto de 12) para que el loop
+       cierre sin salto en las tres. */
+    .identity-process .flow-line-1 { stroke-dasharray:6 6; animation:roadmapFlow 15s linear infinite; }
+    .identity-process .flow-line-2 { stroke-dasharray:6 6; animation:roadmapFlow 19s linear infinite; }
+    .identity-process .flow-line-3 { stroke-dasharray:6 6; animation:roadmapFlow 23s linear infinite reverse; }
+    @keyframes roadmapFlow { to { stroke-dashoffset:-216; } }
   }
   .identity-step {
     position:absolute; left:var(--sx); top:var(--sy); width:105px;
