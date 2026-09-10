@@ -2772,7 +2772,16 @@
      minimalista: sin vórtices ni densidad real, solo la idea de varias
      líneas de flujo paralelas fluyendo juntas). Sin números, sin color
      por texto -- el color vive solo en el punto/la línea. */
-  .identity-process { position:relative; height:150px; }
+  /* Overflow real reportado 2026-09-10: las curvas (overflow:visible +
+     las 2 copias offset) y el texto de la fila "baja" (top:78px +
+     título + hasta 2 líneas de descripción) se salían del height:150px
+     declarado -- como los .identity-step son position:absolute, no
+     empujan el alto real del contenedor, así que la sección de abajo
+     (.identity-grid) arrancaba pegada mientras el contenido visible
+     seguía más abajo, superponiéndose. Alto real con margen + overflow
+     hidden como red de seguridad dura (clip de cualquier resto que se
+     pase, en vez de seguir ajustando a mano cada offset). */
+  .identity-process { position:relative; height:185px; overflow:hidden; }
   .identity-process .roadmap-svg { position:absolute; inset:0; width:100%; height:100%; overflow:visible; pointer-events:none; }
   .identity-process .flow-line { fill:none; stroke-linecap:round; }
   .identity-process .flow-line-1 { stroke:url(#roadmapGrad); stroke-width:1.6; opacity:0.85; }
@@ -2795,9 +2804,9 @@
     position:absolute; left:var(--sx); top:var(--sy); width:105px;
     display:grid; align-content:start; gap:3px; justify-items:start;
   }
-  .identity-step:nth-child(2) { --dot:var(--accent); --sx:0%;  --sy:0px; }
+  .identity-step:nth-child(2) { --dot:var(--accent); --sx:0%;  --sy:8px; }
   .identity-step:nth-child(3) { --dot:var(--good);   --sx:25%; --sy:78px; }
-  .identity-step:nth-child(4) { --dot:var(--purple); --sx:50%; --sy:0px; }
+  .identity-step:nth-child(4) { --dot:var(--purple); --sx:50%; --sy:8px; }
   .identity-step:nth-child(5) { --dot:var(--amber);  --sx:74%; --sy:78px; }
   .rm-dot { width:7px; height:7px; border-radius:50%; background:var(--dot,var(--accent)); box-shadow:0 0 0 3px color-mix(in srgb, var(--dot,var(--accent)) 16%, transparent); }
   .identity-step h3,.identity-step p,.identity-card h3 { margin:0; }
@@ -2989,9 +2998,9 @@
       <p>We hunt real, evidence-based gaps in developer tooling and ship focused IntelliJ-family plugins to fix them. Every product in this catalog exists because of a documented complaint, not a guess.</p>
     </div>
     <div class="identity-process" aria-label="How we work">
-      <svg class="roadmap-svg" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+      <svg class="roadmap-svg" viewBox="0 0 100 185" preserveAspectRatio="none" aria-hidden="true">
         <defs>
-          <path id="flowPath" d="M2,3 C14,3 18,54 27,54 S39,3 52,3 S64,54 76,54"/>
+          <path id="flowPath" d="M2,11.5 C14,11.5 18,81.5 27,81.5 S39,11.5 52,11.5 S64,81.5 76,81.5"/>
           <linearGradient id="roadmapGrad" x1="0" y1="0" x2="1" y2="0">
             <stop offset="0%" stop-color="var(--accent)"/>
             <stop offset="35%" stop-color="var(--good)"/>
@@ -2999,8 +3008,8 @@
             <stop offset="100%" stop-color="var(--amber)"/>
           </linearGradient>
         </defs>
-        <use class="flow-line flow-line-3" href="#flowPath" transform="translate(2,10)"/>
-        <use class="flow-line flow-line-2" href="#flowPath" transform="translate(-2,-8)"/>
+        <use class="flow-line flow-line-3" href="#flowPath" transform="translate(2,12)"/>
+        <use class="flow-line flow-line-2" href="#flowPath" transform="translate(-2,-10)"/>
         <use class="flow-line flow-line-1" href="#flowPath"/>
       </svg>
       <article class="identity-step"><span class="rm-dot" aria-hidden="true"></span><h3>Observe</h3><p>Identify friction</p></article>
