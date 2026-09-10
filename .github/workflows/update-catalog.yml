@@ -2,11 +2,10 @@ name: Update catalog data
 
 # Corre 2 veces por dia, hora America/Bogota (UTC-5, sin DST -- Colombia
 # no observa horario de verano, asi que esta resta es fija todo el año):
-#   1:00am Colombia = 06:00 UTC  -> cron "0 6 * * *"
-#   7:00pm Colombia = 00:00 UTC (medianoche del dia siguiente en UTC)
-#                   -> cron "0 0 * * *"
-# Reemplaza el cron unico anterior de 5:30am Colombia (10:30 UTC),
-# eliminado 2026-08-20 a pedido explicito del usuario.
+#   12:00am (medianoche) Colombia = 05:00 UTC -> cron "0 5 * * *"
+#   5:00pm Colombia      = 22:00 UTC          -> cron "0 22 * * *"
+# Horarios reemplazados 2026-09-10 a pedido explicito del usuario (antes
+# 1:00am/7:00pm Colombia, ver historial de commits para ese cron previo).
 # Trae datos EN VIVO de JetBrains Marketplace + GitHub (descargas,
 # pricing, reviews, rating, stars) para todos los plugins y actualiza
 # el JSON publico, el SEO del catalogo y los conteos estaticos. Los campos que casi
@@ -16,8 +15,8 @@ name: Update catalog data
 # alguna vez hace falta.
 on:
   schedule:
-    - cron: "0 6 * * *"
-    - cron: "0 0 * * *"
+    - cron: "0 5 * * *"
+    - cron: "0 22 * * *"
   workflow_dispatch: {}  # permite disparar manualmente desde la pestaña Actions si hace falta
 
 # Permiso minimo real que este job necesita, explicito a nivel top-level

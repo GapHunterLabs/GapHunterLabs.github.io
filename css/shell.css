@@ -1,0 +1,307 @@
+/* Gap Hunter Labs — application shell (Intelligence Cockpit)
+   Fase 0: sistema de grid de 12 columnas + spacing scale compartido.
+   Fase 1: sidebar persistente + drawer mobile, sobre ese grid.
+
+   Depende de los custom properties ya definidos en el :root de cada
+   página (--bg, --surface, --surface-2, --border, --text, --text-dim,
+   --text-faint, --accent, --good, --cyan, --warn, --mono, --sans,
+   --page-max, --page-pad, --section-gap, --card-pad, --card-pad-sm,
+   --duration-*, --ease-*, --radius*) — este archivo no redefine esos
+   tokens, los reusa. Cargar SIEMPRE después del <style> inline de la
+   página (que define :root), nunca antes. */
+
+/* ---- Fase 0: grid de 12 columnas + spacing scale ------------------- */
+
+:root {
+  --sidebar-w: 248px;
+  --shell-header-h: 56px;
+  /* Spacing scale (múltiplos de 4px, ya coherente con --page-pad:24px
+     y --card-pad:16px existentes) -- para separaciones nuevas del
+     shell/cockpit que no tenían un token propio todavía. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --grid-gap: var(--space-5);
+}
+
+.grid-12 {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: var(--grid-gap);
+}
+/* Column-span utilities -- solo las que el cockpit necesita en las
+   fases siguientes (no las 12 combinaciones posibles, se agregan más
+   si hace falta). En mobile todo colapsa a ancho completo (ver media
+   query al final del archivo). */
+.col-span-3 { grid-column: span 3; }
+.col-span-4 { grid-column: span 4; }
+.col-span-6 { grid-column: span 6; }
+.col-span-8 { grid-column: span 8; }
+.col-span-9 { grid-column: span 9; }
+.col-span-12 { grid-column: span 12; }
+
+/* ---- Fase 1: application shell (header + sidebar + main) ----------- */
+
+.app-shell {
+  display: grid;
+  grid-template-columns: var(--sidebar-w) minmax(0, 1fr);
+  grid-template-rows: var(--shell-header-h) 1fr;
+  grid-template-areas:
+    "shell-header shell-header"
+    "shell-sidebar shell-main";
+  min-height: 100vh;
+}
+
+/* El header reusa .topbar ya existente (marca + links externos +
+   burger) -- solo se le quita el grid-area por defecto y se lo ubica
+   en la fila de header del shell. .topbar-nav (Catalog/Methodology/
+   Contact) se retira del header en las páginas que adoptan el shell:
+   esos destinos viven ahora en el sidebar. */
+.app-shell .topbar { grid-area: shell-header; position: sticky; top: 0; }
+/* .topbar-inner base (definido inline por página) es un grid de 3
+   columnas -- brand / .topbar-nav / actions. Las páginas que adoptan
+   el shell sacan .topbar-nav del header (los destinos viven en el
+   sidebar ahora), así que quedan solo 2 hijos reales; sin este
+   override la última columna 1fr queda vacía y .topbar-actions no
+   llega al borde derecho real. */
+.app-shell .topbar-inner { grid-template-columns: minmax(0, 1fr) auto; }
+
+.app-sidebar {
+  grid-area: shell-sidebar;
+  position: sticky;
+  top: var(--shell-header-h);
+  align-self: start;
+  height: calc(100vh - var(--shell-header-h));
+  overflow-y: auto;
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  padding: var(--space-5) var(--space-3);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 11px 14px;
+  border-radius: var(--radius-md);
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-dim);
+  text-decoration: none;
+  position: relative;
+}
+.sidebar-link svg { width: 19px; height: 19px; flex: none; stroke: currentColor; fill: none; stroke-width: 1.5; }
+.sidebar-link:hover { color: var(--text); background: var(--surface-2); }
+.sidebar-link:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+/* Relleno sólido, no un acento tenue -- la página activa tiene que
+   leerse con la misma confianza que el resto de la marca (--accent a
+   pleno, texto blanco), no como un detalle sutil. */
+.sidebar-link[aria-current="page"] {
+  color: #fff;
+  background: var(--accent);
+}
+.sidebar-link[aria-current="page"]:hover { color: #fff; background: var(--accent); }
+
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  transition: opacity var(--duration-slow) var(--ease-standard);
+}
+/* En páginas cortas, el sidebar (sticky, alto fijo) termina su caja
+   justo donde empieza el <footer> real -- sin esto, la marca del pie
+   del sidebar y la marca del footer quedan visibles casi superpuestas
+   al llegar abajo (bug real reportado 2026-09-10: "el logo se
+   triplica"). JS observa el footer real vía IntersectionObserver y
+   agrega/saca esta clase -- fade-out al acercarse al footer,
+   fade-in al alejarse subiendo. */
+.sidebar-footer.is-near-footer { opacity: 0; }
+@media (prefers-reduced-motion: reduce) {
+  .sidebar-footer { transition: none; }
+}
+.sidebar-footer svg { width: 22px; height: 22px; flex: none; }
+.sidebar-footer-name {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+  line-height: 1.3;
+}
+.sidebar-footer-sub {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-faint);
+  line-height: 1.3;
+}
+
+/* Fondo de "red/circuito" + glow para el header de cualquier página --
+   reusable: se agrega como clase extra sobre el contenedor del header
+   de cada página (envolviendo kicker+h1+lead, o combinada con un
+   layout propio como .contact-hero). CSS puro, sin asset nuevo --
+   mismo patrón hand-rolled que el resto de los efectos del sitio. */
+.page-hero {
+  position: relative;
+  padding: 7%;
+  margin-bottom: var(--space-8);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 700px 420px at 85% -10%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 65%),
+    repeating-linear-gradient(115deg, color-mix(in srgb, var(--accent) 7%, transparent) 0px, transparent 1.5px 84px),
+    repeating-linear-gradient(25deg, color-mix(in srgb, var(--cyan) 6%, transparent) 0px, transparent 1.5px 120px),
+    var(--surface);
+}
+
+.app-main {
+  grid-area: shell-main;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* Rail derecho liviano ("Platform Insights") -- versión chica de lo
+   que en el plan es la Fase 3/4 (gráfico de tendencia + recent
+   changes, que necesitan el pipeline). Esta versión usa solo datos
+   YA cargados por GapCatalog.ready (stats agregados, categorías,
+   plugin destacado) -- nada nuevo del lado del pipeline, nada
+   inventado. Envuelve el contenido existente de la página + el rail
+   en un grid de 2 columnas, sin tocar el padding/max-width que ya
+   tiene cada .methodology-main/.contact-main. */
+.main-with-rail {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 300px;
+  gap: var(--space-6);
+  align-items: start;
+}
+.main-with-rail > .methodology-main,
+.main-with-rail > .contact-main {
+  max-width: none;
+  margin: 0;
+}
+.page-insights {
+  padding: 40px var(--page-pad) 40px 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.pi-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow, none);
+  padding: var(--card-pad);
+}
+.pi-eyebrow {
+  margin: 0 0 var(--space-3);
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-faint);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.pi-stats { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+.pi-stat-num { display: block; font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--text); }
+.pi-stat-label { display: block; font-size: 11px; color: var(--text-faint); margin-top: 2px; }
+.pi-categories { display: flex; flex-direction: column; gap: 2px; }
+.pi-cat {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 4px; border-radius: var(--radius-sm);
+  font-size: 12.5px; color: var(--text-dim); text-decoration: none;
+}
+.pi-cat:hover { color: var(--text); background: var(--surface-2); }
+.pi-cat svg { width: 15px; height: 15px; flex: none; color: var(--cat, var(--accent)); stroke: currentColor; fill: none; stroke-width: 1.4; }
+.pi-cat span { flex: 1; min-width: 0; }
+.pi-cat b { font-family: var(--mono); font-weight: 600; font-size: 11px; color: var(--text-faint); }
+.pi-featured {
+  display: block; text-decoration: none; color: inherit;
+  margin: var(--space-2) 0 0;
+}
+/* aspect-ratio + object-fit:cover -- las screenshots reales de cada
+   plugin tienen proporciones distintas entre sí (GIF_URL apunta a
+   demo.gif/screenshot_1.png de cada repo, sin tamaño uniforme). Sin
+   esto, el alto de la card cambiaría según qué plugin salga
+   destacado y algunas imágenes podrían verse estiradas. Con esto,
+   siempre se recorta a 16:9, nunca se deforma. Inset dentro del
+   padding de la card (no sangra a los costados) con un radio chico,
+   a pedido explícito 2026-09-10. */
+.pi-featured img {
+  display: block; width: 100%; aspect-ratio: 16/9; object-fit: cover;
+  background: var(--surface-2);
+  border-radius: var(--radius-sm);
+}
+.pi-featured strong { display: block; font-size: 13px; font-weight: 650; padding: var(--space-3) 0 2px; }
+.pi-featured span { display: block; font-size: 11.5px; font-weight: 600; color: var(--accent); padding: 0 0 var(--space-1); }
+
+@media (max-width: 1100px) {
+  .main-with-rail { grid-template-columns: 1fr; }
+  .page-insights { padding: 0 var(--page-pad) var(--space-8); flex-direction: row; flex-wrap: wrap; }
+  .pi-card { flex: 1 1 220px; }
+}
+/* .methodology-main/.contact-main (definidas inline por página) usan
+   margin:0 auto -- correcto en el layout viejo (topbar sola, sin
+   sidebar, centrado en el ancho completo), pero deja un hueco grande y
+   asimétrico ahora que el sidebar ya ocupa la izquierda. Dentro del
+   shell el contenido debe pegar contra el sidebar (0 auto -> 0), no
+   flotar centrado en el espacio que sobra. */
+.app-main > .methodology-main,
+.app-main > .contact-main,
+.app-main > .wrap {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* El drawer mobile reusa el mecanismo/nombre de clase ya existente en
+   el topbar (.nav-open + #topbarBurger) -- mismo patrón, ahora
+   controla .app-sidebar en vez de #topbarNav. */
+@media (min-width: 841px) {
+  .app-sidebar { transform: none !important; }
+}
+@media (max-width: 840px) {
+  .app-shell { grid-template-columns: 1fr; grid-template-areas: "shell-header" "shell-main"; }
+  .app-sidebar {
+    position: fixed;
+    top: var(--shell-header-h);
+    left: 0;
+    bottom: 0;
+    width: min(var(--sidebar-w), 82vw);
+    height: auto;
+    transform: translateX(-100%);
+    transition: transform var(--duration-slow) var(--ease-standard);
+    z-index: 39;
+    box-shadow: 0 0 24px rgba(0,0,0,0.4);
+  }
+  /* .topbar y .app-sidebar son hermanos directos dentro de .app-shell
+     (mismo orden en el HTML de cada página) -- el combinador de
+     hermano adyacente alcanza, sin depender de :has(). */
+  .topbar.nav-open + .app-sidebar {
+    transform: translateX(0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .app-sidebar { transition: none; }
+  }
+  .col-span-3, .col-span-4, .col-span-6, .col-span-8, .col-span-9 { grid-column: span 12; }
+}
