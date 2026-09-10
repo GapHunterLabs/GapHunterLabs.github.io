@@ -538,6 +538,31 @@
   .case-meta-row dd { margin: 0; font-size: 13px; font-weight: 600; color: var(--text); }
   .case-meta-note { display: block; margin-top: 2px; font-size: 11px; font-weight: 500; color: var(--text-faint); }
   .lab-pending { padding: var(--card-pad); border: 1px dashed var(--border); border-radius: var(--radius); color: var(--text-faint); font-size: 13px; line-height: 1.6; }
+  /* IJPL tickets -- entradas reales confirmadas vía la API pública de
+     YouTrack (summary/status/comments) antes de escribir cada resumen
+     de causa raíz, 2026-09-10. Reusa el mismo lenguaje de card que
+     .identity-card en vez de una <table> -- a 760px de ancho una tabla
+     de 4 columnas con texto largo en la última quedaba apretada; una
+     lista de cards con head+resumen debajo lee mejor a ese ancho. */
+  .lab-section-head { margin: 40px 0 16px; }
+  .lab-section-head h2 { margin: 4px 0 0; font-size: 20px; font-weight: 650; letter-spacing: -0.01em; }
+  .lab-section-head > p:last-child { margin: 6px 0 0; color: var(--text-dim); line-height: 1.65; }
+  .lab-tickets { display: flex; flex-direction: column; gap: 10px; }
+  .ticket-card {
+    padding: var(--card-pad); border: 1px solid var(--border); border-radius: var(--radius);
+    background: var(--surface); box-shadow: var(--shadow); transition: border-color var(--duration-base) ease;
+  }
+  .ticket-card:hover { border-color: var(--accent); }
+  .ticket-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+  .ticket-id { flex: none; font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--accent); text-decoration: none; }
+  .ticket-id:hover { text-decoration: underline; }
+  .ticket-head h3 { margin: 0; font-size: 14.5px; font-weight: 650; color: var(--text); flex: 1 1 220px; min-width: 0; }
+  .ticket-status { flex: none; font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; padding: 2px 8px; border-radius: var(--radius-sm); }
+  .ticket-status.is-fixed { color: var(--good); background: color-mix(in srgb, var(--good) 16%, transparent); }
+  .ticket-status.is-submitted { color: var(--accent); background: color-mix(in srgb, var(--accent) 16%, transparent); }
+  .ticket-status.is-open { color: var(--text-faint); background: var(--surface-2); }
+  .ticket-card p { margin: 0; color: var(--text-dim); font-size: 13px; line-height: 1.6; }
+  .ticket-card code { background: var(--surface-2); padding: 1px 5px; border-radius: var(--radius-sm); font-size: 0.92em; }
   @media (max-width: 760px) {
     .case-meta { flex-basis: 100%; border-left: 0; padding-left: 0; border-top: 1px solid var(--border); padding-top: var(--section-gap); flex-direction: row; flex-wrap: wrap; }
     .case-meta-row { flex: 1 1 140px; }
@@ -664,6 +689,54 @@
     </article>
 
     <p class="lab-pending">More case studies land here as they're curated &mdash; each one requires reading the plugin's full evidence in its own README and confirming every claim against a real, public source, the same bar as the two above. Every plugin in the <a href="catalog.html">catalog</a> already ships with real evidence in its own listing; this page holds the handful with the most unusual or well-documented stories behind them.</p>
+  </div>
+
+  <div class="lab-section-head">
+    <p class="eyebrow">Beyond the catalog</p>
+    <h2>JetBrains Platform tickets</h2>
+    <p>Gap Hunter Labs also reports and diagnoses real bugs directly in JetBrains' own IntelliJ Platform (IJPL) tracker &mdash; root-cause analysis posted publicly, not tied to any plugin in this catalog.</p>
+  </div>
+  <div class="lab-tickets">
+    <article class="ticket-card">
+      <div class="ticket-head">
+        <a class="ticket-id" href="https://youtrack.jetbrains.com/issue/IJPL-200871" target="_blank" rel="noopener">IJPL-200871 &#8599;</a>
+        <h3>CME in workspace model</h3>
+        <span class="ticket-status is-fixed">Fixed</span>
+      </div>
+      <p>Missing <code>ProgressManager.checkCanceled()</code> in <code>WorkspaceFileIndexDataImpl.fillPackageFilesAndDirectories()</code> let a pending workspace-model write mutate an unsynchronized <code>LinkedHashMap</code> mid-iteration &mdash; producing a <code>ConcurrentModificationException</code> instead of a clean cancellation. Fix: add the missing call, mirroring the pattern the caller already uses.</p>
+    </article>
+    <article class="ticket-card">
+      <div class="ticket-head">
+        <a class="ticket-id" href="https://youtrack.jetbrains.com/issue/IJPL-27359" target="_blank" rel="noopener">IJPL-27359 &#8599;</a>
+        <h3>CME in InspectionToolRegistrar.createTools on loading/unloading plugins</h3>
+        <span class="ticket-status is-submitted">Submitted</span>
+      </div>
+      <p><code>toolFactories</code> is iterated as a live, unsynchronized view of a mutable map inside <code>createTools()</code>, running on background threads with no read-action lock &mdash; a concurrent plugin unload can mutate the map mid-iteration. Confirmed still reproducible today, years after the original report.</p>
+    </article>
+    <article class="ticket-card">
+      <div class="ticket-head">
+        <a class="ticket-id" href="https://youtrack.jetbrains.com/issue/IJPL-80817" target="_blank" rel="noopener">IJPL-80817 &#8599;</a>
+        <h3>Cannot create light service git4ide.repo.GitRepositoryManager because container is already disposed</h3>
+        <span class="ticket-status is-submitted">Submitted</span>
+      </div>
+      <p>Same missing-<code>checkCanceled()</code> pattern as IJPL-200871: the original call site moved after a widget restructuring, but none of the new utility functions in the lookup chain call it either, so a project closing can still race into an <code>AlreadyDisposedException</code>. Flagged as one systemic cleanup together with IJPL-200871, not two unrelated bugs.</p>
+    </article>
+    <article class="ticket-card">
+      <div class="ticket-head">
+        <a class="ticket-id" href="https://youtrack.jetbrains.com/issue/IJPL-76141" target="_blank" rel="noopener">IJPL-76141 &#8599;</a>
+        <h3>Git Log is empty due to a StackOverflow exception in IntToIntBtree.processLeafPages</h3>
+        <span class="ticket-status is-open">Open</span>
+      </div>
+      <p><code>processLeafPages</code> recurses with no stack-depth guard, so a large enough index overflows the stack and silently empties Git Log. Proposed fix: rewrite the traversal iteratively.</p>
+    </article>
+    <article class="ticket-card">
+      <div class="ticket-head">
+        <a class="ticket-id" href="https://youtrack.jetbrains.com/issue/IJPL-196254" target="_blank" rel="noopener">IJPL-196254 &#8599;</a>
+        <h3>Memory leak via ProjectRootManagerImpl::rootsChanged</h3>
+        <span class="ticket-status is-open">Open</span>
+      </div>
+      <p><code>BatchSession</code>'s <code>changes</code> list only clears once its <code>pendingRootsChanged</code> counter hits exactly 0 &mdash; but the counter is incremented without matching exception handling, so one exception or an asymmetric reentrant call leaves it stuck above 0 permanently, and <code>changes</code> keeps growing on every later roots-changed event.</p>
+    </article>
   </div>
 </main>
 <aside class="page-insights" aria-label="About Gap Hunter Labs">
