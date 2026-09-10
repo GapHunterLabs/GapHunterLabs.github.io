@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="The Laboratorie: Gap Hunter Labs' case studies -- the plugins in the catalog with the strongest, most unusual real evidence behind them.">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://gc.zgo.at; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; manifest-src 'self'; connect-src https://gaphunterlabs.goatcounter.com; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
+<meta name="theme-color" content="#090D16">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%201024%201024%22%20width%3D%22100%25%22%20height%3D%22100%25%22%3E%20%3Crect%20width%3D%221024%22%20height%3D%221024%22%20fill%3D%22%23FFFFFF%22/%3E%20%3Cpath%20d%3D%22%20M%20511%2C81%20L%20847%2C283%20L%20725%2C351%20L%20508%2C223%20L%20296%2C348%20L%20296%2C588%20L%20463%2C691%20L%20342%2C765%20L%20173%2C665%20L%20172%2C281%20Z%22%20fill%3D%22%230151FC%22%20/%3E%20%3Cpath%20d%3D%22%20M%20846%2C412%20L%20844%2C668%20L%20518%2C863%20L%20393%2C795%20L%20724%2C589%20L%20721%2C540%20L%20567%2C538%20L%20568%2C412%20Z%22%20fill%3D%22%2301B3FD%22%20/%3E%20%3Cpolygon%20points%3D%22569%2C413%20695%2C413%20695%2C539%20569%2C539%22%20fill%3D%22%2302F172%22%20/%3E%20%3C/svg%3E">
+<link rel="canonical" href="https://gaphunterlabs.github.io/laboratorio/">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="preconnect" href="https://gc.zgo.at" crossorigin>
+<link rel="preconnect" href="https://gaphunterlabs.goatcounter.com" crossorigin>
+<title>The Laboratorie &mdash; Gap Hunter Labs</title>
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Gap Hunter Labs">
+<meta property="og:url" content="https://gaphunterlabs.github.io/laboratorio/">
+<meta property="og:title" content="The Laboratorie — Gap Hunter Labs">
+<meta property="og:description" content="The catalog's case studies -- the plugins with the strongest, most unusual real evidence behind them.">
+<meta property="og:image" content="https://gaphunterlabs.github.io/og-image.png">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="The Laboratorie — Gap Hunter Labs">
+<meta name="twitter:description" content="The catalog's case studies -- the plugins with the strongest, most unusual real evidence behind them.">
+<meta name="twitter:image" content="https://gaphunterlabs.github.io/og-image.png">
+<style>
+  @font-face {
+    font-family: "IBM Plex Sans";
+    src: url("/fonts/IBMPlexSans-Variable.ttf") format("truetype");
+    font-weight: 100 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "JetBrains Mono";
+    src: url("/fonts/JetBrainsMono-Variable.ttf") format("truetype");
+    font-weight: 100 800;
+    font-style: normal;
+    font-display: swap;
+  }
+  :root {
+    --bg: #090D16;
+    --surface: #111726;
+    --surface-2: #1A2235;
+    --border: #29334A;
+    --text: #E9EDF8;
+    --text-dim: #9AA6C4;
+    --text-faint: #8894B8;
+    --accent: #3FA2FF;
+    --good: #02F172;
+    --cyan: #01B3FD;
+    --mono: "JetBrains Mono", ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    --sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --page-max: 1280px;
+    --page-pad: 24px;
+    --section-gap: 20px;
+    --card-pad: 16px;
+    --card-pad-sm: 10px;
+    --duration-fast: 120ms;
+    --duration-base: 150ms;
+    --duration-slow: 300ms;
+    --ease-standard: cubic-bezier(.65,0,.35,1);
+    --ease-emphasized: cubic-bezier(.2,.7,.3,1);
+    --radius: 10px;
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+  }
+  * { box-sizing: border-box; }
+  html { scrollbar-color: var(--border) var(--bg); scrollbar-width: thin; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg);
+    background-image: radial-gradient(ellipse 1200px 640px at 50% 0%, rgba(63,162,255,0.07), transparent 60%);
+    background-repeat: no-repeat;
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); }
+  a:hover { color: var(--text); }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: rgba(9,13,22,0.94);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .topbar::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: -1px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), var(--cyan), var(--good), transparent);
+    opacity: 0.55;
+  }
+  .topbar-inner {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    padding: 0 var(--page-pad);
+    height: 56px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+  }
+  .topbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-self: start;
+    min-width: 0;
+    text-decoration: none;
+    color: inherit;
+    border-radius: var(--radius-md);
+  }
+  .topbar-brand:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .topbar-mark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 32px;
+    height: 32px;
+  }
+  .topbar-mark svg { width: 32px; height: 32px; display: block; }
+  .topbar-wordmark {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+  }
+  .tw-name {
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1.15;
+    white-space: nowrap;
+  }
+  .tw-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    line-height: 1.2;
+  }
+  .topbar-nav {
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    gap: 0;
+    flex: none;
+    padding: 3px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .topbar-link {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--text-faint);
+    text-decoration: none;
+    padding: 7px 14px;
+    border-radius: var(--radius-md);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+  .topbar-link:hover {
+    color: var(--text);
+    background: var(--surface-2);
+  }
+  .topbar-link.active {
+    color: var(--text);
+    background: var(--surface-2);
+  }
+  .topbar-link:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .topbar-actions {
+    display: flex;
+    align-items: center;
+    justify-self: end;
+    gap: 8px;
+    min-width: 0;
+  }
+  .topbar-ext {
+    display: flex;
+    align-items: stretch;
+    height: 36px;
+    flex: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .topbar-ext-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 0 12px;
+    border-left: 1px solid var(--border);
+    background: transparent;
+  }
+  .topbar-ext-link:first-child { border-left: 0; }
+  .topbar-ext-link:hover {
+    color: var(--text);
+    background: var(--surface-2);
+  }
+  .topbar-ext-link:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+    color: var(--text);
+  }
+  .topbar-ext-link svg { width: 15px; height: 15px; flex: none; }
+  .topbar-burger {
+    display: none;
+    flex: none;
+    width: 44px;
+    height: auto;
+    align-self: stretch;
+    border-radius: 0;
+    border: 0;
+    border-left: 1px solid var(--border);
+    background: transparent;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .topbar-burger:hover { background: var(--surface-2); }
+  .topbar-burger:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+  }
+  .topbar-burger span,
+  .topbar-burger::before,
+  .topbar-burger::after {
+    content: "";
+    display: block;
+    width: 16px;
+    height: 1.85px;
+    background: var(--text-dim);
+    position: relative;
+  }
+  .topbar-burger::before { position: absolute; transform: translateY(-5.75px); }
+  .topbar-burger::after { position: absolute; transform: translateY(5.75px); }
+  .topbar.nav-open .topbar-burger span { opacity: 0; }
+  .topbar.nav-open .topbar-burger::before { transform: translateY(0) rotate(45deg); }
+  .topbar.nav-open .topbar-burger::after { transform: translateY(0) rotate(-45deg); }
+
+  @media (max-width: 900px) {
+    .tw-tag { display: none; }
+    .topbar-ext-label { display: none; }
+    .topbar-ext { height: 44px; }
+    .topbar-ext-link { min-width: 44px; padding: 0 12px; }
+  }
+  @media (max-width: 840px) {
+    .topbar-inner {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+    }
+    .topbar-nav { display: none; }
+    .topbar-burger { display: flex; }
+    .topbar.nav-open .topbar-nav {
+      display: flex;
+      position: absolute;
+      top: 56px; left: 0; right: 0;
+      flex-direction: column;
+      align-items: stretch;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      border-radius: 0;
+      padding: 6px;
+      gap: 2px;
+    }
+    .topbar.nav-open .topbar-link { padding: 12px 14px; }
+  }
+
+  .methodology-main {
+    flex: 1;
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 40px var(--page-pad) 56px;
+  }
+  .contact-kicker {
+    margin: 0 0 8px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+  .methodology-main h1 {
+    margin: 0 0 16px;
+    font-size: 32px;
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  .contact-lead {
+    margin: 0 0 36px;
+    font-size: 17px;
+    color: var(--text-dim);
+    line-height: 1.65;
+  }
+  .contact-section {
+    margin: 0 0 32px;
+    padding: 0;
+    border: 0;
+  }
+  .contact-section h2 {
+    margin: 0 0 10px;
+    font-size: 18px;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+  }
+  .contact-section p,
+  .contact-section li {
+    color: var(--text-dim);
+    line-height: 1.65;
+  }
+  .contact-section p { margin: 0 0 10px; }
+  .contact-section ul {
+    margin: 0;
+    padding-left: 1.2em;
+  }
+  .contact-section li { margin: 0 0 8px; }
+  .contact-section li:last-child { margin-bottom: 0; }
+  .channel-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .channel-list li {
+    margin: 0;
+    padding: var(--card-pad);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-dim);
+  }
+  .channel-list strong {
+    display: block;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .back-link {
+    display: inline-block;
+    margin-top: 8px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .back-link:hover { text-decoration: underline; }
+
+  .brand-mark {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+  }
+  .brand-mark svg { width: 19px; height: 19px; }
+
+  .site-footer {
+    margin-top: auto;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .footer-inner {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    padding: 36px var(--page-pad) 28px;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.75fr) minmax(0, 0.9fr);
+    gap: 40px 48px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+  .footer-brand { max-width: 400px; }
+  .footer-brand-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .footer-brand-name {
+    font-weight: 650;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+  }
+  .footer-brand-tagline {
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--text-faint);
+    margin-top: 2px;
+  }
+  .footer-brand p {
+    margin: 14px 0 0;
+    font-size: 13.5px;
+    color: var(--text-dim);
+    line-height: 1.65;
+  }
+  .footer-col-title {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 12px;
+  }
+  .footer-nav { display: flex; flex-direction: column; gap: 2px; }
+  .footer-nav a {
+    display: block;
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 6px 0;
+    border-radius: var(--radius-sm);
+    transition: color var(--duration-base) ease;
+  }
+  .footer-nav a:hover { color: var(--text); }
+  .footer-nav a:focus-visible {
+    color: var(--text);
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .footer-elsewhere { display: flex; flex-direction: column; gap: 2px; }
+  .fe-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 6px 0;
+    border-radius: var(--radius-sm);
+    transition: color var(--duration-base) ease;
+  }
+  .fe-link svg { width: 15px; height: 15px; flex: none; opacity: 0.85; }
+  .fe-link:hover { color: var(--text); }
+  .fe-link:hover svg { opacity: 1; }
+  .fe-link:focus-visible {
+    color: var(--text);
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .footer-bottom {
+    margin-top: 18px;
+    font-family: var(--sans);
+    font-size: 12.5px;
+    color: var(--text-faint);
+    line-height: 1.5;
+  }
+  @media (max-width: 760px) {
+    .footer-grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-areas: "brand brand" "nav elsewhere";
+      gap: 28px 24px;
+    }
+    .footer-brand { grid-area: brand; max-width: none; }
+    .footer-nav { grid-area: nav; }
+    .footer-elsewhere { grid-area: elsewhere; }
+    .methodology-main { padding-top: 28px; }
+    .methodology-main h1 { font-size: 26px; }
+  }
+  @media (max-width: 640px) {
+    .footer-grid {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: "brand" "nav" "elsewhere";
+    }
+  }
+
+  .methodology-main { max-width: var(--page-max); }
+  .method-intro { max-width: 760px; }
+  /* Case studies -- mismas clases/reglas que .identity-case en
+     index.html (copiadas tal cual para reusar el estilo ya probado),
+     apiladas en columna en vez de en grid de 2 porque hoy son pocas
+     (curadas a mano, no generadas) y cada una se beneficia del ancho
+     completo para el layout body+meta lado a lado. 2026-09-10. */
+  .eyebrow { margin: 0; color: var(--accent); font: 700 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+  .pi-note { margin: 0 0 var(--space-2); font-size: 12.5px; color: var(--text-dim); line-height: 1.55; }
+  .lab-cases { display: flex; flex-direction: column; gap: var(--section-gap); }
+  .identity-card {
+    padding: var(--card-pad); border: 1px solid var(--border); border-radius: var(--radius);
+    background: var(--surface); box-shadow: var(--shadow); transition: border-color var(--duration-base) ease;
+    display: flex; flex-direction: column; align-items: flex-start; gap: 12px;
+  }
+  .identity-card:hover { border-color: var(--accent); }
+  .identity-card p, .identity-card li { color: var(--text-dim); line-height: 1.65; overflow-wrap: anywhere; }
+  .identity-card h3 { margin: 0; }
+  .identity-case { flex-direction: row; align-items: stretch; gap: var(--section-gap); flex-wrap: wrap; }
+  .case-body { flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+  .case-meta { flex: 0 0 220px; margin: 0; padding-left: var(--section-gap); border-left: 1px solid var(--border); display: flex; flex-direction: column; gap: 14px; }
+  .case-meta-row dt { display: flex; align-items: center; gap: 7px; margin: 0 0 3px; font-family: var(--mono); font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-faint); }
+  .case-meta-row dt svg { width: 14px; height: 14px; flex: none; color: var(--accent); }
+  .case-meta-row dd { margin: 0; font-size: 13px; font-weight: 600; color: var(--text); }
+  .case-meta-note { display: block; margin-top: 2px; font-size: 11px; font-weight: 500; color: var(--text-faint); }
+  .lab-pending { padding: var(--card-pad); border: 1px dashed var(--border); border-radius: var(--radius); color: var(--text-faint); font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }
+  /* IJPL tickets -- entradas reales confirmadas vía la API pública de
+     YouTrack (summary/status/comments) antes de escribir cada resumen
+     de causa raíz, 2026-09-10. Reusa el mismo lenguaje de card que
+     .identity-card en vez de una <table> -- a 760px de ancho una tabla
+     de 4 columnas con texto largo en la última quedaba apretada; una
+     lista de cards con head+resumen debajo lee mejor a ese ancho. */
+  .lab-section-head { margin: 40px 0 16px; }
+  .lab-section-head h2 { margin: 4px 0 0; font-size: 20px; font-weight: 650; letter-spacing: -0.01em; }
+  .lab-section-head > p:last-child { margin: 6px 0 0; color: var(--text-dim); line-height: 1.65; }
+  .lab-tickets { display: flex; flex-direction: column; gap: 10px; }
+  .ticket-card {
+    padding: var(--card-pad); border: 1px solid var(--border); border-radius: var(--radius);
+    background: var(--surface); box-shadow: var(--shadow); transition: border-color var(--duration-base) ease;
+  }
+  .ticket-card:hover { border-color: var(--accent); }
+  .ticket-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+  .ticket-id { flex: none; font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--accent); text-decoration: none; }
+  .ticket-id:hover { text-decoration: underline; }
+  .ticket-head h3 { margin: 0; font-size: 14.5px; font-weight: 650; color: var(--text); flex: 1 1 220px; min-width: 0; overflow-wrap: anywhere; }
+  .ticket-status { flex: none; font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; padding: 2px 8px; border-radius: var(--radius-sm); }
+  .ticket-status.is-fixed { color: var(--good); background: color-mix(in srgb, var(--good) 16%, transparent); }
+  .ticket-status.is-submitted { color: var(--accent); background: color-mix(in srgb, var(--accent) 16%, transparent); }
+  .ticket-status.is-open { color: var(--text-faint); background: var(--surface-2); }
+  .ticket-card p { margin: 0; color: var(--text-dim); font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }
+  .ticket-card code { background: var(--surface-2); padding: 1px 5px; border-radius: var(--radius-sm); font-size: 0.92em; overflow-wrap: anywhere; }
+  @media (max-width: 760px) {
+    .case-meta { flex-basis: 100%; border-left: 0; padding-left: 0; border-top: 1px solid var(--border); padding-top: var(--section-gap); flex-direction: row; flex-wrap: wrap; }
+    .case-meta-row { flex: 1 1 140px; }
+  }
+</style>
+<link rel="stylesheet" href="/css/shell.css">
+</head>
+<body>
+<div class="app-shell">
+<nav class="topbar" id="topbar">
+  <div class="topbar-inner">
+    <a class="topbar-brand" href="/" aria-label="Gap Hunter Labs">
+      <span class="topbar-mark" aria-hidden="true">
+        <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#0151FC"/>
+          <path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z" fill="#01B3FD"/>
+          <polygon points="569,413 695,413 695,539 569,539" fill="#02F172"/>
+        </svg>
+      </span>
+      <span class="topbar-wordmark">
+        <span class="tw-name">Gap Hunter Labs</span>
+        <span class="tw-tag">Plugin Intelligence</span>
+      </span>
+    </a>
+    <div class="topbar-actions">
+      <div class="topbar-ext">
+        <a class="topbar-ext-link" href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" target="_blank" rel="noopener" aria-label="JetBrains Marketplace" title="Gap Hunter Labs on JetBrains Marketplace">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2.345 23.997A2.347 2.347 0 0 1 0 21.652V10.988C0 9.665.535 8.37 1.473 7.433l5.965-5.961A5.01 5.01 0 0 1 10.989 0h10.666A2.347 2.347 0 0 1 24 2.345v10.664a5.056 5.056 0 0 1-1.473 3.554l-5.965 5.965A5.017 5.017 0 0 1 13.007 24v-.003H2.345Zm8.969-6.854H5.486v1.371h5.828v-1.371ZM3.963 6.514h13.523v13.519l4.257-4.257a3.936 3.936 0 0 0 1.146-2.767V2.345c0-.678-.552-1.234-1.234-1.234H10.989a3.897 3.897 0 0 0-2.767 1.145L3.963 6.514Zm-.192.192L2.256 8.22a3.944 3.944 0 0 0-1.145 2.768v10.664c0 .678.552 1.234 1.234 1.234h10.666a3.9 3.9 0 0 0 2.767-1.146l1.512-1.511H3.771V6.706Z"/></svg>
+          <span class="topbar-ext-label">JetBrains</span>
+        </a>
+        <a class="topbar-ext-link" href="https://marketplace.visualstudio.com/publishers/GapHunterLabs" target="_blank" rel="noopener" aria-label="VS Code Marketplace" title="Gap Hunter Labs on VS Code Marketplace">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z"/></svg>
+          <span class="topbar-ext-label">VS Code</span>
+        </a>
+        <a class="topbar-ext-link" href="https://github.com/GapHunterLabs" target="_blank" rel="noopener" aria-label="GitHub" title="Gap Hunter Labs on GitHub">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          <span class="topbar-ext-label">GitHub</span>
+        </a>
+        <a class="topbar-ext-link" href="https://www.linkedin.com/in/joel-diaz-82687b428/?locale=en" target="_blank" rel="noopener" aria-label="LinkedIn" title="Gap Hunter Labs on LinkedIn">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          <span class="topbar-ext-label">LinkedIn</span>
+        </a>
+        <button type="button" class="topbar-burger" id="topbarBurger" aria-label="Toggle navigation" aria-expanded="false" aria-controls="appSidebar"><span></span></button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<aside class="app-sidebar" id="appSidebar">
+  <nav class="sidebar-nav" aria-label="Primary">
+    <a class="sidebar-link" href="/"><svg viewBox="0 0 20 20" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10 10 3l7 7M5 8.5V17h10V8.5"/></svg>Home</a>
+    <a class="sidebar-link" href="/catalog/"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="11" y="3" width="6" height="6" rx="1"/><rect x="3" y="11" width="6" height="6" rx="1"/><rect x="11" y="11" width="6" height="6" rx="1"/></svg>Catalog</a>
+    <a class="sidebar-link" href="/methodology/"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8" cy="10" r="5.5" fill="none" stroke="currentColor" stroke-width="1.2" stroke-dasharray="1.6 1.8"/><circle cx="8" cy="10" r="2" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M8 4.7v1.3M8 14v1.3M2.7 10h1.3M12 10h1.3M4.3 6.3l.9.9M10.8 12.8l.9.9M4.3 13.7l.9-.9M10.8 7.2l.9-.9" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/><path d="M13.5 10h4.3M15.8 8l2 2-2 2" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>Methodology</a>
+    <a class="sidebar-link" href="/laboratorio/" aria-current="page"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 2.5h5M8.5 2.5v4.3L4.8 13a1.6 1.6 0 0 0 1.4 2.4h7.6a1.6 1.6 0 0 0 1.4-2.4L11.5 6.8V2.5"/><path d="M6.2 11h7.6"/></svg>Laboratorie</a>
+    <a class="sidebar-link" href="/contact/"><svg viewBox="0 0 20 20" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="14" height="10" rx="1.5"/><path d="M3.5 6l6.5 5 6.5-5"/></svg>Contact</a>
+  </nav>
+  <div class="sidebar-footer">
+    <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#0151FC"/>
+      <path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z" fill="#01B3FD"/>
+      <polygon points="569,413 695,413 695,539 569,539" fill="#02F172"/>
+    </svg>
+    <span>
+      <span class="sidebar-footer-name">Gap Hunter Labs</span><br>
+      <span class="sidebar-footer-sub">Plugin Intelligence</span>
+    </span>
+  </div>
+</aside>
+
+<div class="app-main">
+<div class="main-with-rail">
+<main class="methodology-main">
+  <div class="page-hero method-intro">
+    <p class="contact-kicker">Gap Hunter Labs</p>
+    <h1>The Laboratorie</h1>
+    <p class="contact-lead" style="margin-bottom:0">The catalog's case studies &mdash; the plugins with the strongest, most unusual evidence behind them. Real sources, real competitor patterns, real compliance requirements. Nothing here is a guess.</p>
+  </div>
+
+  <div class="lab-cases">
+    <article class="identity-card identity-case">
+      <div class="case-body">
+        <p class="eyebrow">Case study</p>
+        <h3>Background ReadAction Freeze Companion</h3>
+        <p>Not the usual &ldquo;a paid competitor's users are complaining&rdquo; story this catalog is built around &mdash; this one is motivated directly by JetBrains' own Platform Blog: a background-thread entry point reaching a blocking, non-cancellable read-lock call, a pattern their own Platform team publicly named as a real, recurring cause of IDE freezes.</p>
+        <a class="btn" href="https://github.com/GapHunterLabs/background-readaction-freeze-companion#readme" target="_blank" rel="noopener">View evidence &rarr;</a>
+      </div>
+      <dl class="case-meta">
+        <div class="case-meta-row">
+          <dt><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h8" stroke-linecap="round"/></svg>Source</dt>
+          <dd>JetBrains Platform Blog</dd>
+        </div>
+        <div class="case-meta-row">
+          <dt><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>Category</dt>
+          <dd>Code Quality</dd>
+        </div>
+        <div class="case-meta-row">
+          <dt><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M8 1v14M2 8h12" stroke-linecap="round"/><circle cx="8" cy="8" r="6"/></svg>Impact</dt>
+          <dd>High <span class="case-meta-note">&mdash; named by JetBrains itself, not a competitor complaint</span></dd>
+        </div>
+      </dl>
+    </article>
+
+    <article class="identity-card identity-case">
+      <div class="case-body">
+        <p class="eyebrow">Case study</p>
+        <h3>Dependency Vulnerability Companion</h3>
+        <p>Every leading alternative &mdash; Aikido, Xygeni, JFrog's own Marketplace plugins, Snyk &mdash; requires a cloud account or personal access token before it does anything; Semgrep's OSS core was relicensed in December 2024, which is exactly why ten competing DevSecOps vendors forked it into Opengrep weeks later. This plugin checks the same class of vulnerable dependencies with zero account, zero token, and zero network calls, ever &mdash; the only way to serve CMMC 2.0&ndash;regulated defense contractors, a real buyer segment that structurally cannot use any cloud-based alternative above.</p>
+        <a class="btn" href="https://github.com/GapHunterLabs/dependency-vulnerability-companion#readme" target="_blank" rel="noopener">View evidence &rarr;</a>
+      </div>
+      <dl class="case-meta">
+        <div class="case-meta-row">
+          <dt><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h8" stroke-linecap="round"/></svg>Source</dt>
+          <dd>Vendor docs (Aikido, Snyk) + CMMC 2.0</dd>
+        </div>
+        <div class="case-meta-row">
+          <dt><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>Category</dt>
+          <dd>Security</dd>
+        </div>
+        <div class="case-meta-row">
+          <dt><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M8 1v14M2 8h12" stroke-linecap="round"/><circle cx="8" cy="8" r="6"/></svg>Impact</dt>
+          <dd>High <span class="case-meta-note">&mdash; CMMC 2.0 requires FedRAMP Moderate for any cloud tool touching CUI; no commercial SCA/SAST cloud tool clears that bar</span></dd>
+        </div>
+      </dl>
+    </article>
+
+    <p class="lab-pending">More case studies land here as they're curated &mdash; each one requires reading the plugin's full evidence in its own README and confirming every claim against a real, public source, the same bar as the two above. Every plugin in the <a href="/catalog/">catalog</a> already ships with real evidence in its own listing; this page holds the handful with the most unusual or well-documented stories behind them.</p>
+  </div>
+
+  <div class="lab-section-head">
+    <p class="eyebrow">Beyond the catalog</p>
+    <h2>JetBrains Platform tickets</h2>
+    <p>Gap Hunter Labs also reports and diagnoses real bugs directly in JetBrains' own IntelliJ Platform (IJPL) tracker &mdash; root-cause analysis posted publicly, not tied to any plugin in this catalog.</p>
+  </div>
+  <div class="lab-tickets">
+    <article class="ticket-card">
+      <div class="ticket-head">
+        <a class="ticket-id" href="https://youtrack.jetbrains.com/issue/IJPL-200871" target="_blank" rel="noopener">IJPL-200871 &#8599;</a>
+        <h3>CME in workspace model</h3>
+        <span class="ticket-status is-fixed">Fixed</span>
+      </div>
+      <p>Missing <code>ProgressManager.checkCanceled()</code> in <code>WorkspaceFileIndexDataImpl.fillPackageFilesAndDirectories()</code> let a pending workspace-model write mutate an unsynchronized <code>LinkedHashMap</code> mid-iteration &mdash; producing a <code>ConcurrentModificationException</code> instead of a clean cancellation. Fix: add the missing call, mirroring the pattern the caller already uses.</p>
+    </article>
+    <article class="ticket-card">
+      <div class="ticket-head">
+        <a class="ticket-id" href="https://youtrack.jetbrains.com/issue/IJPL-27359" target="_blank" rel="noopener">IJPL-27359 &#8599;</a>
+        <h3>CME in InspectionToolRegistrar.createTools on loading/unloading plugins</h3>
+        <span class="ticket-status is-submitted">Submitted</span>
+      </div>
+      <p><code>toolFactories</code> is iterated as a live, unsynchronized view of a mutable map inside <code>createTools()</code>, running on background threads with no read-action lock &mdash; a concurrent plugin unload can mutate the map mid-iteration. Confirmed still reproducible today, years after the original report.</p>
+    </article>
+    <article class="ticket-card">
+      <div class="ticket-head">
+        <a class="ticket-id" href="https://youtrack.jetbrains.com/issue/IJPL-80817" target="_blank" rel="noopener">IJPL-80817 &#8599;</a>
+        <h3>Cannot create light service git4ide.repo.GitRepositoryManager because container is already disposed</h3>
+        <span class="ticket-status is-submitted">Submitted</span>
+      </div>
+      <p>Same missing-<code>checkCanceled()</code> pattern as IJPL-200871: the original call site moved after a widget restructuring, but none of the new utility functions in the lookup chain call it either, so a project closing can still race into an <code>AlreadyDisposedException</code>. Flagged as one systemic cleanup together with IJPL-200871, not two unrelated bugs.</p>
+    </article>
+    <article class="ticket-card">
+      <div class="ticket-head">
+        <a class="ticket-id" href="https://youtrack.jetbrains.com/issue/IJPL-76141" target="_blank" rel="noopener">IJPL-76141 &#8599;</a>
+        <h3>Git Log is empty due to a StackOverflow exception in IntToIntBtree.processLeafPages</h3>
+        <span class="ticket-status is-open">Open</span>
+      </div>
+      <p><code>processLeafPages</code> recurses with no stack-depth guard, so a large enough index overflows the stack and silently empties Git Log. Proposed fix: rewrite the traversal iteratively.</p>
+    </article>
+    <article class="ticket-card">
+      <div class="ticket-head">
+        <a class="ticket-id" href="https://youtrack.jetbrains.com/issue/IJPL-196254" target="_blank" rel="noopener">IJPL-196254 &#8599;</a>
+        <h3>Memory leak via ProjectRootManagerImpl::rootsChanged</h3>
+        <span class="ticket-status is-open">Open</span>
+      </div>
+      <p><code>BatchSession</code>'s <code>changes</code> list only clears once its <code>pendingRootsChanged</code> counter hits exactly 0 &mdash; but the counter is incremented without matching exception handling, so one exception or an asymmetric reentrant call leaves it stuck above 0 permanently, and <code>changes</code> keeps growing on every later roots-changed event.</p>
+    </article>
+  </div>
+</main>
+<aside class="page-insights" aria-label="About Gap Hunter Labs">
+  <div class="pi-card">
+    <p class="pi-eyebrow">What we do</p>
+    <p class="pi-note">Gap Hunter Labs finds real, evidence-based gaps in developer tooling and ships focused IntelliJ-family plugins to fix them. Every product in the catalog exists because of a documented complaint, not a guess.</p>
+  </div>
+  <div class="pi-card">
+    <p class="pi-eyebrow">Why case studies</p>
+    <p class="pi-note">Most of the catalog's evidence lives inside each plugin's own README. The Laboratorie holds the handful with a story strong enough to read on its own &mdash; not just cited in a listing.</p>
+  </div>
+</aside>
+</div>
+</div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-brand-row">
+          <div class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+              <path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#0151FC"/>
+              <path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z" fill="#01B3FD"/>
+              <polygon points="569,413 695,413 695,539 569,539" fill="#02F172"/>
+            </svg>
+          </div>
+          <div>
+            <div class="footer-brand-name">Gap Hunter Labs</div>
+            <div class="footer-brand-tagline">Plugin Intelligence</div>
+          </div>
+        </div>
+        <p>We hunt real, evidence-based gaps in developer tooling and ship focused IntelliJ-family plugins to fix them. Every product in this catalog exists because of a documented complaint, not a guess.</p>
+      </div>
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <div class="footer-col-title">Explore</div>
+        <a href="/catalog/">Catalog</a>
+        <a href="/methodology/">Methodology</a>
+        <a href="/laboratorio/" aria-current="page">Laboratorie</a>
+        <a href="/security/">Security</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+      <div class="footer-elsewhere">
+        <div class="footer-col-title">Elsewhere</div>
+        <a class="fe-link" href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2.345 23.997A2.347 2.347 0 0 1 0 21.652V10.988C0 9.665.535 8.37 1.473 7.433l5.965-5.961A5.01 5.01 0 0 1 10.989 0h10.666A2.347 2.347 0 0 1 24 2.345v10.664a5.056 5.056 0 0 1-1.473 3.554l-5.965 5.965A5.017 5.017 0 0 1 13.007 24v-.003H2.345Zm8.969-6.854H5.486v1.371h5.828v-1.371ZM3.963 6.514h13.523v13.519l4.257-4.257a3.936 3.936 0 0 0 1.146-2.767V2.345c0-.678-.552-1.234-1.234-1.234H10.989a3.897 3.897 0 0 0-2.767 1.145L3.963 6.514Zm-.192.192L2.256 8.22a3.944 3.944 0 0 0-1.145 2.768v10.664c0 .678.552 1.234 1.234 1.234h10.666a3.9 3.9 0 0 0 2.767-1.146l1.512-1.511H3.771V6.706Z"/></svg>
+          JetBrains Marketplace
+        </a>
+        <a class="fe-link" href="https://marketplace.visualstudio.com/publishers/GapHunterLabs" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z"/></svg>
+          VS Code Marketplace
+        </a>
+        <a class="fe-link" href="https://github.com/GapHunterLabs" target="_blank" rel="noopener">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          GitHub
+        </a>
+        <a class="fe-link" href="https://www.linkedin.com/in/joel-diaz-82687b428/?locale=en" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          LinkedIn
+        </a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      Data: plugins.jetbrains.com/api + GitHub API — nothing here is estimated.
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var topbar = document.getElementById('topbar');
+  var burger = document.getElementById('topbarBurger');
+  if (topbar && burger) {
+    burger.addEventListener('click', function () {
+      var open = topbar.classList.toggle('nav-open');
+      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.querySelectorAll('#appSidebar a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        topbar.classList.remove('nav-open');
+        burger.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
+  // Fade el logo del pie del sidebar cuando el <footer> real entra en
+  // viewport (ver comentario en css/shell.css).
+  var siteFooter = document.querySelector('.site-footer');
+  var sidebarFooter = document.querySelector('.sidebar-footer');
+  if (siteFooter && sidebarFooter && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        sidebarFooter.classList.toggle('is-near-footer', entry.isIntersecting);
+      });
+    }).observe(siteFooter);
+  }
+})();
+</script>
+<script data-goatcounter="https://gaphunterlabs.goatcounter.com/count"
+        async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

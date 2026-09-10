@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="How Gap Hunter Labs evaluates plugin ideas and reports public catalog data.">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://gc.zgo.at; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; manifest-src 'self'; connect-src https://gaphunterlabs.goatcounter.com; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
+<meta name="theme-color" content="#090D16">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%201024%201024%22%20width%3D%22100%25%22%20height%3D%22100%25%22%3E%20%3Crect%20width%3D%221024%22%20height%3D%221024%22%20fill%3D%22%23FFFFFF%22/%3E%20%3Cpath%20d%3D%22%20M%20511%2C81%20L%20847%2C283%20L%20725%2C351%20L%20508%2C223%20L%20296%2C348%20L%20296%2C588%20L%20463%2C691%20L%20342%2C765%20L%20173%2C665%20L%20172%2C281%20Z%22%20fill%3D%22%230151FC%22%20/%3E%20%3Cpath%20d%3D%22%20M%20846%2C412%20L%20844%2C668%20L%20518%2C863%20L%20393%2C795%20L%20724%2C589%20L%20721%2C540%20L%20567%2C538%20L%20568%2C412%20Z%22%20fill%3D%22%2301B3FD%22%20/%3E%20%3Cpolygon%20points%3D%22569%2C413%20695%2C413%20695%2C539%20569%2C539%22%20fill%3D%22%2302F172%22%20/%3E%20%3C/svg%3E">
+<link rel="canonical" href="https://gaphunterlabs.github.io/methodology/">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="preconnect" href="https://gc.zgo.at" crossorigin>
+<link rel="preconnect" href="https://gaphunterlabs.goatcounter.com" crossorigin>
+<title>Methodology &mdash; Gap Hunter Labs</title>
+<meta name="robots" content="index, follow">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Gap Hunter Labs">
+<meta property="og:url" content="https://gaphunterlabs.github.io/methodology/">
+<meta property="og:title" content="Methodology — Gap Hunter Labs">
+<meta property="og:description" content="How Gap Hunter Labs evaluates plugin ideas and reports public catalog data.">
+<meta property="og:image" content="https://gaphunterlabs.github.io/og-image.png">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Methodology — Gap Hunter Labs">
+<meta name="twitter:description" content="How Gap Hunter Labs evaluates plugin ideas and reports public catalog data.">
+<meta name="twitter:image" content="https://gaphunterlabs.github.io/og-image.png">
+<style>
+  @font-face {
+    font-family: "IBM Plex Sans";
+    src: url("/fonts/IBMPlexSans-Variable.ttf") format("truetype");
+    font-weight: 100 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "JetBrains Mono";
+    src: url("/fonts/JetBrainsMono-Variable.ttf") format("truetype");
+    font-weight: 100 800;
+    font-style: normal;
+    font-display: swap;
+  }
+  :root {
+    --bg: #090D16;
+    --surface: #111726;
+    --surface-2: #1A2235;
+    --border: #29334A;
+    --text: #E9EDF8;
+    --text-dim: #9AA6C4;
+    --text-faint: #8894B8;
+    --accent: #3FA2FF;
+    --good: #02F172;
+    --cyan: #01B3FD;
+    --mono: "JetBrains Mono", ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    --sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --page-max: 1280px;
+    --page-pad: 24px;
+    --section-gap: 20px;
+    --card-pad: 16px;
+    --card-pad-sm: 10px;
+    --duration-fast: 120ms;
+    --duration-base: 150ms;
+    --duration-slow: 300ms;
+    --ease-standard: cubic-bezier(.65,0,.35,1);
+    --ease-emphasized: cubic-bezier(.2,.7,.3,1);
+    --radius: 10px;
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+  }
+  * { box-sizing: border-box; }
+  html { scrollbar-color: var(--border) var(--bg); scrollbar-width: thin; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bg);
+    background-image: radial-gradient(ellipse 1200px 640px at 50% 0%, rgba(63,162,255,0.07), transparent 60%);
+    background-repeat: no-repeat;
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); }
+  a:hover { color: var(--text); }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: rgba(9,13,22,0.94);
+    -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .topbar::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: -1px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), var(--cyan), var(--good), transparent);
+    opacity: 0.55;
+  }
+  .topbar-inner {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    padding: 0 var(--page-pad);
+    height: 56px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+  }
+  .topbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-self: start;
+    min-width: 0;
+    text-decoration: none;
+    color: inherit;
+    border-radius: var(--radius-md);
+  }
+  .topbar-brand:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .topbar-mark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 32px;
+    height: 32px;
+  }
+  .topbar-mark svg { width: 32px; height: 32px; display: block; }
+  .topbar-wordmark {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+  }
+  .tw-name {
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1.15;
+    white-space: nowrap;
+  }
+  .tw-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    line-height: 1.2;
+  }
+  .topbar-nav {
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    gap: 0;
+    flex: none;
+    padding: 3px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .topbar-link {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--text-faint);
+    text-decoration: none;
+    padding: 7px 14px;
+    border-radius: var(--radius-md);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+  .topbar-link:hover {
+    color: var(--text);
+    background: var(--surface-2);
+  }
+  .topbar-link.active {
+    color: var(--text);
+    background: var(--surface-2);
+  }
+  .topbar-link:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .topbar-actions {
+    display: flex;
+    align-items: center;
+    justify-self: end;
+    gap: 8px;
+    min-width: 0;
+  }
+  .topbar-ext {
+    display: flex;
+    align-items: stretch;
+    height: 36px;
+    flex: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+  .topbar-ext-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 0 12px;
+    border-left: 1px solid var(--border);
+    background: transparent;
+  }
+  .topbar-ext-link:first-child { border-left: 0; }
+  .topbar-ext-link:hover {
+    color: var(--text);
+    background: var(--surface-2);
+  }
+  .topbar-ext-link:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+    color: var(--text);
+  }
+  .topbar-ext-link svg { width: 15px; height: 15px; flex: none; }
+  .topbar-burger {
+    display: none;
+    flex: none;
+    width: 44px;
+    height: auto;
+    align-self: stretch;
+    border-radius: 0;
+    border: 0;
+    border-left: 1px solid var(--border);
+    background: transparent;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .topbar-burger:hover { background: var(--surface-2); }
+  .topbar-burger:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+  }
+  .topbar-burger span,
+  .topbar-burger::before,
+  .topbar-burger::after {
+    content: "";
+    display: block;
+    width: 16px;
+    height: 1.85px;
+    background: var(--text-dim);
+    position: relative;
+  }
+  .topbar-burger::before { position: absolute; transform: translateY(-5.75px); }
+  .topbar-burger::after { position: absolute; transform: translateY(5.75px); }
+  .topbar.nav-open .topbar-burger span { opacity: 0; }
+  .topbar.nav-open .topbar-burger::before { transform: translateY(0) rotate(45deg); }
+  .topbar.nav-open .topbar-burger::after { transform: translateY(0) rotate(-45deg); }
+
+  @media (max-width: 900px) {
+    .tw-tag { display: none; }
+    .topbar-ext-label { display: none; }
+    .topbar-ext { height: 44px; }
+    .topbar-ext-link { min-width: 44px; padding: 0 12px; }
+  }
+  @media (max-width: 840px) {
+    .topbar-inner {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+    }
+    .topbar-nav { display: none; }
+    .topbar-burger { display: flex; }
+    .topbar.nav-open .topbar-nav {
+      display: flex;
+      position: absolute;
+      top: 56px; left: 0; right: 0;
+      flex-direction: column;
+      align-items: stretch;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      border-radius: 0;
+      padding: 6px;
+      gap: 2px;
+    }
+    .topbar.nav-open .topbar-link { padding: 12px 14px; }
+  }
+
+  .methodology-main {
+    flex: 1;
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 40px var(--page-pad) 56px;
+  }
+  .contact-kicker {
+    margin: 0 0 8px;
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+  .methodology-main h1 {
+    margin: 0 0 16px;
+    font-size: 32px;
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+  .contact-lead {
+    margin: 0 0 36px;
+    font-size: 17px;
+    color: var(--text-dim);
+    line-height: 1.65;
+  }
+  .contact-section {
+    margin: 0 0 32px;
+    padding: 0;
+    border: 0;
+  }
+  .contact-section h2 {
+    margin: 0 0 10px;
+    font-size: 18px;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+  }
+  .contact-section p,
+  .contact-section li {
+    color: var(--text-dim);
+    line-height: 1.65;
+  }
+  .contact-section p { margin: 0 0 10px; }
+  .contact-section ul {
+    margin: 0;
+    padding-left: 1.2em;
+  }
+  .contact-section li { margin: 0 0 8px; }
+  .contact-section li:last-child { margin-bottom: 0; }
+  .channel-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .channel-list li {
+    margin: 0;
+    padding: var(--card-pad);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-dim);
+  }
+  .channel-list strong {
+    display: block;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .back-link {
+    display: inline-block;
+    margin-top: 8px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .back-link:hover { text-decoration: underline; }
+
+  .brand-mark {
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+  }
+  .brand-mark svg { width: 19px; height: 19px; }
+
+  .site-footer {
+    margin-top: auto;
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+  .footer-inner {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    padding: 36px var(--page-pad) 28px;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.75fr) minmax(0, 0.9fr);
+    gap: 40px 48px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+  .footer-brand { max-width: 400px; }
+  .footer-brand-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .footer-brand-name {
+    font-weight: 650;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+  }
+  .footer-brand-tagline {
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--text-faint);
+    margin-top: 2px;
+  }
+  .footer-brand p {
+    margin: 14px 0 0;
+    font-size: 13.5px;
+    color: var(--text-dim);
+    line-height: 1.65;
+  }
+  .footer-col-title {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 12px;
+  }
+  .footer-nav { display: flex; flex-direction: column; gap: 2px; }
+  .footer-nav a {
+    display: block;
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 6px 0;
+    border-radius: var(--radius-sm);
+    transition: color var(--duration-base) ease;
+  }
+  .footer-nav a:hover { color: var(--text); }
+  .footer-nav a:focus-visible {
+    color: var(--text);
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .footer-elsewhere { display: flex; flex-direction: column; gap: 2px; }
+  .fe-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 6px 0;
+    border-radius: var(--radius-sm);
+    transition: color var(--duration-base) ease;
+  }
+  .fe-link svg { width: 15px; height: 15px; flex: none; opacity: 0.85; }
+  .fe-link:hover { color: var(--text); }
+  .fe-link:hover svg { opacity: 1; }
+  .fe-link:focus-visible {
+    color: var(--text);
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .footer-bottom {
+    margin-top: 18px;
+    font-family: var(--sans);
+    font-size: 12.5px;
+    color: var(--text-faint);
+    line-height: 1.5;
+  }
+  @media (max-width: 760px) {
+    .footer-grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-areas: "brand brand" "nav elsewhere";
+      gap: 28px 24px;
+    }
+    .footer-brand { grid-area: brand; max-width: none; }
+    .footer-nav { grid-area: nav; }
+    .footer-elsewhere { grid-area: elsewhere; }
+    .methodology-main { padding-top: 28px; }
+    .methodology-main h1 { font-size: 26px; }
+  }
+  @media (max-width: 640px) {
+    .footer-grid {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: "brand" "nav" "elsewhere";
+    }
+  }
+
+  .methodology-main { max-width: var(--page-max); }
+  .method-intro { max-width: 760px; }
+  .decision-figure {
+    margin: 0 0 36px;
+    padding: var(--card-pad);
+    min-width: 0;
+    max-width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .decision-figure h2 { margin: 0 0 6px; font-size: 20px; }
+  .decision-figure > p { margin: 0 0 16px; color: var(--text-dim); }
+  .diagram-scroll {
+    max-width: 100%;
+    padding-bottom: 4px;
+  }
+  /* Sin min-width: el SVG (viewBox fijo) escala proporcionalmente al
+     ancho real del box en vez de forzar overflow horizontal -- a
+     pedido explícito 2026-09-10 (antes tenía min-width:720px + scroll
+     interno para no achicar el texto de más; ahora prioriza encajar
+     siempre en el box, incluso si el texto queda más chico en
+     viewports angostos). */
+  .decision-diagram { display: block; width: 100%; height: auto; }
+  .decision-diagram .node { fill: var(--surface-2); stroke: var(--border); stroke-width: 2; transition: stroke var(--duration-base) ease; }
+  .decision-diagram .node:hover { stroke: var(--accent); }
+  .decision-diagram .node-built { stroke: var(--good); }
+  .decision-diagram .node-built:hover { stroke: var(--good); }
+  /* Trazo punteado + relleno más apagado -- distingue un nodo terminal
+     de rechazo ("Not built") de un nodo de decisión real, sin inventar
+     un color nuevo (esta página no tiene token --bad). */
+  .decision-diagram .node-reject { fill: color-mix(in srgb, var(--border) 35%, var(--bg)); stroke: var(--text-faint); stroke-dasharray: 4 3; }
+  .decision-diagram .node-reject:hover { stroke: var(--text-faint); }
+  .decision-diagram .connector { fill: none; stroke: var(--border); stroke-width: 2; stroke-linecap: square; stroke-linejoin: miter; }
+  .decision-diagram .label { fill: var(--text); font: 600 16px var(--sans); text-anchor: middle; }
+  .decision-diagram .small { fill: var(--text-dim); font: 14px var(--sans); text-anchor: middle; }
+  .decision-diagram .branch { fill: var(--text-faint); font: 600 13px var(--mono); }
+  .decision-diagram .built { fill: var(--good); }
+
+  /* Dinamismo real: el diagrama "se dibuja" al entrar en viewport --
+     los nodos aparecen con un fade+scale escalonado (delay puesto por
+     JS según su orden real en el flujo) y los conectores se trazan
+     con la técnica clásica de stroke-dasharray/dashoffset.
+
+     Importante: el estado "oculto" NUNCA es el default en CSS puro --
+     es JS quien agrega .diagram-anim-ready (de forma síncrona, antes
+     de armar el IntersectionObserver) para activar el ocultamiento
+     inicial. Sin JS (o si algo en el script falla antes de esa línea),
+     el diagrama se queda con su apariencia normal, siempre visible --
+     nunca depende de que el observer llegue a disparar. */
+  .decision-diagram .node,
+  .decision-diagram .node-built,
+  .decision-diagram .connector {
+    transition: opacity 0.5s var(--ease-standard), transform 0.5s var(--ease-standard), stroke-dashoffset 0.7s var(--ease-standard), stroke var(--duration-base) ease;
+  }
+  .decision-figure.diagram-anim-ready .decision-diagram .node,
+  .decision-figure.diagram-anim-ready .decision-diagram .node-built {
+    opacity: 0; transform: scale(0.94); transform-origin: center;
+  }
+  .decision-figure.diagram-anim-ready .decision-diagram .connector {
+    stroke-dasharray: 900; stroke-dashoffset: 900;
+  }
+  .decision-figure.is-visible .decision-diagram .node,
+  .decision-figure.is-visible .decision-diagram .node-built { opacity: 1; transform: scale(1); }
+  .decision-figure.is-visible .decision-diagram .connector { stroke-dashoffset: 0; }
+  @media (prefers-reduced-motion: reduce) {
+    .decision-diagram .node, .decision-diagram .node-built, .decision-diagram .connector {
+      transition: none; opacity: 1; transform: none; stroke-dashoffset: 0;
+    }
+  }
+  /* .disclosure vivía antes en la columna principal ancha (18px
+     heading, 15px/1.65 de texto) -- ahora que las 4 secciones viven
+     solo en el rail derecho (300px), se compacta al mismo lenguaje
+     visual que el resto de boxes del rail (.pi-card en shell.css):
+     eyebrow chico en mono mayúscula en vez de <h2> grande, texto
+     11.5-12px, sin el acento lateral (ningún otro box del rail lo
+     tiene). Reescrito a pedido explícito 2026-09-10. */
+  .disclosure {
+    padding: var(--card-pad);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow, none);
+  }
+  .disclosure h2 {
+    margin: 0 0 var(--space-3, 12px);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+  .disclosure ul { margin: 0; padding-left: 1.1em; }
+  .disclosure li { color: var(--text-dim); font-size: 12px; line-height: 1.45; margin-bottom: 6px; }
+  .disclosure li:last-child { margin-bottom: 0; }
+  .disclosure b { color: var(--text); }
+  @media (max-width: 760px) {
+    .decision-figure { padding: var(--card-pad); }
+  }
+</style>
+<link rel="stylesheet" href="/css/shell.css">
+</head>
+<body>
+<div class="app-shell">
+<nav class="topbar" id="topbar">
+  <div class="topbar-inner">
+    <a class="topbar-brand" href="/" aria-label="Gap Hunter Labs">
+      <span class="topbar-mark" aria-hidden="true">
+        <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#0151FC"/>
+          <path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z" fill="#01B3FD"/>
+          <polygon points="569,413 695,413 695,539 569,539" fill="#02F172"/>
+        </svg>
+      </span>
+      <span class="topbar-wordmark">
+        <span class="tw-name">Gap Hunter Labs</span>
+        <span class="tw-tag">Plugin Intelligence</span>
+      </span>
+    </a>
+    <div class="topbar-actions">
+      <div class="topbar-ext">
+        <a class="topbar-ext-link" href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" target="_blank" rel="noopener" aria-label="JetBrains Marketplace" title="Gap Hunter Labs on JetBrains Marketplace">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2.345 23.997A2.347 2.347 0 0 1 0 21.652V10.988C0 9.665.535 8.37 1.473 7.433l5.965-5.961A5.01 5.01 0 0 1 10.989 0h10.666A2.347 2.347 0 0 1 24 2.345v10.664a5.056 5.056 0 0 1-1.473 3.554l-5.965 5.965A5.017 5.017 0 0 1 13.007 24v-.003H2.345Zm8.969-6.854H5.486v1.371h5.828v-1.371ZM3.963 6.514h13.523v13.519l4.257-4.257a3.936 3.936 0 0 0 1.146-2.767V2.345c0-.678-.552-1.234-1.234-1.234H10.989a3.897 3.897 0 0 0-2.767 1.145L3.963 6.514Zm-.192.192L2.256 8.22a3.944 3.944 0 0 0-1.145 2.768v10.664c0 .678.552 1.234 1.234 1.234h10.666a3.9 3.9 0 0 0 2.767-1.146l1.512-1.511H3.771V6.706Z"/></svg>
+          <span class="topbar-ext-label">JetBrains</span>
+        </a>
+        <a class="topbar-ext-link" href="https://marketplace.visualstudio.com/publishers/GapHunterLabs" target="_blank" rel="noopener" aria-label="VS Code Marketplace" title="Gap Hunter Labs on VS Code Marketplace">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z"/></svg>
+          <span class="topbar-ext-label">VS Code</span>
+        </a>
+        <a class="topbar-ext-link" href="https://github.com/GapHunterLabs" target="_blank" rel="noopener" aria-label="GitHub" title="Gap Hunter Labs on GitHub">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          <span class="topbar-ext-label">GitHub</span>
+        </a>
+        <a class="topbar-ext-link" href="https://www.linkedin.com/in/joel-diaz-82687b428/?locale=en" target="_blank" rel="noopener" aria-label="LinkedIn" title="Gap Hunter Labs on LinkedIn">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          <span class="topbar-ext-label">LinkedIn</span>
+        </a>
+        <button type="button" class="topbar-burger" id="topbarBurger" aria-label="Toggle navigation" aria-expanded="false" aria-controls="appSidebar"><span></span></button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<aside class="app-sidebar" id="appSidebar">
+  <nav class="sidebar-nav" aria-label="Primary">
+    <a class="sidebar-link" href="/"><svg viewBox="0 0 20 20" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10 10 3l7 7M5 8.5V17h10V8.5"/></svg>Home</a>
+    <a class="sidebar-link" href="/catalog/"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="11" y="3" width="6" height="6" rx="1"/><rect x="3" y="11" width="6" height="6" rx="1"/><rect x="11" y="11" width="6" height="6" rx="1"/></svg>Catalog</a>
+    <a class="sidebar-link" href="/methodology/" aria-current="page"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8" cy="10" r="5.5" fill="none" stroke="currentColor" stroke-width="1.2" stroke-dasharray="1.6 1.8"/><circle cx="8" cy="10" r="2" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M8 4.7v1.3M8 14v1.3M2.7 10h1.3M12 10h1.3M4.3 6.3l.9.9M10.8 12.8l.9.9M4.3 13.7l.9-.9M10.8 7.2l.9-.9" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/><path d="M13.5 10h4.3M15.8 8l2 2-2 2" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>Methodology</a>
+    <a class="sidebar-link" href="/laboratorio/"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 2.5h5M8.5 2.5v4.3L4.8 13a1.6 1.6 0 0 0 1.4 2.4h7.6a1.6 1.6 0 0 0 1.4-2.4L11.5 6.8V2.5"/><path d="M6.2 11h7.6"/></svg>Laboratorie</a>
+    <a class="sidebar-link" href="/contact/"><svg viewBox="0 0 20 20" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="14" height="10" rx="1.5"/><path d="M3.5 6l6.5 5 6.5-5"/></svg>Contact</a>
+  </nav>
+  <div class="sidebar-footer">
+    <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#0151FC"/>
+      <path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z" fill="#01B3FD"/>
+      <polygon points="569,413 695,413 695,539 569,539" fill="#02F172"/>
+    </svg>
+    <span>
+      <span class="sidebar-footer-name">Gap Hunter Labs</span><br>
+      <span class="sidebar-footer-sub">Plugin Intelligence</span>
+    </span>
+  </div>
+</aside>
+
+<div class="app-main">
+<div class="main-with-rail">
+<main class="methodology-main">
+  <div class="page-hero method-intro">
+    <p class="contact-kicker">Gap Hunter Labs</p>
+    <h1>Methodology</h1>
+    <p class="contact-lead" style="margin-bottom:0">How plugin ideas are evaluated, what the catalog&rsquo;s figures mean, and what this site deliberately leaves out.</p>
+  </div>
+
+  <figure class="decision-figure" aria-labelledby="greenlit-title">
+    <h2 id="greenlit-title">How a plugin gets greenlit</h2>
+    <p>A focused plugin moves forward only when each public, evidence-based question has a clear answer.</p>
+    <div class="diagram-scroll">
+      <svg class="decision-diagram" viewBox="0 0 900 720" role="img" aria-labelledby="diagram-title diagram-desc" xmlns="http://www.w3.org/2000/svg">
+        <title id="diagram-title">How a plugin gets greenlit</title>
+        <desc id="diagram-desc">A recurring documented complaint is checked for a repeated pattern, an existing focused Marketplace fix, and whether it can become one narrow plugin. A failing branch is not built. Passing all checks leads to a built, tested, published plugin with its evidence attached.</desc>
+        <defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="var(--border)"/></marker></defs>
+        <path class="node" d="M250 24 H650 L680 54 V126 L650 156 H250 L220 126 V54 Z"/>
+        <text class="label" x="450" y="72"><tspan x="450">Documented, recurring complaint found</tspan><tspan class="small" x="450" dy="25">Marketplace reviews, ratings, bug reports</tspan></text>
+        <path class="connector" marker-end="url(#arrow)" d="M450 156 V190"/>
+
+        <path class="node" d="M270 196 H630 L658 224 V280 L630 308 H270 L242 280 V224 Z"/>
+        <text class="label" x="450" y="247"><tspan x="450">Is it a real, repeated pattern?</tspan></text>
+        <path class="connector" marker-end="url(#arrow)" d="M658 252 H758"/>
+        <text class="branch" x="685" y="241">NO</text>
+        <path class="node node-reject" d="M760 218 H876 V286 H760 L744 252 Z"/>
+        <text class="small" x="814" y="257">Not built</text>
+        <path class="connector" marker-end="url(#arrow)" d="M450 308 V342"/>
+        <text class="branch" x="462" y="330">YES</text>
+
+        <path class="node" d="M270 348 H630 L658 376 V442 L630 470 H270 L242 442 V376 Z"/>
+        <text class="label" x="450" y="397"><tspan x="450">Does a focused fix already exist</tspan><tspan x="450" dy="23">on the Marketplace?</tspan></text>
+        <path class="connector" marker-end="url(#arrow)" d="M658 409 H758"/>
+        <text class="branch" x="682" y="398">YES</text>
+        <path class="node node-reject" d="M760 371 H884 V447 H760 L744 409 Z"/>
+        <text class="small" x="818" y="405"><tspan x="818">Not built</tspan><tspan x="818" dy="20">(redundant)</tspan></text>
+        <path class="connector" marker-end="url(#arrow)" d="M450 470 V504"/>
+        <text class="branch" x="462" y="492">NO</text>
+
+        <path class="node" d="M270 510 H630 L658 538 V594 L630 622 H270 L242 594 V538 Z"/>
+        <text class="label" x="450" y="555"><tspan x="450">Buildable as one narrow,</tspan><tspan x="450" dy="23">single-purpose plugin?</tspan></text>
+        <path class="connector" marker-end="url(#arrow)" d="M658 566 H748"/>
+        <text class="branch" x="680" y="555">NO</text>
+        <path class="node node-reject" d="M750 520 H890 V612 H750 L734 566 Z"/>
+        <text class="small" x="815" y="550"><tspan x="815">Documented as a</tspan><tspan x="815" dy="19">known limit,</tspan><tspan x="815" dy="19">not built</tspan></text>
+        <path class="connector" marker-end="url(#arrow)" d="M450 622 V650"/>
+        <text class="branch" x="462" y="644">YES</text>
+
+        <path class="node node-built" d="M220 656 H680 L704 680 L680 710 H220 L196 680 Z"/>
+        <text class="label built" x="450" y="678"><tspan x="450">Built, tested, published</tspan><tspan class="small" x="450" dy="21">evidence stays attached to the listing</tspan></text>
+      </svg>
+    </div>
+  </figure>
+</main>
+<aside class="page-insights" aria-label="Methodology notes">
+  <section class="disclosure" aria-labelledby="method-data"><h2 id="method-data">Methodology</h2><ul>
+    <li>Every number on this page &mdash; downloads, pricing, rating, first-published date, GitHub &#9733; &mdash; comes straight from JetBrains Marketplace and GitHub's own public data. Nothing here is estimated or made up.</li>
+    <li><b>Growth</b> compares each plugin's current downloads against the earliest point we have real data for it, not just the last time this page was refreshed &mdash; that's why the baseline date under the % can vary from plugin to plugin. A plugin with no earlier data point yet shows "&mdash;" instead of a guess.</li>
+    <li>A plugin marked <b>Pending</b> was recently submitted to Marketplace and is still in moderation &mdash; its listing exists, it just isn't indexed for search yet. That's normal review turnaround, not a problem with the plugin.</li>
+  </ul></section>
+  <section class="disclosure" aria-labelledby="method-gap"><h2 id="method-gap">The Gap / The Fix</h2><ul>
+    <li><b>The Gap</b> is the real, cited evidence that this plugin needed to exist &mdash; a documented pattern of complaints about an existing tool (reviews, ratings, recurring bug reports), not a guess about what developers might want.</li>
+    <li><b>The Fix</b> is the plugin's own real, published description of what it actually does. Neither side is generated or embellished &mdash; every claim traces back to something publicly verifiable.</li>
+  </ul></section>
+  <section class="disclosure" aria-labelledby="method-signals"><h2 id="method-signals">Reviews, rating, and stars</h2><ul>
+    <li>Reviews, Marketplace rating, and GitHub stars use the same public sources as downloads. This catalog is still early and product-focused, so those figures live here &mdash; not in the hero &mdash; until they describe the work rather than empty cells.</li>
+  </ul></section>
+  <section class="disclosure" aria-labelledby="method-privacy"><h2 id="method-privacy">What's Never Stored Here</h2><ul>
+    <li>We never publish a competitor's private marketplace identifiers or a vendor's personal contact details (email, phone, address) &mdash; even when the public API we read from happens to expose them alongside the data we do use.</li>
+    <li>"Visitors today" counts real visits via GoatCounter &mdash; cookie-free, no IP address stored, no individual visitor ever identifiable. It counts sessions, not raw pageviews, so reloading this page or browsing multiple sections doesn't inflate the number.</li>
+  </ul></section>
+</aside>
+</div>
+</div>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-brand-row">
+          <div class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg">
+              <path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#0151FC"/>
+              <path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z" fill="#01B3FD"/>
+              <polygon points="569,413 695,413 695,539 569,539" fill="#02F172"/>
+            </svg>
+          </div>
+          <div>
+            <div class="footer-brand-name">Gap Hunter Labs</div>
+            <div class="footer-brand-tagline">Plugin Intelligence</div>
+          </div>
+        </div>
+        <p>We hunt real, evidence-based gaps in developer tooling and ship focused IntelliJ-family plugins to fix them. Every product in this catalog exists because of a documented complaint, not a guess.</p>
+      </div>
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <div class="footer-col-title">Explore</div>
+        <a href="/catalog/">Catalog</a>
+        <a href="/methodology/" aria-current="page">Methodology</a>
+        <a href="/laboratorio/">Laboratorie</a>
+        <a href="/security/">Security</a>
+        <a href="/contact/">Contact</a>
+      </nav>
+      <div class="footer-elsewhere">
+        <div class="footer-col-title">Elsewhere</div>
+        <a class="fe-link" href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2.345 23.997A2.347 2.347 0 0 1 0 21.652V10.988C0 9.665.535 8.37 1.473 7.433l5.965-5.961A5.01 5.01 0 0 1 10.989 0h10.666A2.347 2.347 0 0 1 24 2.345v10.664a5.056 5.056 0 0 1-1.473 3.554l-5.965 5.965A5.017 5.017 0 0 1 13.007 24v-.003H2.345Zm8.969-6.854H5.486v1.371h5.828v-1.371ZM3.963 6.514h13.523v13.519l4.257-4.257a3.936 3.936 0 0 0 1.146-2.767V2.345c0-.678-.552-1.234-1.234-1.234H10.989a3.897 3.897 0 0 0-2.767 1.145L3.963 6.514Zm-.192.192L2.256 8.22a3.944 3.944 0 0 0-1.145 2.768v10.664c0 .678.552 1.234 1.234 1.234h10.666a3.9 3.9 0 0 0 2.767-1.146l1.512-1.511H3.771V6.706Z"/></svg>
+          JetBrains Marketplace
+        </a>
+        <a class="fe-link" href="https://marketplace.visualstudio.com/publishers/GapHunterLabs" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z"/></svg>
+          VS Code Marketplace
+        </a>
+        <a class="fe-link" href="https://github.com/GapHunterLabs" target="_blank" rel="noopener">
+          <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+          GitHub
+        </a>
+        <a class="fe-link" href="https://www.linkedin.com/in/joel-diaz-82687b428/?locale=en" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          LinkedIn
+        </a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      Data: plugins.jetbrains.com/api + GitHub API — nothing here is estimated.
+    </div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var topbar = document.getElementById('topbar');
+  var burger = document.getElementById('topbarBurger');
+  if (topbar && burger) {
+    burger.addEventListener('click', function () {
+      var open = topbar.classList.toggle('nav-open');
+      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+    document.querySelectorAll('#appSidebar a').forEach(function (link) {
+      link.addEventListener('click', function () {
+        topbar.classList.remove('nav-open');
+        burger.setAttribute('aria-expanded', 'false');
+      });
+    });
+  }
+  // El diagrama "se dibuja" una vez al entrar en viewport. Respeta
+  // prefers-reduced-motion desde el arranque -- si el usuario lo
+  // pidió, ni siquiera se agrega .diagram-anim-ready, así que el
+  // diagrama nunca pasa por un estado oculto en ningún momento.
+  var figure = document.querySelector('.decision-figure');
+  var reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (figure && !reduceMotion && 'IntersectionObserver' in window) {
+    figure.classList.add('diagram-anim-ready');
+    var seq = figure.querySelectorAll('.node, .node-built, .connector');
+    seq.forEach(function (el, i) { el.style.transitionDelay = (i * 55) + 'ms'; });
+    var io = new IntersectionObserver(function (entries, obs) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          figure.classList.add('is-visible');
+          obs.disconnect();
+        }
+      });
+    }, { threshold: 0.25 });
+    io.observe(figure);
+  }
+  // Fade el logo del pie del sidebar cuando el <footer> real entra en
+  // viewport (ver comentario en css/shell.css).
+  var siteFooter = document.querySelector('.site-footer');
+  var sidebarFooter = document.querySelector('.sidebar-footer');
+  if (siteFooter && sidebarFooter && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        sidebarFooter.classList.toggle('is-near-footer', entry.isIntersecting);
+      });
+    }).observe(siteFooter);
+  }
+})();
+</script>
+<script data-goatcounter="https://gaphunterlabs.goatcounter.com/count"
+        async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

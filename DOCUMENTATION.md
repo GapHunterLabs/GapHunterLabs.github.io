@@ -4,12 +4,27 @@ This repository is the static GitHub Pages site for Gap Hunter Labs. It has no b
 
 ## Public pages
 
-- `index.html` — home page, featured plugins, category previews, and the public identity section.
-- `catalog.html` — full searchable/filterable catalog, table and field views, plugin dossiers, JSON-LD, and a no-script crawler list.
-- `methodology.html` — public decision model and catalog data disclosures.
-- `contact.html` — support and contact channels.
+2026-09-10: migrated to clean (extensionless) URLs. Real content now
+lives at `<page>/index.html` so GitHub Pages serves it at `/<page>/`
+with no `.html` in the address bar; the home page is the one
+exception (`index.html` at the repo root already serves `/`). The old
+top-level `catalog.html`/`methodology.html`/`contact.html`/
+`security.html`/`laboratorio.html` files still exist, but each is now
+a tiny client-side redirect stub (meta refresh + `location.replace`,
+preserving query/hash) pointing at the new clean URL — kept working
+rather than removed, since search engines had already indexed the old
+URLs.
 
-All four pages use the same destination navigation: Catalog, Methodology, and Contact. The logo returns home. Only destination pages set `aria-current="page"`; home does not.
+- `index.html` — home page, featured plugins, category previews, and the public identity section. Served at `/`.
+- `catalog/index.html` — full searchable/filterable catalog, table and field views, plugin dossiers, JSON-LD, and a no-script crawler list. Served at `/catalog/`.
+- `methodology/index.html` — public decision model and catalog data disclosures. Served at `/methodology/`.
+- `security/index.html` — security posture, vulnerability reporting, certification disclosures. Served at `/security/`.
+- `laboratorio/index.html` — curated case studies from the catalog. Served at `/laboratorio/`.
+- `contact/index.html` — support and contact channels. Served at `/contact/`.
+
+All pages share the same sidebar navigation: Home, Catalog, Methodology, Laboratorie, Contact (`security/index.html` has no sidebar entry of its own — it's reached via the footer nav and the "Security Report" link on Contact). Only the page a visitor is on sets `aria-current="page"` in that nav.
+
+Because these pages now live one directory below the repo root, every asset reference (`css/shell.css`, `js/catalog-shared.js`, `js/vscode-catalog.js`, `fonts/*`) and the two shared JS modules' own `fetch('data/catalog-data.json', ...)` calls must be **absolute** (`/css/...`, `/js/...`, `/fonts/...`, `/data/...`), not relative — a relative reference resolves against the subdirectory and 404s. `_review/verify_static.py` guards this regression explicitly.
 
 ## Catalog data
 
@@ -17,7 +32,7 @@ The browser-facing source of truth is `data/catalog-data.json`. Both home and ca
 
 `pipeline/catalog_static_metadata.json` contains curated public product fields. `pipeline/auto_update_catalog.py` combines those fields with live Marketplace and GitHub metrics, writes `data/catalog-data.json`, refreshes the catalog SEO blocks, updates first-paint counts, and records catalog history.
 
-The full catalog's structured data belongs in `catalog.html`, because that is the page containing the listing. The home page keeps only organization/site structured data.
+The full catalog's structured data belongs in `catalog/index.html`, because that is the page containing the listing. The home page keeps only organization/site structured data.
 
 ## Common maintenance
 
