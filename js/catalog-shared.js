@@ -112,6 +112,7 @@
     'API Security': 'security',
     'Certificates / X.509': 'security',
     'JWT / Auth Tooling': 'security',
+    'Dependency / SCA Security': 'security',
     'Firestore / Database': 'data',
     'CSV/XLSX Tooling': 'data',
     'Data Format Conversion': 'data',
@@ -289,6 +290,7 @@
   // 9 repos first, THEN add their entries here -- not the other way
   // around.
   var GIF_URL = {
+    'dependency-vulnerability-companion': 'https://raw.githubusercontent.com/GapHunterLabs/dependency-vulnerability-companion/main/docs/screenshots/demo.gif',
     'react-native-companion': 'https://raw.githubusercontent.com/GapHunterLabs/react-native-companion/main/docs/screenshots/screenshot_1.png',
     'ansible-companion': 'https://raw.githubusercontent.com/GapHunterLabs/ansible-companion/main/docs/screenshots/demo.gif',
     'api-security-companion': 'https://raw.githubusercontent.com/GapHunterLabs/api-security-companion/main/docs/screenshots/demo.gif',

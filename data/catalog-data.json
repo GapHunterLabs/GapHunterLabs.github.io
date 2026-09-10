@@ -1,11 +1,96 @@
 {
-  "generatedAt": "2026-09-10 11:03:16 UTC",
-  "totalPlugins": 145,
+  "generatedAt": "2026-09-10 21:10:47 UTC",
+  "totalPlugins": 146,
   "totalDownloads": 4708,
-  "pending": 0,
+  "pending": 1,
   "totalStars": 0,
   "totalReviews": 0,
   "avgRating": null,
+  "trend7d": [
+    {
+      "date": "2026-09-04",
+      "totalDownloads": 3973
+    },
+    {
+      "date": "2026-09-05",
+      "totalDownloads": 4132
+    },
+    {
+      "date": "2026-09-06",
+      "totalDownloads": 4244
+    },
+    {
+      "date": "2026-09-07",
+      "totalDownloads": 4362
+    },
+    {
+      "date": "2026-09-08",
+      "totalDownloads": 4523
+    },
+    {
+      "date": "2026-09-09",
+      "totalDownloads": 4672
+    },
+    {
+      "date": "2026-09-10",
+      "totalDownloads": 4708
+    }
+  ],
+  "recentChanges": [
+    {
+      "date": "2026-09-10",
+      "type": "growth",
+      "name": "Mermaid Companion",
+      "niche": "Diagrams",
+      "delta": 11
+    },
+    {
+      "date": "2026-09-10",
+      "type": "growth",
+      "name": "React Native Companion",
+      "niche": "React Native Tooling",
+      "delta": 5
+    },
+    {
+      "date": "2026-09-10",
+      "type": "growth",
+      "name": "JWT Companion",
+      "niche": "JWT / Auth Tooling",
+      "delta": 3
+    },
+    {
+      "date": "2026-09-10",
+      "type": "growth",
+      "name": "Error Lens Companion",
+      "niche": "Inline Diagnostics",
+      "delta": 3
+    },
+    {
+      "date": "2026-09-10",
+      "type": "growth",
+      "name": "Commit Message Convention Companion",
+      "niche": "VCS / Git Workflow",
+      "delta": 3
+    },
+    {
+      "date": "2026-09-02",
+      "type": "new",
+      "name": "Dockerfile Missing USER Instruction Companion",
+      "niche": "Docker / DevOps"
+    },
+    {
+      "date": "2026-09-02",
+      "type": "new",
+      "name": "Terraform IAM Wildcard Companion",
+      "niche": "IAM / Cloud Security"
+    },
+    {
+      "date": "2026-09-02",
+      "type": "new",
+      "name": "AWS S3 Public ACL via SDK Companion",
+      "niche": "AWS Security"
+    }
+  ],
   "plugins": [
     {
       "xmlId": "dev.gaphunter.mermaidcompanion",
@@ -2761,6 +2846,24 @@
       "growth": 700.0,
       "growthSince": "2026-09-05",
       "growthFrom": 1
+    },
+    {
+      "name": "Dependency Vulnerability Companion",
+      "niche": "Dependency / SCA Security",
+      "pitch": "IntelliJ-family plugin. Flags known-vulnerable dependency versions directly in `pom.xml`, `build.gradle(.kts)`, `package.json`, and `requirements.txt`, matched against a vulnerability database bundled inside the plugin — zero account, zero token, zero network call, ever.",
+      "why": "Real evidence, not assumptions:",
+      "xmlId": "dev.gaphunter.dependencyvulnerabilitycompanion",
+      "githubUrl": "https://github.com/GapHunterLabs/dependency-vulnerability-companion",
+      "firstPublished": null,
+      "repo": "dependency-vulnerability-companion",
+      "marketplaceUrl": null,
+      "downloads": null,
+      "pricing": null,
+      "reviews": 0,
+      "rating": null,
+      "growth": null,
+      "growthSince": null,
+      "growthFrom": null
     }
   ]
 }
