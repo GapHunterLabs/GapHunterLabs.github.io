@@ -273,11 +273,8 @@
   body {
     margin: 0;
     background-color: var(--bg);
-    background-image:
-      radial-gradient(ellipse 1200px 640px at 50% 0%, rgba(63,162,255,0.07), transparent 60%),
-      radial-gradient(var(--border) 1px, transparent 1.6px);
-    background-size: auto, 34px 34px;
-    background-repeat: no-repeat, repeat;
+    background-image: radial-gradient(ellipse 1200px 640px at 50% 0%, rgba(63,162,255,0.07), transparent 60%);
+    background-repeat: no-repeat;
     color: var(--text);
     font-family: var(--sans);
     font-size: 15px;
@@ -1323,16 +1320,141 @@
      that used to live below it (that list moved into the controls row
      as a <select>, see #categoryFilter, so all the extra width now goes
      straight to the diagram). */
-  .field-layout {
-    display: grid;
-    grid-template-columns: 360px minmax(0, 1fr);
-    gap: var(--section-gap);
-    align-items: start;
-  }
+  /* El Hunting Field (sidebar de categorías + panel de marca + process
+     strip) se reemplazó por stats + tiles de categoría horizontales
+     arriba de la grilla, a pedido explícito 2026-09-10 -- .field-layout
+     pasa de 2 columnas a una sola. El mecanismo de filtro real
+     (wireCategoryBoard()/updateCategoryBoard(), event delegation sobre
+     .cat-board/.cat-cell) no se tocó -- sigue funcionando igual, solo
+     cambió dónde vive el HTML. */
+  .field-layout { display: flex; flex-direction: column; gap: var(--section-gap); }
   .field-main { min-width: 0; }
+  /* Panel de detalle fijo (Fase 5b/5c del plan) -- clickear una card
+     ya no reemplaza la grilla (como hacía renderDossier() antes),
+     ahora abre un panel al lado. .field-row solo tiene 2 columnas
+     cuando hay un detalle abierto (.has-detail); si no, #fieldMain
+     ocupa todo el ancho como siempre. El routing por hash no se tocó
+     -- setSelectedRepo(null,...) sigue haciendo exactamente lo mismo
+     que antes, "cerrar" ya es la conducta correcta porque renderGrid()
+     ahora corre siempre. */
+  .field-row { display: grid; grid-template-columns: minmax(0, 1fr); gap: var(--section-gap); align-items: start; }
+  .field-row.has-detail { grid-template-columns: minmax(0, 1fr) minmax(320px, 440px); }
+  .field-detail {
+    /* Sticky pero SIN max-height/overflow-y (a pedido explícito
+       2026-09-10) -- un scroll interno propio, además del scroll de
+       la página, se sentía como "doble scroll". El panel ahora crece
+       lo que necesite y se desplaza junto con el resto de la página;
+       sticky solo lo mantiene pegado arriba mientras su propio alto
+       quepa en el viewport, comportamiento normal de sticky sin cap. */
+    position: sticky; top: 72px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
+    box-shadow: var(--shadow); padding: var(--card-pad);
+  }
+  /* El dossier fue diseñado para la columna principal ancha
+     (.dossier-top/.dossier-stats en 2-3 columnas) -- dentro de este
+     panel angosto (320-440px) esas columnas quedarían apretadas.
+     Se fuerza a 1 columna acá, sin depender de los media queries de
+     viewport que ya tiene el dossier (esos siguen siendo para cuando
+     el dossier ocupa toda la pantalla en mobile, comportamiento sin
+     cambios). */
+  .field-detail .dossier-top,
+  .field-detail .dossier-body { grid-template-columns: 1fr; }
+  /* Mismo problema, mismo fix: .facts-list es grid de 3 columnas por
+     defecto (media queries por VIEWPORT, no por el ancho real del
+     panel) -- acá el contenedor mide 320-440px con un viewport de
+     escritorio ancho, así que esos media queries nunca se disparaban
+     y cada valor terminaba envuelto letra por letra. 2026-09-10. */
+  .field-detail .facts-list { grid-template-columns: 1fr; }
+  /* "Doble box" (a pedido explícito 2026-09-10): .dossier-card traía
+     su propio fondo/borde/sombra/padding, pensado para cuando el
+     dossier ocupaba toda la página -- acá adentro de .field-detail,
+     que ya pone esa misma superficie, se veía como una card dentro de
+     otra card. Se aplana solo en este contexto. */
+  .field-detail .dossier-card {
+    background: none; border: 0; box-shadow: none; padding: 0;
+  }
+  .field-detail .dossier-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  /* Con 3 stats reales (antes 5) en las 2 columnas que fuerza el panel
+     angosto de arriba, el 3er tile queda solo en la 2da fila -- mismo
+     patrón que el media query de 640px de abajo, pero acá aplica
+     siempre (el ancho del panel, no el viewport, es lo que manda). */
+  .field-detail .dossier-stats .stat {
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .field-detail .dossier-stats .stat:nth-child(2n) { border-right: 0; }
+  .field-detail .dossier-stats .stat:last-child {
+    grid-column: 1 / -1;
+    border-right: 0;
+    border-bottom: 0;
+  }
+  /* Mobile: en vez de forzar el panel angosto en una pantalla chica,
+     vuelve a la conducta de antes (el detalle reemplaza la grilla,
+     pantalla completa) -- experiencia ya conocida y accesible, en vez
+     de un panel fijo apretado. */
+  @media (max-width: 900px) {
+    .field-row.has-detail { grid-template-columns: minmax(0, 1fr); }
+    .field-row.has-detail .field-main { display: none; }
+    .field-detail { position: static; max-height: none; }
+  }
+  .catalog-explore { margin-bottom: var(--section-gap); padding-bottom: var(--section-gap); border-bottom: 1px solid var(--border); }
+
+  .catalog-stats { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 10px; margin-bottom: var(--section-gap); }
+  .cs-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 12px 14px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius-lg); box-shadow: var(--shadow);
+    transition: border-color var(--duration-base) ease;
+  }
+  .cs-item:hover { border-color: var(--accent); }
+  .cs-icon {
+    flex: none; width: 34px; height: 34px; border-radius: 50%;
+    background: color-mix(in srgb, currentColor 14%, var(--surface-2));
+    display: flex; align-items: center; justify-content: center;
+  }
+  .cs-icon svg { width: 16px; height: 16px; }
+  .cs-num { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 19px; font-weight: 700; color: var(--text); line-height: 1.15; }
+  .cs-label { margin-top: 2px; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-faint); }
+
+  .section-head-sm { margin: 0 0 10px; color: var(--accent); font: 700 11px var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+  /* Tiles horizontales -- mismo lenguaje que .category-links de
+     index.html, reusado acá tal cual para consistencia entre páginas. */
+  /* Barra horizontal de chips (a pedido explícito 2026-09-10) -- flex-
+     wrap, todas las categorías en una fila continua. border-radius
+     corregido a var(--radius-md): 999px (pill totalmente redondeado)
+     no es el lenguaje real del sitio -- ningún otro botón/card/chip
+     del resto del sitio usa esa forma, todo usa esquinas moderadas. */
+  /* nowrap + flex:1 1 0/min-width:0 (a pedido explícito 2026-09-10) --
+     las 10 tiles (All categories + 9 categorías) se reparten el ancho
+     disponible y se achican juntas en vez de que "Other" salte a una
+     segunda línea; label/count truncan con ellipsis si no entran.
+     Revierte a chips de ancho natural + wrap en mobile (media query
+     abajo), donde 10 tiles apretadas en una sola línea ya no son
+     usables como blanco de touch. */
+  .catalog-explore .cat-board { display: flex; flex-wrap: nowrap; gap: 6px; margin-top: 0; }
+  .catalog-explore .cat-cell {
+    flex: 1 1 0; min-width: 0; flex-direction: row; align-items: center; gap: 6px; min-height: auto;
+    padding: 7px 8px; background: var(--surface); border-radius: var(--radius-md);
+    transition: border-color var(--duration-base) ease;
+  }
+  .catalog-explore .cat-cell::before { display: none; } /* el color ya vive en el ícono, mismo criterio que .tele-row/.qa-item (acento solo al hover, no una barra fija) */
+  .catalog-explore .cat-cell:hover { border-color: color-mix(in srgb, var(--cat) 55%, var(--border)); }
+  .catalog-explore .cat-cell-icon { width: 22px; height: 22px; border-radius: var(--radius-sm); }
+  .catalog-explore .cat-cell-icon svg { width: 12px; height: 12px; }
+  .catalog-explore .cat-cell-copy { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+  .catalog-explore .cat-cell-label { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--sans); font-size: 11.5px; font-weight: 650; letter-spacing: normal; text-transform: none; color: var(--text); }
+  .catalog-explore .cat-cell-count { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; color: var(--text-faint); }
 
   @media (max-width: 900px) {
-    .field-layout { grid-template-columns: 1fr; }
+    .catalog-stats { grid-template-columns: 1fr 1fr; }
+    .catalog-explore .cat-board { flex-wrap: wrap; }
+    .catalog-explore .cat-cell { flex: none; padding: 7px 12px 7px 8px; gap: 8px; }
+    .catalog-explore .cat-cell-copy { flex-direction: row; align-items: baseline; gap: 5px; }
+    .catalog-explore .cat-cell-label { font-size: 12px; }
+    .catalog-explore .cat-cell-count { font-size: 10.5px; }
+  }
+  @media (max-width: 520px) {
+    .catalog-stats { grid-template-columns: 1fr; }
   }
 
   .panel {
@@ -1441,7 +1563,9 @@
     position: relative;
     cursor: pointer;
     font: inherit;
+    transition: border-color var(--duration-base) ease;
   }
+  .cat-cell:hover { border-color: color-mix(in srgb, var(--cat) 55%, var(--border)); }
   .cat-cell::before {
     content: "";
     position: absolute;
@@ -1533,7 +1657,7 @@
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 10px 34px 9px 11px;
+    padding: 10px 11px 9px 11px;
     cursor: pointer;
     box-shadow: var(--shadow);
     transition: border-color var(--duration-fast) ease, transform var(--duration-fast) ease;
@@ -1584,7 +1708,19 @@
 
   .plugin-card:hover::after { left: 130%; }
 
-  .plugin-card .card-top { min-width: 0; }
+  /* Header en flex row (a pedido explícito 2026-09-10) -- antes el
+     ícono de categoría era position:absolute sobre la esquina y el
+     título le reservaba espacio con un padding-right (34px) calculado
+     a mano para que coincidiera exacto con el ancho+offset del ícono;
+     cualquier diferencia mínima dejaba el título rozando el ícono sin
+     margen real. Con flex + gap la separación la calcula el layout
+     mismo, siempre exacta, sin importar cuántas líneas ocupe el
+     nombre. Solo dentro de .plugin-card -- .card-cat sigue siendo
+     position:absolute para .similar-card/.tbl-similar-card, que no se
+     tocan acá. */
+  .plugin-card .card-header { display: flex; align-items: flex-start; gap: 8px; }
+  .plugin-card .card-header .card-cat { position: static; flex: none; }
+  .plugin-card .card-top { flex: 1; min-width: 0; }
 
   /* 2-line clamp with an ellipsis instead of a silent hard clip: at
      narrow widths a grid row's height comes from its shortest sibling,
@@ -1822,7 +1958,7 @@
 
   .dossier-stats {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0;
     margin-top: auto;
     background: var(--surface-2);
@@ -1833,15 +1969,24 @@
     align-self: stretch;
   }
   .dossier-stats .stat {
+    display: flex;
+    align-items: center;
+    gap: 6px;
     background: transparent;
     border: 0;
     border-radius: 0;
     box-shadow: none;
     border-right: 1px solid var(--border);
-    padding: 4px 8px;
+    padding: 6px 8px;
     min-width: 0;
   }
   .dossier-stats .stat:last-child { border-right: 0; }
+  /* Reviews/Rating tiles se sacaron 2026-09-10 (nunca tenían dato
+     real -- avgRating/totalReviews son null/0 en todo el catálogo
+     hoy). Quedan 3 stats reales con ícono: Downloads, GitHub ★,
+     Published. */
+  .dossier-stats .stat-icon { flex: none; width: 14px; height: 14px; color: var(--text-faint); }
+  .dossier-stats .stat-icon svg { width: 100%; height: 100%; display: block; }
   .dossier-stats .stat .num { font-size: 12px; line-height: 1.1; min-height: 0; }
   .dossier-stats .stat .label { margin-top: 1px; line-height: 1.15; }
   .dossier-stats .growth { font-size: 8px; margin-left: 4px; }
@@ -2128,7 +2273,7 @@
 
   .tbl-stats {
     display: grid;
-    grid-template-columns: repeat(5, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0;
     margin: 0;
     background: var(--surface);
@@ -2727,7 +2872,13 @@
   }
 
   :root { --card-pad:16px; --card-pad-sm:10px; }
-  .category-preview,.identity-section,.catalog-heading { max-width:var(--page-max); padding:0 var(--page-pad); margin:var(--section-gap) auto 0; }
+  /* Sin padding horizontal propio -- .wrap ya pone 24px de cada lado;
+     esta regla sumaba OTRO padding encima del header, doble inset a
+     la izquierda respecto a .controls/.content-stage (que nunca lo
+     tuvieron) -- no se notaba en el layout viejo centrado, se ve como
+     desalineado real ahora con el sidebar al lado (feedback real
+     2026-09-10). */
+  .category-preview,.identity-section,.catalog-heading { max-width:var(--page-max); margin:var(--section-gap) auto 0; }
   .section-head { display:flex; align-items:end; justify-content:space-between; gap:var(--card-pad); margin-bottom:var(--section-gap); }
   .section-head h2,.identity-section h2,.catalog-heading h1 { margin:4px 0 0; }
   .eyebrow { margin:0; color:var(--accent); font:700 11px var(--mono); letter-spacing:.12em; text-transform:uppercase; }
@@ -2752,6 +2903,7 @@
   @media (max-width: 620px) { .category-links,.identity-process,.identity-grid { grid-template-columns:1fr; } .section-head{align-items:flex-start;flex-direction:column;} }
 
 </style>
+<link rel="stylesheet" href="css/shell.css">
 </head>
 <body>
 <div id="siteLoader" class="site-loader" role="status" aria-live="polite" aria-busy="true">
@@ -2934,6 +3086,7 @@
     </ol>
   </div>
 </noscript>
+<div class="app-shell">
 <nav class="topbar" id="topbar">
   <div class="topbar-inner">
     <a class="topbar-brand" href="index.html" aria-label="Gap Hunter Labs">
@@ -2949,7 +3102,6 @@
         <span class="tw-tag">Plugin Intelligence</span>
       </span>
     </a>
-    <div class="topbar-nav" id="topbarNav"><a class="topbar-link active" href="catalog.html" aria-current="page">Catalog</a><a class="topbar-link" href="methodology.html">Methodology</a><a class="topbar-link" href="contact.html">Contact</a></div>
     <div class="topbar-actions">
       <div class="topbar-ext">
         <a class="topbar-ext-link" href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" target="_blank" rel="noopener" aria-label="JetBrains Marketplace" title="Gap Hunter Labs on JetBrains Marketplace">
@@ -2968,11 +3120,33 @@
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
           <span class="topbar-ext-label">LinkedIn</span>
         </a>
-        <button type="button" class="topbar-burger" id="topbarBurger" aria-label="Toggle navigation" aria-expanded="false" aria-controls="topbarNav"><span></span></button>
+        <button type="button" class="topbar-burger" id="topbarBurger" aria-label="Toggle navigation" aria-expanded="false" aria-controls="appSidebar"><span></span></button>
       </div>
     </div>
   </div>
 </nav>
+
+<aside class="app-sidebar" id="appSidebar">
+  <nav class="sidebar-nav" aria-label="Primary">
+    <a class="sidebar-link" href="index.html"><svg viewBox="0 0 20 20" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10 10 3l7 7M5 8.5V17h10V8.5"/></svg>Home</a>
+    <a class="sidebar-link" href="catalog.html" aria-current="page"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="11" y="3" width="6" height="6" rx="1"/><rect x="3" y="11" width="6" height="6" rx="1"/><rect x="11" y="11" width="6" height="6" rx="1"/></svg>Catalog</a>
+    <a class="sidebar-link" href="methodology.html"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8" cy="10" r="5.5" fill="none" stroke="currentColor" stroke-width="1.2" stroke-dasharray="1.6 1.8"/><circle cx="8" cy="10" r="2" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M8 4.7v1.3M8 14v1.3M2.7 10h1.3M12 10h1.3M4.3 6.3l.9.9M10.8 12.8l.9.9M4.3 13.7l.9-.9M10.8 7.2l.9-.9" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/><path d="M13.5 10h4.3M15.8 8l2 2-2 2" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>Methodology</a>
+    <a class="sidebar-link" href="contact.html"><svg viewBox="0 0 20 20" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="14" height="10" rx="1.5"/><path d="M3.5 6l6.5 5 6.5-5"/></svg>Contact</a>
+  </nav>
+  <div class="sidebar-footer">
+    <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#0151FC"/>
+      <path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z" fill="#01B3FD"/>
+      <polygon points="569,413 695,413 695,539 569,539" fill="#02F172"/>
+    </svg>
+    <span>
+      <span class="sidebar-footer-name">Gap Hunter Labs</span><br>
+      <span class="sidebar-footer-sub">Plugin Intelligence</span>
+    </span>
+  </div>
+</aside>
+
+<div class="app-main">
 <!-- Added 2026-08-21: this was a plain <div> wrapping the page's ENTIRE
      real content (hero, process strip, controls, catalog views,
      methodology) -- no <main> landmark anywhere on the page, so screen
@@ -2983,7 +3157,9 @@
      semantically confusing for the same landmark-navigation use case
      this fix is for. -->
 <main class="wrap">
-  <header class="catalog-heading" id="top"><p class="eyebrow">Plugin intelligence</p><h1>Catalog</h1><p>Search, filter, and inspect every focused IntelliJ-family plugin.</p></header>
+  <header class="catalog-heading page-hero" id="top"><p class="eyebrow">Plugin intelligence</p><h1>Catalog</h1><p>Search, filter, and inspect every focused IntelliJ-family plugin.</p></header>
+
+  <div class="catalog-stats" id="catalogStats" aria-label="Catalog metrics"></div>
 
   <div class="controls">
     <div class="search" role="search">
@@ -3011,86 +3187,62 @@
   <div class="content-stage" id="contentStage">
     <!-- ==================== FIELD MODE ==================== -->
     <div id="fieldView" class="field-layout">
-      <aside class="field-sidebar">
-        <div class="panel hunting-panel corner-frame">
-
-          <h2 class="panel-title"><span class="hf-live-dot" aria-hidden="true"></span>Hunting Field <span class="info-dot" tabindex="0" role="note" aria-label="Explore by technology gap" title="Explore by technology gap">i</span></h2>
-          <div class="panel-hint" id="huntingHint">Explore by technology gap</div>
-          <div class="cat-board" role="group" aria-label="Plugin categories">
-            <button type="button" class="cat-cell cat-cell-all is-active" data-cat="" aria-pressed="true">
-              <span><span class="cat-cell-label">All</span><span class="cat-cell-count">plugins</span></span>
-            </button>
-            <button type="button" class="cat-cell" data-cat="api" aria-pressed="false">
-              <span class="cat-cell-icon" aria-hidden="true"><svg viewBox="-8 -8 16 16"><path d="M-4.5-6.5v3M-1.5-6.5v3M-6-3.5h7a2 2 0 0 1 2 2v1a2 2 0 0 0 2 2h1M6 6.5v-3M1.5 6.5v-3M6 3.5H-1a2 2 0 0 1-2-2v-1a2 2 0 0 0-2-2h-1" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-              <span><span class="cat-cell-label">API</span><span class="cat-cell-count"></span></span>
-            </button>
-            <button type="button" class="cat-cell" data-cat="devops" aria-pressed="false">
-              <span class="cat-cell-icon" aria-hidden="true"><svg viewBox="-8 -8 16 16"><path d="M-6 0a3 3 0 1 0 6 0 3 3 0 1 1 6 0 3 3 0 1 1-6 0 3 3 0 1 0-6 0Z" stroke-linejoin="round"/></svg></span>
-              <span><span class="cat-cell-label">DevOps</span><span class="cat-cell-count"></span></span>
-            </button>
-            <button type="button" class="cat-cell" data-cat="security" aria-pressed="false">
-              <span class="cat-cell-icon" aria-hidden="true"><svg viewBox="-8 -8 16 16"><path d="M0-6.5 5.5-4v4.2C5.5 3.8 2.8 6 0 6.5-2.8 6-5.5 3.8-5.5.2V-4Z" stroke-linejoin="round"/></svg></span>
-              <span><span class="cat-cell-label">Security</span><span class="cat-cell-count"></span></span>
-            </button>
-            <button type="button" class="cat-cell" data-cat="data" aria-pressed="false">
-              <span class="cat-cell-icon" aria-hidden="true"><svg viewBox="-8 -8 16 16"><path d="M-5-3c0-1.4 2.2-2.5 5-2.5s5 1.1 5 2.5v6c0 1.4-2.2 2.5-5 2.5s-5-1.1-5-2.5Z"/><path d="M-5-3c0 1.4 2.2 2.5 5 2.5s5-1.1 5-2.5"/></svg></span>
-              <span><span class="cat-cell-label">Data</span><span class="cat-cell-count"></span></span>
-            </button>
-            <button type="button" class="cat-cell" data-cat="quality" aria-pressed="false">
-              <span class="cat-cell-icon" aria-hidden="true"><svg viewBox="-8 -8 16 16"><path d="M0-6.5v13M-5.5-3.5h11M-5.5-3.5 -6.5 0M-5.5-3.5-4.5 0M5.5-3.5 4.5 0M5.5-3.5 6.5 0M-6.5 0a1.5 1.5 0 0 0 3 0M3.5 0a1.5 1.5 0 0 0 3 0M-2.5 6.5h5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-              <span><span class="cat-cell-label">Code Quality</span><span class="cat-cell-count"></span></span>
-            </button>
-            <button type="button" class="cat-cell" data-cat="codegen" aria-pressed="false">
-              <span class="cat-cell-icon" aria-hidden="true"><svg viewBox="-8 -8 16 16"><path d="M-6-2.5-3 0-6 2.5M6-2.5 3 0 6 2.5M.8-6 -1.3-.5h2.6L-.8 6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-              <span><span class="cat-cell-label">Codegen</span><span class="cat-cell-count"></span></span>
-            </button>
-            <button type="button" class="cat-cell" data-cat="testing" aria-pressed="false">
-              <span class="cat-cell-icon" aria-hidden="true"><svg viewBox="-8 -8 16 16"><path d="M-2-6.5v4.2l-3.3 6.6a1.6 1.6 0 0 0 1.4 2.2h7.8a1.6 1.6 0 0 0 1.4-2.2L1-2.3v-4.2M-3.3-6.5h6.6M-3-1.5h6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-              <span><span class="cat-cell-label">Testing</span><span class="cat-cell-count"></span></span>
-            </button>
-            <button type="button" class="cat-cell" data-cat="editor" aria-pressed="false">
-              <span class="cat-cell-icon" aria-hidden="true"><svg viewBox="-8 -8 16 16"><rect x="-6" y="-5" width="12" height="10" rx="1.5"/><path d="M-3.5-2h4M-3.5 0.5h2.5M2-2v2.5" stroke-linecap="round"/></svg></span>
-              <span><span class="cat-cell-label">Editor</span><span class="cat-cell-count"></span></span>
-            </button>
-            <button type="button" class="cat-cell" data-cat="other" aria-pressed="false" hidden>
-              <span class="cat-cell-icon" aria-hidden="true"><svg viewBox="-8 -8 16 16"><path d="M0-6.5v13M-6.5 0h13M-4.6-4.6 4.6 4.6M4.6-4.6-4.6 4.6" stroke-linecap="round"/></svg></span>
-              <span><span class="cat-cell-label">Other</span><span class="cat-cell-count"></span></span>
-            </button>
-          </div>
+      <section class="catalog-explore" aria-labelledby="catalogExploreTitle">
+        <p class="section-head-sm" id="catalogExploreTitle">Explore by category</p>
+        <div class="cat-board category-links" role="group" aria-label="Plugin categories">
+          <!-- Botón "All categories" reintroducido a pedido explícito
+             2026-09-10 (antes se había sacado del DOM por un bug real
+             de display:none que no renderizaba bien) -- esta vez con
+             data-cat="" tal cual, sin el modificador .cat-cell-all de
+             grid-column:1/-1 (ese wireCategoryBoard()/updateCategoryBoard()
+             ya reconocen cat==='' como "clear filter", cero cambios de JS. -->
+          <button type="button" class="cat-cell" data-cat="" aria-pressed="true">
+            <span class="cat-cell-icon" aria-hidden="true"><svg viewBox="-8 -8 16 16"><rect x="-6" y="-6" width="5" height="5" rx="1"/><rect x="1" y="-6" width="5" height="5" rx="1"/><rect x="-6" y="1" width="5" height="5" rx="1"/><rect x="1" y="1" width="5" height="5" rx="1"/></svg></span>
+            <span class="cat-cell-copy"><strong class="cat-cell-label">All categories</strong><span class="cat-cell-count"></span></span>
+          </button>
+          <button type="button" class="cat-cell" data-cat="api" aria-pressed="false">
+            <span class="cat-cell-icon" aria-hidden="true"><svg viewBox="-8 -8 16 16"><path d="M-4.5-6.5v3M-1.5-6.5v3M-6-3.5h7a2 2 0 0 1 2 2v1a2 2 0 0 0 2 2h1M6 6.5v-3M1.5 6.5v-3M6 3.5H-1a2 2 0 0 1-2-2v-1a2 2 0 0 0-2-2h-1" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="cat-cell-copy"><strong class="cat-cell-label">API</strong><span class="cat-cell-count"></span></span>
+          </button>
+          <button type="button" class="cat-cell" data-cat="devops" aria-pressed="false">
+            <span class="cat-cell-icon" aria-hidden="true"><svg viewBox="-8 -8 16 16"><path d="M-6 0a3 3 0 1 0 6 0 3 3 0 1 1 6 0 3 3 0 1 1-6 0 3 3 0 1 0-6 0Z" stroke-linejoin="round"/></svg></span>
+            <span class="cat-cell-copy"><strong class="cat-cell-label">DevOps</strong><span class="cat-cell-count"></span></span>
+          </button>
+          <button type="button" class="cat-cell" data-cat="security" aria-pressed="false">
+            <span class="cat-cell-icon" aria-hidden="true"><svg viewBox="-8 -8 16 16"><path d="M0-6.5 5.5-4v4.2C5.5 3.8 2.8 6 0 6.5-2.8 6-5.5 3.8-5.5.2V-4Z" stroke-linejoin="round"/></svg></span>
+            <span class="cat-cell-copy"><strong class="cat-cell-label">Security</strong><span class="cat-cell-count"></span></span>
+          </button>
+          <button type="button" class="cat-cell" data-cat="data" aria-pressed="false">
+            <span class="cat-cell-icon" aria-hidden="true"><svg viewBox="-8 -8 16 16"><path d="M-5-3c0-1.4 2.2-2.5 5-2.5s5 1.1 5 2.5v6c0 1.4-2.2 2.5-5 2.5s-5-1.1-5-2.5Z"/><path d="M-5-3c0 1.4 2.2 2.5 5 2.5s5-1.1 5-2.5"/></svg></span>
+            <span class="cat-cell-copy"><strong class="cat-cell-label">Data</strong><span class="cat-cell-count"></span></span>
+          </button>
+          <button type="button" class="cat-cell" data-cat="quality" aria-pressed="false">
+            <span class="cat-cell-icon" aria-hidden="true"><svg viewBox="-8 -8 16 16"><path d="M0-6.5v13M-5.5-3.5h11M-5.5-3.5 -6.5 0M-5.5-3.5-4.5 0M5.5-3.5 4.5 0M5.5-3.5 6.5 0M-6.5 0a1.5 1.5 0 0 0 3 0M3.5 0a1.5 1.5 0 0 0 3 0M-2.5 6.5h5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="cat-cell-copy"><strong class="cat-cell-label">Code Quality</strong><span class="cat-cell-count"></span></span>
+          </button>
+          <button type="button" class="cat-cell" data-cat="codegen" aria-pressed="false">
+            <span class="cat-cell-icon" aria-hidden="true"><svg viewBox="-8 -8 16 16"><path d="M-6-2.5-3 0-6 2.5M6-2.5 3 0 6 2.5M.8-6 -1.3-.5h2.6L-.8 6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="cat-cell-copy"><strong class="cat-cell-label">Codegen</strong><span class="cat-cell-count"></span></span>
+          </button>
+          <button type="button" class="cat-cell" data-cat="testing" aria-pressed="false">
+            <span class="cat-cell-icon" aria-hidden="true"><svg viewBox="-8 -8 16 16"><path d="M-2-6.5v4.2l-3.3 6.6a1.6 1.6 0 0 0 1.4 2.2h7.8a1.6 1.6 0 0 0 1.4-2.2L1-2.3v-4.2M-3.3-6.5h6.6M-3-1.5h6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+            <span class="cat-cell-copy"><strong class="cat-cell-label">Testing</strong><span class="cat-cell-count"></span></span>
+          </button>
+          <button type="button" class="cat-cell" data-cat="editor" aria-pressed="false">
+            <span class="cat-cell-icon" aria-hidden="true"><svg viewBox="-8 -8 16 16"><rect x="-6" y="-5" width="12" height="10" rx="1.5"/><path d="M-3.5-2h4M-3.5 0.5h2.5M2-2v2.5" stroke-linecap="round"/></svg></span>
+            <span class="cat-cell-copy"><strong class="cat-cell-label">Editor</strong><span class="cat-cell-count"></span></span>
+          </button>
+          <button type="button" class="cat-cell" data-cat="other" aria-pressed="false" hidden>
+            <span class="cat-cell-icon" aria-hidden="true"><svg viewBox="-8 -8 16 16"><path d="M0-6.5v13M-6.5 0h13M-4.6-4.6 4.6 4.6M4.6-4.6-4.6 4.6" stroke-linecap="round"/></svg></span>
+            <span class="cat-cell-copy"><strong class="cat-cell-label">Other</strong><span class="cat-cell-count"></span></span>
+          </button>
         </div>
-        <div class="panel brand-blurb">
-          <h2 class="panel-title">We hunt gaps others miss</h2>
-          <p>Every plugin here started as a documented, evidence-based complaint about an existing tool — not a feature guess. Real reviews, real competitors, real numbers.</p>
-        </div>
-        <section class="process-strip" id="processStrip" aria-label="How we work">
-          <p class="process-head">Process</p>
-          <ol class="process-steps">
-            <li class="process-step" style="--step-color:var(--text)">
-              <svg class="ps-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3.2"/></svg>
-              <span class="ps-idx">01</span>
-              <span class="ps-text"><span class="ps-name">Observe</span><span class="ps-desc">Identify friction</span></span>
-            </li>
-            <li class="process-step" style="--step-color:var(--good)">
-              <svg class="ps-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="11" cy="11" r="7"/><path d="M16.2 16.2 21 21" stroke-linecap="round"/></svg>
-              <span class="ps-idx">02</span>
-              <span class="ps-text"><span class="ps-name">Detect</span><span class="ps-desc">Find real gaps</span></span>
-            </li>
-            <li class="process-step" style="--step-color:var(--purple)">
-              <svg class="ps-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path d="M6 3h9l4 4v14a1 1 0 0 1-1 1H6a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z"/><path d="M15 3v4h4"/><path d="M8 14.5 10.3 17 16 10.5" stroke-linecap="round"/></svg>
-              <span class="ps-idx">03</span>
-              <span class="ps-text"><span class="ps-name">Validate</span><span class="ps-desc">Evidence &amp; impact</span></span>
-            </li>
-            <li class="process-step" style="--step-color:var(--amber)">
-              <svg class="ps-icon" aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"><path d="M14.7 6.3a4 4 0 0 0-5.4 5.4L2 19l3 3 7.3-7.3a4 4 0 0 0 5.4-5.4l-2.8 2.8-2.6-2.6Z"/></svg>
-              <span class="ps-idx">04</span>
-              <span class="ps-text"><span class="ps-name">Build</span><span class="ps-desc">Ship the missing tool</span></span>
-            </li>
-          </ol>
-          <p class="process-mission"><span>Mission</span>Eliminate friction. Empower builders.</p>
-        </section>
-      </aside>
+      </section>
 
-      <div class="field-main" id="fieldMain" aria-live="polite"></div>
+      <div class="field-row" id="fieldRow">
+        <div class="field-main" id="fieldMain" aria-live="polite"></div>
+        <aside class="field-detail" id="fieldDetail" hidden></aside>
+      </div>
     </div>
 
     <!-- ==================== TABLE MODE ==================== -->
@@ -3122,13 +3274,23 @@
        dossier machinery above on purpose; see that script's header comment. -->
   <section class="vsx-section" id="vsxSection" aria-labelledby="vsxTitle" hidden>
     <style>
-      .vsx-section { max-width: 1180px; margin: 0 auto; padding: 8px 20px 56px; }
+      .vsx-section { max-width: 1180px; margin: 0 auto; padding: 40px 20px 56px; } /* separación de la grilla de plugins de arriba aumentada a pedido 2026-09-10 -- 8px dejaba la línea divisoria pegada a las cards */
       .vsx-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 16px; border-top: 1px solid var(--border); padding-top: 36px; }
       .vsx-head h2 { display: flex; align-items: center; gap: 10px; font-size: 20px; margin: 0; }
       .vsx-head h2 svg { width: 20px; height: 20px; flex: none; color: var(--accent); }
       .vsx-head p { margin: 4px 0 0; font-size: 13px; color: var(--text-dim); }
       .vsx-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 12px; }
-      .vsx-card { display: flex; flex-direction: column; gap: 8px; padding: 14px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); }
+      /* Antes era la única card "plana" del sitio (sin sombra, sin
+         hover) al lado de .plugin-card ya pulida arriba -- mismo
+         lenguaje ahora: sombra + hover con borde acento y lift chico. */
+      .vsx-card {
+        display: flex; flex-direction: column; gap: 8px; padding: 14px;
+        background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg);
+        box-shadow: var(--shadow);
+        transition: border-color var(--duration-base) ease, transform var(--duration-base) ease;
+      }
+      .vsx-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+      @media (prefers-reduced-motion: reduce) { .vsx-card { transition: border-color var(--duration-base) ease; } .vsx-card:hover { transform: none; } }
       .vsx-card-name { font-size: 14px; font-weight: 700; color: var(--text); }
       .vsx-card-niche { font-size: 10.5px; color: var(--text-faint); text-transform: uppercase; letter-spacing: 0.04em; }
       .vsx-card-pitch { font-size: 12.5px; color: var(--text-dim); line-height: 1.5; flex: 1; }
@@ -3147,6 +3309,8 @@
   </section>
 
 </main>
+</div>
+</div>
 
 <footer class="site-footer">
   <div class="footer-inner">
@@ -3245,6 +3409,11 @@ GapCatalog.ready.then(function (shared) {
   var CATEGORIES = shared.CATEGORIES;
   var CAT_BY_KEY = shared.CAT_BY_KEY;
   var ICONS = shared.ICONS;
+  // Ícono local (no vive en catalog-shared.js porque ningún otro
+  // consumidor lo necesita hoy) -- mismo lenguaje visual que
+  // ICONS.downloads (viewBox 20x20, stroke, stroke-width 1.4), usado
+  // para el stat "Published" del dossier. 2026-09-10.
+  var ICON_CALENDAR = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="14" height="13" rx="1.5"/><path d="M3 8h14M7 2.5v3M13 2.5v3"/></svg>';
   var GIF_URL = shared.GIF_URL;
   var esc = shared.esc;
   var safeUrl = shared.safeUrl;
@@ -3265,7 +3434,7 @@ GapCatalog.ready.then(function (shared) {
   var categoryParam = new URLSearchParams(location.search).get('category') || '';
   var filterCategory = shared.CAT_BY_KEY[categoryParam] && categoryParam !== 'other' ? categoryParam : (categoryParam === 'other' ? 'other' : '');
   var selectedRepo = null;
-  var PAGE_SIZE = 24;
+  var PAGE_SIZE = 15;
   var catalogPage = 1;
   function setSelectedRepo(repo, scrollAfter) {
     selectedRepo = repo || null;
@@ -3362,6 +3531,19 @@ GapCatalog.ready.then(function (shared) {
     if (el) el.innerHTML = finalText + (extraHtml || '');
   }
 
+  // Stats reales arriba del Hunting Field (reemplazo del sidebar, a
+  // pedido explícito 2026-09-10) -- mismos campos que ya usa
+  // renderStats() en index.html, mismos íconos compartidos.
+  function renderCatalogStats() {
+    var el = document.getElementById('catalogStats');
+    if (!el) return;
+    var catCount = CATEGORIES.filter(function (c) { return c.key !== 'other'; }).length;
+    el.innerHTML =
+      '<div class="cs-item"><span class="cs-icon" style="color:var(--accent)">' + ICONS.plugins + '</span><div><div class="cs-num">' + data.totalPlugins + '</div><div class="cs-label">Active plugins</div></div></div>' +
+      '<div class="cs-item"><span class="cs-icon" style="color:var(--good)">' + ICONS.downloads + '</span><div><div class="cs-num">' + data.totalDownloads.toLocaleString('en-US') + '</div><div class="cs-label">Total downloads</div></div></div>' +
+      '<div class="cs-item"><span class="cs-icon" style="color:var(--purple)"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="11" y="3" width="6" height="6" rx="1"/><rect x="3" y="11" width="6" height="6" rx="1"/><rect x="11" y="11" width="6" height="6" rx="1"/></svg></span><div><div class="cs-num">' + catCount + '</div><div class="cs-label">Categories</div></div></div>';
+  }
+
   function populateCategorySelect() {
     var counts = {};
     CATEGORIES.forEach(function (c) { counts[c.key] = 0; });
@@ -3385,7 +3567,10 @@ GapCatalog.ready.then(function (shared) {
       selectedRepo = null;
       catalogPage = 1;
       renderAll();
-      scrollCatalogIntoView();
+      // Mismo criterio que wireCategoryBoard() -- este <select> vive en
+      // la barra de controles, ya pegado arriba de la grilla; el salto
+      // de scrollCatalogIntoView() rompía la misma vista quieta pedida
+      // para el tablero de categorías. 2026-09-10.
     });
   }
 
@@ -3432,7 +3617,12 @@ GapCatalog.ready.then(function (shared) {
       selectedRepo = null;
       catalogPage = 1;
       renderAll();
-      scrollCatalogIntoView();
+      // A diferencia de wireCategorySelect() (el <select> de la barra de
+      // controles, lejos de la grilla), este tablero vive pegado arriba
+      // de la grilla -- no hace falta scrollCatalogIntoView() y, peor,
+      // el salto rompía la vista que el usuario pidió: el tablero de
+      // categorías quieto arriba, la grilla filtrada apareciendo justo
+      // debajo, sin mover el scroll. 2026-09-10.
     });
   }
 
@@ -3446,10 +3636,12 @@ GapCatalog.ready.then(function (shared) {
     // <date>" tooltip context that a compact card face doesn't.
     var pr = pricingLabel(p.pricing, isPending);
     return '<div class="plugin-card" data-repo="' + esc(p.repo) + '" role="button" tabindex="0" aria-label="' + esc(p.name) + ' details">' +
+      '<div class="card-header">' +
       '<span class="card-cat" style="--cat:' + cat.color + '" title="' + esc(cat.label) + '" aria-hidden="true">' + catIconHtml(p.categoryKey) + '</span>' +
       '<div class="card-top">' +
       '<div class="card-name">' + esc(p.name) + (p.verified ? '<span class="verified-mark" role="img" aria-label="Verified vendor" title="Verified vendor">✓</span>' : '') + '</div>' +
       '<div class="card-niche">' + esc(p.niche) + '</div>' +
+      '</div>' +
       '</div>' +
       '<div class="card-metrics">' +
       (isPending
@@ -3508,7 +3700,7 @@ GapCatalog.ready.then(function (shared) {
       .slice(0, 4);
 
     var html = '<div class="dossier-sheet"><div class="dossier-card">';
-    html += '<button type="button" class="dossier-back" id="dossierBack">← Back to catalog</button>';
+    html += '<button type="button" class="dossier-back" id="dossierBack">✕ Close</button>';
     html += '<div class="dossier-top">';
     html += '<div class="dossier-intro"><div class="dossier-title-row"><h2>' + esc(p.name) + '</h2>' +
       '<span class="chip ' + pr.cls + '">' + esc(pr.text) + '</span>' +
@@ -3516,23 +3708,22 @@ GapCatalog.ready.then(function (shared) {
       '<div class="dossier-niche">' + esc(p.niche) + '</div>' +
       '<div class="dossier-pitch">' + mdInline(p.pitch || '—') + '</div>';
     html += '<div class="dossier-stats">';
-    html += '<div class="stat"><div class="num" id="dossierDlNum">' + (isPending ? '—' : p.downloads.toLocaleString('en-US')) + '</div><div class="label">Downloads' + (isPending ? '' : ' ' + growthMarkup(p)) + '</div></div>';
-    html += '<div class="stat"><div class="num">' + (p.reviews == null ? '—' : p.reviews) + '</div><div class="label">Reviews</div></div>';
-    html += '<div class="stat"><div class="num">' + (p.rating != null ? p.rating.toFixed(2) : '—') + '</div><div class="label">Rating</div></div>';
-    html += '<div class="stat"><div class="num">' + (p.stars != null ? p.stars : '—') + '</div><div class="label">GitHub ★</div></div>';
-    html += '<div class="stat"><div class="num">' + (p.firstPublished || '—') + '</div><div class="label">Published</div></div>';
+    html += '<div class="stat"><span class="stat-icon">' + ICONS.downloads + '</span><div><div class="num" id="dossierDlNum">' + (isPending ? '—' : p.downloads.toLocaleString('en-US')) + '</div><div class="label">Downloads' + (isPending ? '' : ' ' + growthMarkup(p)) + '</div></div></div>';
+    html += '<div class="stat"><span class="stat-icon">' + ICONS.github + '</span><div><div class="num">' + (p.stars != null ? p.stars : '—') + '</div><div class="label">GitHub stars</div></div></div>';
+    html += '<div class="stat"><span class="stat-icon">' + ICON_CALENDAR + '</span><div><div class="num">' + (p.firstPublished || '—') + '</div><div class="label">Published</div></div></div>';
     html += '</div></div>';
     html += '<div class="dossier-side">';
+    html += '<div class="dossier-links">';
+    if (p.marketplaceUrl) html += '<a class="btn primary" href="' + esc(safeUrl(p.marketplaceUrl)) + '" target="_blank" rel="noopener"><span class="btn-icon">' + ICONS.jetbrains + '</span>Install on JetBrains ↗</a>';
+    html += '<a class="btn" href="' + esc(safeUrl(p.githubUrl)) + '" target="_blank" rel="noopener"><span class="btn-icon">' + ICONS.github + '</span>View on GitHub ↗</a>';
+    html += '</div>';
     if (gifUrl) {
       // onerror moved to a real addEventListener in
       // wireDossierInteractions() so this markup stays free of inline
       // handlers (script-src unsafe-inline).
       html += '<img class="dossier-gif" src="' + esc(gifUrl) + '" alt="' + esc(p.name) + ' in action" loading="lazy">';
     }
-    html += '<div class="dossier-links">';
-    if (p.marketplaceUrl) html += '<a class="btn primary" href="' + esc(safeUrl(p.marketplaceUrl)) + '" target="_blank" rel="noopener"><span class="btn-icon">' + ICONS.jetbrains + '</span>Install on JetBrains ↗</a>';
-    html += '<a class="btn" href="' + esc(safeUrl(p.githubUrl)) + '" target="_blank" rel="noopener"><span class="btn-icon">' + ICONS.github + '</span>View on GitHub ↗</a>';
-    html += '</div></div></div></div>';
+    html += '</div></div></div>';
 
     html += '<div class="dossier-body">';
     html += '<div class="info-block"><div class="ib-head"><span class="ib-icon gap">!</span><span class="ib-title">The Gap</span></div>' +
@@ -3600,8 +3791,6 @@ GapCatalog.ready.then(function (shared) {
 
     html += '<div class="tbl-stats">';
     html += '<div class="tbl-stat"><div class="ts-icon">↓</div><div><div class="ts-num">' + (isPending ? '—' : p.downloads.toLocaleString('en-US')) + (isPending ? '' : growthMarkup(p)) + '</div><div class="ts-label">Downloads</div></div></div>';
-    html += '<div class="tbl-stat"><div class="ts-icon">☆</div><div><div class="ts-num">' + (p.reviews == null ? '—' : p.reviews) + '</div><div class="ts-label">Reviews</div></div></div>';
-    html += '<div class="tbl-stat"><div class="ts-icon">★</div><div><div class="ts-num">' + (p.rating != null ? p.rating.toFixed(2) : '—') + '</div><div class="ts-label">Rating</div></div></div>';
     html += '<div class="tbl-stat"><div class="ts-icon">⌥</div><div><div class="ts-num">' + (p.stars != null ? p.stars : '—') + '</div><div class="ts-label">GitHub ★</div></div></div>';
     html += '<div class="tbl-stat"><div class="ts-icon">▤</div><div><div class="ts-num">' + (p.firstPublished || '—') + '</div><div class="ts-label">Published</div></div></div>';
     html += '</div>';
@@ -3691,23 +3880,41 @@ GapCatalog.ready.then(function (shared) {
     });
   }
 
+  // Panel de detalle fijo (Fase 5b) -- ya no reemplaza #fieldMain,
+  // se monta en #fieldDetail al lado de la grilla. wireDossierInteractions()
+  // y el resto del contenido (dossierBodyHtml()) no cambiaron.
   function renderDossier(p) {
     var html = '<div class="dossier-enter">' + dossierBodyHtml(p) + '</div>';
-    var main = document.getElementById('fieldMain');
-    main.innerHTML = html;
+    var detail = document.getElementById('fieldDetail');
+    var row = document.getElementById('fieldRow');
+    detail.innerHTML = html;
+    detail.hidden = false;
+    if (row) row.classList.add('has-detail');
 
     document.getElementById('dossierBack').addEventListener('click', function () {
       setSelectedRepo(null, false);
     });
-    wireDossierInteractions(main, p);
+    wireDossierInteractions(detail, p);
+  }
+
+  function closeDossier() {
+    var detail = document.getElementById('fieldDetail');
+    var row = document.getElementById('fieldRow');
+    if (detail) { detail.hidden = true; detail.innerHTML = ''; }
+    if (row) row.classList.remove('has-detail');
   }
 
   function renderField() {
+    // renderGrid() corre siempre ahora -- antes selectedRepo hacía que
+    // renderDossier() reemplazara la grilla entera; el hash routing
+    // (setSelectedRepo/syncHashToState) no se tocó, "cerrar" el panel
+    // ya es la conducta correcta sin cambios ahí.
+    renderGrid();
     if (selectedRepo) {
       var p = byRepo(selectedRepo);
       if (p) { renderDossier(p); return; }
     }
-    renderGrid();
+    closeDossier();
   }
 
   // ---- Table mode (unchanged logic, restyled) -------------------------
@@ -3968,6 +4175,7 @@ GapCatalog.ready.then(function (shared) {
   // renderAll() via categoryFilter.value = filterCategory. Populating +
   // re-attaching a listener on every render would stack duplicate
   // 'change' handlers instead of replacing them.
+  renderCatalogStats();
   populateCategorySelect();
   wireCategorySelect();
   wireCategoryBoard();
@@ -4022,6 +4230,20 @@ GapCatalog.ready.then(function (shared) {
         var open = topbar.classList.toggle('nav-open');
         burger.setAttribute('aria-expanded', String(open));
       });
+    }
+  })();
+
+  // Fade el logo del pie del sidebar cuando el <footer> real entra en
+  // viewport (ver comentario en css/shell.css).
+  (function () {
+    var siteFooter = document.querySelector('.site-footer');
+    var sidebarFooter = document.querySelector('.sidebar-footer');
+    if (siteFooter && sidebarFooter && 'IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          sidebarFooter.classList.toggle('is-near-footer', entry.isIntersecting);
+        });
+      }).observe(siteFooter);
     }
   })();
 

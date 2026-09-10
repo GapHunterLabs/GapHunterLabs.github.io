@@ -19,7 +19,7 @@ import subprocess
 import urllib.request
 import urllib.parse
 import html
-from datetime import date, datetime, timezone
+from datetime import date, datetime, timedelta, timezone
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PIPELINE_DIR = os.path.join(ROOT, "pipeline")
@@ -106,6 +106,67 @@ def earliest_datapoint(history, xml_id):
         if xml_id in snap.get("plugins", {}):
             return snap["date"], snap["plugins"][xml_id]["downloads"]
     return None, None
+
+
+# Fase 3 del plan de rediseño (Intelligence layer) -- el sparkline de la
+# home necesita una serie corta de {date, totalDownloads} en vez de
+# mandar el historico completo (pipeline/catalog_daily_history.json,
+# que crece sin poda) al navegador. Se computa aca, sobre el `history`
+# que YA incluye el snapshot de hoy (agregado mas arriba en main()
+# antes de este punto), sin ninguna llamada de red adicional.
+def compute_trend7d(history):
+    snaps = sorted(history.get("snapshots", []), key=lambda s: s["date"])[-7:]
+    return [
+        {
+            "date": s["date"],
+            "totalDownloads": sum(
+                (v.get("downloads") or 0) for v in s.get("plugins", {}).values()
+            ),
+        }
+        for s in snaps
+    ]
+
+
+# "Intelligence changes" -- dos señales reales, ambas con granularidad
+# de dia (nunca de hora: el cron corre 2x/dia, cualquier timestamp mas
+# fino seria fabricado). 1) plugins nuevos via firstPublished (campo
+# curado real); 2) mayores subas de descargas entre los ultimos dos
+# snapshots disponibles. Sin umbral "magico" de importancia -- se
+# ordena por fecha real y se recorta a un maximo razonable.
+def compute_recent_changes(history, rows, days=14, max_events=8):
+    events = []
+    cutoff = (datetime.now(timezone.utc) - timedelta(days=days)).strftime("%Y-%m-%d")
+    for r in rows:
+        fp = r.get("firstPublished")
+        if fp and fp >= cutoff:
+            events.append({"date": fp, "type": "new", "name": r["name"], "niche": r.get("niche")})
+
+    snaps = sorted(history.get("snapshots", []), key=lambda s: s["date"])
+    if len(snaps) >= 2:
+        prev_snap, cur_snap = snaps[-2], snaps[-1]
+        name_by_id = {r["xmlId"]: r["name"] for r in rows}
+        niche_by_id = {r["xmlId"]: r.get("niche") for r in rows}
+        deltas = []
+        for xml_id, cur_v in cur_snap.get("plugins", {}).items():
+            prev_v = prev_snap.get("plugins", {}).get(xml_id)
+            if not prev_v:
+                continue
+            prev_dl, cur_dl = prev_v.get("downloads"), cur_v.get("downloads")
+            if prev_dl is None or cur_dl is None:
+                continue
+            delta = cur_dl - prev_dl
+            if delta > 0:
+                deltas.append((delta, xml_id))
+        deltas.sort(reverse=True)
+        for delta, xml_id in deltas[:5]:
+            events.append({
+                "date": cur_snap["date"], "type": "growth",
+                "name": name_by_id.get(xml_id, xml_id), "niche": niche_by_id.get(xml_id),
+                "delta": delta,
+            })
+
+    events.sort(key=lambda e: e["date"], reverse=True)
+    return events[:max_events]
 
 
 SITE = "https://gaphunterlabs.github.io/"
@@ -397,6 +458,8 @@ def main():
         "totalStars": total_stars,
         "totalReviews": total_reviews,
         "avgRating": avg_rating_all,
+        "trend7d": compute_trend7d(history),
+        "recentChanges": compute_recent_changes(history, rows),
         "plugins": rows,
     }
 
