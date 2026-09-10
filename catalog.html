@@ -2891,6 +2891,13 @@
      SVG hand-rolled, sin librería ni asset externo, mismo criterio que
      el resto del sitio (sparkline, decision-diagram). */
   .catalog-heading { display: flex; align-items: center; gap: var(--section-gap); }
+  /* Solo top/bottom a la mitad (a pedido explícito 2026-09-10) -- left/
+     right se quedan en el 7% que ya trae .page-hero (shell.css). Selector
+     compuesto (.catalog-heading.page-hero, especificidad 0,2,0) en vez
+     de solo .catalog-heading -- shell.css carga después del <style> de
+     esta página, así que un empate de especificidad con el padding:7%
+     shorthand de .page-hero lo hubiera ganado shell.css igual. */
+  .catalog-heading.page-hero { padding-top: 3.5%; padding-bottom: 3.5%; }
   .ch-copy { flex: 1 1 360px; min-width: 0; }
   .ch-net { flex: 1 1 380px; min-width: 0; max-width: 480px; }
   .ch-net svg { display: block; width: 100%; height: auto; overflow: visible; }
