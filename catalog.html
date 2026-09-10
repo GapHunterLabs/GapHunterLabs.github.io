@@ -1294,23 +1294,31 @@
     outline-offset: 1px;
   }
 
-  /* Grid de 2 columnas parejo para los 4 controles (a pedido explícito
-     2026-09-10) -- antes .search y .view-toggle competían por una
-     misma fila con flex-shrink (recortaba el toggle contra el borde
-     real) y terminaban cada uno en su propia fila completa, dejando 3
-     franjas visuales sueltas en vez de un bloque unificado. Grid fijo
-     en vez de flex-wrap con anchos a mano: los 4 controles (buscador,
-     toggle Field/Table, categoría, pricing) caen solos 2 por fila,
-     sin math de shrink que se pueda desalinear. */
+  /* Los 4 controles agrupados en 1 solo elemento (a pedido explícito
+     2026-09-10, 3ra vuelta) -- antes eran 4 boxes sueltos apilados,
+     cada uno con su propio borde/fondo/radio. Ahora .controls ES la
+     única caja visible (borde+fondo+radio una vez), cada control
+     pierde el suyo propio y se separan con una línea divisoria fina
+     en vez de un hueco entre cards. .view-toggle conserva su propio
+     padding/.vt-thumb (el pill azul activo) -- solo se le saca el
+     borde/fondo exterior, que ahora lo pone .controls. */
   @media (max-width: 640px) {
-    .controls { display: grid; grid-template-columns: 1fr; gap: 8px; }
-    .search, select#categoryFilter, select#pricingFilter { flex: none; min-width: 0; width: auto; }
-    /* .view-toggle es inline-flex/flex:none -- como grid item eso lo
-       deja en su ancho de contenido (~160px, los 2 botones + padding),
-       más ancho que la columna de 1fr y el botón "Table" se salía del
-       viewport real (confirmado con captura). width:100% fuerza a que
-       llene la celda igual que los otros 3 controles. */
-    .view-toggle { flex: none; min-width: 0; width: 100%; }
+    .controls {
+      display: grid; grid-template-columns: 1fr; gap: 0;
+      border: 1px solid var(--border); border-radius: var(--radius-md);
+      background: var(--surface); overflow: hidden;
+    }
+    .search, select#categoryFilter, select#pricingFilter, .view-toggle {
+      flex: none; min-width: 0; width: auto;
+      border: 0; border-radius: 0; background: transparent;
+    }
+    select#categoryFilter, select#pricingFilter { padding-left: 12px; padding-right: 12px; }
+    /* margin, no padding -- .view-toggle ya usa su propio padding:3px
+       para posicionar .vt-thumb (el pill azul activo); tocar ese
+       padding corriera el thumb del borde real del control. */
+    .view-toggle { margin: 6px 12px; }
+    .search input { border: 0; background: transparent; border-radius: 0; }
+    .controls > * + * { border-top: 1px solid var(--border); }
     .topbar-inner { padding: 0 var(--page-pad-sm); }
     .tw-name { font-size: 13px; letter-spacing: 0.06em; }
   }
