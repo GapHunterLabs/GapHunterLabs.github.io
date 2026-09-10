@@ -2783,6 +2783,7 @@
      pase, en vez de seguir ajustando a mano cada offset). */
   .identity-process { position:relative; height:185px; overflow:hidden; }
   .identity-process .roadmap-svg { position:absolute; inset:0; width:100%; height:100%; overflow:visible; pointer-events:none; }
+  .identity-process .roadmap-svg-v { display:none; }
   .identity-process .flow-line { fill:none; stroke-linecap:round; }
   .identity-process .flow-line-1 { stroke:url(#roadmapGrad); stroke-width:1.6; opacity:0.85; }
   .identity-process .flow-line-2 { stroke:var(--cyan); stroke-width:1; opacity:0.2; }
@@ -2814,29 +2815,30 @@
   .identity-step p { font-size:11.5px; color:var(--text-dim); }
   /* 900px (no 700px) -- mismo umbral que .category-links ya usa más
      abajo; el sidebar (248px) angosta la columna real bastante antes
-     de que el viewport "se sienta" chico. El SVG en diagonal no cabe
-     en una columna angosta -- en vez de ocultarlo sin más (bug real
-     reportado 2026-09-10: "no se ve el svg"), se reemplaza por una
-     timeline VERTICAL propia: una barra con el mismo gradiente de 4
-     colores corriendo detrás de los puntos, apilados en una sola
-     columna siempre (ya no 2x1 a 900px / 1x1 a 620px -- esas reglas
-     viejas más abajo se sacaron de .identity-process para no pisar
-     esto). */
+     de que el viewport "se sienta" chico. El SVG diagonal no cabe en
+     una columna angosta -- en vez de ocultarlo sin más (bug real
+     reportado 2026-09-10) o una simple barra de gradiente (segunda
+     vuelta, mismo día: pidió un SVG real, centrado, "alineado con la
+     solución de Navier-Stokes" como el de escritorio), esto rota el
+     mismo lenguaje 90°: un gutter angosto a la izquierda del stack con
+     3 curvas superpuestas (misma técnica <use>+translate+dash-flow que
+     .roadmap-svg de escritorio) ondulando suave cerca de donde caen
+     los puntos, en vez de una línea recta. Timeline centrada (max-width
+     + margin:auto) en vez de pegada al borde. */
   @media (max-width:900px) {
     .identity-process {
       position:relative; height:auto; overflow:visible; padding-top:0;
-      display:flex; flex-direction:column; gap:20px;
+      max-width:360px; margin:0 auto;
+      display:flex; flex-direction:column; gap:26px;
+      padding-left:36px;
     }
     .identity-process .roadmap-svg { display:none; }
-    /* Línea corre por donde ya caen los puntos (izquierda del stack,
-       nada de indent nuevo -- acá el punto va ARRIBA del texto, no al
-       lado, así que ya comparten la misma x). */
-    .identity-process::before {
-      content:""; position:absolute; left:3px; top:4px; bottom:4px; width:2px; border-radius:2px;
-      background:linear-gradient(to bottom, var(--accent), var(--good), var(--purple), var(--amber));
-      opacity:0.6;
+    .identity-process .roadmap-svg-v {
+      display:block; position:absolute; left:0; top:2px; bottom:2px; width:34px; overflow:visible; pointer-events:none;
     }
-    .identity-step { position:static; width:auto; }
+    .identity-step { position:static; width:auto; gap:5px; }
+    .identity-step h3 { font-size:15px; }
+    .identity-step p { font-size:12.5px; line-height:1.5; }
     .rm-dot { position:relative; z-index:1; }
   }
   .identity-card { padding:var(--card-pad); border:1px solid var(--border); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow); transition:border-color var(--duration-base) ease; }
@@ -3032,6 +3034,27 @@
         <use class="flow-line flow-line-3" href="#flowPath" transform="translate(2,12)"/>
         <use class="flow-line flow-line-2" href="#flowPath" transform="translate(-2,-10)"/>
         <use class="flow-line flow-line-1" href="#flowPath"/>
+      </svg>
+      <!-- Versión vertical del mismo campo de streamlines, solo visible
+           debajo de 900px (ver CSS .roadmap-svg-v) -- mismo mecanismo
+           (1 curva base + 2 copias <use>/translate + dash-flow
+           animado), rotado 90°: ondula de lado a lado en vez de
+           arriba/abajo. Gradiente propio (roadmapGradV) en vertical
+           para que los 4 colores se lean de arriba a abajo, mismo
+           orden que los puntos reales debajo. -->
+      <svg class="roadmap-svg-v" viewBox="0 0 30 100" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <path id="flowPathV" d="M24,6 C20,18 16,26 18,36 S28,52 26,64 S16,84 18,94"/>
+          <linearGradient id="roadmapGradV" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="var(--accent)"/>
+            <stop offset="35%" stop-color="var(--good)"/>
+            <stop offset="65%" stop-color="var(--purple)"/>
+            <stop offset="100%" stop-color="var(--amber)"/>
+          </linearGradient>
+        </defs>
+        <use class="flow-line flow-line-3" href="#flowPathV" transform="translate(4,0)"/>
+        <use class="flow-line flow-line-2" href="#flowPathV" transform="translate(-4,0)"/>
+        <use class="flow-line flow-line-1" href="#flowPathV" style="stroke:url(#roadmapGradV)"/>
       </svg>
       <article class="identity-step"><span class="rm-dot" aria-hidden="true"></span><h3>Observe</h3><p>Identify friction</p></article>
       <article class="identity-step"><span class="rm-dot" aria-hidden="true"></span><h3>Detect</h3><p>Find real gaps</p></article>
