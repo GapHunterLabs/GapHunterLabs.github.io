@@ -88,6 +88,13 @@
   }
   a { color: var(--accent); }
   a:hover { color: var(--text); }
+  /* Bug real reportado 2026-09-10: el botón "Security report" de
+     contact.html (href="security.html#sec-report") SÍ navegaba, pero
+     sin esto el <h2> destino quedaba pegado al borde superior del
+     viewport y el topbar sticky lo tapaba -- se veía como si el botón
+     "no hiciera nada". Mismo valor (72px) que #top/#identity ya usan
+     en index.html/catalog.html para el mismo problema. */
+  #sec-arch, #sec-network, #sec-open, #sec-report, #sec-cert { scroll-margin-top: 72px; }
 
   .topbar {
     position: sticky;
