@@ -1453,8 +1453,33 @@
     .catalog-explore .cat-cell-label { font-size: 12px; }
     .catalog-explore .cat-cell-count { font-size: 10.5px; }
   }
+  /* Vuelve a 3 columnas en vez de 1 (a pedido explícito 2026-09-10) --
+     los 3 boxes se achican en vez de apilarse, para que quepan uno al
+     lado del otro incluso en un teléfono angosto. */
   @media (max-width: 520px) {
-    .catalog-stats { grid-template-columns: 1fr; }
+    .catalog-stats { grid-template-columns: repeat(3, minmax(0,1fr)); gap: 6px; }
+    .cs-item { padding: 8px 6px; gap: 6px; }
+    .cs-icon { width: 24px; height: 24px; }
+    .cs-icon svg { width: 12px; height: 12px; }
+    .cs-num { font-size: 14px; }
+    .cs-label { margin-top: 1px; font-size: 8px; }
+    /* Tiles de categoría más chicas (a pedido explícito 2026-09-10)
+       para que entren 4 por fila en vez de 2 en un teléfono angosto.
+       Grid de 4 columnas explícitas en vez de flex-wrap -- con
+       flex:none + flex-wrap, el ancho "natural" de un chip (icono +
+       texto sin recortar) no respeta que 4 quepan en la fila; el texto
+       terminaba desbordando el borde real del viewport en vez de
+       recortarse con ellipsis (bug real visto en captura). minmax(0,1fr)
+       sí le da a cada celda un ancho fijo con base 0, que es lo que
+       .cat-cell-label/-count necesitan para que su overflow:hidden +
+       text-overflow:ellipsis (ya existían) realmente actúen. */
+    .catalog-explore .cat-board { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 5px; }
+    .catalog-explore .cat-cell { flex: none; min-width: 0; padding: 6px 6px; gap: 5px; }
+    .catalog-explore .cat-cell-icon { width: 18px; height: 18px; }
+    .catalog-explore .cat-cell-icon svg { width: 10px; height: 10px; }
+    .catalog-explore .cat-cell-copy { flex-direction: column; align-items: flex-start; gap: 1px; min-width: 0; }
+    .catalog-explore .cat-cell-label { font-size: 10px; }
+    .catalog-explore .cat-cell-count { font-size: 8.5px; }
   }
 
   .panel {
@@ -2878,7 +2903,7 @@
      tuvieron) -- no se notaba en el layout viejo centrado, se ve como
      desalineado real ahora con el sidebar al lado (feedback real
      2026-09-10). */
-  .category-preview,.identity-section,.catalog-heading { max-width:var(--page-max); margin:var(--section-gap) auto 0; }
+  .catalog-heading { max-width:var(--page-max); margin:var(--section-gap) auto 0; }
   /* Ilustración del hero de Catalog (a pedido explícito 2026-09-10) --
      misma composición que una referencia visual del usuario (nodos
      hexagonales conectados por líneas de circuito con glow), pero con
@@ -2912,28 +2937,22 @@
   @media (max-width: 900px) {
     .ch-net { display: none; }
   }
-  .section-head { display:flex; align-items:end; justify-content:space-between; gap:var(--card-pad); margin-bottom:var(--section-gap); }
-  .section-head h2,.identity-section h2,.catalog-heading h1 { margin:4px 0 0; }
+  /* Limpieza real (2026-09-10): este bloque tenía ~20 líneas de CSS de
+     index.html pegadas por error (.identity-section/.identity-process/
+     .identity-step/.identity-card/.identity-grid/.identity-links/
+     .section-head/.method-fact/.tele-row) -- ninguna de esas clases
+     existe en el HTML de esta página. No era solo peso muerto: dos
+     bugs reales salían de ahí por coincidencia de nombre de clase --
+     .category-links .cat-cell (flex-direction:column, declarado
+     después de .catalog-explore .cat-cell) ganaba el empate de
+     especificidad y convertía las tiles de categoría en cards altas
+     apiladas en vez del chip horizontal ya construido (bug reportado
+     con captura); y .plugin-card compartía selector con
+     .method-fact/.tele-row, pisando su padding real (10px 11px 9px
+     11px) por --card-pad-sm (10px parejo) sin que nadie lo notara.
+     Solo quedan .eyebrow/.catalog-heading h1, que sí son reales acá. */
   .eyebrow { margin:0; color:var(--accent); font:700 11px var(--mono); letter-spacing:.12em; text-transform:uppercase; }
-  .category-links { grid-template-columns:repeat(4,minmax(0,1fr)); align-items:stretch; }
-  .category-links .cat-cell { min-height:120px; padding:var(--card-pad); text-decoration:none; display:flex; flex-direction:column; align-items:flex-start; justify-content:space-between; }
-  .category-links .cat-cell-copy { display:grid; gap:4px; }
-  .identity-section { display:grid; gap:var(--section-gap); }
-  .identity-lead { max-width:780px; }
-  .identity-lead>p:last-child,.catalog-heading>p:last-child { color:var(--text-dim); line-height:1.7; }
-  .identity-process { display:grid; grid-template-columns:repeat(4,1fr); gap:var(--section-gap); align-items:stretch; }
-  .identity-step,.identity-card { padding:var(--card-pad); border:1px solid var(--border); border-radius:var(--radius); background:var(--panel); box-shadow:var(--shadow); }
-  .identity-step { display:grid; align-content:start; gap:8px; }
-  .identity-step span { color:var(--text-faint); font:700 11px var(--mono); }
-  .identity-step h3,.identity-step p,.identity-card h3 { margin:0; }
-  .identity-step:nth-child(1) h3{color:var(--text)}.identity-step:nth-child(2) h3{color:var(--good)}.identity-step:nth-child(3) h3{color:var(--purple)}.identity-step:nth-child(4) h3{color:var(--amber)}
-  .identity-grid { display:grid; grid-template-columns:1fr 1fr; gap:var(--section-gap); align-items:stretch; }
-  .identity-card { display:flex; flex-direction:column; align-items:flex-start; gap:12px; }
-  .identity-card p,.identity-card li { color:var(--text-dim); line-height:1.65; }
-  .identity-links { display:grid; gap:8px; margin-top:auto; }
-  .method-fact,.tele-row,.plugin-card { padding:var(--card-pad-sm); }
-  @media (max-width: 900px) { .category-links,.identity-process { grid-template-columns:repeat(2,1fr); } }
-  @media (max-width: 620px) { .category-links,.identity-process,.identity-grid { grid-template-columns:1fr; } .section-head{align-items:flex-start;flex-direction:column;} }
+  .catalog-heading h1 { margin:4px 0 0; }
 
 </style>
 <link rel="stylesheet" href="css/shell.css">
