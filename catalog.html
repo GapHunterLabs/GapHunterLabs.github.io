@@ -1337,6 +1337,14 @@
     }
     .controls.is-searching .search { max-width: 1000px; opacity: 1; }
     .search input { border: 0; background: transparent; border-radius: 0; height: 32px; padding: 0 8px 0 4px; }
+    /* El ícono de lupa viejo (.search::before/::after, dibujado con
+       pseudo-elementos para el input de escritorio) se quedaba
+       encendido acá y quedaba flotando sobre el texto -- el padding
+       nuevo del input (4px, ya no 32px) dejó de reservarle espacio.
+       El botón .ctl-search-icon ya cumple ese rol acá, así que se
+       oculta el viejo en vez de reacomodarlo (glitch real reportado
+       con captura, 2026-09-10). */
+    .search::before, .search::after { display: none; }
     .ctl-rest {
       display: flex; align-items: center; gap: 6px; flex: 1 1 auto; max-width: 1000px; min-width: 0;
       overflow: hidden; transition: max-width var(--duration-slow) var(--ease-standard), opacity var(--duration-base) ease;
