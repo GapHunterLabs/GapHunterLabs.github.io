@@ -28,7 +28,11 @@ HISTORY_PATH = os.path.join(PIPELINE_DIR, "catalog_daily_history.json")
 LATEST_PATH = os.path.join(PIPELINE_DIR, "catalog_latest_data.json")
 DATA_PATH = os.path.join(ROOT, "data", "catalog-data.json")
 INDEX_PATH = os.path.join(ROOT, "index.html")
-CATALOG_PATH = os.path.join(ROOT, "catalog.html")
+# 2026-09-10 (clean-URL migration): the catalog page now lives at
+# catalog/index.html so GitHub Pages serves it at /catalog/ with no
+# ".html" in the address bar. catalog.html itself became a tiny
+# client-side redirect stub and is no longer touched by this script.
+CATALOG_PATH = os.path.join(ROOT, "catalog", "index.html")
 SITEMAP_PATH = os.path.join(ROOT, "sitemap.xml")
 
 API = "https://plugins.jetbrains.com/api"
@@ -170,7 +174,7 @@ def compute_recent_changes(history, rows, days=14, max_events=8):
 
 
 SITE = "https://gaphunterlabs.github.io/"
-CATALOG_URL = SITE + "catalog.html"
+CATALOG_URL = SITE + "catalog/"
 
 JSONLD_RE = re.compile(
     r'(<script type="application/ld\+json" id="catalog-jsonld">)(.*?)(</script>)',
@@ -290,7 +294,7 @@ def build_catalog_noscript(rows):
 
 def _replace_inner(page_html, pattern, inner, label):
     if not pattern.search(page_html):
-        sys.exit("[auto_update] ERROR: missing %s block in catalog.html" % label)
+        sys.exit("[auto_update] ERROR: missing %s block in catalog/index.html" % label)
 
     def repl(mm):
         return mm.group(1) + inner + mm.group(3)
@@ -345,7 +349,10 @@ def update_static_counts(path, rows, include_hero=False):
     for rx, repl in swaps:
         page, count = rx.subn(repl, page, count=1)
         if count != 1:
-            sys.exit("[auto_update] ERROR: expected static count marker in %s" % os.path.basename(path))
+            # os.path.basename alone would print "index.html" for both
+            # index.html and catalog/index.html -- use the path relative
+            # to ROOT so a failure here says which file actually broke.
+            sys.exit("[auto_update] ERROR: expected static count marker in %s" % os.path.relpath(path, ROOT))
     with open(path, "w", encoding="utf-8") as f:
         f.write(page)
 
@@ -511,12 +518,12 @@ def main():
             sitemap = f.read()
         lastmod_date = generated_at[:10]  # YYYY-MM-DD from the ISO timestamp
         catalog_entry = re.compile(
-            r"(<loc>%scatalog\.html</loc>\s*<lastmod>).*?(</lastmod>)" % re.escape(SITE),
+            r"(<loc>%scatalog/</loc>\s*<lastmod>).*?(</lastmod>)" % re.escape(SITE),
             re.S,
         )
         sitemap, count = catalog_entry.subn(r"\g<1>%s\g<2>" % lastmod_date, sitemap, count=1)
         if count != 1:
-            sys.exit("[auto_update] ERROR: catalog.html sitemap entry missing")
+            sys.exit("[auto_update] ERROR: catalog/ sitemap entry missing")
         with open(SITEMAP_PATH, "w", encoding="utf-8") as f:
             f.write(sitemap)
         print(f"[auto_update] sitemap.xml lastmod actualizado a {lastmod_date}")

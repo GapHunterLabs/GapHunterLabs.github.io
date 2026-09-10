@@ -83,7 +83,7 @@ jobs:
           import json, re, sys
           with open("data/catalog-data.json", encoding="utf-8") as f:
               data = json.load(f)
-          with open("catalog.html", encoding="utf-8") as f:
+          with open("catalog/index.html", encoding="utf-8") as f:
               catalog = f.read()
           m = re.search(r'<script type="application/ld\+json" id="catalog-jsonld">(.*?)</script>', catalog, re.S)
           if not m:
@@ -102,10 +102,10 @@ jobs:
         run: |
           git config user.name "Gap Hunter Labs"
           git config user.email "gaphunterlabs@gmail.com"
-          if git diff --quiet -- data/catalog-data.json catalog.html index.html sitemap.xml pipeline/catalog_daily_history.json pipeline/catalog_latest_data.json; then
+          if git diff --quiet -- data/catalog-data.json catalog/index.html index.html sitemap.xml pipeline/catalog_daily_history.json pipeline/catalog_latest_data.json; then
             echo "sin cambios reales en los datos, no se commitea nada"
           else
-            git add data/catalog-data.json catalog.html index.html sitemap.xml pipeline/catalog_daily_history.json pipeline/catalog_latest_data.json
+            git add data/catalog-data.json catalog/index.html index.html sitemap.xml pipeline/catalog_daily_history.json pipeline/catalog_latest_data.json
             git commit -m "Auto-update catalog data ($(date -u +%Y-%m-%d))"
             git push
           fi

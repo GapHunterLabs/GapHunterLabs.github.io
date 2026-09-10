@@ -24,7 +24,7 @@
     });
   }
 
-  var ready = fetch('data/catalog-data.json', { credentials: 'same-origin' })
+  var ready = fetch('/data/catalog-data.json', { credentials: 'same-origin' })
     .then(function (response) {
       if (!response.ok) throw new Error('Catalog request failed: ' + response.status);
       return response.json();

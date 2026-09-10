@@ -7,8 +7,8 @@ The scheduled update in `.github/workflows/update-catalog.yml` runs twice daily:
 1. `pipeline/auto_update_catalog.py` reads the curated product fields in `pipeline/catalog_static_metadata.json`.
 2. It retrieves current downloads, pricing, reviews, ratings, and repository stars from the public JetBrains Marketplace and GitHub interfaces.
 3. It writes the browser-facing payload to `data/catalog-data.json` with `json.dump()`.
-4. It refreshes the JSON-LD and no-script list in `catalog.html` from that payload.
-5. It updates static plugin counts in `index.html` and `catalog.html`, records the daily history, and updates the catalog entry's sitemap date.
+4. It refreshes the JSON-LD and no-script list in `catalog/index.html` from that payload.
+5. It updates static plugin counts in `index.html` and `catalog/index.html`, records the daily history, and updates the catalog entry's sitemap date.
 
 The browser loads `data/catalog-data.json` from `js/catalog-shared.js`; catalog data is not embedded in either HTML page.
 
@@ -37,7 +37,7 @@ python pipeline/auto_update_catalog.py --seo-from-data
 A successful update requires the same plugin count in:
 
 - `data/catalog-data.json` (`totalPlugins` and `plugins.length`)
-- `catalog.html` JSON-LD (`numberOfItems`)
-- `catalog.html` no-script list (`<li>` count`)
+- `catalog/index.html` JSON-LD (`numberOfItems`)
+- `catalog/index.html` no-script list (`<li>` count`)
 
 The workflow checks this parity before committing generated changes. It skips the commit when no tracked generated file changed.
