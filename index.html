@@ -2741,6 +2741,23 @@
      jerarquía tipográfica que el resto de las cards nuevas del sitio. */
   .category-links .cat-cell-copy strong { font-size: 15px; font-weight: 650; letter-spacing: -0.01em; color: var(--text); }
   .category-links .cat-cell-count { font-size: 11.5px; }
+  /* Flecha + movimiento (a pedido explícito 2026-09-10) -- mismo
+     lenguaje que la flecha de "Explore the full catalog →" arriba a
+     la derecha, pero animada: se corre hacia la derecha y se tiñe del
+     color real de la categoría al hacer hover, en vez de quedar
+     estática. .cat-cell-copy ya tiene flex:1 (crece para llenar el
+     espacio libre de la fila) -- por eso esta flecha, como próximo
+     ítem flex sin flex:1 propio, cae sola en el borde derecho de la
+     card sin necesitar margin-left:auto. */
+  .category-links .cat-cell-arrow {
+    flex: none; font-family: var(--mono); font-size: 15px; color: var(--text-faint); opacity: 0.55;
+    transition: transform var(--duration-base) ease, opacity var(--duration-base) ease, color var(--duration-base) ease;
+  }
+  .category-links .cat-cell:hover .cat-cell-arrow { transform: translateX(4px); opacity: 1; color: var(--cat); }
+  @media (prefers-reduced-motion: reduce) {
+    .category-links .cat-cell-arrow { transition: opacity var(--duration-base) ease, color var(--duration-base) ease; }
+    .category-links .cat-cell:hover .cat-cell-arrow { transform: none; }
+  }
   .identity-section { display:grid; gap:var(--section-gap); }
   .identity-lead { max-width:780px; }
   .identity-lead>p:last-child,.catalog-heading>p:last-child { color:var(--text-dim); line-height:1.7; }
@@ -3040,7 +3057,7 @@
       var counts = {};
       plugins.forEach(function (p) { counts[p.categoryKey] = (counts[p.categoryKey] || 0) + 1; });
       document.getElementById('categoryPreview').innerHTML = CATEGORIES.filter(function (c) { return c.key !== 'other'; }).map(function (c) {
-        return '<a class="cat-cell" href="catalog.html?category=' + c.key + '" style="--cat:' + c.color + '"><span class="cat-cell-icon">' + shared.catIconHtml(c.key) + '</span><span class="cat-cell-copy"><strong>' + esc(c.label) + '</strong><span class="cat-cell-count">' + (counts[c.key] || 0) + ' plugins</span></span></a>';
+        return '<a class="cat-cell" href="catalog.html?category=' + c.key + '" style="--cat:' + c.color + '"><span class="cat-cell-icon">' + shared.catIconHtml(c.key) + '</span><span class="cat-cell-copy"><strong>' + esc(c.label) + '</strong><span class="cat-cell-count">' + (counts[c.key] || 0) + ' plugins</span></span><span class="cat-cell-arrow" aria-hidden="true">&rarr;</span></a>';
       }).join('');
     }
 
