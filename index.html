@@ -2761,14 +2761,39 @@
   .identity-section { display:grid; gap:var(--section-gap); }
   .identity-lead { max-width:780px; }
   .identity-lead>p:last-child,.catalog-heading>p:last-child { color:var(--text-dim); line-height:1.7; }
-  .identity-process { display:grid; grid-template-columns:repeat(4,1fr); gap:var(--section-gap); align-items:stretch; }
-  .identity-step,.identity-card { padding:var(--card-pad); border:1px solid var(--border); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow); transition:border-color var(--duration-base) ease; }
-  .identity-step:hover,.identity-card:hover { border-color:var(--accent); }
-  .identity-step { display:grid; align-content:start; gap:8px; }
-  .identity-step span { color:var(--text-faint); font:700 11px var(--mono); }
+  /* Roadmap conectado por una línea en vez de 4 boxes sueltos (a pedido
+     explícito 2026-09-10) -- sin números, sin color por texto (el color
+     vive solo en el punto/la línea, nunca en el <h3>). La curva SVG es
+     puramente decorativa (gradiente que atraviesa los 4 colores
+     originales, trazo animado sugiriendo flujo -- "minimalista, tipo
+     streamline") -- no necesita tocar exacto cada punto para leerse
+     como "los 4 pasos conectados". */
+  .identity-process { position:relative; display:grid; grid-template-columns:repeat(4,1fr); gap:var(--section-gap); align-items:start; padding-top:26px; }
+  .identity-process .roadmap-line { position:absolute; top:0; left:0; width:100%; height:26px; overflow:visible; pointer-events:none; }
+  .identity-process .roadmap-line path { fill:none; stroke:url(#roadmapGrad); stroke-width:1.5; stroke-linecap:round; opacity:0.8; }
+  @media (prefers-reduced-motion: no-preference) {
+    .identity-process .roadmap-line path { stroke-dasharray:6 8; animation:roadmapFlow 16s linear infinite; }
+    @keyframes roadmapFlow { to { stroke-dashoffset:-280; } }
+  }
+  .identity-step { display:grid; align-content:start; gap:6px; justify-items:start; }
+  .identity-step:nth-child(2) { --dot:var(--accent); }
+  .identity-step:nth-child(3) { --dot:var(--good); }
+  .identity-step:nth-child(4) { --dot:var(--purple); }
+  .identity-step:nth-child(5) { --dot:var(--amber); }
+  .rm-dot { width:9px; height:9px; border-radius:50%; background:var(--dot,var(--accent)); box-shadow:0 0 0 4px color-mix(in srgb, var(--dot,var(--accent)) 16%, transparent); }
   .identity-step h3,.identity-step p,.identity-card h3 { margin:0; }
-  .identity-step:nth-child(1) h3{color:var(--text)}.identity-step:nth-child(2) h3{color:var(--good)}.identity-step:nth-child(3) h3{color:var(--purple)}.identity-step:nth-child(4) h3{color:var(--amber)}
+  .identity-step h3 { color:var(--text); }
+  .identity-card { padding:var(--card-pad); border:1px solid var(--border); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow); transition:border-color var(--duration-base) ease; }
+  .identity-card:hover { border-color:var(--accent); }
   .identity-grid { display:grid; grid-template-columns:1fr 1fr; gap:var(--section-gap); align-items:stretch; }
+  .identity-card .ic-head { display:flex; align-items:center; gap:10px; }
+  .identity-card .ic-head .eyebrow { margin:0; }
+  .identity-card .ic-icon { flex:none; width:34px; height:34px; border-radius:50%; background:color-mix(in srgb, currentColor 14%, var(--surface-2)); display:flex; align-items:center; justify-content:center; }
+  .identity-card .ic-icon svg { width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:1.5; }
+  .ic-stat { font-family:var(--mono); font-size:11.5px; color:var(--text-faint); margin:0; }
+  .ic-checklist { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; }
+  .ic-checklist li { display:flex; align-items:center; gap:8px; color:var(--text-dim); font-size:13.5px; line-height:1.4; }
+  .ic-checklist svg { flex:none; width:14px; height:14px; color:var(--good); }
   .identity-card { display:flex; flex-direction:column; align-items:flex-start; gap:12px; }
   .identity-card p,.identity-card li { color:var(--text-dim); line-height:1.65; }
   .identity-links { display:grid; gap:8px; margin-top:auto; justify-items:start; }
@@ -2935,23 +2960,46 @@
       <p>We hunt real, evidence-based gaps in developer tooling and ship focused IntelliJ-family plugins to fix them. Every product in this catalog exists because of a documented complaint, not a guess.</p>
     </div>
     <div class="identity-process" aria-label="How we work">
-      <article class="identity-step"><span>01</span><h3>Observe</h3><p>Identify friction</p></article>
-      <article class="identity-step"><span>02</span><h3>Detect</h3><p>Find real gaps</p></article>
-      <article class="identity-step"><span>03</span><h3>Validate</h3><p>Evidence &amp; impact</p></article>
-      <article class="identity-step"><span>04</span><h3>Build</h3><p>Ship the missing tool</p></article>
+      <svg class="roadmap-line" viewBox="0 0 1000 26" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <linearGradient id="roadmapGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="var(--accent)"/>
+            <stop offset="35%" stop-color="var(--good)"/>
+            <stop offset="65%" stop-color="var(--purple)"/>
+            <stop offset="100%" stop-color="var(--amber)"/>
+          </linearGradient>
+        </defs>
+        <path d="M10 13 C 130 -1, 200 27, 320 13 S 450 -1, 520 13 S 650 27, 770 13 S 900 -1, 990 13"/>
+      </svg>
+      <article class="identity-step"><span class="rm-dot" aria-hidden="true"></span><h3>Observe</h3><p>Identify friction</p></article>
+      <article class="identity-step"><span class="rm-dot" aria-hidden="true"></span><h3>Detect</h3><p>Find real gaps</p></article>
+      <article class="identity-step"><span class="rm-dot" aria-hidden="true"></span><h3>Validate</h3><p>Evidence &amp; impact</p></article>
+      <article class="identity-step"><span class="rm-dot" aria-hidden="true"></span><h3>Build</h3><p>Ship the missing tool</p></article>
     </div>
     <div class="identity-grid">
       <article class="identity-card">
-        <p class="eyebrow">Case studies</p>
+        <div class="ic-head">
+          <span class="ic-icon" style="color:var(--cyan)"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8 2.5h4M8.5 2.5v4.3l-3.7 7a1.8 1.8 0 0 0 1.6 2.6h7.2a1.8 1.8 0 0 0 1.6-2.6l-3.7-7V2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <p class="eyebrow">Case studies</p>
+        </div>
         <h3>The Laboratorie</h3>
-        <p>The plugins in this catalog with the strongest, most unusual real evidence behind them — JetBrains' own Platform Blog naming a freeze pattern, a compliance requirement no cloud competitor can clear. Full stories, real sources.</p>
+        <p>The plugins in this catalog with the strongest, most unusual real evidence behind them — JetBrains' own Platform Blog naming a freeze pattern, a compliance requirement no cloud competitor can clear.</p>
+        <p class="ic-stat">2 plugin case studies &middot; 5 JetBrains Platform tickets</p>
         <a class="btn" href="laboratorio.html">Visit the Laboratorie →</a>
       </article>
       <article class="identity-card">
-        <p class="eyebrow">Built with focus</p>
+        <div class="ic-head">
+          <span class="ic-icon" style="color:var(--good)"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7"/><circle cx="10" cy="10" r="3.7"/><circle cx="10" cy="10" r="0.7" fill="currentColor" stroke="none"/></svg></span>
+          <p class="eyebrow">Built with focus</p>
+        </div>
         <h3>One person, one purpose per plugin</h3>
         <p>Built and maintained by one person, self-taught, with no formal software background. The catalog began with its first plugin on July 23, 2026.</p>
-        <ul><li>Evidence-based, not guessed</li><li>Focused tools, not bloated suites</li><li>Transparent methodology</li><li>Free or freemium for most of the catalog</li></ul>
+        <ul class="ic-checklist">
+          <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.2 12 13 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Evidence-based, not guessed</li>
+          <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.2 12 13 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Focused tools, not bloated suites</li>
+          <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.2 12 13 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Transparent methodology</li>
+          <li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.2 12 13 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Free or freemium for most of the catalog</li>
+        </ul>
         <div class="identity-links">
           <a class="btn primary" href="methodology.html">Read the methodology →</a>
           <a class="btn" href="contact.html">Have a gap only your team can see? Tell us →</a>
