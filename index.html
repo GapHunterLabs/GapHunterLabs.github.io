@@ -1092,11 +1092,25 @@
       column-gap: 0;
     }
     .hero-title { font-size: clamp(18px, 5.6vw, 26px); }
-    .hero-actions { margin-top: 16px; padding-bottom: 0; }
+    /* Ritmo vertical más prolijo (a pedido explícito 2026-09-10,
+       "dale un orden a todos los elementos") -- kicker/subtítulo/stats/
+       botones con el mismo gap consistente en vez de valores sueltos
+       heredados del layout de escritorio. */
+    .hero-kicker { margin-top: 6px; }
+    .hero-subtitle { margin-top: 8px; }
+    .telemetry { margin-top: 14px; }
+    .hero-actions { margin-top: 14px; padding-bottom: 0; }
     .hs-media, .hs-viewport { min-height: 148px; }
     .hs-nav { width: 40px; height: 40px; }
-    .tele-row { padding: 8px 10px; gap: 8px; }
-    .tele-num .stat-growth { display: block; margin-left: 0; }
+    /* Boxes de stats reducidos ~50% (a pedido explícito 2026-09-10) --
+       antes 8px/10px de padding + ícono de 34px se sentían igual de
+       grandes que en escritorio, desproporcionados en un hero angosto. */
+    .tele-row { padding: 5px 8px; gap: 6px; }
+    .tele-icon { width: 20px; height: 20px; }
+    .tele-icon svg { width: 10px; height: 10px; }
+    .tele-num { font-size: 14px; }
+    .tele-label { font-size: 8px; margin-top: 1px; }
+    .tele-num .stat-growth { display: block; margin-left: 0; font-size: 9px; }
     .hs-copy { padding: 8px 10px 10px; }
     .hs-name { font-size: 14px; }
     .telemetry { max-width: none; }
@@ -3035,7 +3049,7 @@
     <div class="hero-brand">
       <h1 class="hero-title">Gap Hunter <span class="accent">Labs</span></h1>
       <p class="hero-kicker">Plugin Intelligence</p>
-      <p class="hero-subtitle" id="heroSubtitle">Real state of the 146-plugin catalog — every product exists because of a documented, evidence-based gap in existing tooling, not a guess.</p>
+      <p class="hero-subtitle" id="heroSubtitle">We hunt real, evidence-based gaps in developer tooling and ship focused IntelliJ-family plugins to fix them — every product exists because of a documented complaint, not a guess.</p>
       <section class="telemetry" id="stats" aria-label="Catalog metrics"></section>
       <div class="hero-actions">
         <a class="btn primary" href="catalog.html">Explore the Catalog</a>
@@ -3223,7 +3237,7 @@
     var statsDecoded = false;
 
     function renderStats() {
-      document.getElementById('heroSubtitle').textContent = 'Real state of the ' + data.totalPlugins + '-plugin catalog — every product exists because of a documented, evidence-based gap in existing tooling, not a guess. Each listing traces its gap to a real complaint, its fix to a real diff, and its traction to real download and growth numbers pulled straight from JetBrains Marketplace and GitHub — nothing here is estimated.';
+      document.getElementById('heroSubtitle').textContent = 'We hunt real, evidence-based gaps in developer tooling and ship focused IntelliJ-family plugins to fix them. Every one of the ' + data.totalPlugins + ' products in this catalog exists because of a documented complaint, its fix traces to a real diff, and its traction to real download numbers pulled straight from JetBrains Marketplace and GitHub — nothing here is estimated.';
       var base = 0, current = 0;
       plugins.forEach(function (p) { if (p.growthFrom != null && p.downloads != null) { base += p.growthFrom; current += p.downloads; } });
       var growth = base > 0 ? '<span class="stat-growth">▲ ' + (((current - base) / base) * 100).toFixed(1) + '%</span>' : '';
