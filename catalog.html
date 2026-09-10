@@ -1294,17 +1294,23 @@
     outline-offset: 1px;
   }
 
-  /* Below ~640px, .search's own flex-shrink was letting it and
-     .view-toggle share a line where the toggle had no room left and
-     visibly clipped at the viewport edge -- category/pricing already
-     wrapped to their own line fine, only this specific pairing broke.
-     Forcing search to a full row of its own removes the ambiguity:
-     everything after it always gets a guaranteed-clean line, no
-     shrink math to get wrong. */
+  /* Grid de 2 columnas parejo para los 4 controles (a pedido explícito
+     2026-09-10) -- antes .search y .view-toggle competían por una
+     misma fila con flex-shrink (recortaba el toggle contra el borde
+     real) y terminaban cada uno en su propia fila completa, dejando 3
+     franjas visuales sueltas en vez de un bloque unificado. Grid fijo
+     en vez de flex-wrap con anchos a mano: los 4 controles (buscador,
+     toggle Field/Table, categoría, pricing) caen solos 2 por fila,
+     sin math de shrink que se pueda desalinear. */
   @media (max-width: 640px) {
-    .search { flex: 1 1 100%; }
-    select#categoryFilter, select#pricingFilter { flex: 1 1 calc(50% - 5px); min-width: 0; }
-    .view-toggle { width: 100%; }
+    .controls { display: grid; grid-template-columns: 1fr; gap: 8px; }
+    .search, select#categoryFilter, select#pricingFilter { flex: none; min-width: 0; width: auto; }
+    /* .view-toggle es inline-flex/flex:none -- como grid item eso lo
+       deja en su ancho de contenido (~160px, los 2 botones + padding),
+       más ancho que la columna de 1fr y el botón "Table" se salía del
+       viewport real (confirmado con captura). width:100% fuerza a que
+       llene la celda igual que los otros 3 controles. */
+    .view-toggle { flex: none; min-width: 0; width: 100%; }
     .topbar-inner { padding: 0 var(--page-pad-sm); }
     .tw-name { font-size: 13px; letter-spacing: 0.06em; }
   }
