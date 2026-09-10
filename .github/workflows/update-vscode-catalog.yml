@@ -1,15 +1,16 @@
 name: Update VS Code catalog data
 
-# Same twice-daily cadence as update-catalog.yml (06:00 and 00:00 UTC),
-# kept as its own workflow because it pulls from a different
-# marketplace (VS Code, not JetBrains) into a different output file
-# (data/vscode-catalog-data.json) with no shared consumer -- the
-# JetBrains workflow's JSON-LD/no-script parity check has nothing to
-# do with this data and should never gate on it, or vice versa.
+# Same twice-daily cadence as update-catalog.yml (05:00 and 22:00 UTC =
+# midnight and 5pm America/Bogota, updated 2026-09-10), kept as its own
+# workflow because it pulls from a different marketplace (VS Code, not
+# JetBrains) into a different output file (data/vscode-catalog-data.json)
+# with no shared consumer -- the JetBrains workflow's JSON-LD/no-script
+# parity check has nothing to do with this data and should never gate
+# on it, or vice versa.
 on:
   schedule:
-    - cron: "0 6 * * *"
-    - cron: "0 0 * * *"
+    - cron: "0 5 * * *"
+    - cron: "0 22 * * *"
   workflow_dispatch: {}
 
 permissions:

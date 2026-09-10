@@ -274,11 +274,8 @@
   body {
     margin: 0;
     background-color: var(--bg);
-    background-image:
-      radial-gradient(ellipse 1200px 640px at 50% 0%, rgba(63,162,255,0.07), transparent 60%),
-      radial-gradient(var(--border) 1px, transparent 1.6px);
-    background-size: auto, 34px 34px;
-    background-repeat: no-repeat, repeat;
+    background-image: radial-gradient(ellipse 1200px 640px at 50% 0%, rgba(63,162,255,0.07), transparent 60%);
+    background-repeat: no-repeat;
     color: var(--text);
     font-family: var(--sans);
     font-size: 15px;
@@ -767,7 +764,7 @@
 
   .hero-spine { display: none; }
 
-  .hero-subtitle { margin: 10px 0 0; color: var(--text-dim); font-size: 13.5px; max-width: 42ch; line-height: 1.5; }
+  .hero-subtitle { margin: 10px 0 0; color: var(--text-dim); font-size: 13.5px; max-width: 58ch; line-height: 1.55; }
 
   .hero-actions {
     display: flex;
@@ -974,29 +971,34 @@
   .telemetry {
     display: grid;
     grid-template-columns: 1fr 1fr;
+    gap: 10px;
     width: 100%;
-    max-width: 28rem;
+    max-width: 30rem;
     margin-top: 16px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 0;
     min-width: 0;
   }
-  .tele-row { display: flex; flex-direction: row; align-items: center; gap: 10px; padding: 10px 12px; border-right: 1px solid var(--border); min-width: 0; }
-  .tele-row:last-child { border-right: none; border-bottom: none; }
+  /* Antes era un solo box con un divisor interno -- ahora son 2 cards
+     reales con su propio borde/hover, mismo lenguaje que .pi-card/
+     .qa-item en el resto del sitio (mejora pedida 2026-09-10). */
+  .tele-row {
+    display: flex; flex-direction: row; align-items: center; gap: 10px;
+    padding: 12px 14px; min-width: 0;
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    transition: border-color var(--duration-base) ease;
+  }
+  .tele-row:hover { border-color: var(--accent); }
 
   .tele-icon {
     flex: none;
-    width: 28px;
-    height: 28px;
-    border-radius: var(--radius-md);
-    background: var(--surface-2);
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: color-mix(in srgb, currentColor 14%, var(--surface-2));
     display: flex;
     align-items: center;
     justify-content: center;
   }
-  .tele-icon svg { width: 14px; height: 14px; }
+  .tele-icon svg { width: 16px; height: 16px; }
 
   /* min-width:0 -- a flex item's default min-width:auto refuses to
      shrink below its own content's min-content size, same underlying
@@ -1012,7 +1014,7 @@
     color: var(--accent);
   }
 
-  .tele-num { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 15px; font-weight: 650; line-height: 1.15; min-height: 1em; overflow-wrap: anywhere; color: var(--text); }
+  .tele-num { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 19px; font-weight: 700; line-height: 1.15; min-height: 1em; overflow-wrap: anywhere; color: var(--text); }
   .tele-num.accent { color: var(--accent); }
   .tele-num .stat-growth { font-size: 11px; margin-left: 4px; color: var(--good); vertical-align: 1px; }
 
@@ -1073,8 +1075,6 @@
      enough now that a single column there is a reasonable floor. */
   @media (max-width: 340px) {
     .telemetry { grid-template-columns: 1fr; }
-    .tele-row { border-right: none; border-bottom: 1px solid var(--border); }
-    .tele-row:last-child { border-bottom: none; }
     .hero-title { font-size: clamp(16px, 6.4vw, 22px); }
   }
 
@@ -1442,7 +1442,12 @@
     position: relative;
     cursor: pointer;
     font: inherit;
+    transition: border-color var(--duration-base) ease, box-shadow var(--duration-base) ease;
   }
+  /* No tenía hover -- mismo patrón que el resto del sitio (borde se
+     tiñe del color propio de la categoría, no del accent genérico,
+     ya que cada categoría trae su --cat). */
+  .cat-cell:hover { border-color: color-mix(in srgb, var(--cat) 55%, var(--border)); box-shadow: var(--shadow, none); }
   .cat-cell::before {
     content: "";
     position: absolute;
@@ -2702,18 +2707,43 @@
   }
 
   :root { --card-pad:16px; --card-pad-sm:10px; }
-  .category-preview,.identity-section,.catalog-heading { max-width:var(--page-max); padding:0 var(--page-pad); margin:var(--section-gap) auto 0; }
+  /* Sin padding horizontal propio -- .wrap ya pone 24px de cada lado
+     (ver .wrap más arriba); estas secciones sumaban OTRO padding
+     encima, doble inset a la izquierda que no se notaba en el layout
+     viejo centrado (simétrico) pero se ve como desalineado real ahora
+     que hay un sidebar al lado (.controls/.content-stage nunca tuvieron
+     este padding extra, por eso quedaban en otra posición horizontal
+     que el resto -- feedback real 2026-09-10). */
+  .category-preview,.identity-section,.catalog-heading,.insights-section { max-width:var(--page-max); margin:var(--section-gap) auto 0; }
   .section-head { display:flex; align-items:end; justify-content:space-between; gap:var(--card-pad); margin-bottom:var(--section-gap); }
   .section-head h2,.identity-section h2,.catalog-heading h1 { margin:4px 0 0; }
   .eyebrow { margin:0; color:var(--accent); font:700 11px var(--mono); letter-spacing:.12em; text-transform:uppercase; }
   .category-links { grid-template-columns:repeat(4,minmax(0,1fr)); align-items:stretch; }
-  .category-links .cat-cell { min-height:120px; padding:var(--card-pad); text-decoration:none; display:flex; flex-direction:column; align-items:flex-start; justify-content:space-between; }
-  .category-links .cat-cell-copy { display:grid; gap:4px; }
+  /* Horizontal (ícono izquierda, texto derecha) en vez de vertical
+     apilado -- la versión en columna con min-height:120px dejaba más
+     de la mitad del ancho vacío a la derecha del texto, mucho más
+     notorio en mobile donde las cards se apilan a 1 columna (feedback
+     real 2026-09-10). Esto usa el ancho real de la card y baja la
+     altura en los dos breakpoints, no solo mobile. */
+  .category-links .cat-cell {
+    padding: 14px var(--card-pad); text-decoration:none;
+    display:flex; flex-direction:row; align-items:center; gap: 12px;
+    background: var(--surface); box-shadow: var(--shadow); border-radius: var(--radius-lg);
+  }
+  .category-links .cat-cell-icon { width: 38px; height: 38px; border-radius: var(--radius-lg); }
+  .category-links .cat-cell-icon svg { width: 19px; height: 19px; }
+  .category-links .cat-cell-copy { display:grid; gap:2px; flex: 1; min-width: 0; }
+  /* El markup real usa <strong> sin clase propia (hereda el default
+     del body) -- estilo dedicado para que el título tenga la misma
+     jerarquía tipográfica que el resto de las cards nuevas del sitio. */
+  .category-links .cat-cell-copy strong { font-size: 15px; font-weight: 650; letter-spacing: -0.01em; color: var(--text); }
+  .category-links .cat-cell-count { font-size: 11.5px; }
   .identity-section { display:grid; gap:var(--section-gap); }
   .identity-lead { max-width:780px; }
   .identity-lead>p:last-child,.catalog-heading>p:last-child { color:var(--text-dim); line-height:1.7; }
   .identity-process { display:grid; grid-template-columns:repeat(4,1fr); gap:var(--section-gap); align-items:stretch; }
-  .identity-step,.identity-card { padding:var(--card-pad); border:1px solid var(--border); border-radius:var(--radius); background:var(--panel); box-shadow:var(--shadow); }
+  .identity-step,.identity-card { padding:var(--card-pad); border:1px solid var(--border); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow); transition:border-color var(--duration-base) ease; }
+  .identity-step:hover,.identity-card:hover { border-color:var(--accent); }
   .identity-step { display:grid; align-content:start; gap:8px; }
   .identity-step span { color:var(--text-faint); font:700 11px var(--mono); }
   .identity-step h3,.identity-step p,.identity-card h3 { margin:0; }
@@ -2724,10 +2754,28 @@
   .identity-links { display:grid; gap:8px; margin-top:auto; justify-items:start; }
   .identity-links .btn { white-space:normal; text-align:left; }
   .method-fact,.tele-row,.plugin-card { padding:var(--card-pad-sm); }
+
+  /* .identity-case ocupa el ancho completo del grid (2 cols) y usa un
+     layout propio de 2 columnas adentro (cuerpo + metadata real:
+     Source/Category/Impact) -- todos los valores son reales (categoría
+     derivada del niche real del plugin, no copiados de una referencia
+     visual), "Impact: High" es juicio editorial respaldado por un
+     hecho citable (JetBrains mismo publicó el patrón), no un número
+     inventado. */
+  .identity-case { grid-column: 1 / -1; flex-direction: row; align-items: stretch; gap: var(--section-gap); flex-wrap: wrap; }
+  .case-body { flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+  .case-meta { flex: 0 0 220px; margin: 0; padding-left: var(--section-gap); border-left: 1px solid var(--border); display: flex; flex-direction: column; gap: 14px; }
+  .case-meta-row dt { display: flex; align-items: center; gap: 7px; margin: 0 0 3px; font-family: var(--mono); font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-faint); }
+  .case-meta-row dt svg { width: 14px; height: 14px; flex: none; color: var(--accent); }
+  .case-meta-row dd { margin: 0; font-size: 13px; font-weight: 600; color: var(--text); }
+  .case-meta-note { display: block; margin-top: 2px; font-size: 11px; font-weight: 500; color: var(--text-faint); }
+  @media (max-width: 760px) { .case-meta { flex-basis: 100%; border-left: 0; padding-left: 0; border-top: 1px solid var(--border); padding-top: var(--section-gap); flex-direction: row; flex-wrap: wrap; } .case-meta-row { flex: 1 1 140px; } }
+
   @media (max-width: 900px) { .category-links,.identity-process { grid-template-columns:repeat(2,1fr); } }
   @media (max-width: 620px) { .category-links,.identity-process,.identity-grid { grid-template-columns:1fr; } .section-head{align-items:flex-start;flex-direction:column;} }
 
 </style>
+<link rel="stylesheet" href="css/shell.css">
 </head>
 <body>
 <div id="siteLoader" class="site-loader" role="status" aria-live="polite" aria-busy="true">
@@ -2755,6 +2803,7 @@
     <div class="sl-status">Fetching catalog data…</div>
   </div>
 </div>
+<div class="app-shell">
 <nav class="topbar" id="topbar">
   <div class="topbar-inner">
     <a class="topbar-brand" href="index.html" aria-label="Gap Hunter Labs">
@@ -2770,7 +2819,6 @@
         <span class="tw-tag">Plugin Intelligence</span>
       </span>
     </a>
-    <div class="topbar-nav" id="topbarNav"><a class="topbar-link" href="catalog.html">Catalog</a><a class="topbar-link" href="methodology.html">Methodology</a><a class="topbar-link" href="contact.html">Contact</a></div>
     <div class="topbar-actions">
       <div class="topbar-ext">
         <a class="topbar-ext-link" href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" target="_blank" rel="noopener" aria-label="JetBrains Marketplace" title="Gap Hunter Labs on JetBrains Marketplace">
@@ -2789,11 +2837,33 @@
           <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
           <span class="topbar-ext-label">LinkedIn</span>
         </a>
-        <button type="button" class="topbar-burger" id="topbarBurger" aria-label="Toggle navigation" aria-expanded="false" aria-controls="topbarNav"><span></span></button>
+        <button type="button" class="topbar-burger" id="topbarBurger" aria-label="Toggle navigation" aria-expanded="false" aria-controls="appSidebar"><span></span></button>
       </div>
     </div>
   </div>
 </nav>
+
+<aside class="app-sidebar" id="appSidebar">
+  <nav class="sidebar-nav" aria-label="Primary">
+    <a class="sidebar-link" href="index.html" aria-current="page"><svg viewBox="0 0 20 20" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10 10 3l7 7M5 8.5V17h10V8.5"/></svg>Home</a>
+    <a class="sidebar-link" href="catalog.html"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="11" y="3" width="6" height="6" rx="1"/><rect x="3" y="11" width="6" height="6" rx="1"/><rect x="11" y="11" width="6" height="6" rx="1"/></svg>Catalog</a>
+    <a class="sidebar-link" href="methodology.html"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8" cy="10" r="5.5" fill="none" stroke="currentColor" stroke-width="1.2" stroke-dasharray="1.6 1.8"/><circle cx="8" cy="10" r="2" fill="none" stroke="currentColor" stroke-width="1.2"/><path d="M8 4.7v1.3M8 14v1.3M2.7 10h1.3M12 10h1.3M4.3 6.3l.9.9M10.8 12.8l.9.9M4.3 13.7l.9-.9M10.8 7.2l.9-.9" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/><path d="M13.5 10h4.3M15.8 8l2 2-2 2" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>Methodology</a>
+    <a class="sidebar-link" href="contact.html"><svg viewBox="0 0 20 20" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="14" height="10" rx="1.5"/><path d="M3.5 6l6.5 5 6.5-5"/></svg>Contact</a>
+  </nav>
+  <div class="sidebar-footer">
+    <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#0151FC"/>
+      <path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z" fill="#01B3FD"/>
+      <polygon points="569,413 695,413 695,539 569,539" fill="#02F172"/>
+    </svg>
+    <span>
+      <span class="sidebar-footer-name">Gap Hunter Labs</span><br>
+      <span class="sidebar-footer-sub">Plugin Intelligence</span>
+    </span>
+  </div>
+</aside>
+
+<div class="app-main">
 <!-- Added 2026-08-21: this was a plain <div> wrapping the page's ENTIRE
      real content (hero, process strip, controls, catalog views,
      methodology) -- no <main> landmark anywhere on the page, so screen
@@ -2804,7 +2874,7 @@
      semantically confusing for the same landmark-navigation use case
      this fix is for. -->
 <main class="wrap">
-  <div class="hero" id="top">
+  <div class="hero page-hero" id="top">
     <div class="hero-brand">
       <h1 class="hero-title">Gap Hunter <span class="accent">Labs</span></h1>
       <p class="hero-kicker">Plugin Intelligence</p>
@@ -2837,7 +2907,7 @@
     <div class="cat-board category-links" id="categoryPreview"></div>
   </section>
 
-  <section class="identity-section" id="identity" aria-labelledby="identityTitle">
+  <section class="identity-section page-hero" id="identity" aria-labelledby="identityTitle">
     <div class="identity-lead">
       <p class="eyebrow">Gap Hunter Labs</p>
       <h2 id="identityTitle">We hunt gaps others miss</h2>
@@ -2851,10 +2921,26 @@
     </div>
     <div class="identity-grid">
       <article class="identity-card identity-case">
-        <p class="eyebrow">One real case</p>
-        <h3>Background ReadAction Freeze Companion</h3>
-        <p>Not the usual “a paid competitor's users are complaining” story this catalog is built around — this one is motivated directly by JetBrains' own Platform Blog.</p>
-        <a class="btn" href="https://github.com/GapHunterLabs/background-readaction-freeze-companion" target="_blank" rel="noopener">View the plugin on GitHub ↗</a>
+        <div class="case-body">
+          <p class="eyebrow">Case study</p>
+          <h3>Background ReadAction Freeze Companion</h3>
+          <p>Not the usual “a paid competitor's users are complaining” story this catalog is built around — this one is motivated directly by JetBrains' own Platform Blog: a background-thread entry point reaching a blocking, non-cancellable read-lock call, a pattern their own Platform team publicly named as a real, recurring cause of IDE freezes.</p>
+          <a class="btn" href="https://github.com/GapHunterLabs/background-readaction-freeze-companion#readme" target="_blank" rel="noopener">View evidence →</a>
+        </div>
+        <dl class="case-meta">
+          <div class="case-meta-row">
+            <dt><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h8" stroke-linecap="round"/></svg>Source</dt>
+            <dd>JetBrains Platform Blog</dd>
+          </div>
+          <div class="case-meta-row">
+            <dt><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>Category</dt>
+            <dd>Code Quality</dd>
+          </div>
+          <div class="case-meta-row">
+            <dt><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M8 1v14M2 8h12" stroke-linecap="round"/><circle cx="8" cy="8" r="6"/></svg>Impact</dt>
+            <dd>High <span class="case-meta-note">— named by JetBrains itself, not a competitor complaint</span></dd>
+          </div>
+        </dl>
       </article>
       <article class="identity-card">
         <p class="eyebrow">Built with focus</p>
@@ -2870,6 +2956,8 @@
     <div class="method-facts" id="methodFacts"></div>
   </section>
 </main>
+</div>
+</div>
 
 <footer class="site-footer">
   <div class="footer-inner">
@@ -2942,7 +3030,7 @@
     var statsDecoded = false;
 
     function renderStats() {
-      document.getElementById('heroSubtitle').textContent = 'Real state of the ' + data.totalPlugins + '-plugin catalog — every product exists because of a documented, evidence-based gap in existing tooling, not a guess.';
+      document.getElementById('heroSubtitle').textContent = 'Real state of the ' + data.totalPlugins + '-plugin catalog — every product exists because of a documented, evidence-based gap in existing tooling, not a guess. Each listing traces its gap to a real complaint, its fix to a real diff, and its traction to real download and growth numbers pulled straight from JetBrains Marketplace and GitHub — nothing here is estimated.';
       var base = 0, current = 0;
       plugins.forEach(function (p) { if (p.growthFrom != null && p.downloads != null) { base += p.growthFrom; current += p.downloads; } });
       var growth = base > 0 ? '<span class="stat-growth">▲ ' + (((current - base) / base) * 100).toFixed(1) + '%</span>' : '';
@@ -3002,6 +3090,18 @@
 
   var burger = document.getElementById('topbarBurger'), topbar = document.getElementById('topbar');
   if (burger && topbar) burger.addEventListener('click', function () { var open = topbar.classList.toggle('nav-open'); burger.setAttribute('aria-expanded', String(open)); });
+
+  // Fade el logo del pie del sidebar cuando el <footer> real entra en
+  // viewport (ver comentario en css/shell.css).
+  var siteFooter = document.querySelector('.site-footer');
+  var sidebarFooter = document.querySelector('.sidebar-footer');
+  if (siteFooter && sidebarFooter && 'IntersectionObserver' in window) {
+    new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        sidebarFooter.classList.toggle('is-near-footer', entry.isIntersecting);
+      });
+    }).observe(siteFooter);
+  }
 })();
 </script>
 <!-- GoatCounter's own tracking snippet -- the ONLY visible trace of it
