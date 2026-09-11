@@ -78,16 +78,22 @@
    "Home"/"Catalog" ocultos arriba de ese scroll interno mientras la
    página principal sí navegaba bien (se veía como "el link no
    funciona" cuando en realidad era el sidebar el que quedaba
-   scrolleado). Con solo 5 links + el logo del pie, este contenido
-   nunca necesita scroll propio en un viewport real -- max-height (no
-   height fijo) + sin overflow-y:auto elimina la posibilidad de que
-   quede scrolleado por accidente, sin perder el position:sticky. */
+   scrolleado). El fix de ese día cambió a max-height + align-self:start
+   para sacar el overflow-y:auto -- pero align-self:start hace que la
+   caja se encoja al alto de su CONTENIDO (nav + logo del pie, ~320px)
+   en vez de llenar la fila del grid, así que en cualquier página más
+   alta que eso el fondo (--surface) del sidebar terminaba a mitad de
+   pantalla y dejaba ver el fondo liso de abajo -- el "corte" reportado
+   2026-09-11. Fix real: height fijo (no max-height, así la caja SIEMPRE
+   mide el viewport completo y su fondo llega hasta el borde inferior
+   real de la pantalla) + sin overflow-y:auto (así nunca se vuelve
+   scrolleable) -- el contenido (5 links + logo) siempre entra sobrado
+   en ese alto, así que no hace falta overflow-y en absoluto. */
 .app-sidebar {
   grid-area: shell-sidebar;
   position: sticky;
   top: var(--shell-header-h);
-  align-self: start;
-  max-height: calc(100vh - var(--shell-header-h));
+  height: calc(100vh - var(--shell-header-h));
   background: var(--surface);
   border-right: 1px solid var(--border);
   padding: var(--space-5) var(--space-3);
