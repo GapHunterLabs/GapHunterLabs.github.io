@@ -3546,6 +3546,7 @@
       <a class="btn" href="https://marketplace.visualstudio.com/publishers/GapHunterLabs" target="_blank" rel="noopener">View publisher page ↗</a>
     </div>
     <div class="vsx-grid" id="vsxGrid"></div>
+    <div id="vsxPager"></div>
   </section>
 
 </main>
@@ -3618,13 +3619,28 @@
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
+  // 2026-09-11: paginated at the user's explicit request (31 extensions
+  // made the section a very long unbroken scroll) -- same
+  // .catalog-pager/.catalog-pager-btn/.catalog-pager-status classes the
+  // JetBrains grid's own pager uses above, for one consistent pager
+  // look site-wide, but with its own local page state: this section is
+  // a separate IIFE/data source (GapVSCode, not GapCatalog) so it can't
+  // share that pager's catalogPage variable.
+  var VSX_PAGE_SIZE = 10;
+  var vsxPage = 1;
+  var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
   GapVSCode.ready.then(function (data) {
     var section = document.getElementById('vsxSection');
     var grid = document.getElementById('vsxGrid');
     var subtitle = document.getElementById('vsxSubtitle');
+    var pagerHost = document.getElementById('vsxPager');
     if (!section || !grid || !data.extensions.length) return;
-    subtitle.textContent = data.extensions.length + ' extensions published for VS Code -- same evidence-driven approach, a different editor.';
-    grid.innerHTML = data.extensions.map(function (e) {
+    var extensions = data.extensions;
+    subtitle.textContent = extensions.length + ' extensions published for VS Code -- same evidence-driven approach, a different editor.';
+
+    function pageCount() { return Math.max(1, Math.ceil(extensions.length / VSX_PAGE_SIZE)); }
+    function cardHtml(e) {
       return '<div class="vsx-card">' +
         '<div class="vsx-card-name">' + esc(e.displayName) + '</div>' +
         '<div class="vsx-card-niche">' + esc(e.niche) + '</div>' +
@@ -3633,7 +3649,33 @@
         '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg>' +
         'View on VS Code Marketplace</a>' +
         '</div>';
-    }).join('');
+    }
+    function pagerHtml() {
+      var pages = pageCount();
+      if (pages <= 1) return '';
+      return '<nav class="catalog-pager" aria-label="VS Code extension pages">' +
+        '<button type="button" class="btn catalog-pager-btn" data-vsx-dir="-1" aria-label="Previous page"' + (vsxPage <= 1 ? ' disabled' : '') + '>Previous</button>' +
+        '<span class="catalog-pager-status" aria-live="polite">Page ' + vsxPage + ' of ' + pages + '</span>' +
+        '<button type="button" class="btn catalog-pager-btn" data-vsx-dir="1" aria-label="Next page"' + (vsxPage >= pages ? ' disabled' : '') + '>Next</button>' +
+        '</nav>';
+    }
+    function render() {
+      var pages = pageCount();
+      if (vsxPage > pages) vsxPage = pages;
+      if (vsxPage < 1) vsxPage = 1;
+      var start = (vsxPage - 1) * VSX_PAGE_SIZE;
+      grid.innerHTML = extensions.slice(start, start + VSX_PAGE_SIZE).map(cardHtml).join('');
+      if (!pagerHost) return;
+      pagerHost.innerHTML = pagerHtml();
+      Array.prototype.forEach.call(pagerHost.querySelectorAll('[data-vsx-dir]'), function (btn) {
+        btn.addEventListener('click', function () {
+          vsxPage = Math.min(pageCount(), Math.max(1, vsxPage + parseInt(btn.getAttribute('data-vsx-dir'), 10)));
+          render();
+          section.scrollIntoView({ block: 'start', behavior: reducedMotion ? 'auto' : 'smooth' });
+        });
+      });
+    }
+    render();
     section.hidden = false;
   }).catch(function (error) {
     // Non-fatal: this section is additive to the page, never gates it
@@ -3644,7 +3686,19 @@
 </script>
 <script>
 (function () {
-GapCatalog.ready.then(function (shared) {
+Promise.all([
+  GapCatalog.ready,
+  // 2026-09-11: cross-reference for the dossier's "Download for VS
+  // Code" button -- additive only, same non-fatal contract as the vsx
+  // section below (js/vscode-catalog.js's own header comment): if this
+  // fetch fails, the JetBrains catalog still renders exactly as
+  // before, it just never matches a VS Code port (empty map) instead
+  // of blocking the whole page on a second marketplace's outage.
+  GapVSCode.ready.then(function (d) { return d.extensions; }).catch(function () { return []; })
+]).then(function (results) {
+  var shared = results[0];
+  var vsxByRepo = {};
+  results[1].forEach(function (e) { vsxByRepo[e.name] = e; });
   var data = shared.data;
   var plugins = shared.plugins;
   var CATEGORIES = shared.CATEGORIES;
@@ -3957,6 +4011,12 @@ GapCatalog.ready.then(function (shared) {
     html += '<div class="dossier-links">';
     if (p.marketplaceUrl) html += '<a class="btn primary" href="' + esc(safeUrl(p.marketplaceUrl)) + '" target="_blank" rel="noopener"><span class="btn-icon">' + ICONS.jetbrains + '</span>Install on JetBrains ↗</a>';
     html += '<a class="btn" href="' + esc(safeUrl(p.githubUrl)) + '" target="_blank" rel="noopener"><span class="btn-icon">' + ICONS.github + '</span>View on GitHub ↗</a>';
+    // 2026-09-11: real cross-reference (vsxByRepo, keyed by the same
+    // repo slug both marketplaces share, e.g. "cert-companion") -- only
+    // ports that actually exist and are live on the VS Code Marketplace
+    // get this button, never every plugin.
+    var vsxMatch = vsxByRepo[p.repo];
+    if (vsxMatch) html += '<a class="btn" href="' + esc(safeUrl(vsxMatch.marketplaceUrl)) + '" target="_blank" rel="noopener"><span class="btn-icon">' + ICONS.vscode + '</span>Download for VS Code ↗</a>';
     html += '</div>';
     if (gifUrl) {
       // onerror moved to a real addEventListener in
@@ -4027,6 +4087,8 @@ GapCatalog.ready.then(function (shared) {
     html += '<div class="tbl-links">';
     if (p.marketplaceUrl) html += '<a class="btn primary" href="' + esc(safeUrl(p.marketplaceUrl)) + '" target="_blank" rel="noopener"><span class="btn-icon">' + ICONS.jetbrains + '</span>Install on JetBrains ↗</a>';
     html += '<a class="btn" href="' + esc(safeUrl(p.githubUrl)) + '" target="_blank" rel="noopener"><span class="btn-icon">' + ICONS.github + '</span>View on GitHub ↗</a>';
+    var vsxMatchTbl = vsxByRepo[p.repo];
+    if (vsxMatchTbl) html += '<a class="btn" href="' + esc(safeUrl(vsxMatchTbl.marketplaceUrl)) + '" target="_blank" rel="noopener"><span class="btn-icon">' + ICONS.vscode + '</span>Download for VS Code ↗</a>';
     html += '</div>';
     html += '</div>';
 
