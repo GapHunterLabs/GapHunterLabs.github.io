@@ -334,18 +334,25 @@ def refresh_seo_from_data():
     print("[auto_update] catalog SEO refreshed from external data (%d plugins)" % len(rows))
 
 
-def update_static_counts(path, rows, include_hero=False):
+def update_static_counts(path, rows):
     with open(path, encoding="utf-8") as f:
         page = f.read()
     total = len(rows)
     swaps = [
         (re.compile(r'(id="footerStatusText">)\d+( plugins tracked)'), r"\g<1>%d\g<2>" % total),
     ]
-    if include_hero:
-        swaps.append((
-            re.compile(r'(id="heroSubtitle">Real state of the )\d+(-plugin catalog)'),
-            r"\g<1>%d\g<2>" % total,
-        ))
+    # 2026-09-11 (cron incident): a hero-subtitle marker used to live
+    # here too ("Real state of the N-plugin catalog"), but commit
+    # bcd7753 (2026-09-10, "Rewrite hero subtitle to lead with the
+    # mission") replaced that copy with a generic no-JS mission
+    # statement that embeds no count at all -- the live count now only
+    # ever reaches #heroSubtitle via the JS hydration in index.html
+    # (which sets its own textContent from data.totalPlugins at
+    # runtime, independent of this script). That silently broke every
+    # scheduled run since (regex stopped matching -> sys.exit here) --
+    # the marker is intentionally gone from the static HTML now, not a
+    # bug to restore; removing the dead swap instead of re-adding a
+    # count to copy that was deliberately rewritten to not have one.
     for rx, repl in swaps:
         page, count = rx.subn(repl, page, count=1)
         if count != 1:
@@ -502,7 +509,7 @@ def main():
         json.dump(data, f, ensure_ascii=False, indent=2)
         f.write("\n")
 
-    update_static_counts(INDEX_PATH, rows, include_hero=True)
+    update_static_counts(INDEX_PATH, rows)
     update_static_counts(CATALOG_PATH, rows)
     refresh_seo_from_data()
     print("[auto_update] external catalog JSON and static page counts updated")
