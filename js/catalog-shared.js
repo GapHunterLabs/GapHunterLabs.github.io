@@ -92,7 +92,13 @@
     copyCheck: '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5 6.2 12 13 4"/></svg>',
     // A generic plugin puzzle icon stays legible at button size and
     // matches the currentColor outline language used by the icon set.
-    jetbrains: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M7.5 3.5h3v1.75a1.25 1.25 0 0 0 2.5 0V3.5h3v3h-1.75a1.25 1.25 0 0 0 0 2.5h1.75v3h-3v-1.75a1.25 1.25 0 0 0-2.5 0V12h-3V9h1.75a1.25 1.25 0 0 0 0-2.5H7.5Z"/></svg>'
+    jetbrains: '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"><path d="M7.5 3.5h3v1.75a1.25 1.25 0 0 0 2.5 0V3.5h3v3h-1.75a1.25 1.25 0 0 0 0 2.5h1.75v3h-3v-1.75a1.25 1.25 0 0 0-2.5 0V12h-3V9h1.75a1.25 1.25 0 0 0 0-2.5H7.5Z"/></svg>',
+    // 2026-09-11: real VS Code logo mark, same path already used
+    // elsewhere on the site (vsx section header, footer "VS Code
+    // Marketplace" link) -- reused here so the new "Download for VS
+    // Code" dossier button matches those exactly instead of a
+    // different approximation.
+    vscode: '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z"/></svg>'
   };
 
   var NICHE_TO_CATEGORY = {

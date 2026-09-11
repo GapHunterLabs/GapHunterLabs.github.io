@@ -1,6 +1,6 @@
 {
   "_comment": "Curated fields per VS Code extension -- displayName/pitch/niche/repo. Mirrors the shape of catalog_static_metadata.json but is a fully separate namespace (kept apart so the JetBrains-only parity checks in update-catalog.yml never see these entries). Live metrics (installs/rating/version/publishedDate) are NOT stored here -- pipeline/auto_update_vscode_catalog.py fetches those from the VS Code Marketplace public gallery API and merges them in at generation time.",
-  "generatedAt": "2026-09-09",
+  "generatedAt": "2026-09-11",
   "extensions": {
     "android-unused-permission-companion": {
       "displayName": "Android Unused Permission Companion",
@@ -13,6 +13,18 @@
       "pitch": "Wraps `cargo audit --json` as inline VS Code diagnostics on Cargo.toml -- RustSec advisories at the exact dependency line.",
       "niche": "Rust Tooling",
       "repo": "vscode-cargo-audit-companion"
+    },
+    "cert-companion": {
+      "displayName": "Cert Companion",
+      "pitch": "Decodes X.509 certificates (PEM/CRT/CER/DER) inline -- subject, issuer, validity, fingerprint, right in the editor.",
+      "niche": "Certificates / X.509",
+      "repo": "vscode-cert-companion"
+    },
+    "circular-dependency-companion": {
+      "displayName": "Circular Dependency Companion",
+      "pitch": "Flags real circular dependencies between modules of a multi-module Gradle project -- 100% static text parsing, no Gradle daemon.",
+      "niche": "Build Tooling / Architecture",
+      "repo": "vscode-circular-dependency-companion"
     },
     "codeowners-validator-companion": {
       "displayName": "CODEOWNERS Validator Companion",
@@ -56,6 +68,18 @@
       "niche": "JWT / Auth Tooling",
       "repo": "vscode-jwt-companion"
     },
+    "log-format-string-companion": {
+      "displayName": "Log Format String Companion",
+      "pitch": "Flags a log call whose placeholder count doesn't match its argument count -- SLF4J `{}` and Python `%`-style format strings.",
+      "niche": "Code Quality / Logging",
+      "repo": "vscode-log-format-string-companion"
+    },
+    "merge-conflict-leftover-companion": {
+      "displayName": "Merge Conflict Leftover Companion",
+      "pitch": "Finds leftover Git conflict markers (`<<<<<<<`, `=======`, `>>>>>>>`) accidentally committed in any file.",
+      "niche": "VCS / Git Workflow",
+      "repo": "vscode-merge-conflict-leftover-companion"
+    },
     "mlflow-companion": {
       "displayName": "MLflow Companion",
       "pitch": "Browses local MLflow tracking-store runs (params, metrics, tags) in a sidebar tree, reading the store directly.",
@@ -86,11 +110,47 @@
       "niche": "API Contract Testing",
       "repo": "vscode-pact-contract-companion"
     },
+    "php-composer-script-companion": {
+      "displayName": "PHP Composer Script Companion",
+      "pitch": "Flags an orphan `composer.json` script -- never called from itself, CI configs, or README.md.",
+      "niche": "PHP Tooling",
+      "repo": "vscode-php-composer-script-companion"
+    },
+    "php-security-companion": {
+      "displayName": "PHP Security Companion",
+      "pitch": "5 turnkey PHP injection-sink checks in one extension: SQL, shell, file inclusion, function injection, and open redirect.",
+      "niche": "PHP Security",
+      "repo": "vscode-php-security-companion"
+    },
+    "postman-openapi-drift-companion": {
+      "displayName": "Postman OpenAPI Drift Companion",
+      "pitch": "Warns when a Postman collection endpoint's method+path no longer exists in the project's OpenAPI/Swagger spec.",
+      "niche": "OpenAPI/Swagger Tooling",
+      "repo": "vscode-postman-openapi-drift-companion"
+    },
     "prometheus-alert-rule-companion": {
       "displayName": "Prometheus Alert Rule Companion",
       "pitch": "Lints Prometheus alert rule YAML -- duplicate alert names, missing 'for', missing annotations.",
       "niche": "Observability Tooling",
       "repo": "vscode-prometheus-alert-rule-companion"
+    },
+    "ruby-companion": {
+      "displayName": "Ruby Companion",
+      "pitch": "3 turnkey Ruby checks in one extension: shell injection, Net::HTTP reuse in a loop, and ungrouped dev/test gems in Gemfile.",
+      "niche": "Ruby Tooling",
+      "repo": "vscode-ruby-companion"
+    },
+    "semver-bump-mismatch-companion": {
+      "displayName": "Semver Bump Mismatch Companion",
+      "pitch": "Flags a CHANGELOG.md release that reads as a breaking change but didn't bump MAJOR.",
+      "niche": "VCS / Git Workflow",
+      "repo": "vscode-semver-bump-mismatch-companion"
+    },
+    "sql-concatenation-companion": {
+      "displayName": "SQL Concatenation Companion",
+      "pitch": "Finds SQL built by unparameterized string concatenation or interpolation, then executed, across Java/Kotlin/Python.",
+      "niche": "SQL Injection Detection",
+      "repo": "vscode-sql-concatenation-companion"
     },
     "turborepo-graph-companion": {
       "displayName": "Turborepo Graph Companion",
