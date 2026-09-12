@@ -307,11 +307,23 @@
 }
 @media (max-width: 840px) {
   .app-shell { grid-template-columns: 1fr; grid-template-areas: "shell-header" "shell-main"; }
+  /* Bug real reportado 2026-09-12: con bottom:0 + height:auto, un
+     elemento position:fixed con top Y bottom fijos se ESTIRA para
+     llenar ese hueco (no se ajusta a su contenido) -- el drawer medía
+     788px reales (viewport completo) aunque nav+logo (.sidebar-footer,
+     que ya usa margin-top:auto para pegarse abajo DE LO QUE HAYA)
+     miden ~320px, dejando ~460px de hueco vacio entre "Contact" y el
+     logo. bottom:0 nunca debio estar en un drawer mobile -- eso tiene
+     sentido en el sidebar sticky de escritorio (llenar el viewport
+     completo es el punto), no en un panel que se abre y cierra, donde
+     lo esperable es que termine justo debajo de su propio contenido.
+     Fix: sacar bottom:0, max-height como tope de seguridad (nunca se
+     activa en la práctica, nav+logo siempre entran sobrados). */
   .app-sidebar {
     position: fixed;
     top: var(--shell-header-h);
     left: 0;
-    bottom: 0;
+    max-height: calc(100vh - var(--shell-header-h));
     width: min(var(--sidebar-w), 82vw);
     height: auto;
     transform: translateX(-100%);
