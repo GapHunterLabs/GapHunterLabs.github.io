@@ -98,14 +98,38 @@ jobs:
           print("catalog JSON/SEO parity OK (%s plugins)" % totals[0])
           PYEOF
 
+      # 2026-09-11: bug real -- este workflow y update-vscode-catalog.yml
+      # corren en el MISMO cron ("0 5 * * *" / "0 22 * * *"), asi que
+      # cuando los dos tienen cambios reales el mismo dia, uno de los dos
+      # push siempre puede llegar unos segundos despues de que el otro ya
+      # actualizo `main` -- confirmado en vivo (run #47, commit 6402a083
+      # de update-vscode-catalog.yml aterrizo en main a las 23:42:24Z,
+      # este job intento pushear su propio commit a las 23:43:09Z y
+      # `git push` fue rechazado con "! [rejected] main -> main (fetch
+      # first)"). El job entero fallaba en rojo y el commit local del
+      # runner se perdia (el runner se destruye al terminar) -- la
+      # proxima corrida programada, 12h despues, s notaba pero perdia
+      # esa actualizacion puntual. Fix: reintentar con fetch+rebase (los
+      # archivos son 100% generados, no hay edicion manual con la que
+      # pueda chocar un rebase real) antes de rendirse.
       - name: Commit and push if data changed
         run: |
           git config user.name "Gap Hunter Labs"
           git config user.email "gaphunterlabs@gmail.com"
           if git diff --quiet -- data/catalog-data.json catalog/index.html index.html sitemap.xml pipeline/catalog_daily_history.json pipeline/catalog_latest_data.json; then
             echo "sin cambios reales en los datos, no se commitea nada"
-          else
-            git add data/catalog-data.json catalog/index.html index.html sitemap.xml pipeline/catalog_daily_history.json pipeline/catalog_latest_data.json
-            git commit -m "Auto-update catalog data ($(date -u +%Y-%m-%d))"
-            git push
+            exit 0
           fi
+          git add data/catalog-data.json catalog/index.html index.html sitemap.xml pipeline/catalog_daily_history.json pipeline/catalog_latest_data.json
+          git commit -m "Auto-update catalog data ($(date -u +%Y-%m-%d))"
+          for i in 1 2 3 4 5; do
+            if git push; then
+              exit 0
+            fi
+            echo "push rechazado (probable carrera con update-vscode-catalog.yml, intento $i/5) -- fetch+rebase y reintentar"
+            sleep $(( (RANDOM % 10) + 5 ))
+            git fetch origin main
+            git rebase origin/main
+          done
+          echo "push fallo tras 5 intentos -- abortando" >&2
+          exit 1

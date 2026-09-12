@@ -34,14 +34,30 @@ jobs:
       - name: Run auto-update
         run: python pipeline/auto_update_vscode_catalog.py
 
+      # 2026-09-11: mismo cron que update-catalog.yml ("0 5 * * *" /
+      # "0 22 * * *") -- los dos jobs pueden pushear a `main` casi al
+      # mismo tiempo. Confirmado en vivo: este job commiteo primero (run
+      # #47 de update-catalog.yml se rechazo por esto). Mismo fix ahi:
+      # reintentar con fetch+rebase antes de rendirse (archivos 100%
+      # generados, sin edicion manual con la que un rebase pueda chocar).
       - name: Commit and push if data changed
         run: |
           git config user.name "Gap Hunter Labs"
           git config user.email "gaphunterlabs@gmail.com"
           if git diff --quiet -- data/vscode-catalog-data.json; then
             echo "sin cambios reales en los datos, no se commitea nada"
-          else
-            git add data/vscode-catalog-data.json
-            git commit -m "Auto-update VS Code catalog data ($(date -u +%Y-%m-%d))"
-            git push
+            exit 0
           fi
+          git add data/vscode-catalog-data.json
+          git commit -m "Auto-update VS Code catalog data ($(date -u +%Y-%m-%d))"
+          for i in 1 2 3 4 5; do
+            if git push; then
+              exit 0
+            fi
+            echo "push rechazado (probable carrera con update-catalog.yml, intento $i/5) -- fetch+rebase y reintentar"
+            sleep $(( (RANDOM % 10) + 5 ))
+            git fetch origin main
+            git rebase origin/main
+          done
+          echo "push fallo tras 5 intentos -- abortando" >&2
+          exit 1
