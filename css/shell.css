@@ -71,44 +71,65 @@
    llega al borde derecho real. */
 .app-shell .topbar-inner { grid-template-columns: minmax(0, 1fr) auto; }
 
-/* Historial de esta regla, 3 bugs reales en 3 días seguidos -- cada fix
-   corrigió el reportado sin pensar en el efecto sobre los otros dos:
-   1. 2026-09-09/10: height:100vh + overflow-y:auto -- el sidebar tenía
-      su PROPIO scroll interno, la rueda del mouse sobre él scrolleaba
-      el sidebar en vez de la página ("el link no funciona").
-   2. 2026-09-10->11: fix de (1) cambió a max-height + align-self:start
-      para sacar overflow-y:auto -- pero align-self:start encoge la caja
-      al alto de su CONTENIDO (nav + logo, ~320px) en vez de llenar la
-      fila del grid, así que en cualquier página más alta que eso el
-      fondo (--surface) terminaba a mitad de pantalla ("el corte").
-   3. 2026-09-11->12: fix de (2) volvió a un height FIJO
-      (calc(100vh - header)) -- soluciona (2) en páginas de un viewport
-      exacto, pero ".app-shell" tiene "grid-template-rows: ... 1fr" +
-      "min-height:100vh", así que en CUALQUIER página cuyo contenido de
-      shell-main (incluido el footer) supere un viewport, esa fila del
-      grid crece más allá de 100vh -- y el sidebar, con su height fijo a
-      exactamente un viewport, se queda corto contra esa fila más alta:
-      mismo "corte" que (2), ahora justo antes del footer en vez de a
-      mitad de página.
-   Fix real (los 3 a la vez): height:100% -- un grid item sin height
-   fijo ya se estira por defecto (align-items:stretch, el default del
-   contenedor) al alto REAL de su fila, que siempre es >= 100vh (por el
-   min-height del shell) y crece con el contenido si hace falta (fila
-   1fr) -- eso resuelve (3) sin reintroducir (2) (no hay align-self:start
-   ni max-height acá). Sigue sin overflow-y:auto, así que (1) tampoco
-   vuelve: el contenido (5 links + logo, ~320px) siempre entra sobrado
-   en una caja que como mínimo mide el viewport completo. */
+/* Historial de esta regla, 5 bugs reales en 4 días -- cada fix anterior
+   corrigió lo reportado a costa de otra cosa (ver commits del
+   2026-09-09 al 2026-09-12): height:100vh+overflow-y:auto (scroll
+   interno) -> max-height+align-self:start (se encoge al contenido) ->
+   height fijo a 1 viewport (corta antes del footer en paginas largas)
+   -> height:100% de una fila que ahora incluye el footer (empuja
+   .sidebar-footer, que usa margin-top:auto, hasta el fondo REAL de la
+   pagina -- rompe el timing del fade con el footer real, que dependia
+   de que el logo quedara cerca del final del contenido principal, no
+   de toda la pagina).
+
+   Causa de fondo de los ultimos 3 intentos: intentar que la CAJA del
+   sidebar "sepa" hasta donde llega el footer (que ademas varia por
+   pagina -- index/catalog usan margin-top:var(--section-gap) en el
+   footer, el resto usa margin-top:auto) mezclaba dos cosas que no
+   deberian depender una de la otra: (a) el tamaño de la caja real que
+   contiene nav+logo (del que depende el fade), y (b) la continuidad
+   VISUAL de la franja oscura hasta el borde real de abajo de la
+   pagina, footer incluido.
+
+   Fix real: separar los dos. (a) esta caja vuelve a su tamaño simple
+   de 1 viewport (el que ya funcionaba bien para el fade antes de que
+   se tocara nada de esto) -- sticky + sin overflow-y seguyen evitando
+   el bug original de scroll interno. (b) la franja oscura de ancho
+   completo hasta el fondo real vive en el FONDO de <body> (ver regla
+   nueva mas abajo) -- un background de body/html cubre el canvas
+   completo (toda la altura real scrolleable), sin el problema de
+   "necesito saber la altura de que" que arrastraban las 3 versiones
+   anteriores. */
 .app-sidebar {
   grid-area: shell-sidebar;
   position: sticky;
   top: var(--shell-header-h);
-  height: 100%;
+  height: calc(100vh - var(--shell-header-h));
   background: var(--surface);
   border-right: 1px solid var(--border);
   padding: var(--space-5) var(--space-3);
   display: flex;
   flex-direction: column;
   gap: var(--space-6);
+}
+
+/* Franja oscura de ancho = sidebar, hasta el borde real de abajo de la
+   pagina (footer incluido, sin importar su margin-top por pagina) --
+   pintada en <body>, no en .app-sidebar (ver comentario arriba). El
+   radial-gradient decorativo es IDENTICO en las 6 paginas (confirmado
+   por grep) y se preserva tal cual, solo se agrega la franja como
+   segunda capa -- reemplazar "background-image" a secas perderia esa
+   decoracion en vez de sumarse a ella. Solo en escritorio: en movil no
+   hay columna de sidebar persistente (es un drawer superpuesto), pintar
+   la franja ahi dejaria una banda oscura fantasma sin sidebar visible. */
+@media (min-width: 841px) {
+  body {
+    background-color: var(--bg);
+    background-repeat: no-repeat;
+    background-image:
+      radial-gradient(ellipse 1200px 640px at 50% 0%, rgba(63,162,255,0.07), transparent 60%),
+      linear-gradient(to right, var(--surface) 0, var(--surface) var(--sidebar-w), transparent var(--sidebar-w));
+  }
 }
 
 .sidebar-nav {
