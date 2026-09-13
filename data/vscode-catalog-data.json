@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-09-13 09:54:57 UTC",
+  "generatedAt": "2026-09-13 23:47:56 UTC",
   "totalExtensions": 31,
-  "totalInstalls": 24,
+  "totalInstalls": 28,
   "pendingCount": 0,
   "extensions": [
     {
@@ -57,9 +57,9 @@
       "repo": "vscode-cert-companion",
       "githubUrl": "https://github.com/GapHunterLabs/vscode-cert-companion",
       "marketplaceUrl": "https://marketplace.visualstudio.com/items?itemName=GapHunterLabs.cert-companion",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "publishedDate": "2026-09-10T00:13:33.757Z",
-      "lastUpdated": "2026-09-10T00:18:53.623Z",
+      "lastUpdated": "2026-09-13T23:32:34.073Z",
       "installs": 1,
       "rating": null,
       "ratingCount": 0
@@ -195,7 +195,7 @@
       "version": "0.1.0",
       "publishedDate": "2026-09-09T02:12:50.447Z",
       "lastUpdated": "2026-09-09T02:18:10.343Z",
-      "installs": 0,
+      "installs": 2,
       "rating": null,
       "ratingCount": 0
     },
@@ -390,7 +390,7 @@
       "version": "0.1.0",
       "publishedDate": "2026-09-09T02:13:04.737Z",
       "lastUpdated": "2026-09-09T02:18:23.07Z",
-      "installs": 0,
+      "installs": 1,
       "rating": null,
       "ratingCount": 0
     },
@@ -420,7 +420,7 @@
       "version": "0.1.0",
       "publishedDate": "2026-09-09T02:09:38.153Z",
       "lastUpdated": "2026-09-09T02:14:23.63Z",
-      "installs": 0,
+      "installs": 1,
       "rating": null,
       "ratingCount": 0
     },
