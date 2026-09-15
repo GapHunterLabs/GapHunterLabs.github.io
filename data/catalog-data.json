@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-14 10:21:00 UTC",
+  "generatedAt": "2026-09-15 00:06:44 UTC",
   "totalPlugins": 146,
   "totalDownloads": 4870,
   "pending": 0,
@@ -7,10 +7,6 @@
   "totalReviews": 0,
   "avgRating": null,
   "trend7d": [
-    {
-      "date": "2026-09-08",
-      "totalDownloads": 4523
-    },
     {
       "date": "2026-09-09",
       "totalDownloads": 4672
@@ -34,44 +30,13 @@
     {
       "date": "2026-09-14",
       "totalDownloads": 4870
+    },
+    {
+      "date": "2026-09-15",
+      "totalDownloads": 4870
     }
   ],
   "recentChanges": [
-    {
-      "date": "2026-09-14",
-      "type": "growth",
-      "name": "PHP Composer Script Companion",
-      "niche": "Node.js / npm Tooling",
-      "delta": 4
-    },
-    {
-      "date": "2026-09-14",
-      "type": "growth",
-      "name": "Mermaid Companion",
-      "niche": "Diagrams",
-      "delta": 4
-    },
-    {
-      "date": "2026-09-14",
-      "type": "growth",
-      "name": "Spreadsheet Companion",
-      "niche": "CSV/XLSX Tooling",
-      "delta": 2
-    },
-    {
-      "date": "2026-09-14",
-      "type": "growth",
-      "name": "React Native Companion",
-      "niche": "React Native Tooling",
-      "delta": 2
-    },
-    {
-      "date": "2026-09-14",
-      "type": "growth",
-      "name": "Material Companion",
-      "niche": "Editor Theme",
-      "delta": 2
-    },
     {
       "date": "2026-09-02",
       "type": "new",
@@ -89,6 +54,36 @@
       "type": "new",
       "name": "AWS S3 Public ACL via SDK Companion",
       "niche": "AWS Security"
+    },
+    {
+      "date": "2026-09-02",
+      "type": "new",
+      "name": "Kubernetes Missing Readiness/Liveness Probe Companion",
+      "niche": "Kubernetes Tooling"
+    },
+    {
+      "date": "2026-09-02",
+      "type": "new",
+      "name": "Kubernetes RBAC Wildcard Companion",
+      "niche": "Kubernetes Security"
+    },
+    {
+      "date": "2026-09-02",
+      "type": "new",
+      "name": "CompletableFuture Cancellation Propagation Companion",
+      "niche": "Concurrency / Async Bugs"
+    },
+    {
+      "date": "2026-09-02",
+      "type": "new",
+      "name": "ReDoS Catastrophic-Backtracking Companion",
+      "niche": "ReDoS Detection"
+    },
+    {
+      "date": "2026-09-02",
+      "type": "new",
+      "name": "SSRF via Unsanitized URL Companion",
+      "niche": "SSRF Detection"
     }
   ],
   "plugins": [
