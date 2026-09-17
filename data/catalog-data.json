@@ -1,16 +1,12 @@
 {
-  "generatedAt": "2026-09-16 23:59:23 UTC",
+  "generatedAt": "2026-09-17 09:50:39 UTC",
   "totalPlugins": 146,
-  "totalDownloads": 4942,
+  "totalDownloads": 4971,
   "pending": 0,
   "totalStars": 0,
   "totalReviews": 0,
   "avgRating": null,
   "trend7d": [
-    {
-      "date": "2026-09-10",
-      "totalDownloads": 4708
-    },
     {
       "date": "2026-09-11",
       "totalDownloads": 4749
@@ -34,61 +30,47 @@
     {
       "date": "2026-09-16",
       "totalDownloads": 4942
+    },
+    {
+      "date": "2026-09-17",
+      "totalDownloads": 4971
     }
   ],
   "recentChanges": [
     {
-      "date": "2026-09-16",
+      "date": "2026-09-17",
       "type": "growth",
       "name": "Mermaid Companion",
       "niche": "Diagrams",
-      "delta": 21
+      "delta": 8
     },
     {
-      "date": "2026-09-16",
+      "date": "2026-09-17",
       "type": "growth",
-      "name": "Kafka Topic Feedback-Loop Companion",
-      "niche": "Kafka / Messaging Bugs",
-      "delta": 2
+      "name": "Dependency Vulnerability Companion",
+      "niche": "Dependency / SCA Security",
+      "delta": 5
     },
     {
-      "date": "2026-09-16",
-      "type": "growth",
-      "name": "Firestore Companion",
-      "niche": "Firestore / Database",
-      "delta": 2
-    },
-    {
-      "date": "2026-09-16",
+      "date": "2026-09-17",
       "type": "growth",
       "name": "XSD Companion",
       "niche": "XSD/WSDL Tooling",
-      "delta": 1
+      "delta": 2
     },
     {
-      "date": "2026-09-16",
+      "date": "2026-09-17",
       "type": "growth",
-      "name": "Unsafe Deserialization Sink Companion",
-      "niche": "Deserialization Security",
-      "delta": 1
+      "name": "React Native Companion",
+      "niche": "React Native Tooling",
+      "delta": 2
     },
     {
-      "date": "2026-09-02",
-      "type": "new",
-      "name": "Dockerfile Missing USER Instruction Companion",
-      "niche": "Docker / DevOps"
-    },
-    {
-      "date": "2026-09-02",
-      "type": "new",
-      "name": "Terraform IAM Wildcard Companion",
-      "niche": "IAM / Cloud Security"
-    },
-    {
-      "date": "2026-09-02",
-      "type": "new",
-      "name": "AWS S3 Public ACL via SDK Companion",
-      "niche": "AWS Security"
+      "date": "2026-09-17",
+      "type": "growth",
+      "name": "Postman OpenAPI Drift Companion",
+      "niche": "OpenAPI/Swagger Tooling",
+      "delta": 2
     }
   ],
   "plugins": [
@@ -102,12 +84,12 @@
       "firstPublished": "2026-08-27",
       "repo": "mermaid-companion",
       "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33340-mermaid-companion",
-      "downloads": 364,
+      "downloads": 372,
       "pricing": "FREE",
       "reviews": 0,
       "rating": null,
       "stars": 0,
-      "growth": 405.6,
+      "growth": 416.7,
       "growthSince": "2026-08-18",
       "growthFrom": 72
     },
@@ -121,12 +103,12 @@
       "firstPublished": "2026-08-27",
       "repo": "react-native-companion",
       "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33093-react-native-companion",
-      "downloads": 260,
+      "downloads": 262,
       "pricing": "FREE",
       "reviews": 0,
       "rating": null,
       "stars": 0,
-      "growth": 114.9,
+      "growth": 116.5,
       "growthSince": "2026-08-18",
       "growthFrom": 121
     },
@@ -159,12 +141,12 @@
       "firstPublished": "2026-08-31",
       "repo": "gitlab-ci-companion",
       "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33317-gitlab-ci-companion",
-      "downloads": 148,
+      "downloads": 150,
       "pricing": "FREE",
       "reviews": 0,
       "rating": null,
       "stars": 0,
-      "growth": 142.6,
+      "growth": 145.9,
       "growthSince": "2026-08-18",
       "growthFrom": 61
     },
@@ -197,12 +179,12 @@
       "firstPublished": "2026-08-27",
       "repo": "jwt-companion",
       "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33316-jwt-companion",
-      "downloads": 111,
+      "downloads": 112,
       "pricing": "FREE",
       "reviews": 0,
       "rating": null,
       "stars": 0,
-      "growth": 184.6,
+      "growth": 187.2,
       "growthSince": "2026-08-18",
       "growthFrom": 39
     },
@@ -235,12 +217,12 @@
       "firstPublished": "2026-08-31",
       "repo": "xsd-companion",
       "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33392-xsd-companion",
-      "downloads": 100,
+      "downloads": 102,
       "pricing": "FREE",
       "reviews": 0,
       "rating": null,
       "stars": 0,
-      "growth": 203.0,
+      "growth": 209.1,
       "growthSince": "2026-08-18",
       "growthFrom": 33
     },
@@ -311,12 +293,12 @@
       "firstPublished": "2026-08-06",
       "repo": "spreadsheet-companion",
       "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33095-spreadsheet-companion",
-      "downloads": 81,
+      "downloads": 82,
       "pricing": "FREE",
       "reviews": 0,
       "rating": null,
       "stars": 0,
-      "growth": 52.8,
+      "growth": 54.7,
       "growthSince": "2026-08-18",
       "growthFrom": 53
     },
@@ -444,12 +426,12 @@
       "firstPublished": "2026-08-31",
       "repo": "jenkinsfile-companion",
       "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33390-jenkinsfile-companion",
-      "downloads": 66,
+      "downloads": 67,
       "pricing": "FREE",
       "reviews": 0,
       "rating": null,
       "stars": 0,
-      "growth": 266.7,
+      "growth": 272.2,
       "growthSince": "2026-08-18",
       "growthFrom": 18
     },
@@ -463,12 +445,12 @@
       "firstPublished": "2026-08-27",
       "repo": "cmake-companion",
       "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33339-cmake-companion",
-      "downloads": 59,
+      "downloads": 60,
       "pricing": "FREE",
       "reviews": 0,
       "rating": null,
       "stars": 0,
-      "growth": 227.8,
+      "growth": 233.3,
       "growthSince": "2026-08-18",
       "growthFrom": 18
     },
@@ -910,6 +892,25 @@
       "growthFrom": 0
     },
     {
+      "xmlId": "dev.gaphunter.awssdkclientreusecompanion",
+      "name": "AWS SDK Client Reuse Companion",
+      "pitch": "Gutter warning icon on an AWS SDK for Java 2.x service client (`S3Client`, `DynamoDbClient`, `SqsClient`, `SnsClient`, `LambdaClient`, and similar) built via `XxxClient.builder().build()` inside a regular method body — AWS's own documentation states service clients are thread-safe and meant to be created once and reused; a client built inside a method means a brand new client (and its own connecti",
+      "why": "Building a client inside a request handler or a Lambda function body is an easy, natural-looking mistake — the code compiles fine and works correctly, it's just needlessly slow (every call pays connection-setup cost) and wastes resources. AWS documents the singleton-client pattern explicitly, but nothing in the IDE flags a client built the wrong way today.",
+      "niche": "Cloud SDK Client Reuse",
+      "githubUrl": "https://github.com/GapHunterLabs/aws-sdk-client-reuse-companion",
+      "firstPublished": "2026-08-25",
+      "repo": "aws-sdk-client-reuse-companion",
+      "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33806-aws-sdk-client-reuse-companion",
+      "downloads": 32,
+      "pricing": "FREE",
+      "reviews": 0,
+      "rating": null,
+      "stars": 0,
+      "growth": null,
+      "growthSince": "2026-08-26",
+      "growthFrom": 0
+    },
+    {
       "xmlId": "dev.gaphunter.circulardependencycompanion",
       "name": "Circular Dependency Companion",
       "pitch": "IntelliJ-family plugin. Visualizes the dependency graph between **modules** of a multi-module Gradle or Maven project, and highlights real circular dependencies when they exist — module/build-system level, not file/class-level \"circular import\" (already covered by several existing plugins). 100% static text/XML analysis of files already open in your project: no Gradle daemon, no Maven reactor buil",
@@ -927,25 +928,6 @@
       "growth": 3100.0,
       "growthSince": "2026-08-21",
       "growthFrom": 1
-    },
-    {
-      "xmlId": "dev.gaphunter.awssdkclientreusecompanion",
-      "name": "AWS SDK Client Reuse Companion",
-      "pitch": "Gutter warning icon on an AWS SDK for Java 2.x service client (`S3Client`, `DynamoDbClient`, `SqsClient`, `SnsClient`, `LambdaClient`, and similar) built via `XxxClient.builder().build()` inside a regular method body — AWS's own documentation states service clients are thread-safe and meant to be created once and reused; a client built inside a method means a brand new client (and its own connecti",
-      "why": "Building a client inside a request handler or a Lambda function body is an easy, natural-looking mistake — the code compiles fine and works correctly, it's just needlessly slow (every call pays connection-setup cost) and wastes resources. AWS documents the singleton-client pattern explicitly, but nothing in the IDE flags a client built the wrong way today.",
-      "niche": "Cloud SDK Client Reuse",
-      "githubUrl": "https://github.com/GapHunterLabs/aws-sdk-client-reuse-companion",
-      "firstPublished": "2026-08-25",
-      "repo": "aws-sdk-client-reuse-companion",
-      "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33806-aws-sdk-client-reuse-companion",
-      "downloads": 31,
-      "pricing": "FREE",
-      "reviews": 0,
-      "rating": null,
-      "stars": 0,
-      "growth": null,
-      "growthSince": "2026-08-26",
-      "growthFrom": 0
     },
     {
       "xmlId": "dev.gaphunter.changecasecompanion",
@@ -1043,6 +1025,25 @@
       "growthFrom": 14
     },
     {
+      "xmlId": "dev.gaphunter.postmanopenapidriftcompanion",
+      "name": "Postman OpenAPI Drift Companion",
+      "pitch": "Warning on a Postman collection (`*.postman_collection.json`) endpoint whose method+path no longer exists in the project's OpenAPI/Swagger spec. Collections and specs drift apart silently: a collection is hand-edited or an endpoint gets renamed/removed in the spec, and nothing tells the team the collection now exercises a path that doesn't exist — usually caught only when a request in the collecti",
+      "why": "A team maintains both an OpenAPI spec (source of truth) and a Postman collection (used for manual testing/demos). The spec evolves, an endpoint gets renamed from `/users/{id}` to `/accounts/{id}`, and the collection's \"Get user\" request keeps pointing at the old path — silently, until someone runs it.",
+      "niche": "OpenAPI/Swagger Tooling",
+      "githubUrl": "https://github.com/GapHunterLabs/postman-openapi-drift-companion",
+      "firstPublished": "2026-08-25",
+      "repo": "postman-openapi-drift-companion",
+      "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33815-postman-openapi-drift-companion",
+      "downloads": 27,
+      "pricing": "FREE",
+      "reviews": 0,
+      "rating": null,
+      "stars": 0,
+      "growth": null,
+      "growthSince": "2026-08-26",
+      "growthFrom": 0
+    },
+    {
       "xmlId": "dev.gaphunter.jsontocodecompanion",
       "name": "JSON to Code Companion",
       "pitch": "IntelliJ-family plugin. Select a JSON object — in a `.json` file, a string literal, anywhere — run **Generate Class from JSON**, and get a real Java POJO or Kotlin `data class` with field types inferred from the actual JSON values, including nested objects (their own nested/ sibling classes) and arrays (`List<T>`, typed from the first element).",
@@ -1059,25 +1060,6 @@
       "stars": 0,
       "growth": null,
       "growthSince": "2026-08-18",
-      "growthFrom": 0
-    },
-    {
-      "xmlId": "dev.gaphunter.postmanopenapidriftcompanion",
-      "name": "Postman OpenAPI Drift Companion",
-      "pitch": "Warning on a Postman collection (`*.postman_collection.json`) endpoint whose method+path no longer exists in the project's OpenAPI/Swagger spec. Collections and specs drift apart silently: a collection is hand-edited or an endpoint gets renamed/removed in the spec, and nothing tells the team the collection now exercises a path that doesn't exist — usually caught only when a request in the collecti",
-      "why": "A team maintains both an OpenAPI spec (source of truth) and a Postman collection (used for manual testing/demos). The spec evolves, an endpoint gets renamed from `/users/{id}` to `/accounts/{id}`, and the collection's \"Get user\" request keeps pointing at the old path — silently, until someone runs it.",
-      "niche": "OpenAPI/Swagger Tooling",
-      "githubUrl": "https://github.com/GapHunterLabs/postman-openapi-drift-companion",
-      "firstPublished": "2026-08-25",
-      "repo": "postman-openapi-drift-companion",
-      "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33815-postman-openapi-drift-companion",
-      "downloads": 25,
-      "pricing": "FREE",
-      "reviews": 0,
-      "rating": null,
-      "stars": 0,
-      "growth": null,
-      "growthSince": "2026-08-26",
       "growthFrom": 0
     },
     {
@@ -1166,7 +1148,7 @@
       "firstPublished": "2026-08-27",
       "repo": "apache-httpclient-reuse-companion",
       "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33880-apache-httpclient-reuse-companion",
-      "downloads": 21,
+      "downloads": 23,
       "pricing": "FREE",
       "reviews": 0,
       "rating": null,
@@ -1231,6 +1213,25 @@
       "growth": null,
       "growthSince": "2026-09-02",
       "growthFrom": 0
+    },
+    {
+      "name": "Dependency Vulnerability Companion",
+      "niche": "Dependency / SCA Security",
+      "pitch": "IntelliJ-family plugin. Flags known-vulnerable dependency versions directly in `pom.xml`, `build.gradle(.kts)`, `package.json`, and `requirements.txt`, matched against a vulnerability database bundled inside the plugin — zero account, zero token, zero network call, ever.",
+      "why": "Real evidence, not assumptions:",
+      "xmlId": "dev.gaphunter.dependencyvulnerabilitycompanion",
+      "githubUrl": "https://github.com/GapHunterLabs/dependency-vulnerability-companion",
+      "firstPublished": null,
+      "repo": "dependency-vulnerability-companion",
+      "marketplaceUrl": "https://plugins.jetbrains.com/plugin/34191-dependency-vulnerability-companion",
+      "downloads": 19,
+      "pricing": "FREE",
+      "reviews": 0,
+      "rating": null,
+      "stars": 0,
+      "growth": 1800.0,
+      "growthSince": "2026-09-11",
+      "growthFrom": 1
     },
     {
       "xmlId": "dev.gaphunter.k8sresourcelimitcompanion",
@@ -1499,6 +1500,25 @@
       "growthFrom": 0
     },
     {
+      "xmlId": "dev.gaphunter.rabbitmqchannelreusecompanion",
+      "name": "RabbitMQ Channel Reuse Companion",
+      "pitch": "Warning icon on a RabbitMQ `Channel` created with `....createChannel()` and used for `basicPublish(...)` in the same method — RabbitMQ's own Java Client API Guide calls this a \"classic anti-pattern to be avoided\": \"opening a channel for each published message... Channels are supposed to be reasonably long-lived and opening a new one is a network round-trip which makes this pattern extremely ineffi",
+      "why": "`Channel channel = connection.createChannel(); channel.basicPublish(...)` compiles fine and publishes the message — call it once per outgoing message and every single publish quietly costs a full network round-trip to open a channel, instead of reusing one long-lived channel the application already has.",
+      "niche": "Messaging Client Reuse",
+      "githubUrl": "https://github.com/GapHunterLabs/rabbitmq-channel-reuse-companion",
+      "firstPublished": "2026-08-27",
+      "repo": "rabbitmq-channel-reuse-companion",
+      "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33879-rabbitmq-channel-reuse-companion",
+      "downloads": 16,
+      "pricing": "FREE",
+      "reviews": 0,
+      "rating": null,
+      "stars": 0,
+      "growth": null,
+      "growthSince": "2026-08-29",
+      "growthFrom": 0
+    },
+    {
       "xmlId": "dev.gaphunter.configsecretsfilecompanion",
       "name": "Config Secrets File Companion",
       "pitch": "Warning on a suspected real secret (AWS access key, GitHub/Slack token, JWT, PEM private key, or a high-entropy value assigned to a secret-shaped key name) hardcoded directly in a config file — `.properties`, `.env` (and its variants), or a `.yml`/`.yaml` file. Config files are a real, common, separate place secrets get committed by accident — a real value pasted into `application.yml` \"just for l",
@@ -1546,25 +1566,6 @@
       "firstPublished": "2026-08-27",
       "repo": "php-open-redirect-companion",
       "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33891-php-open-redirect-companion",
-      "downloads": 15,
-      "pricing": "FREE",
-      "reviews": 0,
-      "rating": null,
-      "stars": 0,
-      "growth": null,
-      "growthSince": "2026-08-29",
-      "growthFrom": 0
-    },
-    {
-      "xmlId": "dev.gaphunter.rabbitmqchannelreusecompanion",
-      "name": "RabbitMQ Channel Reuse Companion",
-      "pitch": "Warning icon on a RabbitMQ `Channel` created with `....createChannel()` and used for `basicPublish(...)` in the same method — RabbitMQ's own Java Client API Guide calls this a \"classic anti-pattern to be avoided\": \"opening a channel for each published message... Channels are supposed to be reasonably long-lived and opening a new one is a network round-trip which makes this pattern extremely ineffi",
-      "why": "`Channel channel = connection.createChannel(); channel.basicPublish(...)` compiles fine and publishes the message — call it once per outgoing message and every single publish quietly costs a full network round-trip to open a channel, instead of reusing one long-lived channel the application already has.",
-      "niche": "Messaging Client Reuse",
-      "githubUrl": "https://github.com/GapHunterLabs/rabbitmq-channel-reuse-companion",
-      "firstPublished": "2026-08-27",
-      "repo": "rabbitmq-channel-reuse-companion",
-      "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33879-rabbitmq-channel-reuse-companion",
       "downloads": 15,
       "pricing": "FREE",
       "reviews": 0,
@@ -1630,25 +1631,6 @@
       "growth": null,
       "growthSince": "2026-08-26",
       "growthFrom": 0
-    },
-    {
-      "name": "Dependency Vulnerability Companion",
-      "niche": "Dependency / SCA Security",
-      "pitch": "IntelliJ-family plugin. Flags known-vulnerable dependency versions directly in `pom.xml`, `build.gradle(.kts)`, `package.json`, and `requirements.txt`, matched against a vulnerability database bundled inside the plugin — zero account, zero token, zero network call, ever.",
-      "why": "Real evidence, not assumptions:",
-      "xmlId": "dev.gaphunter.dependencyvulnerabilitycompanion",
-      "githubUrl": "https://github.com/GapHunterLabs/dependency-vulnerability-companion",
-      "firstPublished": null,
-      "repo": "dependency-vulnerability-companion",
-      "marketplaceUrl": "https://plugins.jetbrains.com/plugin/34191-dependency-vulnerability-companion",
-      "downloads": 14,
-      "pricing": "FREE",
-      "reviews": 0,
-      "rating": null,
-      "stars": 0,
-      "growth": 1300.0,
-      "growthSince": "2026-09-11",
-      "growthFrom": 1
     },
     {
       "xmlId": "dev.gaphunter.gradletaskgraphcompanion",
