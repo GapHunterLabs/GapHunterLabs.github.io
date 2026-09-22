@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-21 10:25:15 UTC",
+  "generatedAt": "2026-09-22 00:25:50 UTC",
   "totalPlugins": 146,
   "totalDownloads": 5137,
   "pending": 0,
@@ -7,10 +7,6 @@
   "totalReviews": 0,
   "avgRating": null,
   "trend7d": [
-    {
-      "date": "2026-09-15",
-      "totalDownloads": 4899
-    },
     {
       "date": "2026-09-16",
       "totalDownloads": 4942
@@ -34,45 +30,13 @@
     {
       "date": "2026-09-21",
       "totalDownloads": 5137
+    },
+    {
+      "date": "2026-09-22",
+      "totalDownloads": 5137
     }
   ],
-  "recentChanges": [
-    {
-      "date": "2026-09-21",
-      "type": "growth",
-      "name": "Ansible Companion",
-      "niche": "Ansible / DevOps",
-      "delta": 4
-    },
-    {
-      "date": "2026-09-21",
-      "type": "growth",
-      "name": "Mermaid Companion",
-      "niche": "Diagrams",
-      "delta": 3
-    },
-    {
-      "date": "2026-09-21",
-      "type": "growth",
-      "name": "Semver Bump Mismatch Companion",
-      "niche": "VCS / Git Workflow",
-      "delta": 2
-    },
-    {
-      "date": "2026-09-21",
-      "type": "growth",
-      "name": "React Native Companion",
-      "niche": "React Native Tooling",
-      "delta": 2
-    },
-    {
-      "date": "2026-09-21",
-      "type": "growth",
-      "name": "Spreadsheet Companion",
-      "niche": "CSV/XLSX Tooling",
-      "delta": 1
-    }
-  ],
+  "recentChanges": [],
   "plugins": [
     {
       "xmlId": "dev.gaphunter.mermaidcompanion",
