@@ -37,7 +37,13 @@ RELATIVE_ASSET_REGRESSION = re.compile(
 for display_name, rel_path in PAGES:
     text = (ROOT / rel_path).read_text(encoding="utf-8")
     scripts = re.findall(r"<script(?![^>]*\bsrc=)([^>]*)>(.*?)</script>", text, re.S | re.I)
-    executable = [body for attrs, body in scripts if "application/ld+json" not in attrs]
+    # application/ld+json is data, not code; speculationrules (Fase 3,
+    # 2026-09-23) is a JSON body too (a bare object literal isn't valid
+    # top-level JS -- "{" at statement position parses as a block, and
+    # a key like "prefetch": trips on the colon) -- both are excluded
+    # from the executable-JS syntax check the same way.
+    NON_EXECUTABLE_TYPES = ("application/ld+json", "speculationrules")
+    executable = [body for attrs, body in scripts if not any(t in attrs for t in NON_EXECUTABLE_TYPES)]
     code = "\n".join(executable)
     # display_name (not rel_path) keeps these filenames flat and
     # collision-free -- every migrated page is literally named

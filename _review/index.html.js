@@ -33,6 +33,13 @@
     var dotEls = Array.prototype.slice.call(dots.children);
     if (!slides.length) return;
     var index = 0, timer;
+    // Fase 3 (2026-09-23): el autoplay no corre mientras el slider esta
+    // fuera de viewport (nadie lo ve, y setInterval + los reflows de
+    // go() seguian corriendo igual mientras el visitante lee mas abajo
+    // en la pagina) -- inVisible controla si play() arma el timer o no;
+    // el observer llama play()/pause() al cruzar, sin tocar el resto de
+    // la logica de abajo.
+    var inViewport = true;
 
     function go(n) {
       index = (n + slides.length) % slides.length;
@@ -42,7 +49,7 @@
     }
     function play() {
       clearInterval(timer);
-      if (!PREFERS_REDUCED_MOTION) timer = setInterval(function () { go(index + 1); }, 5500);
+      if (!PREFERS_REDUCED_MOTION && inViewport) timer = setInterval(function () { go(index + 1); }, 5500);
     }
     prev.addEventListener('click', function () { go(index - 1); play(); });
     next.addEventListener('click', function () { go(index + 1); play(); });
@@ -53,22 +60,40 @@
     });
     play();
 
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        inViewport = entries[0].isIntersecting;
+        play();
+      }, { threshold: 0 }).observe(track);
+    }
+
     // Zoom que sigue al mouse (a pedido explicito 2026-09-10) -- el
     // origen del scale() (--hs-ox/--hs-oy, default 50%/18% en CSS) se
     // sobreescribe por elemento segun la posicion real del cursor.
-    // Delegado en `track` (estable) en vez de por-slide.
+    // Delegado en `track` (estable) en vez de por-slide. Throttleado a
+    // un update por frame (rAF) desde el 2026-09-23 -- mousemove puede
+    // disparar 60-120+ veces/seg con un mouse rapido, y cada disparo
+    // sin throttle forzaba un recalculo de estilo; con rAF, varios
+    // eventos que llegan en el mismo frame colapsan en un solo write.
     if (!PREFERS_REDUCED_MOTION) {
+      var zoomFrame = null, pendingMedia = null, pendingOx = 0, pendingOy = 0;
+      function flushZoom() {
+        zoomFrame = null;
+        pendingMedia.style.setProperty('--hs-ox', pendingOx + '%');
+        pendingMedia.style.setProperty('--hs-oy', pendingOy + '%');
+      }
       track.addEventListener('mousemove', function (e) {
         var media = e.target.closest('.hs-media');
         if (!media) return;
         var rect = media.getBoundingClientRect();
         if (!rect.width || !rect.height) return;
-        var ox = Math.min(100, Math.max(0, (e.clientX - rect.left) / rect.width * 100));
-        var oy = Math.min(100, Math.max(0, (e.clientY - rect.top) / rect.height * 100));
-        media.style.setProperty('--hs-ox', ox + '%');
-        media.style.setProperty('--hs-oy', oy + '%');
+        pendingMedia = media;
+        pendingOx = Math.min(100, Math.max(0, (e.clientX - rect.left) / rect.width * 100));
+        pendingOy = Math.min(100, Math.max(0, (e.clientY - rect.top) / rect.height * 100));
+        if (zoomFrame === null) zoomFrame = requestAnimationFrame(flushZoom);
       });
       track.addEventListener('mouseleave', function () {
+        if (zoomFrame !== null) { cancelAnimationFrame(zoomFrame); zoomFrame = null; }
         Array.prototype.forEach.call(track.querySelectorAll('.hs-media'), function (media) {
           media.style.removeProperty('--hs-ox');
           media.style.removeProperty('--hs-oy');

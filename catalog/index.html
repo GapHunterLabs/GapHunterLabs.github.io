@@ -95,6 +95,8 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="theme-color" content="#090D16">
 <link rel="manifest" href="/manifest.json">
+<link rel="preload" href="/fonts/IBMPlexSans-Latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/JetBrainsMono-Latin.woff2" as="font" type="font/woff2" crossorigin>
 <!-- Added 2026-08-21: raw.githubusercontent.com is the only external
      host this page ever fetches from (dossier demo images/GIFs, lazy-
      loaded only when a plugin's dossier actually opens) -- preconnect
@@ -182,14 +184,14 @@
 <style>
   @font-face {
     font-family: "IBM Plex Sans";
-    src: url("/fonts/IBMPlexSans-Variable.ttf") format("truetype");
+    src: url("/fonts/IBMPlexSans-Latin.woff2") format("woff2");
     font-weight: 100 700;
     font-style: normal;
     font-display: swap;
   }
   @font-face {
     font-family: "JetBrains Mono";
-    src: url("/fonts/JetBrainsMono-Variable.ttf") format("truetype");
+    src: url("/fonts/JetBrainsMono-Latin.woff2") format("woff2");
     font-weight: 100 800;
     font-style: normal;
     font-display: swap;
@@ -3849,12 +3851,22 @@
   })();
 })();
 </script>
-<!-- GoatCounter's own tracking snippet -- the ONLY visible trace of it
-     on this page is this tag; its dashboard/widget/logo is never shown
-     anywhere, the visit count itself renders through .tele-row further
-     up (see fetchVisitorCount() in the main script above). async so it
-     never blocks first paint; data-goatcounter points at the real
-     account the user created (gaphunterlabs.goatcounter.com). -->
+<!-- Fase 3 del SuperPlan de SEO (2026-09-23): prefetch (no prerender) de
+     los 146 enlaces a fichas de plugin -- moderate en vez de eager
+     para no descargar las 146 a la vez, solo las que el visitante
+     probablemente vaya a visitar (hover/viewport, criterio del propio
+     navegador). prefetch nunca ejecuta JS de la pagina prefetcheada,
+     asi que no infla las visitas de GoatCounter con paginas que nadie
+     llego a ver de verdad -- prerender si lo haria. Los navegadores sin
+     soporte ignoran el bloque entero y navegan normal. -->
+<script type="speculationrules">
+{"prefetch": [{"where": {"href_matches": "/catalog/*"}, "eagerness": "moderate"}]}
+</script>
+<!-- GoatCounter's own tracking snippet -- la unica marca visible de
+     esto en la pagina es este tag; su dashboard/widget/logo nunca se
+     muestra en ningun lado. async para no bloquear el primer pintado;
+     data-goatcounter apunta a la cuenta real del usuario
+     (gaphunterlabs.goatcounter.com). -->
 <script data-goatcounter="https://gaphunterlabs.goatcounter.com/count"
         async src="https://gc.zgo.at/count.js"></script>
 </body>
