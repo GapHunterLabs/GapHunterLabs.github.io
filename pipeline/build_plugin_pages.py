@@ -18,7 +18,7 @@ Los lee del propio catalogo:
     catalog/index.html por marcadores estables;
   * el CSS sale de los <style> inline de esa misma pagina y se escribe UNA
     vez a css/plugin.css, cacheable por las 146 fichas;
-  * los mapas de datos (NICHE_TO_CATEGORY, GAP_OVERRIDES, GIF_URL,
+  * los mapas de datos (NICHE_TO_CATEGORY, GAP_OVERRIDES, DEMO_MEDIA,
     CATEGORIES, ICONS) se parsean de js/catalog-shared.js.
 
 Si alguno de esos marcadores desaparece, el script aborta con un mensaje
@@ -316,7 +316,7 @@ class Sources:
         label = "js/catalog-shared.js"
         self.niche_to_category = js_literal(self.shared_js, "NICHE_TO_CATEGORY", label)
         self.gap_overrides = js_literal(self.shared_js, "GAP_OVERRIDES", label)
-        self.gif_url = js_literal(self.shared_js, "GIF_URL", label)
+        self.demo_media = js_literal(self.shared_js, "DEMO_MEDIA", label)
         self.categories = js_literal(self.shared_js, "CATEGORIES", label)
         self.icons = js_literal(self.shared_js, "ICONS", label)
         self.cat_icon_inner = js_literal(self.shared_js, "CAT_ICON_INNER", label)
@@ -459,6 +459,32 @@ class PluginRenderer:
         inner = self.src.cat_icon_inner.get(key) or self.src.cat_icon_inner["other"]
         return '<svg viewBox="-8 -8 16 16" aria-hidden="true">%s</svg>' % inner
 
+    def demo_media_html(self, repo, css_class, alt, *, eager=False, decorative=False):
+        """<video> con poster+mp4+webm si hay una demo real; <img> con
+        solo el poster si es un screenshot estatico (react-native-companion);
+        '' si el plugin no tiene ninguno de los dos (Fase 3, 2026-09-23:
+        las demos ahora viven en /media/<slug>/ de este mismo repo, no en
+        raw.githubusercontent.com -- ver el comentario de DEMO_MEDIA en
+        js/catalog-shared.js). decorative=True omite el texto alternativo
+        (alt="" / sin aria-label) para cuando el nombre/niche ya son texto
+        real justo al lado (el slider de la home) en vez de la unica pista
+        de que plugin es (la ficha propia)."""
+        media = self.src.demo_media.get(repo)
+        if not media:
+            return ""
+        poster = media["poster"]
+        alt_text = "" if decorative else ("%s in action" % alt)
+        if "mp4" not in media:
+            loading = "" if eager else ' loading="lazy"'
+            return '<img class="%s" src="%s" alt="%s"%s decoding="async">' % (
+                css_class, esc(poster), esc(alt_text), loading)
+        preload = "auto" if eager else "metadata"
+        aria = "" if decorative else (' aria-label="%s"' % esc(alt_text))
+        return (
+            '<video class="%s" poster="%s" muted loop playsinline autoplay preload="%s"%s>'
+            '<source src="%s" type="video/webm"><source src="%s" type="video/mp4"></video>'
+        ) % (css_class, esc(poster), preload, aria, esc(media["webm"]), esc(media["mp4"]))
+
     def similar_card_html(self, s):
         cat = self.src.cat_by_key.get(s["categoryKey"], self.src.cat_by_key["other"])
         color = self.src.cat_color[cat["key"]]
@@ -478,7 +504,6 @@ class PluginRenderer:
         pr_cls, pr_text = self.pricing_label(p.get("pricing"), is_pending)
         cat = src.cat_by_key.get(p["categoryKey"], src.cat_by_key["other"])
         color = src.cat_color[cat["key"]]
-        gif = src.gif_url.get(p["repo"])
         mp_id = self.marketplace_id(p)
 
         similar = sorted(
@@ -529,9 +554,7 @@ class PluginRenderer:
                      '<span class="btn-icon">%s</span>Download for VS Code ↗</a>'
                      % (esc(safe_url(vsx.get("marketplaceUrl"))), icons["vscode"]))
         h.append('</div>')
-        if gif:
-            h.append('<img class="dossier-gif" src="%s" alt="%s in action" loading="lazy" decoding="async">'
-                     % (esc(gif), esc(p["name"])))
+        h.append(self.demo_media_html(p["repo"], "dossier-gif", p["name"], eager=True))
         h.append('</div></div></div>')
 
         h.append('<div class="dossier-body">')
@@ -822,8 +845,8 @@ def cmd_inspect(src: Sources):
         sample = next((p[k] for p in src.plugins if p.get(k) not in (None, "")), None)
         print("  %-16s %3d/%d  ej: %s" % (k, c, len(src.plugins), repr(sample)[:70]))
     print("\nmapas parseados de js/catalog-shared.js:")
-    print("  NICHE_TO_CATEGORY %d  GAP_OVERRIDES %d  GIF_URL %d  CATEGORIES %d  ICONS %d"
-          % (len(src.niche_to_category), len(src.gap_overrides), len(src.gif_url),
+    print("  NICHE_TO_CATEGORY %d  GAP_OVERRIDES %d  DEMO_MEDIA %d  CATEGORIES %d  ICONS %d"
+          % (len(src.niche_to_category), len(src.gap_overrides), len(src.demo_media),
              len(src.categories), len(src.icons)))
     print("  colores resueltos: %s" % src.cat_color)
     print("  VS Code cross-refs: %d" % len(src.vsx_by_repo))

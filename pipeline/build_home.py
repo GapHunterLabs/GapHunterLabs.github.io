@@ -110,24 +110,27 @@ def build(dry_run: bool = False) -> None:
 
     # ---- hero slider: 5 destacados reales, ya con su URL /catalog/<slug>/ --
     featured = sorted(
-        (p for p in plugins if p["repo"] in src.gif_url),
+        (p for p in plugins if p["repo"] in src.demo_media),
         key=lambda p: p.get("downloads") or 0, reverse=True,
     )[:FEATURED_MAX]
     if not featured:
-        die("ningun plugin con GIF_URL -- el slider quedaria vacio")
+        die("ningun plugin con DEMO_MEDIA -- el slider quedaria vacio")
 
     slides, dots = [], []
     for i, p in enumerate(featured):
-        img_attrs = (
-            ' fetchpriority="high"' if i == 0 else ' loading="lazy" decoding="async"'
-        )
+        # Solo el primer slide es eager (visible sin interactuar, LCP);
+        # el resto queda detras de un click/autoplay del propio slider.
+        # decorative=True: el nombre/niche ya son texto real justo al
+        # lado (.hs-copy), no hace falta repetirlo en alt/aria-label.
+        media_html = renderer.demo_media_html(
+            p["repo"], "", p["name"], eager=(i == 0), decorative=True)
         slides.append(
             '<a class="hs-slide" href="/catalog/%s/"%s>'
-            '<span class="hs-media"><img src="%s" alt="" width="640" height="360"%s></span>'
+            '<span class="hs-media">%s</span>'
             '<span class="hs-copy"><span class="hs-kicker">Featured</span>'
             '<span class="hs-name">%s</span><span class="hs-niche">%s</span></span></a>'
             % (esc(p["repo"]), '' if i == 0 else ' tabindex="-1"',
-               esc(src.gif_url[p["repo"]]), img_attrs, esc(p["name"]), esc(p.get("niche")))
+               media_html, esc(p["name"]), esc(p.get("niche")))
         )
         dots.append(
             '<button type="button" class="hs-dot%s" aria-label="Show %s"></button>'
