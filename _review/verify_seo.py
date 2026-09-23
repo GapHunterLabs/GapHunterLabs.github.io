@@ -270,6 +270,34 @@ def main() -> int:
         if not re.match(r"^/catalog/[a-z0-9-]+/$", slide_href):
             fail("index.html", "diapositiva del hero con href no canonico: %s" % slide_href)
 
+    # ---- 7. demos re-alojadas en /media/ (Fase 3) --------------------------
+    # Las 34 demos migraron de raw.githubusercontent.com a media/<slug>/ en
+    # este mismo repo (decision explicita del usuario, 2026-09-23, ver
+    # DOCUMENTATION.md "Demo media") -- estos chequeos fallan si algo vuelve
+    # a depender del host externo, o si <video> queda sin la CSP que
+    # necesita para cargar bajo default-src 'none'.
+    def csp_value(text):
+        m = re.search(r'<meta http-equiv="Content-Security-Policy" content="([^"]*)"', text)
+        return m.group(1) if m else ""
+
+    # https://raw... (con el esquema) para no marcar el comentario del
+    # <head> que solo MENCIONA el hostname al explicar por que ya no se usa;
+    # media-src se busca DENTRO del valor real de la CSP, no en cualquier
+    # parte del archivo (un comentario explicando la CSP tambien contiene
+    # la frase "media-src 'self'" como prosa).
+    for text, where in ((catalog_text, "catalog/index.html"), (home_text, "index.html")):
+        if "https://raw.githubusercontent.com" in text:
+            fail(where, "referencia real a raw.githubusercontent.com de nuevo; las demos viven en /media/")
+        if "<video" in text and "media-src 'self'" not in csp_value(text):
+            fail(where, "tiene <video> pero la CSP no declara media-src 'self' (default-src "
+                        "'none' lo bloquea sin eso)")
+    for slug in slugs:
+        text = (ROOT / "catalog" / slug / "index.html").read_text(encoding="utf-8")
+        if "https://raw.githubusercontent.com" in text:
+            fail("catalog/%s/" % slug, "referencia real a raw.githubusercontent.com de nuevo")
+        if "<video" in text and "media-src 'self'" not in csp_value(text):
+            fail("catalog/%s/" % slug, "tiene <video> pero la CSP no declara media-src 'self'")
+
     if problems:
         print("verify_seo: %d problema(s)\n" % len(problems))
         for item in problems:
