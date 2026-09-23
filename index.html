@@ -95,6 +95,8 @@
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="theme-color" content="#090D16">
 <link rel="manifest" href="/manifest.json">
+<link rel="preload" href="/fonts/IBMPlexSans-Latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/JetBrainsMono-Latin.woff2" as="font" type="font/woff2" crossorigin>
 <!-- Added 2026-08-21: raw.githubusercontent.com is the only external
      host this page ever fetches from (dossier demo images/GIFs, lazy-
      loaded only when a plugin's dossier actually opens) -- preconnect
@@ -183,14 +185,14 @@
      existing system-font stack visible until the files arrive. */
   @font-face {
     font-family: "IBM Plex Sans";
-    src: url("/fonts/IBMPlexSans-Variable.ttf") format("truetype");
+    src: url("/fonts/IBMPlexSans-Latin.woff2") format("woff2");
     font-weight: 100 700;
     font-style: normal;
     font-display: swap;
   }
   @font-face {
     font-family: "JetBrains Mono";
-    src: url("/fonts/JetBrainsMono-Variable.ttf") format("truetype");
+    src: url("/fonts/JetBrainsMono-Latin.woff2") format("woff2");
     font-weight: 100 800;
     font-style: normal;
     font-display: swap;
@@ -3241,6 +3243,13 @@
     var dotEls = Array.prototype.slice.call(dots.children);
     if (!slides.length) return;
     var index = 0, timer;
+    // Fase 3 (2026-09-23): el autoplay no corre mientras el slider esta
+    // fuera de viewport (nadie lo ve, y setInterval + los reflows de
+    // go() seguian corriendo igual mientras el visitante lee mas abajo
+    // en la pagina) -- inVisible controla si play() arma el timer o no;
+    // el observer llama play()/pause() al cruzar, sin tocar el resto de
+    // la logica de abajo.
+    var inViewport = true;
 
     function go(n) {
       index = (n + slides.length) % slides.length;
@@ -3250,7 +3259,7 @@
     }
     function play() {
       clearInterval(timer);
-      if (!PREFERS_REDUCED_MOTION) timer = setInterval(function () { go(index + 1); }, 5500);
+      if (!PREFERS_REDUCED_MOTION && inViewport) timer = setInterval(function () { go(index + 1); }, 5500);
     }
     prev.addEventListener('click', function () { go(index - 1); play(); });
     next.addEventListener('click', function () { go(index + 1); play(); });
@@ -3261,22 +3270,40 @@
     });
     play();
 
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (entries) {
+        inViewport = entries[0].isIntersecting;
+        play();
+      }, { threshold: 0 }).observe(track);
+    }
+
     // Zoom que sigue al mouse (a pedido explicito 2026-09-10) -- el
     // origen del scale() (--hs-ox/--hs-oy, default 50%/18% en CSS) se
     // sobreescribe por elemento segun la posicion real del cursor.
-    // Delegado en `track` (estable) en vez de por-slide.
+    // Delegado en `track` (estable) en vez de por-slide. Throttleado a
+    // un update por frame (rAF) desde el 2026-09-23 -- mousemove puede
+    // disparar 60-120+ veces/seg con un mouse rapido, y cada disparo
+    // sin throttle forzaba un recalculo de estilo; con rAF, varios
+    // eventos que llegan en el mismo frame colapsan en un solo write.
     if (!PREFERS_REDUCED_MOTION) {
+      var zoomFrame = null, pendingMedia = null, pendingOx = 0, pendingOy = 0;
+      function flushZoom() {
+        zoomFrame = null;
+        pendingMedia.style.setProperty('--hs-ox', pendingOx + '%');
+        pendingMedia.style.setProperty('--hs-oy', pendingOy + '%');
+      }
       track.addEventListener('mousemove', function (e) {
         var media = e.target.closest('.hs-media');
         if (!media) return;
         var rect = media.getBoundingClientRect();
         if (!rect.width || !rect.height) return;
-        var ox = Math.min(100, Math.max(0, (e.clientX - rect.left) / rect.width * 100));
-        var oy = Math.min(100, Math.max(0, (e.clientY - rect.top) / rect.height * 100));
-        media.style.setProperty('--hs-ox', ox + '%');
-        media.style.setProperty('--hs-oy', oy + '%');
+        pendingMedia = media;
+        pendingOx = Math.min(100, Math.max(0, (e.clientX - rect.left) / rect.width * 100));
+        pendingOy = Math.min(100, Math.max(0, (e.clientY - rect.top) / rect.height * 100));
+        if (zoomFrame === null) zoomFrame = requestAnimationFrame(flushZoom);
       });
       track.addEventListener('mouseleave', function () {
+        if (zoomFrame !== null) { cancelAnimationFrame(zoomFrame); zoomFrame = null; }
         Array.prototype.forEach.call(track.querySelectorAll('.hs-media'), function (media) {
           media.style.removeProperty('--hs-ox');
           media.style.removeProperty('--hs-oy');
@@ -3306,12 +3333,22 @@
   }
 })();
 </script>
-<!-- GoatCounter's own tracking snippet -- the ONLY visible trace of it
-     on this page is this tag; its dashboard/widget/logo is never shown
-     anywhere, the visit count itself renders through .tele-row further
-     up (see fetchVisitorCount() in the main script above). async so it
-     never blocks first paint; data-goatcounter points at the real
-     account the user created (gaphunterlabs.goatcounter.com). -->
+<!-- Fase 3 del SuperPlan de SEO (2026-09-23): prefetch (no prerender) de
+     los enlaces a /catalog/ -- moderate en vez de eager para no
+     descargar los 146 al mismo tiempo, solo los que el visitante
+     probablemente vaya a visitar (hover/viewport, criterio del propio
+     navegador). prefetch nunca ejecuta JS de la pagina prefetcheada,
+     asi que no infla las visitas de GoatCounter con paginas que nadie
+     llego a ver de verdad -- prerender si lo haria. Los navegadores sin
+     soporte ignoran el bloque entero y navegan normal. -->
+<script type="speculationrules">
+{"prefetch": [{"where": {"href_matches": "/catalog/*"}, "eagerness": "moderate"}]}
+</script>
+<!-- GoatCounter's own tracking snippet -- la unica marca visible de
+     esto en la pagina es este tag; su dashboard/widget/logo nunca se
+     muestra en ningun lado. async para no bloquear el primer pintado;
+     data-goatcounter apunta a la cuenta real del usuario
+     (gaphunterlabs.goatcounter.com). -->
 <script data-goatcounter="https://gaphunterlabs.goatcounter.com/count"
         async src="https://gc.zgo.at/count.js"></script>
 </body>

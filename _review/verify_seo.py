@@ -168,7 +168,8 @@ def main() -> int:
         # ---- enlaces internos ----------------------------------------------
         for href in re.findall(r'href="(/[^"]*)"', page_html):
             path = href.split("#")[0].split("?")[0]
-            if path.endswith((".css", ".js", ".png", ".json", ".xml", ".svg", ".ico", ".txt")):
+            if path.endswith((".css", ".js", ".png", ".json", ".xml", ".svg", ".ico", ".txt",
+                              ".woff2", ".woff", ".ttf")):
                 continue
             if path and not path.endswith("/"):
                 fail(where, "enlace interno sin barra final: %s" % href)
