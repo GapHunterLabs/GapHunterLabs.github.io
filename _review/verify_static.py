@@ -83,14 +83,17 @@ jsonld = json.loads(
         re.S,
     ).group(1)
 )
-noscript = re.search(
-    r'<noscript id="catalog-crawler">(.*?)</noscript>', catalog, re.S
-).group(1)
+# Fase 2 (2026-09-22): ya no hay noscript de respaldo -- pipeline/
+# build_catalog_grid.py pre-renderiza la grilla y la tabla reales, asi
+# que ESE es ahora el contenido que ve un crawler/usuario sin JS. La
+# paridad se verifica contra las tarjetas y filas reales, no contra una
+# lista aparte.
 counts = (
     data["totalPlugins"],
     len(data["plugins"]),
     jsonld["mainEntity"]["numberOfItems"],
-    len(re.findall(r"<li>", noscript)),
+    len(re.findall(r'class="plugin-card"', catalog)),
+    len(re.findall(r'<tr class="row"', catalog)),
 )
 assert len(set(counts)) == 1, counts
 
@@ -167,7 +170,11 @@ for stub_name, target in REDIRECT_STUBS:
         assert opens == closes == 1, (stub_name, tag, opens, closes)
     assert f'content="0; url={target}"' in stub_text, (stub_name, "missing meta refresh")
     assert f'href="https://gaphunterlabs.github.io{target}"' in stub_text, (stub_name, "missing canonical")
-    assert 'name="robots" content="noindex, follow"' in stub_text, (stub_name, "missing noindex,follow robots meta")
+    # Fase 0/4 del SuperPlan de SEO (2026-09-23): noindex removido a
+    # proposito -- un meta refresh de 0s ya se procesa como redireccion
+    # permanente, y noindex junto a canonical en el mismo documento son
+    # senales contradictorias.
+    assert 'noindex' not in stub_text, (stub_name, "el noindex volvio; el refresh de 0s ya basta como redireccion")
     assert f"location.replace('{target}' + location.search + location.hash)" in stub_text, (
         stub_name, "missing/incorrect JS redirect with query+hash preservation"
     )

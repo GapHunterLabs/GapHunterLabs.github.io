@@ -225,6 +225,50 @@ def main() -> int:
     if not (ROOT / "css" / "plugin.css").exists():
         fail("css/plugin.css", "no existe; correr pipeline/build_plugin_pages.py")
 
+    # ---- 5. catalog/index.html pre-renderizado (Fase 2) --------------------
+    # El grid/tabla del propio catalogo dejaron de depender de un fetch a
+    # data/catalog-data.json (pipeline/build_catalog_grid.py los escribe
+    # como HTML real) -- estos chequeos fallan si esa garantia se rompe.
+    catalog_text = (ROOT / "catalog" / "index.html").read_text(encoding="utf-8")
+    # Substring-only checks would also flag harmless leftovers (a comment
+    # mentioning the old behaviour, dead .site-loader CSS rules with no
+    # matching element) -- these look for the actual code/markup that
+    # would mean the page is fetching or waiting on something again.
+    if re.search(r"""fetch\(\s*['"]/data/catalog-data\.json""", catalog_text):
+        fail("catalog/index.html", "vuelve a hacer fetch de catalog-data.json; el grid deberia venir pre-renderizado")
+    if re.search(r'<script src="/js/catalog-shared\.js"', catalog_text):
+        fail("catalog/index.html", "todavia carga catalog-shared.js (solo lo necesitaba el dossier, ya removido)")
+    if re.search(r'id="siteLoader"|<html[^>]*\bclass="boot"', catalog_text):
+        fail("catalog/index.html", "volvio el loader (markup real, no solo la CSS muerta que queda)")
+    n_cards = len(re.findall(r'class="plugin-card"', catalog_text))
+    n_rows = len(re.findall(r'<tr class="row"', catalog_text))
+    if n_cards != len(slugs) or n_rows != len(slugs):
+        fail("catalog/index.html", "%d tarjetas / %d filas pre-renderizadas, se esperaban %d de cada una "
+             "(correr pipeline/build_catalog_grid.py)" % (n_cards, n_rows, len(slugs)))
+    href_slugs = set(re.findall(r'/catalog/([a-z0-9-]+)/"', catalog_text))
+    missing_hrefs = set(slugs) - href_slugs
+    if missing_hrefs:
+        fail("catalog/index.html", "%d plugins sin <a href> real en el grid/tabla: %s"
+             % (len(missing_hrefs), sorted(missing_hrefs)[:5]))
+
+    # ---- 6. index.html pre-renderizado (Fase 2) -----------------------------
+    # Mismo contrato que catalog/index.html: el hero/stats/categorias/slider
+    # ya son HTML real, no un fetch -- estos chequeos fallan si esa garantia
+    # se rompe.
+    home_text = (ROOT / "index.html").read_text(encoding="utf-8")
+    if re.search(r"""fetch\(\s*['"]/data/catalog-data\.json""", home_text):
+        fail("index.html", "vuelve a hacer fetch de catalog-data.json; el hero/stats/categorias deberian venir pre-renderizados")
+    if re.search(r'<script src="/js/catalog-shared\.js"', home_text):
+        fail("index.html", "todavia carga catalog-shared.js (nada en esta pagina lo necesita ya)")
+    if re.search(r'id="siteLoader"|<html[^>]*\bclass="boot"', home_text):
+        fail("index.html", "volvio el loader (markup real, no solo la CSS muerta que queda)")
+    n_slides = len(re.findall(r'class="hs-slide"', home_text))
+    if n_slides == 0:
+        fail("index.html", "el slider de destacados no tiene diapositivas pre-renderizadas")
+    for slide_href in re.findall(r'<a class="hs-slide" href="([^"]+)"', home_text):
+        if not re.match(r"^/catalog/[a-z0-9-]+/$", slide_href):
+            fail("index.html", "diapositiva del hero con href no canonico: %s" % slide_href)
+
     if problems:
         print("verify_seo: %d problema(s)\n" % len(problems))
         for item in problems:
