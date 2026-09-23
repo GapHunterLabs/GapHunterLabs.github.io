@@ -273,70 +273,64 @@
     return GAP_OVERRIDES[p.repo] || p.why || '—';
   }
 
-  // Real demo GIFs already living in each plugin's own repo
-  // (docs/screenshots/demo.gif), referenced via raw.githubusercontent.com
-  // instead of copied into this repo -- one source of truth, updates
-  // automatically if a plugin's own gif is ever replaced. Every URL
-  // below was verified live (HTTP HEAD, 2026-08-15) before being added,
-  // branch name included since it's `main` for some repos and `master`
-  // for others. react-native-companion added 2026-08-21 -- its file is
-  // a real screenshot PNG (screenshot_1.png), not a .gif; the key name
-  // is historical (this map originally only held demo GIFs) but the
-  // <img> rendering it doesn't care about format, so no code change was
-  // needed, only that one new entry, verified live (HTTP HEAD, 200)
-  // before adding.
+  // Fase 3 del SuperPlan de SEO (2026-09-23): las 34 demos (33 GIF + 1
+  // screenshot PNG) se descargaron de cada repo, se convirtieron
+  // (ffmpeg: GIF -> MP4 H.264 + WebM VP9 a 960px/12fps con resample
+  // explicito -- varias de estas GIFs solo tienen 2-4 frames reales con
+  // delays largos, sin el resample el video perdia la duracion real de
+  // la GIF -- mas un poster WebP del primer frame; el PNG solo se
+  // reempaqueto a WebP) y se re-alojaron en este mismo repo bajo
+  // /media/<slug>/, decision explicita del usuario 2026-09-23: prioriza
+  // performance (deja de depender de raw.githubusercontent.com como
+  // tercer origen, cada demo pesa un tercio de la GIF original en el
+  // camino real de carga) sobre mantener una sola fuente de verdad en
+  // el repo de cada plugin. Reemplaza al GIF_URL anterior (URLs
+  // externas, sin poster, sin fallback de formato).
   //
-  // 2026-08-23 audit note: 10 plugins currently have NO entry here, not
-  // 1 as an earlier version of this comment said -- review-companion
-  // (the original, genuinely-deliberate omission) plus the 9 plan-B
-  // plugins shipped 2026-08-19 (dockerfile-layer-size-companion,
-  // circular-dependency-companion, commit-message-convention-companion,
-  // feature-flag-reference-companion, http-status-inline-companion,
-  // log-format-string-companion, sql-concatenation-companion,
-  // unused-npm-script-companion, env-var-missing-companion). Checked
-  // live via HTTP HEAD before writing this note: none of the 9 have a
-  // docs/screenshots/{demo.gif,screenshot_1.png,demo.png} in either
-  // main or master yet -- there is genuinely no real asset to link to
-  // for any of them, so nothing was added to the map (the dossier's
-  // onerror="this.remove()" already degrades gracefully either way).
-  // Next step when this gets revisited: add real demo images to those
-  // 9 repos first, THEN add their entries here -- not the other way
-  // around.
-  var GIF_URL = {
-    'dependency-vulnerability-companion': 'https://raw.githubusercontent.com/GapHunterLabs/dependency-vulnerability-companion/main/docs/screenshots/demo.gif',
-    'react-native-companion': 'https://raw.githubusercontent.com/GapHunterLabs/react-native-companion/main/docs/screenshots/screenshot_1.png',
-    'ansible-companion': 'https://raw.githubusercontent.com/GapHunterLabs/ansible-companion/main/docs/screenshots/demo.gif',
-    'api-security-companion': 'https://raw.githubusercontent.com/GapHunterLabs/api-security-companion/main/docs/screenshots/demo.gif',
-    'cert-companion': 'https://raw.githubusercontent.com/GapHunterLabs/cert-companion/main/docs/screenshots/demo.gif',
-    'highlight-companion': 'https://raw.githubusercontent.com/GapHunterLabs/highlight-companion/main/docs/screenshots/demo.gif',
-    'gitlab-ci-companion': 'https://raw.githubusercontent.com/GapHunterLabs/gitlab-ci-companion/main/docs/screenshots/demo.gif',
-    'mermaid-companion': 'https://raw.githubusercontent.com/GapHunterLabs/mermaid-companion/master/docs/screenshots/demo.gif',
-    'theme-companion': 'https://raw.githubusercontent.com/GapHunterLabs/theme-companion/main/docs/screenshots/demo.gif',
-    'openapi-companion': 'https://raw.githubusercontent.com/GapHunterLabs/openapi-companion/master/docs/screenshots/demo.gif',
-    'spreadsheet-companion': 'https://raw.githubusercontent.com/GapHunterLabs/spreadsheet-companion/main/docs/screenshots/demo.gif',
-    'refactor-simulator': 'https://raw.githubusercontent.com/GapHunterLabs/refactor-simulator/master/docs/screenshots/demo.gif',
-    'jwt-companion': 'https://raw.githubusercontent.com/GapHunterLabs/jwt-companion/main/docs/screenshots/demo.gif',
-    'firestore-companion': 'https://raw.githubusercontent.com/GapHunterLabs/firestore-companion/master/docs/screenshots/demo.gif',
-    'git-hygiene-companion': 'https://raw.githubusercontent.com/GapHunterLabs/git-hygiene-companion/main/docs/screenshots/demo.gif',
-    'asyncapi-companion': 'https://raw.githubusercontent.com/GapHunterLabs/asyncapi-companion/master/docs/screenshots/demo.gif',
-    'xsd-companion': 'https://raw.githubusercontent.com/GapHunterLabs/xsd-companion/master/docs/screenshots/demo.gif',
-    'graphql-companion': 'https://raw.githubusercontent.com/GapHunterLabs/graphql-companion/main/docs/screenshots/demo.gif',
-    'k6-companion': 'https://raw.githubusercontent.com/GapHunterLabs/k6-companion/master/docs/screenshots/demo.gif',
-    'nginx-companion': 'https://raw.githubusercontent.com/GapHunterLabs/nginx-companion/main/docs/screenshots/demo.gif',
-    'format-converter-companion': 'https://raw.githubusercontent.com/GapHunterLabs/format-converter-companion/master/docs/screenshots/demo.gif',
-    'cmake-companion': 'https://raw.githubusercontent.com/GapHunterLabs/cmake-companion/master/docs/screenshots/demo.gif',
-    'jenkinsfile-companion': 'https://raw.githubusercontent.com/GapHunterLabs/jenkinsfile-companion/master/docs/screenshots/demo.gif',
-    'material-companion': 'https://raw.githubusercontent.com/GapHunterLabs/material-companion/master/docs/screenshots/demo.gif',
-    'json-schema-companion': 'https://raw.githubusercontent.com/GapHunterLabs/json-schema-companion/master/docs/screenshots/demo.gif',
-    'test-scaffold-companion': 'https://raw.githubusercontent.com/GapHunterLabs/test-scaffold-companion/master/docs/screenshots/demo.gif',
-    'bean-copy-companion': 'https://raw.githubusercontent.com/GapHunterLabs/bean-copy-companion/main/docs/screenshots/demo.gif',
-    'change-case-companion': 'https://raw.githubusercontent.com/GapHunterLabs/change-case-companion/main/docs/screenshots/demo.gif',
-    'env-diff-companion': 'https://raw.githubusercontent.com/GapHunterLabs/env-diff-companion/main/docs/screenshots/demo.gif',
-    'error-lens-companion': 'https://raw.githubusercontent.com/GapHunterLabs/error-lens-companion/main/docs/screenshots/demo.gif',
-    'import-cost-companion': 'https://raw.githubusercontent.com/GapHunterLabs/import-cost-companion/main/docs/screenshots/demo.gif',
-    'json-to-code-companion': 'https://raw.githubusercontent.com/GapHunterLabs/json-to-code-companion/main/docs/screenshots/demo.gif',
-    'regex-preview-companion': 'https://raw.githubusercontent.com/GapHunterLabs/regex-preview-companion/main/docs/screenshots/demo.gif',
-    'turbo-log-companion': 'https://raw.githubusercontent.com/GapHunterLabs/turbo-log-companion/main/docs/screenshots/demo.gif'
+  // react-native-companion no tiene mp4/webm -- su fuente siempre fue
+  // un screenshot estatico (react-native-companion/poster.webp), no una
+  // demo animada.
+  //
+  // 2026-08-23 audit note (aun vigente): 10 plugins no tienen entrada
+  // aca -- review-companion (omision deliberada original) mas 9
+  // plugins del batch plan-B 2026-08-19 que nunca tuvieron un asset real
+  // que convertir. Antes de agregar sus entradas hace falta un demo real
+  // en cada uno de esos 9 repos primero.
+  var DEMO_MEDIA = {
+    'ansible-companion': { poster: "/media/ansible-companion/poster.webp", mp4: "/media/ansible-companion/demo.mp4", webm: "/media/ansible-companion/demo.webm" },
+    'api-security-companion': { poster: "/media/api-security-companion/poster.webp", mp4: "/media/api-security-companion/demo.mp4", webm: "/media/api-security-companion/demo.webm" },
+    'asyncapi-companion': { poster: "/media/asyncapi-companion/poster.webp", mp4: "/media/asyncapi-companion/demo.mp4", webm: "/media/asyncapi-companion/demo.webm" },
+    'bean-copy-companion': { poster: "/media/bean-copy-companion/poster.webp", mp4: "/media/bean-copy-companion/demo.mp4", webm: "/media/bean-copy-companion/demo.webm" },
+    'cert-companion': { poster: "/media/cert-companion/poster.webp", mp4: "/media/cert-companion/demo.mp4", webm: "/media/cert-companion/demo.webm" },
+    'change-case-companion': { poster: "/media/change-case-companion/poster.webp", mp4: "/media/change-case-companion/demo.mp4", webm: "/media/change-case-companion/demo.webm" },
+    'cmake-companion': { poster: "/media/cmake-companion/poster.webp", mp4: "/media/cmake-companion/demo.mp4", webm: "/media/cmake-companion/demo.webm" },
+    'dependency-vulnerability-companion': { poster: "/media/dependency-vulnerability-companion/poster.webp", mp4: "/media/dependency-vulnerability-companion/demo.mp4", webm: "/media/dependency-vulnerability-companion/demo.webm" },
+    'env-diff-companion': { poster: "/media/env-diff-companion/poster.webp", mp4: "/media/env-diff-companion/demo.mp4", webm: "/media/env-diff-companion/demo.webm" },
+    'error-lens-companion': { poster: "/media/error-lens-companion/poster.webp", mp4: "/media/error-lens-companion/demo.mp4", webm: "/media/error-lens-companion/demo.webm" },
+    'firestore-companion': { poster: "/media/firestore-companion/poster.webp", mp4: "/media/firestore-companion/demo.mp4", webm: "/media/firestore-companion/demo.webm" },
+    'format-converter-companion': { poster: "/media/format-converter-companion/poster.webp", mp4: "/media/format-converter-companion/demo.mp4", webm: "/media/format-converter-companion/demo.webm" },
+    'git-hygiene-companion': { poster: "/media/git-hygiene-companion/poster.webp", mp4: "/media/git-hygiene-companion/demo.mp4", webm: "/media/git-hygiene-companion/demo.webm" },
+    'gitlab-ci-companion': { poster: "/media/gitlab-ci-companion/poster.webp", mp4: "/media/gitlab-ci-companion/demo.mp4", webm: "/media/gitlab-ci-companion/demo.webm" },
+    'graphql-companion': { poster: "/media/graphql-companion/poster.webp", mp4: "/media/graphql-companion/demo.mp4", webm: "/media/graphql-companion/demo.webm" },
+    'highlight-companion': { poster: "/media/highlight-companion/poster.webp", mp4: "/media/highlight-companion/demo.mp4", webm: "/media/highlight-companion/demo.webm" },
+    'import-cost-companion': { poster: "/media/import-cost-companion/poster.webp", mp4: "/media/import-cost-companion/demo.mp4", webm: "/media/import-cost-companion/demo.webm" },
+    'jenkinsfile-companion': { poster: "/media/jenkinsfile-companion/poster.webp", mp4: "/media/jenkinsfile-companion/demo.mp4", webm: "/media/jenkinsfile-companion/demo.webm" },
+    'json-schema-companion': { poster: "/media/json-schema-companion/poster.webp", mp4: "/media/json-schema-companion/demo.mp4", webm: "/media/json-schema-companion/demo.webm" },
+    'json-to-code-companion': { poster: "/media/json-to-code-companion/poster.webp", mp4: "/media/json-to-code-companion/demo.mp4", webm: "/media/json-to-code-companion/demo.webm" },
+    'jwt-companion': { poster: "/media/jwt-companion/poster.webp", mp4: "/media/jwt-companion/demo.mp4", webm: "/media/jwt-companion/demo.webm" },
+    'k6-companion': { poster: "/media/k6-companion/poster.webp", mp4: "/media/k6-companion/demo.mp4", webm: "/media/k6-companion/demo.webm" },
+    'material-companion': { poster: "/media/material-companion/poster.webp", mp4: "/media/material-companion/demo.mp4", webm: "/media/material-companion/demo.webm" },
+    'mermaid-companion': { poster: "/media/mermaid-companion/poster.webp", mp4: "/media/mermaid-companion/demo.mp4", webm: "/media/mermaid-companion/demo.webm" },
+    'nginx-companion': { poster: "/media/nginx-companion/poster.webp", mp4: "/media/nginx-companion/demo.mp4", webm: "/media/nginx-companion/demo.webm" },
+    'openapi-companion': { poster: "/media/openapi-companion/poster.webp", mp4: "/media/openapi-companion/demo.mp4", webm: "/media/openapi-companion/demo.webm" },
+    'react-native-companion': { poster: "/media/react-native-companion/poster.webp" },
+    'refactor-simulator': { poster: "/media/refactor-simulator/poster.webp", mp4: "/media/refactor-simulator/demo.mp4", webm: "/media/refactor-simulator/demo.webm" },
+    'regex-preview-companion': { poster: "/media/regex-preview-companion/poster.webp", mp4: "/media/regex-preview-companion/demo.mp4", webm: "/media/regex-preview-companion/demo.webm" },
+    'spreadsheet-companion': { poster: "/media/spreadsheet-companion/poster.webp", mp4: "/media/spreadsheet-companion/demo.mp4", webm: "/media/spreadsheet-companion/demo.webm" },
+    'test-scaffold-companion': { poster: "/media/test-scaffold-companion/poster.webp", mp4: "/media/test-scaffold-companion/demo.mp4", webm: "/media/test-scaffold-companion/demo.webm" },
+    'theme-companion': { poster: "/media/theme-companion/poster.webp", mp4: "/media/theme-companion/demo.mp4", webm: "/media/theme-companion/demo.webm" },
+    'turbo-log-companion': { poster: "/media/turbo-log-companion/poster.webp", mp4: "/media/turbo-log-companion/demo.mp4", webm: "/media/turbo-log-companion/demo.webm" },
+    'xsd-companion': { poster: "/media/xsd-companion/poster.webp", mp4: "/media/xsd-companion/demo.mp4", webm: "/media/xsd-companion/demo.webm" }
   };
 
   // Real, derivable technical facts (2026-08-15 Facts-panel rework) --
@@ -440,7 +434,7 @@
         CATEGORIES: CATEGORIES,
         CAT_BY_KEY: CAT_BY_KEY,
         ICONS: ICONS,
-        GIF_URL: GIF_URL,
+        DEMO_MEDIA: DEMO_MEDIA,
         esc: esc,
         safeUrl: safeUrl,
         mdInline: mdInline,

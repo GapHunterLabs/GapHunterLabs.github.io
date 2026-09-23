@@ -37,7 +37,17 @@ Each plugin's own structured data (`SoftwareApplication` + `BreadcrumbList`) liv
 
 ## Per-plugin pages (`catalog/<slug>/`)
 
-`pipeline/build_plugin_pages.py` generates one real, indexable page per plugin from `data/catalog-data.json`. It does not reimplement the dossier or the page shell by hand: it reads the topbar/sidebar/footer/`<head>` and the CSS straight out of `catalog/index.html` via stable markers, and the category/gap/demo-GIF maps straight out of `js/catalog-shared.js` (a small tolerant JS-literal parser, since those are real `var X = {...}` maps, not JSON). One source of truth; nothing hand-duplicated. `pipeline/build_plugin_pages.py --inspect` prints the real schema and what it couldn't resolve.
+`pipeline/build_plugin_pages.py` generates one real, indexable page per plugin from `data/catalog-data.json`. It does not reimplement the dossier or the page shell by hand: it reads the topbar/sidebar/footer/`<head>` and the CSS straight out of `catalog/index.html` via stable markers, and the category/gap/demo-media maps straight out of `js/catalog-shared.js` (a small tolerant JS-literal parser, since those are real `var X = {...}` maps, not JSON). One source of truth; nothing hand-duplicated. `pipeline/build_plugin_pages.py --inspect` prints the real schema and what it couldn't resolve.
+
+## Demo media (`media/<slug>/`)
+
+Fase 3 (2026-09-23): the 34 plugin demos (33 animated GIFs + 1 static screenshot) were downloaded from each plugin's own repo, converted with ffmpeg, and re-hosted under `media/<slug>/` in this repo — a deliberate, explicit trade-off (user decision, 2026-09-23) of performance over the "one source of truth in each plugin's own repo" principle the codebase otherwise follows. `js/catalog-shared.js`'s `DEMO_MEDIA` map (parsed by `Sources` the same way as everything else) is the only place these paths are recorded: `{poster, mp4, webm}` for a real demo, `{poster}` only for a static screenshot (`react-native-companion`).
+
+Conversion isn't a straight re-encode: several of these GIFs only have 2–4 real frames with long hold delays (a "scene A → scene B → scene C" slideshow, not smooth motion) — an `fps=12` resample in the ffmpeg filter chain is what makes the output preserve the source's real total duration instead of collapsing those holds into under a second. Output is 960px wide, H.264 MP4 + VP9 WebM (a browser only ever fetches one, via `<video><source>` fallback) plus a WebP poster (shown instantly, before the video buffers). `PluginRenderer.demo_media_html()` in `build_plugin_pages.py` is the one place that turns a `DEMO_MEDIA` entry into markup — `<video muted loop playsinline autoplay>` when a real demo exists, `<img>` when it's a static screenshot, empty string when neither — reused by both `build_plugin_pages.py` (the plugin's own dossier) and `build_home.py` (the featured slider), so the two never diverge.
+
+The CSP's `media-src 'self'` (added the same day) is required for these `<video>` elements to load at all under `default-src 'none'`; `img-src` no longer needs `raw.githubusercontent.com` now that nothing on these pages fetches from it.
+
+To convert a new demo (or re-convert one that changed): `python pipeline/convert_demo_media.py <slug> <path-or-url-to-gif-or-png>` writes `media/<slug>/` and prints the `DEMO_MEDIA` entry to paste into `js/catalog-shared.js` (it refuses to finish if the output duration doesn't match the source's, catching the fps-collapse failure mode above). Rebuild after: `build_catalog_grid.py`, `build_home.py`, `build_plugin_pages.py --sitemap --inject`.
 
 ## Catalog page rendering (`catalog/index.html`'s own grid/table)
 

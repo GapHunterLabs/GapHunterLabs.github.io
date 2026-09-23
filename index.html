@@ -33,10 +33,14 @@
      defense) -- script-src/style-src stay 'self' + 'unsafe-inline' only
      because everything really is inline, never relaxed for a CDN;
      object-src/base-uri/form-action are locked to 'none' since this page
-     never embeds plugins or submits forms; img-src allows only this origin,
-     data: (the inline SVG favicon/icons), and raw.githubusercontent.com
-     (the only external host ever referenced, for demo GIFs) -- no other
-     origin is ever fetched from this page, by design. manifest-src 'self'
+     never embeds plugins or submits forms; img-src allows only this origin and
+     data: (the inline SVG favicon/icons) -- Fase 3 (2026-09-23) dropped
+     raw.githubusercontent.com (the demo GIFs it served now live as
+     video/webp under /media/ in this same repo, see DEMO_MEDIA in
+     js/catalog-shared.js), so img-src no longer needs an external host
+     at all. media-src 'self' added the same day for the <video>
+     elements those demos became -- without it, video falls back to
+     default-src '''none''' and is blocked outright. manifest-src 'self'
      added 2026-08-21 alongside manifest.json -- without an explicit
      manifest-src, that fetch falls back to default-src 'none' and the
      manifest link silently fails to load.
@@ -68,7 +72,7 @@
      served from something other than GitHub Pages' static hosting with
      real response headers) but should not be read as active defenses
      today. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://gc.zgo.at; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https://raw.githubusercontent.com; manifest-src 'self'; connect-src 'self' https://gaphunterlabs.goatcounter.com; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://gc.zgo.at; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; media-src 'self'; manifest-src 'self'; connect-src 'self' https://gaphunterlabs.goatcounter.com; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%201024%201024%22%20width%3D%22100%25%22%20height%3D%22100%25%22%3E%20%3C%21--%20White%20background%3A%20keeps%20the%20mark%20legible%20in%20light%20theme%20and%20on%20the%20Marketplace%20listing%20card%20--%3E%20%3Crect%20width%3D%221024%22%20height%3D%221024%22%20fill%3D%22%23FFFFFF%22/%3E%20%3Cpath%20d%3D%22%20M%20511%2C81%20L%20847%2C283%20L%20725%2C351%20L%20508%2C223%20L%20296%2C348%20L%20296%2C588%20L%20463%2C691%20L%20342%2C765%20L%20173%2C665%20L%20172%2C281%20Z%22%20fill%3D%22%230151FC%22%20/%3E%20%3Cpath%20d%3D%22%20M%20846%2C412%20L%20844%2C668%20L%20518%2C863%20L%20393%2C795%20L%20724%2C589%20L%20721%2C540%20L%20567%2C538%20L%20568%2C412%20Z%22%20fill%3D%22%2301B3FD%22%20/%3E%20%3Cpolygon%20points%3D%22569%2C413%20695%2C413%20695%2C539%20569%2C539%22%20fill%3D%22%2302F172%22%20/%3E%20%3C/svg%3E">
@@ -97,12 +101,6 @@
 <link rel="manifest" href="/manifest.json">
 <link rel="preload" href="/fonts/IBMPlexSans-Latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/fonts/JetBrainsMono-Latin.woff2" as="font" type="font/woff2" crossorigin>
-<!-- Added 2026-08-21: raw.githubusercontent.com is the only external
-     host this page ever fetches from (dossier demo images/GIFs, lazy-
-     loaded only when a plugin's dossier actually opens) -- preconnect
-     lets the browser resolve DNS + TLS ahead of that first real request
-     instead of paying that cost the moment a visitor opens a dossier. -->
-<link rel="preconnect" href="https://raw.githubusercontent.com">
 <!-- Same reasoning, added alongside the GoatCounter visitor counter --
      count.js loads async on every real page load (not lazily like the
      GitHub images above), so this connection happens immediately. -->
@@ -865,7 +863,7 @@
     --hs-ox: 50%;
     --hs-oy: 18%;
   }
-  .hs-slide img {
+  .hs-slide img, .hs-slide video {
     position: absolute;
     inset: 0;
     width: 100%;
@@ -877,8 +875,8 @@
     transition: transform var(--duration-slow) ease;
   }
   @media (hover: hover) and (pointer: fine) {
-    .hs-slide:hover img,
-    .hs-slide:focus-visible img {
+    .hs-slide:hover img, .hs-slide:hover video,
+    .hs-slide:focus-visible img, .hs-slide:focus-visible video {
       /* Zoom 75% (a pedido explícito 2026-09-10) -- 1.75x, con
          transform-origin siguiendo al mouse en vez de un punto fijo
          (ver mousemove en initHeroSlider()). */
@@ -980,9 +978,9 @@
   }
   @media (prefers-reduced-motion: reduce) {
     .hs-track { transition: none; }
-    .hs-slide img { transition: none; }
-    .hs-slide:hover img,
-    .hs-slide:focus-visible img { transform: none; }
+    .hs-slide img, .hs-slide video { transition: none; }
+    .hs-slide:hover img, .hs-slide:hover video,
+    .hs-slide:focus-visible img, .hs-slide:focus-visible video { transform: none; }
     .topbar-status .dot,
     .hf-live-dot,
     .footer-status .dot,
@@ -3059,7 +3057,7 @@
 
     <div class="hero-slider" id="heroSlider" aria-roledescription="carousel" aria-label="Featured plugins">
       <div class="hs-viewport">
-        <div class="hs-track" id="heroSliderTrack"><!-- PRERENDER:SLIDES:START --><a class="hs-slide" href="/catalog/mermaid-companion/"><span class="hs-media"><img src="https://raw.githubusercontent.com/GapHunterLabs/mermaid-companion/master/docs/screenshots/demo.gif" alt="" width="640" height="360" fetchpriority="high"></span><span class="hs-copy"><span class="hs-kicker">Featured</span><span class="hs-name">Mermaid Companion</span><span class="hs-niche">Diagrams</span></span></a><a class="hs-slide" href="/catalog/react-native-companion/" tabindex="-1"><span class="hs-media"><img src="https://raw.githubusercontent.com/GapHunterLabs/react-native-companion/main/docs/screenshots/screenshot_1.png" alt="" width="640" height="360" loading="lazy" decoding="async"></span><span class="hs-copy"><span class="hs-kicker">Featured</span><span class="hs-name">React Native Companion</span><span class="hs-niche">React Native Tooling</span></span></a><a class="hs-slide" href="/catalog/ansible-companion/" tabindex="-1"><span class="hs-media"><img src="https://raw.githubusercontent.com/GapHunterLabs/ansible-companion/main/docs/screenshots/demo.gif" alt="" width="640" height="360" loading="lazy" decoding="async"></span><span class="hs-copy"><span class="hs-kicker">Featured</span><span class="hs-name">Ansible Companion</span><span class="hs-niche">Ansible / DevOps</span></span></a><a class="hs-slide" href="/catalog/api-security-companion/" tabindex="-1"><span class="hs-media"><img src="https://raw.githubusercontent.com/GapHunterLabs/api-security-companion/main/docs/screenshots/demo.gif" alt="" width="640" height="360" loading="lazy" decoding="async"></span><span class="hs-copy"><span class="hs-kicker">Featured</span><span class="hs-name">API Security Companion</span><span class="hs-niche">API Security</span></span></a><a class="hs-slide" href="/catalog/gitlab-ci-companion/" tabindex="-1"><span class="hs-media"><img src="https://raw.githubusercontent.com/GapHunterLabs/gitlab-ci-companion/main/docs/screenshots/demo.gif" alt="" width="640" height="360" loading="lazy" decoding="async"></span><span class="hs-copy"><span class="hs-kicker">Featured</span><span class="hs-name">GitLab CI Companion</span><span class="hs-niche">GitLab CI/CD</span></span></a><!-- PRERENDER:SLIDES:END --></div>
+        <div class="hs-track" id="heroSliderTrack"><!-- PRERENDER:SLIDES:START --><a class="hs-slide" href="/catalog/mermaid-companion/"><span class="hs-media"><video class="" poster="/media/mermaid-companion/poster.webp" muted loop playsinline autoplay preload="auto"><source src="/media/mermaid-companion/demo.webm" type="video/webm"><source src="/media/mermaid-companion/demo.mp4" type="video/mp4"></video></span><span class="hs-copy"><span class="hs-kicker">Featured</span><span class="hs-name">Mermaid Companion</span><span class="hs-niche">Diagrams</span></span></a><a class="hs-slide" href="/catalog/react-native-companion/" tabindex="-1"><span class="hs-media"><img class="" src="/media/react-native-companion/poster.webp" alt="" loading="lazy" decoding="async"></span><span class="hs-copy"><span class="hs-kicker">Featured</span><span class="hs-name">React Native Companion</span><span class="hs-niche">React Native Tooling</span></span></a><a class="hs-slide" href="/catalog/ansible-companion/" tabindex="-1"><span class="hs-media"><video class="" poster="/media/ansible-companion/poster.webp" muted loop playsinline autoplay preload="metadata"><source src="/media/ansible-companion/demo.webm" type="video/webm"><source src="/media/ansible-companion/demo.mp4" type="video/mp4"></video></span><span class="hs-copy"><span class="hs-kicker">Featured</span><span class="hs-name">Ansible Companion</span><span class="hs-niche">Ansible / DevOps</span></span></a><a class="hs-slide" href="/catalog/api-security-companion/" tabindex="-1"><span class="hs-media"><video class="" poster="/media/api-security-companion/poster.webp" muted loop playsinline autoplay preload="metadata"><source src="/media/api-security-companion/demo.webm" type="video/webm"><source src="/media/api-security-companion/demo.mp4" type="video/mp4"></video></span><span class="hs-copy"><span class="hs-kicker">Featured</span><span class="hs-name">API Security Companion</span><span class="hs-niche">API Security</span></span></a><a class="hs-slide" href="/catalog/gitlab-ci-companion/" tabindex="-1"><span class="hs-media"><video class="" poster="/media/gitlab-ci-companion/poster.webp" muted loop playsinline autoplay preload="metadata"><source src="/media/gitlab-ci-companion/demo.webm" type="video/webm"><source src="/media/gitlab-ci-companion/demo.mp4" type="video/mp4"></video></span><span class="hs-copy"><span class="hs-kicker">Featured</span><span class="hs-name">GitLab CI Companion</span><span class="hs-niche">GitLab CI/CD</span></span></a><!-- PRERENDER:SLIDES:END --></div>
       </div>
       <div class="hs-bar">
         <button type="button" class="hs-nav" id="heroSliderPrev" aria-label="Previous featured plugin">
