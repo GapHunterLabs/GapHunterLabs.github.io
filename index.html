@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="boot">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -94,19 +94,18 @@
      size preferences (manifest.json). -->
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <meta name="theme-color" content="#090D16">
-<noscript><style>.site-loader{display:none!important}html.boot{overflow:auto!important}</style></noscript>
 <link rel="manifest" href="/manifest.json">
 <!-- Added 2026-08-21: raw.githubusercontent.com is the only external
      host this page ever fetches from (dossier demo images/GIFs, lazy-
      loaded only when a plugin's dossier actually opens) -- preconnect
      lets the browser resolve DNS + TLS ahead of that first real request
      instead of paying that cost the moment a visitor opens a dossier. -->
-<link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
+<link rel="preconnect" href="https://raw.githubusercontent.com">
 <!-- Same reasoning, added alongside the GoatCounter visitor counter --
      count.js loads async on every real page load (not lazily like the
      GitHub images above), so this connection happens immediately. -->
-<link rel="preconnect" href="https://gc.zgo.at" crossorigin>
-<link rel="preconnect" href="https://gaphunterlabs.goatcounter.com" crossorigin>
+<link rel="preconnect" href="https://gc.zgo.at">
+<link rel="preconnect" href="https://gaphunterlabs.goatcounter.com">
 <!-- Widened 2026-08-23 (indexing audit): was 100% brand, 0% descriptive
      keyword -- on a domain with essentially no existing search equity,
      a brand-only title makes it harder to surface for the actual
@@ -171,7 +170,9 @@
   "logo": "https://gaphunterlabs.github.io/apple-touch-icon.png",
   "sameAs": [
     "https://github.com/GapHunterLabs",
-    "https://plugins.jetbrains.com/vendor/gap-hunter-labs"
+    "https://plugins.jetbrains.com/vendor/gap-hunter-labs",
+    "https://marketplace.visualstudio.com/publishers/GapHunterLabs",
+    "https://www.linkedin.com/in/joel-diaz-82687b428/?locale=en"
   ]
 }
 </script>
@@ -315,8 +316,6 @@
     top: 0;
     z-index: 40;
     background: rgba(9,13,22,0.94);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--border);
   }
 
@@ -764,6 +763,17 @@
   .hero-title .accent { color: var(--accent); }
 
   .hero-kicker {
+    display: block;
+    /* .hero-title es nowrap (marca, una sola linea); este span vive
+       adentro para que "Gap Hunter Labs" siga siendo el <h1> visible
+       en pantalla y a la vez el H1 real incluya la frase descriptiva
+       que el <title> ya usa (auditoria 2026-08-23: antes el H1 era
+       100% marca, 0% keyword) -- white-space:normal explicito porque
+       si no heredaria el nowrap de .hero-title y no envolveria en
+       mobile.
+       2026-09-23 (Fase 0/4 del SuperPlan de SEO): promovido de <p>
+       hermano del H1 a <span> adentro del H1. */
+    white-space: normal;
     margin: 8px 0 0;
     font-family: var(--mono);
     font-size: 12px;
@@ -2960,31 +2970,8 @@
 <link rel="stylesheet" href="/css/shell.css">
 </head>
 <body>
-<div id="siteLoader" class="site-loader" role="status" aria-live="polite" aria-busy="true">
-  <div class="sl-grid" aria-hidden="true"></div>
-  <span class="sl-corner sl-tl" aria-hidden="true"></span>
-  <span class="sl-corner sl-tr" aria-hidden="true"></span>
-  <span class="sl-corner sl-bl" aria-hidden="true"></span>
-  <span class="sl-corner sl-br" aria-hidden="true"></span>
-  <div class="sl-center">
-    <svg class="sl-hud" viewBox="0 0 240 240" aria-hidden="true">
-      <circle class="sl-ring" cx="120" cy="120" r="92"/>
-      <circle class="sl-ring sl-ring-inner" cx="120" cy="120" r="76"/>
-      <g class="sl-ticks">
-        <path d="M120 18v12M120 210v12M18 120h12M210 120h12M48 48l9 9M183 183l9 9M192 48l-9 9M57 183l-9 9"/>
-        <text x="120" y="12">101101</text><text x="120" y="236">011010</text>
-      </g>
-      <g class="sl-brand-mark" transform="translate(69 67) scale(.1)">
-        <path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z"/>
-        <path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z"/>
-        <polygon points="569,413 695,413 695,539 569,539"/>
-      </g>
-    </svg>
-    <div class="sl-name">Gap Hunter Labs</div>
-    <div class="sl-tag">Plugin Intelligence</div>
-    <div class="sl-status">Fetching catalog data…</div>
-  </div>
-</div>
+<!-- Fase 2 (2026-09-22): sin loader -- hero, stats, categorias y
+     slider de abajo llegan ya pre-renderizados en este HTML. -->
 <div class="app-shell">
 <nav class="topbar" id="topbar">
   <div class="topbar-inner">
@@ -3059,10 +3046,9 @@
 <main class="wrap">
   <div class="hero page-hero" id="top">
     <div class="hero-brand">
-      <h1 class="hero-title">Gap Hunter <span class="accent">Labs</span></h1>
-      <p class="hero-kicker">Plugin Intelligence</p>
-      <p class="hero-subtitle" id="heroSubtitle">We hunt real, evidence-based gaps in developer tooling and ship focused IntelliJ-family plugins to fix them — every product exists because of a documented complaint, not a guess.</p>
-      <section class="telemetry" id="stats" aria-label="Catalog metrics"></section>
+      <h1 class="hero-title">Gap Hunter <span class="accent">Labs</span><span class="hero-kicker">JetBrains &amp; IntelliJ Plugin Intelligence</span></h1>
+      <p class="hero-subtitle" id="heroSubtitle"><!-- PRERENDER:SUBTITLE:START -->We hunt real, evidence-based gaps in developer tooling and ship focused IntelliJ-family plugins to fix them. Every one of the 146 products in this catalog exists because of a documented complaint, its fix traces to a real diff, and its traction to real download numbers pulled straight from JetBrains Marketplace and GitHub — nothing here is estimated.<!-- PRERENDER:SUBTITLE:END --></p>
+      <section class="telemetry" id="stats" aria-label="Catalog metrics"><!-- PRERENDER:STATS:START --><div class="tele-row"><span class="tele-icon" style="color:var(--accent)"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M10 1.5 17.5 6v8L10 18.5 2.5 14V6Z"/><path d="M10 10 17.5 6M10 10v8.5M10 10 2.5 6"/></svg></span><div class="tele-body"><div class="tele-num accent">146</div><div class="tele-label">Plugins active</div></div></div><div class="tele-row"><span class="tele-icon" style="color:var(--good)"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2.5v10M6 9l4 4 4-4M3.5 15.5v2a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-2"/></svg></span><div class="tele-body"><div class="tele-num">5,384<span class="stat-growth">▲ 354.0%</span></div><div class="tele-label">Downloads</div></div></div><!-- PRERENDER:STATS:END --></section>
       <div class="hero-actions">
         <a class="btn primary" href="/catalog/">Explore the Catalog</a>
         <a class="btn" href="#identity">How we work</a>
@@ -3071,13 +3057,13 @@
 
     <div class="hero-slider" id="heroSlider" aria-roledescription="carousel" aria-label="Featured plugins">
       <div class="hs-viewport">
-        <div class="hs-track" id="heroSliderTrack"></div>
+        <div class="hs-track" id="heroSliderTrack"><!-- PRERENDER:SLIDES:START --><a class="hs-slide" href="/catalog/mermaid-companion/"><span class="hs-media"><img src="https://raw.githubusercontent.com/GapHunterLabs/mermaid-companion/master/docs/screenshots/demo.gif" alt="" width="640" height="360" fetchpriority="high"></span><span class="hs-copy"><span class="hs-kicker">Featured</span><span class="hs-name">Mermaid Companion</span><span class="hs-niche">Diagrams</span></span></a><a class="hs-slide" href="/catalog/react-native-companion/" tabindex="-1"><span class="hs-media"><img src="https://raw.githubusercontent.com/GapHunterLabs/react-native-companion/main/docs/screenshots/screenshot_1.png" alt="" width="640" height="360" loading="lazy" decoding="async"></span><span class="hs-copy"><span class="hs-kicker">Featured</span><span class="hs-name">React Native Companion</span><span class="hs-niche">React Native Tooling</span></span></a><a class="hs-slide" href="/catalog/ansible-companion/" tabindex="-1"><span class="hs-media"><img src="https://raw.githubusercontent.com/GapHunterLabs/ansible-companion/main/docs/screenshots/demo.gif" alt="" width="640" height="360" loading="lazy" decoding="async"></span><span class="hs-copy"><span class="hs-kicker">Featured</span><span class="hs-name">Ansible Companion</span><span class="hs-niche">Ansible / DevOps</span></span></a><a class="hs-slide" href="/catalog/api-security-companion/" tabindex="-1"><span class="hs-media"><img src="https://raw.githubusercontent.com/GapHunterLabs/api-security-companion/main/docs/screenshots/demo.gif" alt="" width="640" height="360" loading="lazy" decoding="async"></span><span class="hs-copy"><span class="hs-kicker">Featured</span><span class="hs-name">API Security Companion</span><span class="hs-niche">API Security</span></span></a><a class="hs-slide" href="/catalog/gitlab-ci-companion/" tabindex="-1"><span class="hs-media"><img src="https://raw.githubusercontent.com/GapHunterLabs/gitlab-ci-companion/main/docs/screenshots/demo.gif" alt="" width="640" height="360" loading="lazy" decoding="async"></span><span class="hs-copy"><span class="hs-kicker">Featured</span><span class="hs-name">GitLab CI Companion</span><span class="hs-niche">GitLab CI/CD</span></span></a><!-- PRERENDER:SLIDES:END --></div>
       </div>
       <div class="hs-bar">
         <button type="button" class="hs-nav" id="heroSliderPrev" aria-label="Previous featured plugin">
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M10 3 5 8l5 5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
-        <div class="hs-dots" id="heroSliderDots" role="tablist" aria-label="Featured plugin slides"></div>
+        <div class="hs-dots" id="heroSliderDots" role="tablist" aria-label="Featured plugin slides"><!-- PRERENDER:DOTS:START --><button type="button" class="hs-dot is-active" aria-label="Show Mermaid Companion"></button><button type="button" class="hs-dot" aria-label="Show React Native Companion"></button><button type="button" class="hs-dot" aria-label="Show Ansible Companion"></button><button type="button" class="hs-dot" aria-label="Show API Security Companion"></button><button type="button" class="hs-dot" aria-label="Show GitLab CI Companion"></button><!-- PRERENDER:DOTS:END --></div>
         <button type="button" class="hs-nav" id="heroSliderNext" aria-label="Next featured plugin">
           <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
@@ -3087,7 +3073,7 @@
 
   <section class="category-preview" aria-labelledby="categoryPreviewTitle">
     <div class="section-head"><div><p class="eyebrow">Hunting field</p><h2 id="categoryPreviewTitle">Explore by category</h2></div><a class="btn" href="/catalog/">Explore the full catalog →</a></div>
-    <div class="cat-board category-links" id="categoryPreview"></div>
+    <div class="cat-board category-links" id="categoryPreview"><!-- PRERENDER:CATPREVIEW:START --><a class="cat-cell" href="/catalog/?category=api" style="--cat:#3FA2FF"><span class="cat-cell-icon"><svg viewBox="-8 -8 16 16" aria-hidden="true"><path d="M-4.5-6.5v3M-1.5-6.5v3M-6-3.5h7a2 2 0 0 1 2 2v1a2 2 0 0 0 2 2h1M6 6.5v-3M1.5 6.5v-3M6 3.5H-1a2 2 0 0 1-2-2v-1a2 2 0 0 0-2-2h-1" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="cat-cell-copy"><strong>API</strong><span class="cat-cell-count">12 plugins</span></span><span class="cat-cell-arrow" aria-hidden="true">→</span></a><a class="cat-cell" href="/catalog/?category=devops" style="--cat:#02F172"><span class="cat-cell-icon"><svg viewBox="-8 -8 16 16" aria-hidden="true"><path d="M-6 0a3 3 0 1 0 6 0 3 3 0 1 1 6 0 3 3 0 1 1-6 0 3 3 0 1 0-6 0Z" stroke-linejoin="round"/></svg></span><span class="cat-cell-copy"><strong>DevOps</strong><span class="cat-cell-count">48 plugins</span></span><span class="cat-cell-arrow" aria-hidden="true">→</span></a><a class="cat-cell" href="/catalog/?category=security" style="--cat:#FF6E7A"><span class="cat-cell-icon"><svg viewBox="-8 -8 16 16" aria-hidden="true"><path d="M0-6.5 5.5-4v4.2C5.5 3.8 2.8 6 0 6.5-2.8 6-5.5 3.8-5.5.2V-4Z" stroke-linejoin="round"/></svg></span><span class="cat-cell-copy"><strong>Security</strong><span class="cat-cell-count">37 plugins</span></span><span class="cat-cell-arrow" aria-hidden="true">→</span></a><a class="cat-cell" href="/catalog/?category=data" style="--cat:#B98CFF"><span class="cat-cell-icon"><svg viewBox="-8 -8 16 16" aria-hidden="true"><path d="M-5-3c0-1.4 2.2-2.5 5-2.5s5 1.1 5 2.5v6c0 1.4-2.2 2.5-5 2.5s-5-1.1-5-2.5Z"/><path d="M-5-3c0 1.4 2.2 2.5 5 2.5s5-1.1 5-2.5"/></svg></span><span class="cat-cell-copy"><strong>Data</strong><span class="cat-cell-count">4 plugins</span></span><span class="cat-cell-arrow" aria-hidden="true">→</span></a><a class="cat-cell" href="/catalog/?category=quality" style="--cat:#FFB020"><span class="cat-cell-icon"><svg viewBox="-8 -8 16 16" aria-hidden="true"><path d="M0-6.5v13M-5.5-3.5h11M-5.5-3.5 -6.5 0M-5.5-3.5-4.5 0M5.5-3.5 4.5 0M5.5-3.5 6.5 0M-6.5 0a1.5 1.5 0 0 0 3 0M3.5 0a1.5 1.5 0 0 0 3 0M-2.5 6.5h5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="cat-cell-copy"><strong>Code Quality</strong><span class="cat-cell-count">31 plugins</span></span><span class="cat-cell-arrow" aria-hidden="true">→</span></a><a class="cat-cell" href="/catalog/?category=codegen" style="--cat:#01B3FD"><span class="cat-cell-icon"><svg viewBox="-8 -8 16 16" aria-hidden="true"><path d="M-6-2.5-3 0-6 2.5M6-2.5 3 0 6 2.5M.8-6 -1.3-.5h2.6L-.8 6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="cat-cell-copy"><strong>Codegen</strong><span class="cat-cell-count">3 plugins</span></span><span class="cat-cell-arrow" aria-hidden="true">→</span></a><a class="cat-cell" href="/catalog/?category=testing" style="--cat:#34D5C7"><span class="cat-cell-icon"><svg viewBox="-8 -8 16 16" aria-hidden="true"><path d="M-2-6.5v4.2l-3.3 6.6a1.6 1.6 0 0 0 1.4 2.2h7.8a1.6 1.6 0 0 0 1.4-2.2L1-2.3v-4.2M-3.3-6.5h6.6M-3-1.5h6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="cat-cell-copy"><strong>Testing</strong><span class="cat-cell-count">3 plugins</span></span><span class="cat-cell-arrow" aria-hidden="true">→</span></a><a class="cat-cell" href="/catalog/?category=editor" style="--cat:#8DACE0"><span class="cat-cell-icon"><svg viewBox="-8 -8 16 16" aria-hidden="true"><rect x="-6" y="-5" width="12" height="10" rx="1.5"/><path d="M-3.5-2h4M-3.5 0.5h2.5M2-2v2.5" stroke-linecap="round"/></svg></span><span class="cat-cell-copy"><strong>Editor</strong><span class="cat-cell-count">8 plugins</span></span><span class="cat-cell-arrow" aria-hidden="true">→</span></a><!-- PRERENDER:CATPREVIEW:END --></div>
   </section>
 
   <section class="identity-section page-hero" id="identity" aria-labelledby="identityTitle">
@@ -3171,7 +3157,7 @@
         </div>
       </article>
     </div>
-    <div class="method-facts" id="methodFacts"></div>
+    <div class="method-facts" id="methodFacts"><!-- PRERENDER:METHODFACTS:START --><!-- PRERENDER:METHODFACTS:END --></div>
   </section>
 </main>
 </div>
@@ -3232,108 +3218,80 @@
     </div>
   </div>
 </footer>
-<script src="/js/catalog-shared.js"></script>
 <script>
 (function () {
+  'use strict';
+  // Fase 2 del SuperPlan de SEO (2026-09-22): el subtitulo del hero, los
+  // contadores, los facts, las categorias y el slider de destacados ya
+  // llegan pre-renderizados (pipeline/build_home.py, mismos datos que
+  // catalog-data.json pero escritos como HTML real en vez de pedidos por
+  // fetch). Esta pagina ya no carga js/catalog-shared.js ni depende de
+  // GapCatalog -- lo unico que queda en JS es interactividad sobre nodos
+  // que ya existen: el slider (dots/flechas/autoplay/zoom) y el burger
+  // del topbar.
   var PREFERS_REDUCED_MOTION = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  GapCatalog.ready.then(function (shared) {
-    var data = shared.data;
-    var plugins = shared.plugins;
-    var CATEGORIES = shared.CATEGORIES;
-    var CAT_BY_KEY = shared.CAT_BY_KEY;
-    var ICONS = shared.ICONS;
-    var GIF_URL = shared.GIF_URL;
-    var esc = shared.esc;
-    var statsDecoded = false;
 
-    function renderStats() {
-      document.getElementById('heroSubtitle').textContent = 'We hunt real, evidence-based gaps in developer tooling and ship focused IntelliJ-family plugins to fix them. Every one of the ' + data.totalPlugins + ' products in this catalog exists because of a documented complaint, its fix traces to a real diff, and its traction to real download numbers pulled straight from JetBrains Marketplace and GitHub — nothing here is estimated.';
-      var base = 0, current = 0;
-      plugins.forEach(function (p) { if (p.growthFrom != null && p.downloads != null) { base += p.growthFrom; current += p.downloads; } });
-      var growth = base > 0 ? '<span class="stat-growth">▲ ' + (((current - base) / base) * 100).toFixed(1) + '%</span>' : '';
-      document.getElementById('stats').innerHTML =
-        '<div class="tele-row"><span class="tele-icon" style="color:var(--accent)">' + ICONS.plugins + '</span><div class="tele-body"><div class="tele-num accent">' + data.totalPlugins + '</div><div class="tele-label">Plugins active</div></div></div>' +
-        '<div class="tele-row"><span class="tele-icon" style="color:var(--good)">' + ICONS.downloads + '</span><div class="tele-body"><div class="tele-num">' + data.totalDownloads.toLocaleString('en-US') + growth + '</div><div class="tele-label">Downloads</div></div></div>';
-      var facts = [];
-      if (data.totalReviews > 0) facts.push([data.totalReviews, 'Reviews total']);
-      if (data.avgRating != null) facts.push([data.avgRating.toFixed(2), 'Avg rating']);
-      if (data.totalStars > 0) facts.push([data.totalStars, 'GitHub stars']);
-      document.getElementById('methodFacts').innerHTML = facts.map(function (f) { return '<div class="method-fact"><div class="method-fact-num">' + f[0] + '</div><div class="method-fact-label">' + f[1] + '</div></div>'; }).join('');
+  (function initHeroSlider() {
+    var track = document.getElementById('heroSliderTrack');
+    var dots = document.getElementById('heroSliderDots');
+    var prev = document.getElementById('heroSliderPrev');
+    var next = document.getElementById('heroSliderNext');
+    if (!track || !dots || !prev || !next) return;
+    var slides = Array.prototype.slice.call(track.children);
+    var dotEls = Array.prototype.slice.call(dots.children);
+    if (!slides.length) return;
+    var index = 0, timer;
 
-      var footerStatus = document.getElementById('footerStatusText');
-      if (footerStatus) footerStatus.textContent = data.totalPlugins + ' plugins tracked';
+    function go(n) {
+      index = (n + slides.length) % slides.length;
+      track.style.transform = 'translateX(-' + index * 100 + '%)';
+      slides.forEach(function (el, i) { el.tabIndex = i === index ? 0 : -1; });
+      dotEls.forEach(function (el, i) { el.classList.toggle('is-active', i === index); });
     }
-
-    function renderCategories() {
-      var counts = {};
-      plugins.forEach(function (p) { counts[p.categoryKey] = (counts[p.categoryKey] || 0) + 1; });
-      document.getElementById('categoryPreview').innerHTML = CATEGORIES.filter(function (c) { return c.key !== 'other'; }).map(function (c) {
-        return '<a class="cat-cell" href="/catalog/?category=' + c.key + '" style="--cat:' + c.color + '"><span class="cat-cell-icon">' + shared.catIconHtml(c.key) + '</span><span class="cat-cell-copy"><strong>' + esc(c.label) + '</strong><span class="cat-cell-count">' + (counts[c.key] || 0) + ' plugins</span></span><span class="cat-cell-arrow" aria-hidden="true">&rarr;</span></a>';
-      }).join('');
+    function play() {
+      clearInterval(timer);
+      if (!PREFERS_REDUCED_MOTION) timer = setInterval(function () { go(index + 1); }, 5500);
     }
+    prev.addEventListener('click', function () { go(index - 1); play(); });
+    next.addEventListener('click', function () { go(index + 1); play(); });
+    dots.addEventListener('click', function (e) {
+      var dot = e.target.closest('.hs-dot');
+      var i = dot ? dotEls.indexOf(dot) : -1;
+      if (i >= 0) { go(i); play(); }
+    });
+    play();
 
-    function initHeroSlider() {
-      var root = document.getElementById('heroSlider'), track = document.getElementById('heroSliderTrack'), dots = document.getElementById('heroSliderDots');
-      var prev = document.getElementById('heroSliderPrev'), next = document.getElementById('heroSliderNext');
-      if (!root || !track || !dots || !prev || !next) return;
-      var featured = plugins.filter(function (p) { return GIF_URL[p.repo]; }).sort(function (a,b) { return (b.downloads || 0) - (a.downloads || 0); }).slice(0,5);
-      var index = 0, timer;
-      track.innerHTML = featured.map(function (p,i) { return '<a class="hs-slide" href="/catalog/#' + encodeURIComponent(p.repo) + '"' + (i ? ' tabindex="-1"' : '') + '><span class="hs-media"><img src="' + esc(GIF_URL[p.repo]) + '" alt="" width="640" height="360"></span><span class="hs-copy"><span class="hs-kicker">Featured</span><span class="hs-name">' + esc(p.name) + '</span><span class="hs-niche">' + esc(p.niche || '') + '</span></span></a>'; }).join('');
-      dots.innerHTML = featured.map(function (p,i) { return '<button type="button" class="hs-dot' + (i ? '' : ' is-active') + '" aria-label="Show ' + esc(p.name) + '"></button>'; }).join('');
-      function go(n) { index = (n + featured.length) % featured.length; track.style.transform = 'translateX(-' + index * 100 + '%)'; Array.prototype.forEach.call(track.children,function(el,i){el.tabIndex=i===index?0:-1;}); Array.prototype.forEach.call(dots.children,function(el,i){el.classList.toggle('is-active',i===index);}); }
-      function play(){ clearInterval(timer); if(!PREFERS_REDUCED_MOTION) timer=setInterval(function(){go(index+1);},5500); }
-      prev.addEventListener('click',function(){go(index-1);play();}); next.addEventListener('click',function(){go(index+1);play();});
-      dots.addEventListener('click',function(e){var i=Array.prototype.indexOf.call(dots.children,e.target);if(i>=0){go(i);play();}}); play();
-      // Zoom que sigue al mouse (a pedido explícito 2026-09-10) -- el
-      // origen del scale() de arriba (--hs-ox/--hs-oy, default 50%/18%
-      // en CSS) se sobreescribe por elemento según la posición real del
-      // cursor dentro de esa imagen, para que el zoom 1.75x quede
-      // centrado donde está el mouse en vez de un punto fijo. Delegado
-      // en `track` (estable -- innerHTML solo se arma una vez arriba,
-      // go() solo cambia su transform) en vez de por-slide. Se salta
-      // por completo si el usuario pidió reduced motion, mismo criterio
-      // que play() ya usa arriba.
-      if (!PREFERS_REDUCED_MOTION) {
-        track.addEventListener('mousemove', function (e) {
-          var media = e.target.closest('.hs-media');
-          if (!media) return;
-          var rect = media.getBoundingClientRect();
-          if (!rect.width || !rect.height) return;
-          var ox = Math.min(100, Math.max(0, (e.clientX - rect.left) / rect.width * 100));
-          var oy = Math.min(100, Math.max(0, (e.clientY - rect.top) / rect.height * 100));
-          media.style.setProperty('--hs-ox', ox + '%');
-          media.style.setProperty('--hs-oy', oy + '%');
+    // Zoom que sigue al mouse (a pedido explicito 2026-09-10) -- el
+    // origen del scale() (--hs-ox/--hs-oy, default 50%/18% en CSS) se
+    // sobreescribe por elemento segun la posicion real del cursor.
+    // Delegado en `track` (estable) en vez de por-slide.
+    if (!PREFERS_REDUCED_MOTION) {
+      track.addEventListener('mousemove', function (e) {
+        var media = e.target.closest('.hs-media');
+        if (!media) return;
+        var rect = media.getBoundingClientRect();
+        if (!rect.width || !rect.height) return;
+        var ox = Math.min(100, Math.max(0, (e.clientX - rect.left) / rect.width * 100));
+        var oy = Math.min(100, Math.max(0, (e.clientY - rect.top) / rect.height * 100));
+        media.style.setProperty('--hs-ox', ox + '%');
+        media.style.setProperty('--hs-oy', oy + '%');
+      });
+      track.addEventListener('mouseleave', function () {
+        Array.prototype.forEach.call(track.querySelectorAll('.hs-media'), function (media) {
+          media.style.removeProperty('--hs-ox');
+          media.style.removeProperty('--hs-oy');
         });
-        track.addEventListener('mouseleave', function () {
-          Array.prototype.forEach.call(track.querySelectorAll('.hs-media'), function (media) {
-            media.style.removeProperty('--hs-ox');
-            media.style.removeProperty('--hs-oy');
-          });
-        });
-      }
+      });
     }
-
-    renderStats();
-    renderCategories();
-    initHeroSlider();
-  }).catch(function () {
-    var subtitle = document.getElementById('heroSubtitle');
-    var stats = document.getElementById('stats');
-    if (subtitle) {
-      subtitle.setAttribute('role', 'alert');
-      subtitle.textContent = 'Catalog data could not be loaded. You can retry or browse the plugins on JetBrains Marketplace.';
-    }
-    if (stats) {
-      stats.innerHTML =
-        '<button type="button" class="btn primary" id="homeCatalogRetry">Retry</button>' +
-        '<a class="btn" href="https://plugins.jetbrains.com/vendor/gap-hunter-labs">Open JetBrains Marketplace ↗</a>';
-    }
-    var retry = document.getElementById('homeCatalogRetry');
-    if (retry) retry.addEventListener('click', function () { location.reload(); });
-  });
+  })();
 
   var burger = document.getElementById('topbarBurger'), topbar = document.getElementById('topbar');
-  if (burger && topbar) burger.addEventListener('click', function () { var open = topbar.classList.toggle('nav-open'); burger.setAttribute('aria-expanded', String(open)); });
+  if (burger && topbar) {
+    burger.addEventListener('click', function () {
+      var open = topbar.classList.toggle('nav-open');
+      burger.setAttribute('aria-expanded', String(open));
+    });
+  }
 
   // Fade el logo del pie del sidebar cuando el <footer> real entra en
   // viewport (ver comentario en css/shell.css).

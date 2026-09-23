@@ -134,8 +134,6 @@
     top: 0;
     z-index: 40;
     background: rgba(9,13,22,0.94);
-    -webkit-backdrop-filter: blur(10px);
-    backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--border);
   }
 
@@ -1582,6 +1580,7 @@
   }
 
   .plugin-card {
+    text-decoration: none; color: inherit;
     position: relative;
     overflow: hidden;
     display: flex;
@@ -1652,6 +1651,7 @@
      position:absolute para .similar-card/.tbl-similar-card, que no se
      tocan acá. */
   .plugin-card .card-header { display: flex; align-items: flex-start; gap: 8px; }
+  .name-cell a { text-decoration: none; color: inherit; display: block; }
   .plugin-card .card-header .card-cat { position: static; flex: none; }
   .plugin-card .card-top { flex: 1; min-width: 0; }
 
