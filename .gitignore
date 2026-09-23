@@ -1,3 +1,9 @@
 __pycache__/
 *.pyc
-_review/
+# _review/ tiene tanto herramientas de verificacion versionables
+# (verify_static.py, verify_seo.py, etc. -- ninguna estaba trackeada
+# hasta este fix, un hallazgo real de la Fase 1 de SEO: solo vivian en
+# este disco) como artefactos regenerables (capturas before/after). Se
+# ignoran solo estos ultimos.
+_review/screenshots/
+_review/*.png

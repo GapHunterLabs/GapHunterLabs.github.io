@@ -72,6 +72,18 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: python pipeline/auto_update_catalog.py
 
+      # Fase 1 del SuperPlan de SEO (2026-09-22): una URL real por plugin
+      # (/catalog/<slug>/), generada a partir de los mismos datos que este
+      # workflow acaba de refrescar. Corre despues de auto_update_catalog.py
+      # porque lee data/catalog-data.json ya actualizado; verify_seo.py mas
+      # abajo es el gate que aborta el job si alguna ficha queda mal
+      # canonicalizada antes de que nada de esto llegue a commitearse.
+      - name: Build per-plugin pages
+        run: python pipeline/build_plugin_pages.py --sitemap --inject
+
+      - name: Verify SEO guardrails (per-plugin pages, sitemap, hash shim)
+        run: python _review/verify_seo.py
+
       # 2026-08-28 (auditoria, hallazgo cosmetico #56): red de seguridad
       # adicional antes de commitear -- DOCUMENTATION.md ya documenta 2
       # chequeos manuales ("the only real safety net") pero nunca
@@ -116,11 +128,22 @@ jobs:
         run: |
           git config user.name "Gap Hunter Labs"
           git config user.email "gaphunterlabs@gmail.com"
-          if git diff --quiet -- data/catalog-data.json catalog/index.html index.html sitemap.xml pipeline/catalog_daily_history.json pipeline/catalog_latest_data.json; then
+          # catalog/*/index.html: las 146 (y contando) fichas por plugin de
+          # la Fase 1 -- casi ninguna cambia en una corrida dada (el lastmod
+          # solo se mueve con contenido sustancial, ver MATERIAL_FIELDS en
+          # build_plugin_pages.py), pero hay que poder detectar y commitear
+          # las que si cambiaron. css/plugin.css es el CSS compartido que
+          # ese mismo script escribe; _review/plugin_lastmod.json es su
+          # huella persistida entre corridas.
+          TRACKED="data/catalog-data.json catalog/index.html catalog/*/index.html \
+            css/plugin.css index.html catalog.html sitemap.xml \
+            _review/plugin_lastmod.json pipeline/catalog_daily_history.json \
+            pipeline/catalog_latest_data.json"
+          if git diff --quiet -- $TRACKED; then
             echo "sin cambios reales en los datos, no se commitea nada"
             exit 0
           fi
-          git add data/catalog-data.json catalog/index.html index.html sitemap.xml pipeline/catalog_daily_history.json pipeline/catalog_latest_data.json
+          git add -- $TRACKED
           git commit -m "Auto-update catalog data ($(date -u +%Y-%m-%d))"
           for i in 1 2 3 4 5; do
             if git push; then
