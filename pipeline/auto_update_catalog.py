@@ -3,9 +3,13 @@
 """Refresh the public plugin catalog from Marketplace and GitHub data.
 
 The generated browser data is written to ``data/catalog-data.json``.
-The catalog page's JSON-LD and no-script listing are then regenerated
-from that same file, while static counts on the home and catalog pages
-are kept in sync for first paint and non-JavaScript visitors.
+The catalog page's JSON-LD is then regenerated from that same file,
+while static counts on the home and catalog pages are kept in sync for
+first paint and non-JavaScript visitors. Since Fase 2 (2026-09-22),
+catalog/index.html's own grid/table are pre-rendered separately by
+pipeline/build_catalog_grid.py, which the workflow runs right after
+this script -- see that script for why there's no more no-script
+fallback list here (the real grid already is one).
 
 Usage:
     python pipeline/auto_update_catalog.py
@@ -18,7 +22,6 @@ import sys
 import subprocess
 import urllib.request
 import urllib.parse
-import html
 from datetime import date, datetime, timedelta, timezone
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -180,10 +183,6 @@ JSONLD_RE = re.compile(
     r'(<script type="application/ld\+json" id="catalog-jsonld">)(.*?)(</script>)',
     re.S,
 )
-NOSCRIPT_RE = re.compile(
-    r'(<noscript id="catalog-crawler">)(.*?)(</noscript>)',
-    re.S,
-)
 def plain_text(s):
     s = "" if s is None else str(s)
     s = re.sub(r"`+", "", s)
@@ -194,45 +193,23 @@ def plain_text(s):
 
 
 def build_catalog_jsonld(rows, generated_at):
+    # Fase 1 (2026-09-22) le dio a cada plugin su propia URL real y su
+    # propio JSON-LD completo (SoftwareApplication + BreadcrumbList, ver
+    # pipeline/build_plugin_pages.py) -- este bloque a nivel catalogo ya
+    # no necesita repetir esa entidad. Cada ListItem apunta ahora a esa
+    # pagina propia (antes apuntaba al Marketplace/GitHub, dejando a
+    # Google sin una URL nuestra que indexar por plugin) y no lleva
+    # aggregateRating: esas valoraciones son de otro sitio (el
+    # Marketplace) y Google no admite ratings agregados de terceros.
     elements = []
     for i, p in enumerate(rows, 1):
-        url = p.get("marketplaceUrl") or p.get("githubUrl") or CATALOG_URL
-        item = {
-            "@type": "SoftwareApplication",
-            "name": p.get("name") or p.get("repo"),
-            "url": url,
-            "applicationCategory": "DeveloperApplication",
-            "operatingSystem": "IntelliJ Platform",
-        }
-        desc = plain_text(p.get("pitch"))
-        if desc:
-            item["description"] = desc
-        if p.get("githubUrl"):
-            item["sameAs"] = p["githubUrl"]
-        if p.get("marketplaceUrl"):
-            item["downloadUrl"] = p["marketplaceUrl"]
-        if p.get("firstPublished"):
-            item["datePublished"] = p["firstPublished"]
-        if p.get("pricing") == "FREE":
-            item["offers"] = {
-                "@type": "Offer",
-                "price": "0",
-                "priceCurrency": "USD",
-            }
-        reviews = p.get("reviews") or 0
-        rating = p.get("rating")
-        if reviews > 0 and rating:
-            item["aggregateRating"] = {
-                "@type": "AggregateRating",
-                "ratingValue": str(rating),
-                "ratingCount": str(int(reviews)),
-                "bestRating": "5",
-                "worstRating": "1",
-            }
+        slug = p.get("repo")
+        url = ("%s%s/" % (CATALOG_URL, slug)) if slug else CATALOG_URL
         elements.append({
             "@type": "ListItem",
             "position": i,
-            "item": item,
+            "url": url,
+            "name": p.get("name") or slug,
         })
     payload = {
         "@context": "https://schema.org",
@@ -255,43 +232,6 @@ def build_catalog_jsonld(rows, generated_at):
     return raw.replace("</script>", "<\\/script>")
 
 
-def build_catalog_noscript(rows):
-    items = []
-    for p in rows:
-        name = html.escape(p.get("name") or p.get("repo") or "Plugin")
-        pitch = html.escape(plain_text(p.get("pitch")))
-        mp = p.get("marketplaceUrl")
-        gh = p.get("githubUrl")
-        if mp:
-            title = '<a href="%s">%s</a>' % (html.escape(mp, quote=True), name)
-        else:
-            title = name
-        parts = [title]
-        if pitch:
-            parts.append(" — " + pitch)
-        if gh:
-            parts.append(
-                ' <a href="%s">Source</a>' % html.escape(gh, quote=True)
-            )
-        items.append("<li>" + "".join(parts) + "</li>")
-    n = str(len(rows))
-    return (
-        '\n  <div style="max-width:720px;margin:40px auto;padding:24px;'
-        "font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;"
-        'color:#E9EDF8;background:#090D16;">\n'
-        '    <p style="font-size:22px;font-weight:700;margin:0 0 12px;">'
-        "Gap Hunter Labs — IntelliJ &amp; JetBrains Plugin Catalog</p>\n"
-        '    <p style="color:#9AA6C4;line-height:1.6;margin:0 0 16px;">'
-        + n
-        + " IntelliJ-family plugins, each built from a documented gap in existing tooling. "
-        '<a href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" style="color:#3FA2FF;">JetBrains Marketplace</a>'
-        ' · <a href="https://github.com/GapHunterLabs" style="color:#3FA2FF;">GitHub</a></p>\n'
-        '    <ol style="color:#E9EDF8;line-height:1.55;padding-left:1.3em;">\n      '
-        + "\n      ".join(items)
-        + "\n    </ol>\n  </div>\n"
-    )
-
-
 def _replace_inner(page_html, pattern, inner, label):
     if not pattern.search(page_html):
         sys.exit("[auto_update] ERROR: missing %s block in catalog/index.html" % label)
@@ -306,16 +246,10 @@ def apply_seo_blocks(page_html, rows, generated_at):
     page_html = _replace_inner(
         page_html, JSONLD_RE, build_catalog_jsonld(rows, generated_at), "catalog-jsonld"
     )
-    page_html = _replace_inner(
-        page_html, NOSCRIPT_RE, build_catalog_noscript(rows), "catalog-crawler"
-    )
     mld = JSONLD_RE.search(page_html)
     ld = json.loads(mld.group(2))
     if ld.get("mainEntity", {}).get("numberOfItems") != len(rows):
         sys.exit("[auto_update] ERROR: catalog-jsonld numberOfItems does not match plugin count")
-    ns = NOSCRIPT_RE.search(page_html)
-    if not ns or "<ol" not in ns.group(2) or "</ol>" not in ns.group(2):
-        sys.exit("[auto_update] ERROR: catalog-crawler list did not render")
     return page_html
 
 

@@ -320,13 +320,8 @@ class Sources:
         self.categories = js_literal(self.shared_js, "CATEGORIES", label)
         self.icons = js_literal(self.shared_js, "ICONS", label)
         self.cat_icon_inner = js_literal(self.shared_js, "CAT_ICON_INNER", label)
-
-        # ICON_CALENDAR vive inline en catalog/index.html (ningun otro
-        # consumidor lo usa); se extrae de ahi para no duplicarlo.
-        m = re.search(r"var\s+ICON_CALENDAR\s*=\s*'((?:[^'\\]|\\.)*)'", self.catalog_html)
-        if not m:
-            die("no se encontro ICON_CALENDAR en catalog/index.html")
-        self.icon_calendar = m.group(1).replace("\\'", "'")
+        if "calendar" not in self.icons:
+            die("falta ICONS.calendar en js/catalog-shared.js (usado por el stat 'Published')")
 
         # Cross-reference real a VS Code, por el mismo slug de repo.
         self.vsx_by_repo = {}
@@ -517,7 +512,7 @@ class PluginRenderer:
                  % (icons["github"], p.get("stars") if p.get("stars") is not None else "—"))
         h.append('<div class="stat"><span class="stat-icon">%s</span><div><div class="num">%s</div>'
                  '<div class="label">Published</div></div></div>'
-                 % (src.icon_calendar, esc(p.get("firstPublished") or "—")))
+                 % (icons["calendar"], esc(p.get("firstPublished") or "—")))
         h.append('</div></div>')
 
         h.append('<div class="dossier-side"><div class="dossier-links">')
@@ -659,13 +654,15 @@ class PluginRenderer:
 # 5. Shell: se recorta del propio catalog/index.html
 # =============================================================================
 
-LOADER_RE = re.compile(r'<div id="siteLoader".*?<!-- Crawler fallback', re.S)
-NOSCRIPT_RE = re.compile(r'<noscript id="catalog-crawler">.*?</noscript>\s*', re.S)
 CATALOG_JSONLD_RE = re.compile(
     r'<script type="application/ld\+json" id="catalog-jsonld">.*?</script>\s*', re.S)
 MAIN_RE = re.compile(r'(<main class="wrap">).*?(</main>)', re.S)
+# Fase 2 (2026-09-22): catalog/index.html ya no tiene loader ni carga
+# catalog-shared.js (su grid/tabla vienen pre-renderizados, ver
+# pipeline/build_catalog_grid.py) -- el ancla pasa a ser vscode-catalog.js,
+# el unico <script src> que le sigue quedando antes de sus scripts inline.
 TAIL_SCRIPTS_RE = re.compile(
-    r'<script src="/js/catalog-shared\.js"></script>.*?(?=<script data-goatcounter)', re.S)
+    r'<script src="/js/vscode-catalog\.js"></script>.*?(?=<script data-goatcounter)', re.S)
 STYLE_RE = re.compile(r"<style>.*?</style>\s*", re.S)
 
 
@@ -688,20 +685,15 @@ class Shell:
         # mas que todo el resto del <head>.
         html = cut(re.compile(r"<script>(?:(?!</script>).)*?/\*SLUGS\*/.*?</script>\s*", re.S),
                    "", "shim de slugs")
-        html = cut(LOADER_RE, "<!-- Crawler fallback", "loader")
-        html = cut(NOSCRIPT_RE, "", "noscript crawler")
         html = cut(CATALOG_JSONLD_RE, "@@JSONLD@@\n", "catalog-jsonld")
         html = cut(TAIL_SCRIPTS_RE, '<script src="/js/plugin-page.js" defer></script>\n', "scripts del catalogo")
         html = cut(MAIN_RE, r"\1@@BODY@@\2", "<main class=\"wrap\">")
 
         # Todo el CSS inline pasa a /css/plugin.css: una descarga cacheada
-        # por las 146 fichas en vez de ~107 KB repetidos en cada una. El
-        # <noscript> que envolvia la regla del loader se va con el loader.
+        # por las 146 fichas en vez de ~107 KB repetidos en cada una.
         n_styles = len(STYLE_RE.findall(html))
         if n_styles < 1:
             die("no quedan bloques <style> que reemplazar")
-        html = cut(re.compile(r"<noscript>\s*<style>.*?</style>\s*</noscript>\s*", re.S),
-                   "", "noscript del loader")
         html = STYLE_RE.sub("", html)
         html = html.replace('<link rel="stylesheet" href="/css/shell.css">',
                             '<link rel="stylesheet" href="/css/plugin.css">\n'

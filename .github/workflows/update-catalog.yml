@@ -78,6 +78,24 @@ jobs:
       # porque lee data/catalog-data.json ya actualizado; verify_seo.py mas
       # abajo es el gate que aborta el job si alguna ficha queda mal
       # canonicalizada antes de que nada de esto llegue a commitearse.
+      # Fase 2 del SuperPlan de SEO (2026-09-22): pre-renderiza la grilla
+      # y la tabla de /catalog/ mismo (146 <a>/<tr> reales con los datos
+      # que auto_update_catalog.py acaba de refrescar) -- antes del build
+      # de fichas porque ambos leen catalog/index.html como fuente, y
+      # build_plugin_pages.py reemplaza <main> entero al generar cada
+      # ficha (no le importa el contenido de la grilla), asi que el orden
+      # entre los dos no es estrictamente necesario pero mantiene el log
+      # en el mismo orden que el pipeline conceptual: datos -> grid del
+      # catalogo -> fichas por plugin.
+      - name: Build catalog grid/table (pre-rendered, no JS needed to paint)
+        run: python pipeline/build_catalog_grid.py
+
+      # Mismo principio que el paso de arriba, aplicado a la home: el
+      # subtitulo del hero, los contadores, los facts, las categorias y
+      # el slider de destacados tambien llegan ya pre-renderizados.
+      - name: Build home page (pre-rendered hero/stats/categories/slider)
+        run: python pipeline/build_home.py
+
       - name: Build per-plugin pages
         run: python pipeline/build_plugin_pages.py --sitemap --inject
 
@@ -101,12 +119,16 @@ jobs:
           if not m:
               sys.exit("catalog-jsonld script block not found")
           ld = json.loads(m.group(1))
+          # Fase 2 (2026-09-22): ya no hay noscript de respaldo -- la
+          # grilla y la tabla reales (pipeline/build_catalog_grid.py) SON
+          # el contenido visible sin JS, asi que la paridad se mide contra
+          # ellas, no contra una lista aparte.
           totals = (data.get("totalPlugins"), len(data.get("plugins", [])),
-                    ld.get("mainEntity", {}).get("numberOfItems"))
-          noscript = re.search(r'<noscript id="catalog-crawler">(.*?)</noscript>', catalog, re.S)
-          listed = len(re.findall(r"<li>", noscript.group(1))) if noscript else -1
-          if len(set(totals + (listed,))) != 1:
-              sys.exit("catalog count mismatch: data/rows/jsonld/noscript=%r" % (totals + (listed,)))
+                    ld.get("mainEntity", {}).get("numberOfItems"),
+                    len(re.findall(r'class="plugin-card"', catalog)),
+                    len(re.findall(r'<tr class="row"', catalog)))
+          if len(set(totals)) != 1:
+              sys.exit("catalog count mismatch: data/rows/jsonld/cards/rows=%r" % (totals,))
           print("catalog JSON/SEO parity OK (%s plugins)" % totals[0])
           PYEOF
 
