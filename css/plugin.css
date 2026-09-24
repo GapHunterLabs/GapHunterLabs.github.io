@@ -1514,6 +1514,18 @@
   .cat-cell[data-cat="editor"] { --cat: var(--pending); }
   .cat-cell[data-cat="other"] { --cat: var(--text-faint); }
   .cat-cell[hidden] { display: none; }
+  /* Bug real, 2026-09-24: [hidden] y .plugin-card{display:flex} tienen
+     la MISMA especificidad (una clase vs un atributo) -- el orden de
+     cascada (reglas de autor despues de las del user-agent) hace que
+     display:flex le gane a display:none del [hidden] del navegador.
+     El JS de paginacion marcaba hidden=true correctamente (confirmado
+     en el DOM guardado por el usuario: 131/146 tarjetas con el
+     atributo puesto), pero las 146 seguian pintandose en pantalla --
+     el bug era 100% visual/CSS, no de JS, y afectaba a TODOS los
+     navegadores por igual (reproducido tanto en Edge como en Brave
+     limpios una vez que se supo donde mirar). Mismo patron que ya se
+     habia resuelto para .cat-cell arriba, nunca generalizado. */
+  .plugin-card[hidden] { display: none; }
   .cat-cell-all { grid-column: 1 / -1; --cat: var(--text-dim); }
   .cat-cell.is-active {
     border-color: color-mix(in srgb, var(--cat) 65%, var(--border));
@@ -2195,6 +2207,11 @@
       background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
       box-shadow: var(--shadow); padding: 12px; margin-bottom: 10px;
     }
+    /* Mismo bug que .plugin-card[hidden] arriba: display:flex acá adentro
+       tiene mas especificidad que el [hidden] del navegador solo en este
+       breakpoint (a escritorio tr.row no fija display, asi que ahi la
+       tabla paginaba bien). */
+    tr.row[hidden] { display: none; }
     tr.row:last-child { border-bottom: 1px solid var(--border); }
     tr.row:has(+ tr.expand-row .expand-inner.open) {
       margin-bottom: 0; border-bottom: 0; border-bottom-left-radius: 0; border-bottom-right-radius: 0;
