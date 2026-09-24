@@ -19,6 +19,8 @@ PAGES = (
     ("contact.html", "contact/index.html"),
     ("security.html", "security/index.html"),
     ("laboratorio.html", "laboratorio/index.html"),
+    ("privacy.html", "privacy/index.html"),
+    ("terms.html", "terms/index.html"),
 )
 PROHIBITED = re.compile(
     r"CONSTITUTION\.md|SDK_GOTCHAS\.md|AUTOMATION_PLAYBOOK\.md|"
@@ -105,7 +107,7 @@ assert len(set(counts)) == 1, counts
 
 sitemap_text = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
 ElementTree.parse(ROOT / "sitemap.xml")
-for slug in ("catalog", "methodology", "contact", "security", "laboratorio"):
+for slug in ("catalog", "methodology", "contact", "security", "laboratorio", "privacy", "terms"):
     assert f"https://gaphunterlabs.github.io/{slug}/</loc>" in sitemap_text, (
         "sitemap.xml missing clean-URL entry for", slug
     )
@@ -135,6 +137,8 @@ for display_name, rel_path, active in (
     ("laboratorio.html", "laboratorio/index.html", "Laboratorie"),
     ("security.html", "security/index.html", None),
     ("contact.html", "contact/index.html", "Contact"),
+    ("privacy/index.html", "privacy/index.html", None),
+    ("terms/index.html", "terms/index.html", None),
 ):
     text = (ROOT / rel_path).read_text(encoding="utf-8")
     sidebar_match = re.search(r'<aside class="app-sidebar" id="appSidebar">(.*?)</aside>', text, re.S)
