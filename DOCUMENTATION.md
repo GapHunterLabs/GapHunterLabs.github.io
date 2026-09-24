@@ -49,6 +49,20 @@ The CSP's `media-src 'self'` (added the same day) is required for these `<video>
 
 To convert a new demo (or re-convert one that changed): `python pipeline/convert_demo_media.py <slug> <path-or-url-to-gif-or-png>` writes `media/<slug>/` and prints the `DEMO_MEDIA` entry to paste into `js/catalog-shared.js` (it refuses to finish if the output duration doesn't match the source's, catching the fps-collapse failure mode above). Rebuild after: `build_catalog_grid.py`, `build_home.py`, `build_plugin_pages.py --sitemap --inject`.
 
+## Per-plugin OG images (`media/<slug>/og.png`)
+
+Every plugin's `/catalog/<slug>/` page has its own 1200×630 social-share image instead of the site-wide generic `og-image.png` — same brand (logo, dot-grid background, corner brackets) as the generic one, but with the plugin's real name, niche, pricing, category (icon + color pulled from the same `CATEGORIES`/`CAT_ICON_INNER` map as the rest of the site), platform badges (JetBrains/VS Code, whichever it actually ships on), and its real downloads/stars/published-date stat pair.
+
+Two-script split, same pattern as demo media:
+
+- `pipeline/og_plugin_template.html` — the HTML/CSS template with `@@TOKEN@@` placeholders (same convention as `Shell.render()`).
+- `pipeline/render_og.js` — takes `<input.html> <output.png>`, launches Chromium headless via `puppeteer-core` and screenshots it at 1200×630. Needs `npm install` run once inside `pipeline/` (installs `puppeteer-core` only — not committed, see `pipeline/package.json`) and a real Chromium/Chrome/Edge on the machine (`PUPPETEER_EXECUTABLE_PATH` env var to point at a non-default one; defaults to Edge on Windows).
+- `pipeline/build_og_images.py` — orchestrator. Reuses `Sources`/`PluginRenderer` from `build_plugin_pages.py` directly (imported, not duplicated) to fill the template per plugin, shells out to `render_og.js`, and sanity-checks the output isn't empty/truncated. `--slug <repo>` for one plugin, `--limit N` for a quick batch, no args for all 146.
+
+This is a local-only, occasional step — not part of the GitHub Actions build (the runner has no Chromium and images only need regenerating when a plugin's name/category/pricing actually changes, not on every data refresh). `build_plugin_pages.py`'s main loop checks whether `media/<slug>/og.png` exists on disk and points `og:image`/`og:image:secure_url`/`twitter:image`/their `:alt` tags at it if so — falling back to the generic `og-image.png` for any plugin whose image hasn't been generated yet, so a missing render never breaks a page. `_review/verify_seo.py` enforces this: any plugin with a `media/<slug>/og.png` file must have its `<head>` actually pointing at it, and its `og:image:alt` must not still be the generic sitewide text.
+
+The `description(p)` text (already used for meta description/`og:description`) is reused verbatim for the image's tagline — not the `why`/`gap_text` research field, which is written for internal citation and often trails off mid-sentence ("...vendor Tachi Labs. Real, verbatim reviewer complaints:") rather than reading as a complete sentence.
+
 ## Catalog page rendering (`catalog/index.html`'s own grid/table)
 
 `pipeline/build_catalog_grid.py` pre-renders `catalog/index.html`'s own Field grid (146 `<a class="plugin-card" href="/catalog/<slug>/" data-cat="…" data-downloads="…" …>`) and Table rows, plus the hero stats and category `<select>`/board counts, between `<!-- PRERENDER:*:START/END -->` markers. Reuses the same `Sources`/`PluginRenderer` helpers as `build_plugin_pages.py` (same repo, imported directly — not duplicated).

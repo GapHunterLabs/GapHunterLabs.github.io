@@ -1,0 +1,8 @@
+{
+  "name": "gap-hunter-labs-og-render",
+  "private": true,
+  "description": "Solo para pipeline/render_og.js -- renderiza pipeline/og_plugin_template.html a PNG via Chromium headless. No es parte del sitio servido.",
+  "dependencies": {
+    "puppeteer-core": "^23.0.0"
+  }
+}

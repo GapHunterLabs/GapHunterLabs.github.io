@@ -7,3 +7,9 @@ __pycache__/
 # ignoran solo estos ultimos.
 _review/screenshots/
 _review/*.png
+
+# pipeline/render_og.js necesita puppeteer-core (Chromium headless) solo
+# para regenerar imagenes OG por plugin a mano -- no es parte del sitio
+# servido ni del build de CI, asi que no se commitea.
+pipeline/node_modules/
+pipeline/package-lock.json
