@@ -93,7 +93,8 @@ What a shared link or a crawler actually sees, and where each piece lives. `_rev
 - **Structured data** — home: `Organization` + `WebSite`; catalog: `CollectionPage` + `ItemList`; plugin pages: `SoftwareApplication` + `BreadcrumbList`.
 - **`robots.txt`** — allows everything except `/pipeline/`, `/_review/`, `/DOCUMENTATION.md`, `/og-image-source.html`. `/css/`, `/js/`, `/fonts/`, `/media/`, `/data/` must stay crawlable (Googlebot needs them to render). Note `.nojekyll` means GitHub Pages serves the *whole* repo (including `_review/`, `pipeline/`, this file); `Disallow` only removes them from crawling, it does not hide them.
 - **Sitemap** — `lastmod` of static pages is edited by hand when their content changes; plugin `lastmod` is derived from material fields (`build_plugin_pages.py`).
-- **Not done (needs a decision/asset):** no `twitter:site` (needs the X/Twitter handle), no visible "share" buttons on plugin pages.
+- **X / Twitter** — account is `@GapHunterLabs` (https://x.com/GapHunterLabs): `twitter:site` on every page (home, catalog, plugin pages via the catalog shell, secondary pages, redirect stubs) and listed in the `Organization` `sameAs`. It is deliberately *not* in the topbar/footer link lists yet (only LinkedIn/GitHub/JetBrains/VS Code are) — adding it there is a UI change, not an SEO fix.
+- **Not done (needs a decision/asset):** no visible "share" buttons on plugin pages.
 
 ## Common maintenance
 
