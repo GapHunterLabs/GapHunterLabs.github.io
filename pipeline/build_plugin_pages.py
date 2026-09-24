@@ -83,7 +83,9 @@ SIMILAR_MAX = 4
 GROWTH_PERCENT_MIN_BASELINE = 10
 
 # Paginas que llevan el shim hash -> ruta.
-SLUG_INJECTION_TARGETS = ("catalog/index.html", "index.html", "catalog.html")
+# 2026-09-24: el shim de home y catalogo salio del HTML a js/slug-shim.js (para
+# poder quitar 'unsafe-inline' de la CSP); catalog.html (stub, sin CSP) conserva el suyo.
+SLUG_INJECTION_TARGETS = ("js/slug-shim.js", "catalog.html")
 SLUG_MARK_OPEN = "/*SLUGS*/"
 SLUG_MARK_CLOSE = "/*ENDSLUGS*/"
 
@@ -743,7 +745,7 @@ class Shell:
         # El shim hash -> ruta solo tiene sentido en el catalogo y en la
         # home: una ficha ya ES el destino, y su lista de 146 slugs pesa
         # mas que todo el resto del <head>.
-        html = cut(re.compile(r"<script>(?:(?!</script>).)*?/\*SLUGS\*/.*?</script>\s*", re.S),
+        html = cut(re.compile(r'<script src="/js/slug-shim\.js" defer></script>\s*'),
                    "", "shim de slugs")
         html = cut(CATALOG_JSONLD_RE, "@@JSONLD@@\n", "catalog-jsonld")
         html = cut(TAIL_SCRIPTS_RE, '<script src="/js/plugin-page.js" defer></script>\n', "scripts del catalogo")

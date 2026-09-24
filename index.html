@@ -3,18 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<script>
-/* Enlaces antiguos al dossier por hash (#mermaid-companion) -> su URL real
-   (/catalog/mermaid-companion/). Corre antes de cualquier CSS o fetch para
-   que el salto ocurra sin primer pintado. La lista de slugs la escribe
-   pipeline/build_plugin_pages.py entre los marcadores; no editar a mano. */
-(function () {
-  var h = location.hash.slice(1).toLowerCase();
-  if (!h) return;
-  var slugs = /*SLUGS*/["ansible-companion","apache-httpclient-reuse-companion","api-deprecation-header-companion","api-security-companion","async-self-invocation-companion","asyncapi-companion","aws-s3-public-acl-sdk-companion","aws-sdk-client-reuse-companion","background-readaction-freeze-companion","bean-copy-companion","binding-result-position-companion","cache-invalidation-companion","cassandra-cqlsession-reuse-companion","cert-companion","change-case-companion","changelog-fragment-companion","circular-dependency-companion","cmake-companion","commit-message-convention-companion","completablefuture-cancellation-companion","config-secrets-file-companion","connection-pool-config-companion","correlation-id-propagation-companion","cors-policy-companion","deadlock-lock-order-companion","dependency-vulnerability-companion","dockerfile-layer-size-companion","dockerfile-missing-user-companion","dockerfile-unused-stage-companion","elasticsearch-client-reuse-companion","enum-ordinal-persistence-companion","env-diff-companion","env-var-missing-companion","environment-specific-constant-companion","error-lens-companion","exception-escape-chain-companion","feature-flag-reference-companion","feign-fallback-config-companion","firestore-companion","flaky-test-marker-companion","format-converter-companion","gcp-client-reuse-companion","git-hygiene-companion","github-actions-pwn-request-companion","gitlab-ci-companion","go-timer-leak-companion","gradle-task-graph-companion","graphql-companion","grpc-error-status-companion","grpc-missing-deadline-companion","grpc-streamobserver-contract-companion","highlight-companion","http-status-inline-companion","idempotency-key-companion","import-cost-companion","integer-overflow-widening-companion","interface-exception-divergence-companion","interface-resource-close-divergence-companion","interface-sink-divergence-companion","interprocedural-resource-leak-companion","jdbc-double-close-companion","jenkinsfile-companion","json-path-builder-companion","json-schema-companion","json-to-code-companion","jwt-companion","jwt-signature-verification-companion","jwt-webhook-timing-safe-companion","k6-companion","k8s-label-selector-exposure-companion","k8s-readiness-liveness-probe-companion","k8s-resource-limit-companion","kafka-premature-offset-commit-companion","kafka-producer-reuse-companion","kafka-topic-feedback-loop-companion","kafka-topic-schema-companion","ktor-httpclient-reuse-companion","kubernetes-rbac-wildcard-companion","ldap-injection-sink-companion","log-format-string-companion","log-injection-companion","lucene-query-injection-companion","material-companion","merge-conflict-leftover-companion","mermaid-companion","micrometer-timer-sample-companion","micronaut-httpclient-create-companion","mismatched-lock-object-companion","module-boundary-leak-companion","mongo-client-reuse-companion","mutable-state-leak-companion","n-plus-one-query-companion","nginx-companion","npm-peer-dependency-companion","object-mapper-reuse-companion","okhttp-client-reuse-companion","openapi-companion","otel-span-naming-companion","php-composer-script-companion","php-file-inclusion-companion","php-function-injection-companion","php-open-redirect-companion","php-shell-injection-companion","php-sql-injection-companion","pii-field-annotation-companion","pii-tostring-leak-companion","postman-openapi-drift-companion","prometheus-metric-naming-companion","prometheus-metric-registration-companion","rabbitmq-channel-reuse-companion","rails-mass-assignment-companion","rate-limiter-fallback-companion","react-native-companion","redis-lock-missing-ttl-companion","redisson-client-reuse-companion","redos-catastrophic-backtracking-companion","refactor-simulator","regex-named-group-companion","regex-preview-companion","resilience-self-invocation-companion","retry-backoff-jitter-companion","review-companion","ruby-gemfile-group-companion","ruby-nethttp-reuse-companion","ruby-shell-injection-companion","rxjava-disposable-leak-companion","second-order-sqli-field-companion","semver-bump-mismatch-companion","session-attribute-type-confusion-companion","spel-injection-sink-companion","spreadsheet-companion","sql-concatenation-companion","ssrf-allowlist-bypass-companion","ssrf-unsanitized-url-companion","terraform-iam-privesc-companion","terraform-iam-wildcard-companion","test-scaffold-companion","theme-companion","thread-confinement-escape-companion","trycatch-consistency-companion","turbo-log-companion","unsafe-deserialization-sink-companion","unused-npm-script-companion","webhook-signature-companion","xpath-injection-sink-companion","xsd-companion"]/*ENDSLUGS*/;
-  if (slugs.indexOf(h) !== -1) location.replace('/catalog/' + h + '/');
-})();
-</script>
+<script src="/js/slug-shim.js" defer></script>
 <!-- Trimmed 2026-08-23 (indexing audit): was 218 chars, well past
      Google's ~155-160 char truncation point -- everything past
      roughly "...ships focused IntelliJ-family..." was invisible in
@@ -30,8 +19,13 @@
      catalog JSON file built from JetBrains Marketplace + GitHub API
      responses. That data is the actual untrusted-input surface on
      this page (see esc()/safeUrl() below for the render-time half of this
-     defense) -- script-src/style-src stay 'self' + 'unsafe-inline' only
-     because everything really is inline, never relaxed for a CDN;
+     defense) -- since 2026-09-24 script-src is 'self' + GoatCounter only:
+     every page script lives in /js/*.js, no 'unsafe-inline' (the
+     'inline-speculation-rules' keyword is what lets the speculation-rules
+     JSON block keep working). style-src still
+     needs 'unsafe-inline' for the style="" attributes (~300 on the catalog
+     page), which can't be allow-listed by hash without 'unsafe-hashes';
+     never relaxed for a CDN;
      object-src/base-uri/form-action are locked to 'none' since this page
      never embeds plugins or submits forms; img-src allows only this origin and
      data: (the inline SVG favicon/icons) -- Fase 3 (2026-09-23) dropped
@@ -72,7 +66,7 @@
      served from something other than GitHub Pages' static hosting with
      real response headers) but should not be read as active defenses
      today. -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'unsafe-inline' https://gc.zgo.at; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; media-src 'self'; manifest-src 'self'; connect-src 'self' https://gaphunterlabs.goatcounter.com; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://gc.zgo.at 'inline-speculation-rules'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; media-src 'self'; manifest-src 'self'; connect-src 'self' https://gaphunterlabs.goatcounter.com; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <link rel="icon" href="/favicon.ico" sizes="48x48">
@@ -3239,119 +3233,7 @@
     </div>
   </div>
 </footer>
-<script>
-(function () {
-  'use strict';
-  // Fase 2 del SuperPlan de SEO (2026-09-22): el subtitulo del hero, los
-  // contadores, los facts, las categorias y el slider de destacados ya
-  // llegan pre-renderizados (pipeline/build_home.py, mismos datos que
-  // catalog-data.json pero escritos como HTML real en vez de pedidos por
-  // fetch). Esta pagina ya no carga js/catalog-shared.js ni depende de
-  // GapCatalog -- lo unico que queda en JS es interactividad sobre nodos
-  // que ya existen: el slider (dots/flechas/autoplay/zoom) y el burger
-  // del topbar.
-  var PREFERS_REDUCED_MOTION = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  (function initHeroSlider() {
-    var track = document.getElementById('heroSliderTrack');
-    var dots = document.getElementById('heroSliderDots');
-    var prev = document.getElementById('heroSliderPrev');
-    var next = document.getElementById('heroSliderNext');
-    if (!track || !dots || !prev || !next) return;
-    var slides = Array.prototype.slice.call(track.children);
-    var dotEls = Array.prototype.slice.call(dots.children);
-    if (!slides.length) return;
-    var index = 0, timer;
-    // Fase 3 (2026-09-23): el autoplay no corre mientras el slider esta
-    // fuera de viewport (nadie lo ve, y setInterval + los reflows de
-    // go() seguian corriendo igual mientras el visitante lee mas abajo
-    // en la pagina) -- inVisible controla si play() arma el timer o no;
-    // el observer llama play()/pause() al cruzar, sin tocar el resto de
-    // la logica de abajo.
-    var inViewport = true;
-
-    function go(n) {
-      index = (n + slides.length) % slides.length;
-      track.style.transform = 'translateX(-' + index * 100 + '%)';
-      slides.forEach(function (el, i) { el.tabIndex = i === index ? 0 : -1; });
-      dotEls.forEach(function (el, i) { el.classList.toggle('is-active', i === index); });
-    }
-    function play() {
-      clearInterval(timer);
-      if (!PREFERS_REDUCED_MOTION && inViewport) timer = setInterval(function () { go(index + 1); }, 5500);
-    }
-    prev.addEventListener('click', function () { go(index - 1); play(); });
-    next.addEventListener('click', function () { go(index + 1); play(); });
-    dots.addEventListener('click', function (e) {
-      var dot = e.target.closest('.hs-dot');
-      var i = dot ? dotEls.indexOf(dot) : -1;
-      if (i >= 0) { go(i); play(); }
-    });
-    play();
-
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver(function (entries) {
-        inViewport = entries[0].isIntersecting;
-        play();
-      }, { threshold: 0 }).observe(track);
-    }
-
-    // Zoom que sigue al mouse (a pedido explicito 2026-09-10) -- el
-    // origen del scale() (--hs-ox/--hs-oy, default 50%/18% en CSS) se
-    // sobreescribe por elemento segun la posicion real del cursor.
-    // Delegado en `track` (estable) en vez de por-slide. Throttleado a
-    // un update por frame (rAF) desde el 2026-09-23 -- mousemove puede
-    // disparar 60-120+ veces/seg con un mouse rapido, y cada disparo
-    // sin throttle forzaba un recalculo de estilo; con rAF, varios
-    // eventos que llegan en el mismo frame colapsan en un solo write.
-    if (!PREFERS_REDUCED_MOTION) {
-      var zoomFrame = null, pendingMedia = null, pendingOx = 0, pendingOy = 0;
-      function flushZoom() {
-        zoomFrame = null;
-        pendingMedia.style.setProperty('--hs-ox', pendingOx + '%');
-        pendingMedia.style.setProperty('--hs-oy', pendingOy + '%');
-      }
-      track.addEventListener('mousemove', function (e) {
-        var media = e.target.closest('.hs-media');
-        if (!media) return;
-        var rect = media.getBoundingClientRect();
-        if (!rect.width || !rect.height) return;
-        pendingMedia = media;
-        pendingOx = Math.min(100, Math.max(0, (e.clientX - rect.left) / rect.width * 100));
-        pendingOy = Math.min(100, Math.max(0, (e.clientY - rect.top) / rect.height * 100));
-        if (zoomFrame === null) zoomFrame = requestAnimationFrame(flushZoom);
-      });
-      track.addEventListener('mouseleave', function () {
-        if (zoomFrame !== null) { cancelAnimationFrame(zoomFrame); zoomFrame = null; }
-        Array.prototype.forEach.call(track.querySelectorAll('.hs-media'), function (media) {
-          media.style.removeProperty('--hs-ox');
-          media.style.removeProperty('--hs-oy');
-        });
-      });
-    }
-  })();
-
-  var burger = document.getElementById('topbarBurger'), topbar = document.getElementById('topbar');
-  if (burger && topbar) {
-    burger.addEventListener('click', function () {
-      var open = topbar.classList.toggle('nav-open');
-      burger.setAttribute('aria-expanded', String(open));
-    });
-  }
-
-  // Fade el logo del pie del sidebar cuando el <footer> real entra en
-  // viewport (ver comentario en css/shell.css).
-  var siteFooter = document.querySelector('.site-footer');
-  var sidebarFooter = document.querySelector('.sidebar-footer');
-  if (siteFooter && sidebarFooter && 'IntersectionObserver' in window) {
-    new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        sidebarFooter.classList.toggle('is-near-footer', entry.isIntersecting);
-      });
-    }).observe(siteFooter);
-  }
-})();
-</script>
+<script src="/js/home.js" defer></script>
 <!-- Fase 3 del SuperPlan de SEO (2026-09-23): prefetch (no prerender) de
      los enlaces a /catalog/ -- moderate en vez de eager para no
      descargar los 146 al mismo tiempo, solo los que el visitante
