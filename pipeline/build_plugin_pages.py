@@ -528,7 +528,7 @@ class PluginRenderer:
         return (
             '<div class="share-row" role="group" aria-label="Share this plugin">'
             '<span class="share-label">Share</span>'
-            '<a class="share-btn" href="%s" target="_blank" rel="noopener" aria-label="Share %s on X">%s<span>X</span></a>'
+            '<a class="share-btn share-icon" href="%s" target="_blank" rel="noopener" aria-label="Share %s on X" title="Share on X">%s</a>'
             '<a class="share-btn" href="%s" target="_blank" rel="noopener" aria-label="Share %s on LinkedIn">%s<span>LinkedIn</span></a>'
             '<button type="button" class="share-btn share-copy" data-copy="%s" hidden>%s<span>Copy link</span></button>'
             '</div>'
