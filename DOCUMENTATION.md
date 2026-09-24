@@ -81,6 +81,20 @@ The `description(p)` text (already used for meta description/`og:description`) i
 
 The page's own inline script never builds HTML or fetches JSON for this content: it filters by toggling `hidden` on the already-rendered nodes, sorts by reordering them (`appendChild` on an existing child moves it), and paginates the same way. A dossier "click a card, see details in a panel" experience used to live on this page (`dossierBodyHtml()` et al.) — removed 2026-09-22 now that every plugin has its own real page; a card/row click is a normal navigation to `/catalog/<slug>/`.
 
+## SEO / social sharing checklist (audited 2026-09-24)
+
+What a shared link or a crawler actually sees, and where each piece lives. `_review/verify_seo.py` (section 8) fails if any of it regresses.
+
+- **Unique title + description per page** — `/` and `/catalog/` used to be byte-identical (competing with each other in results and giving the same link card). Home keeps the brand title; the catalog has its own. Descriptions 70-160 chars, no raw markdown (`[text](url)`, `**`, backticks) — `plain_text()` in both `build_plugin_pages.py` and `auto_update_catalog.py` strips markdown links.
+- **Complete OG image block on every page** — `og:image` + `:secure_url`/`:type`/`:width`/`:height`/`:alt` and `twitter:image:alt`. Without width/height the *first* share on Facebook/LinkedIn can render with no image while the scraper fetches it. Plugin pages use their own `media/<slug>/og.png`; everything else uses `og-image.png`.
+- **`robots` meta** with `max-image-preview:large, max-snippet:-1` on every indexable page (large previews in Discover/Google).
+- **Favicon** — `favicon.svg` + `favicon.ico` (16/32/48) at the repo root, linked from every page. The old `data:` URI icon is not usable by Google Search, and `/favicon.ico` used to 404. Regenerate the `.ico` from the SVG if the logo changes.
+- **Legacy `.html` stubs** (`catalog.html`, ...) carry the same title/description/OG as their target, written by `pipeline/sync_stub_meta.py` (between `<!--STUBMETA-->` markers). Scrapers do not follow the meta refresh, so before this an old shared link showed a card saying "Redirecting...". Re-run the script after changing a real page's title/description. Do not add `noindex` (see `verify_static.py`).
+- **Structured data** — home: `Organization` + `WebSite`; catalog: `CollectionPage` + `ItemList`; plugin pages: `SoftwareApplication` + `BreadcrumbList`.
+- **`robots.txt`** — allows everything except `/pipeline/`, `/_review/`, `/DOCUMENTATION.md`, `/og-image-source.html`. `/css/`, `/js/`, `/fonts/`, `/media/`, `/data/` must stay crawlable (Googlebot needs them to render). Note `.nojekyll` means GitHub Pages serves the *whole* repo (including `_review/`, `pipeline/`, this file); `Disallow` only removes them from crawling, it does not hide them.
+- **Sitemap** — `lastmod` of static pages is edited by hand when their content changes; plugin `lastmod` is derived from material fields (`build_plugin_pages.py`).
+- **Not done (needs a decision/asset):** no `twitter:site` (needs the X/Twitter handle), no visible "share" buttons on plugin pages.
+
 ## Common maintenance
 
 Refresh live data and all generated catalog surfaces:

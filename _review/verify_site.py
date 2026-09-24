@@ -107,7 +107,7 @@ with sync_playwright() as p:
     assert page.title() == plugin_name + " — Gap Hunter Labs"
     page.locator(".dossier-close").click()
     assert page.evaluate("location.hash") == ""
-    assert page.title() == "Gap Hunter Labs — IntelliJ & JetBrains Plugin Catalog"
+    assert page.title() == "Plugin Catalog for IntelliJ & JetBrains IDEs | Gap Hunter Labs"
 
     for group, rows in alignment.items():
         for row in rows:

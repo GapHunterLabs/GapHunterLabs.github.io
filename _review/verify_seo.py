@@ -318,6 +318,81 @@ def main() -> int:
         if "<video" in text and "media-src 'self'" not in csp_value(text):
             fail("catalog/%s/" % slug, "tiene <video> pero la CSP no declara media-src 'self'")
 
+    # ---- 8. metadatos de paginas estaticas + compartibilidad (auditoria final) --
+    # Todo esto fue un fallo real el 2026-09-24: / y /catalog/ con title y
+    # description IDENTICOS; secundarias sin og:image:width/height/alt ni
+    # max-image-preview; favicon solo como data: URI (Google no lo usa) y sin
+    # /favicon.ico; stubs .html que compartidos salian como "Redirecting...".
+    def meta_of(text, attr, name):
+        m = re.search(r'<meta[^>]+%s="%s"[^>]*content="([^"]*)"' % (attr, re.escape(name)), text)
+        return html.unescape(m.group(1)) if m else None
+
+    static_pages = (("index.html", "/"), ("catalog/index.html", "/catalog/"),
+                    ("methodology/index.html", "/methodology/"), ("security/index.html", "/security/"),
+                    ("laboratorio/index.html", "/laboratorio/"), ("contact/index.html", "/contact/"),
+                    ("privacy/index.html", "/privacy/"), ("terms/index.html", "/terms/"))
+    seen_titles, seen_descs = {}, {}
+    for rel, path in static_pages:
+        text = (ROOT / rel).read_text(encoding="utf-8")
+        title = html.unescape(re.search(r"<title>(.*?)</title>", text, re.S).group(1).strip())
+        desc = meta_of(text, "name", "description") or ""
+        if title in seen_titles:
+            fail(rel, "title identico al de %s: %r" % (seen_titles[title], title))
+        seen_titles[title] = rel
+        if desc in seen_descs:
+            fail(rel, "description identica a la de %s" % seen_descs[desc])
+        seen_descs[desc] = rel
+        if not 70 <= len(desc) <= 160:
+            fail(rel, "description de %d chars (esperado 70-160)" % len(desc))
+        if len(title) > 70:
+            fail(rel, "title de %d chars (max 70)" % len(title))
+        if "max-image-preview:large" not in (meta_of(text, "name", "robots") or ""):
+            fail(rel, "robots sin max-image-preview:large (limita la tarjeta grande en Discover/Google)")
+        for prop in ("og:image:width", "og:image:height", "og:image:alt", "og:image:type"):
+            if not meta_of(text, "property", prop):
+                fail(rel, "falta %s (sin dimensiones el primer share en Facebook/LinkedIn sale sin imagen)" % prop)
+        if not meta_of(text, "name", "twitter:image:alt"):
+            fail(rel, "falta twitter:image:alt")
+        icon = re.findall(r'<link rel="icon"[^>]*href="([^"]*)"', text)
+        if not icon or any(i.startswith("data:") for i in icon):
+            fail(rel, "favicon ausente o solo como data: URI (Google Search no lo puede usar)")
+        for i in icon:
+            if i.startswith("/") and not (ROOT / i.lstrip("/")).exists():
+                fail(rel, "el favicon %s no existe en el repo" % i)
+    ico = ROOT / "favicon.ico"
+    if not ico.exists() or ico.read_bytes()[:4] != b"\x00\x00\x01\x00":
+        fail("favicon.ico", "falta o no es un .ico valido (crawlers/Slack/Discord lo piden en la raiz)")
+    if '"WebSite"' not in home_text:
+        fail("index.html", "falta el JSON-LD WebSite (nombre del sitio en resultados)")
+
+    for stub, target in (("catalog.html", "/catalog/"), ("methodology.html", "/methodology/"),
+                         ("contact.html", "/contact/"), ("security.html", "/security/"),
+                         ("laboratorio.html", "/laboratorio/")):
+        text = (ROOT / stub).read_text(encoding="utf-8")
+        st = html.unescape(re.search(r"<title>(.*?)</title>", text, re.S).group(1))
+        if "redirecting" in st.lower():
+            fail(stub, "el title sigue siendo 'Redirecting...' (asi sale el enlace viejo al compartirlo)")
+        for prop in ("og:title", "og:description", "og:image", "og:image:width", "og:image:height"):
+            if not meta_of(text, "property", prop):
+                fail(stub, "falta %s (correr pipeline/sync_stub_meta.py)" % prop)
+        if meta_of(text, "property", "og:url") != SITE + target:
+            fail(stub, "og:url no apunta a la URL limpia %s" % target)
+
+    for slug in slugs:
+        d = meta_of((ROOT / "catalog" / slug / "index.html").read_text(encoding="utf-8"), "name", "description") or ""
+        if re.search(r"\]\(|\*\*|`", d):
+            fail("catalog/%s/" % slug, "la description arrastra sintaxis markdown cruda: %r" % d[:80])
+
+    robots = (ROOT / "robots.txt").read_text(encoding="utf-8")
+    if "Sitemap: %s/sitemap.xml" % SITE not in robots:
+        fail("robots.txt", "falta la linea Sitemap")
+    for path in ("/_review/", "/pipeline/"):
+        if "Disallow: %s" % path not in robots:
+            fail("robots.txt", "falta Disallow: %s" % path)
+    for path in ("/css/", "/js/", "/fonts/", "/media/", "/data/"):
+        if "Disallow: %s" % path in robots:
+            fail("robots.txt", "%s no debe bloquearse: la pagina lo necesita para renderizar" % path)
+
     if problems:
         print("verify_seo: %d problema(s)\n" % len(problems))
         for item in problems:
