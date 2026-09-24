@@ -1873,6 +1873,8 @@
     transition: color var(--duration-base) ease, background var(--duration-base) ease, border-color var(--duration-base) ease;
   }
   .share-btn svg { width: 13px; height: 13px; flex: none; }
+  /* Solo el logo de X (el texto "X" al lado era redundante); el nombre accesible va en aria-label. */
+  .share-btn.share-icon { padding: 6px 9px; }
   .share-btn:hover { color: var(--text); background: var(--surface-2); }
   .share-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   .share-btn.copied { color: var(--good); border-color: color-mix(in srgb, var(--good) 45%, var(--border)); }
