@@ -42,6 +42,7 @@ import json
 import os
 import re
 import sys
+import urllib.parse
 from datetime import date
 from pathlib import Path
 
@@ -64,6 +65,18 @@ LASTMOD_STORE = ROOT / "_review" / "plugin_lastmod.json"
 OG_IMAGE = SITE + "/og-image.png"
 OG_IMAGE_ALT = "Gap Hunter Labs - Plugin Intelligence Catalog Report"
 MEDIA_DIR = ROOT / "media"
+SHARE_ICON_X = ('<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 '
+                '8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833'
+                'L7.084 4.126H5.117z"/></svg>')
+SHARE_ICON_LINKEDIN = ('<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.447 20.452h-3.554v-5.569c0-1.328'
+                       '-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 '
+                       '3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 '
+                       '2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452z'
+                       'M22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729'
+                       'C24 .774 23.2 0 22.222 0h.003z"/></svg>')
+SHARE_ICON_LINK = ('<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" '
+                   'stroke-linejoin="round" aria-hidden="true"><path d="M6.5 9.5a3 3 0 0 0 4.2 0l2-2a3 3 0 0 0-4.2-4.2l-.7.7"/>'
+                   '<path d="M9.5 6.5a3 3 0 0 0-4.2 0l-2 2a3 3 0 0 0 4.2 4.2l.7-.7"/></svg>')
 TITLE_SOFT_MAX = 70
 DESC_MAX = 155
 SIMILAR_MAX = 4
@@ -499,6 +512,27 @@ class PluginRenderer:
         ) % (esc(s["repo"]), esc(s["name"]), color, esc(cat["label"]),
              self.cat_icon_html(s["categoryKey"]), esc(s["name"]), esc(s.get("niche")), dl)
 
+    # ---- compartir --------------------------------------------------------
+    # Enlaces planos (X, LinkedIn): no cargan ningun script de terceros ni
+    # necesitan JS, asi que la CSP no cambia. "Copy link" si necesita JS
+    # (plugin-page.js) y sale con [hidden]: sin JS/clipboard no se muestra un
+    # boton muerto.
+    def share_html(self, p):
+        url = "%s/catalog/%s/" % (SITE, p["repo"])
+        text = "%s — %s plugin for IntelliJ IDEs" % (p["name"], plain_text(p.get("niche")) or "developer tooling")
+        q = lambda s: urllib.parse.quote(s, safe="")
+        x_url = "https://x.com/intent/post?text=%s&url=%s&via=GapHunterLabs" % (q(text), q(url))
+        li_url = "https://www.linkedin.com/sharing/share-offsite/?url=%s" % q(url)
+        return (
+            '<div class="share-row" role="group" aria-label="Share this plugin">'
+            '<span class="share-label">Share</span>'
+            '<a class="share-btn" href="%s" target="_blank" rel="noopener" aria-label="Share %s on X">%s<span>X</span></a>'
+            '<a class="share-btn" href="%s" target="_blank" rel="noopener" aria-label="Share %s on LinkedIn">%s<span>LinkedIn</span></a>'
+            '<button type="button" class="share-btn share-copy" data-copy="%s" hidden>%s<span>Copy link</span></button>'
+            '</div>'
+        ) % (esc(x_url), esc(p["name"]), SHARE_ICON_X, esc(li_url), esc(p["name"]), SHARE_ICON_LINKEDIN,
+             esc(url), SHARE_ICON_LINK)
+
     # ---- cuerpo de la ficha ---------------------------------------------
     def body_html(self, p):
         src, icons = self.src, self.src.icons
@@ -555,6 +589,7 @@ class PluginRenderer:
             h.append('<a class="btn" href="%s" target="_blank" rel="noopener">'
                      '<span class="btn-icon">%s</span>Download for VS Code ↗</a>'
                      % (esc(safe_url(vsx.get("marketplaceUrl"))), icons["vscode"]))
+        h.append(self.share_html(p))
         h.append('</div>')
         h.append(self.demo_media_html(p["repo"], "dossier-gif", p["name"], eager=True))
         h.append('</div></div></div>')
