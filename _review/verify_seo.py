@@ -34,6 +34,7 @@ SHIM_TARGETS = ("catalog/index.html", "index.html", "catalog.html")
 STATIC_URLS = (
     SITE + "/", SITE + "/catalog/", SITE + "/methodology/",
     SITE + "/security/", SITE + "/contact/", SITE + "/laboratorio/",
+    SITE + "/privacy/", SITE + "/terms/",
 )
 
 problems: list[str] = []
