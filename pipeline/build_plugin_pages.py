@@ -63,6 +63,7 @@ LASTMOD_STORE = ROOT / "_review" / "plugin_lastmod.json"
 
 OG_IMAGE = SITE + "/og-image.png"
 OG_IMAGE_ALT = "Gap Hunter Labs - Plugin Intelligence Catalog Report"
+MEDIA_DIR = ROOT / "media"
 TITLE_SOFT_MAX = 70
 DESC_MAX = 155
 SIMILAR_MAX = 4
@@ -755,6 +756,11 @@ class Shell:
             (r'<meta property="og:type" content="[^"]*">', '<meta property="og:type" content="article">', "og:type"),
             (r'<meta name="twitter:title" content="[^"]*">', '<meta name="twitter:title" content="@@OGTITLE@@">', "twitter:title"),
             (r'<meta name="twitter:description" content="[^"]*">', '<meta name="twitter:description" content="@@DESC@@">', "twitter:description"),
+            (r'<meta property="og:image" content="[^"]*">', '<meta property="og:image" content="@@OGIMAGE@@">', "og:image"),
+            (r'<meta property="og:image:secure_url" content="[^"]*">', '<meta property="og:image:secure_url" content="@@OGIMAGE@@">', "og:image:secure_url"),
+            (r'<meta property="og:image:alt" content="[^"]*">', '<meta property="og:image:alt" content="@@OGIMAGEALT@@">', "og:image:alt"),
+            (r'<meta name="twitter:image" content="[^"]*">', '<meta name="twitter:image" content="@@OGIMAGE@@">', "twitter:image"),
+            (r'<meta name="twitter:image:alt" content="[^"]*">', '<meta name="twitter:image:alt" content="@@OGIMAGEALT@@">', "twitter:image:alt"),
         ]
         for pattern, replacement, label in subs:
             html, n = re.subn(pattern, replacement, html, count=1, flags=re.S)
@@ -762,12 +768,14 @@ class Shell:
                 die("no se pudo reemplazar %s en el <head> del shell" % label)
         return html
 
-    def render(self, *, title, og_title, desc, url, jsonld, body):
+    def render(self, *, title, og_title, desc, url, jsonld, body, og_image, og_image_alt):
         out = self.template
         out = out.replace("@@TITLE@@", esc(title))
         out = out.replace("@@OGTITLE@@", esc(og_title))
         out = out.replace("@@DESC@@", esc(desc))
         out = out.replace("@@URL@@", esc(url))
+        out = out.replace("@@OGIMAGE@@", esc(og_image))
+        out = out.replace("@@OGIMAGEALT@@", esc(og_image_alt))
         out = out.replace("@@JSONLD@@",
                           '<script type="application/ld+json">%s</script>' % jsonld)
         out = out.replace("@@BODY@@", body)
@@ -896,6 +904,13 @@ def main():
     for p in rows:
         slug = p["repo"]
         url = "%s/catalog/%s/" % (SITE, slug)
+        # media/<slug>/og.png lo genera pipeline/build_og_images.py aparte
+        # (necesita Chromium headless, no corre en cada build). Si todavia
+        # no existe para este plugin, cae a la og-image.png generica en
+        # vez de romper el <head>.
+        has_own_og = (MEDIA_DIR / slug / "og.png").exists()
+        og_image = "%s/media/%s/og.png" % (SITE, slug) if has_own_og else OG_IMAGE
+        og_image_alt = ("%s — Gap Hunter Labs" % p["name"]) if has_own_og else OG_IMAGE_ALT
         page = shell.render(
             title=renderer.title(p),
             # En una tarjeta social el nombre del plugin ya es el gancho;
@@ -905,6 +920,8 @@ def main():
             url=url,
             jsonld=renderer.jsonld(p, url),
             body=renderer.body_html(p),
+            og_image=og_image,
+            og_image_alt=og_image_alt,
         )
         # Marca la pagina para que el CSS de la ficha pueda diferenciarse
         # del panel del catalogo sin duplicar reglas.
