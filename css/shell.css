@@ -320,6 +320,36 @@
   margin-right: 0;
 }
 
+/* ---- Pantallas grandes (2026-09-24) -------------------------------------
+   Antes el contenido tope en --page-max (1280px) y quedaba pegado al
+   sidebar: a 2560px sobraban ~1000px vacios a la derecha, mientras el
+   topbar y el footer si iban centrados en el viewport (la marca flotaba
+   sin alinear con el sidebar), y en las paginas con rail (methodology,
+   security, privacy, terms) el grid 1fr+300px no tenia tope y estiraba el
+   texto a ~2000px de ancho.
+   Ahora: --page-max sube a 1600px, el contenido (y el grid contenido+rail)
+   se centra en el area a la derecha del sidebar, y el topbar ocupa el ancho
+   completo (marca a la izquierda, sobre el sidebar; links al borde derecho).
+   Ojo: un hijo con margin auto dentro de .app-main (flex en columna) deja
+   de estirarse, por eso el width:100% explicito. */
+:root { --page-max: 1600px; }
+.app-shell .topbar-inner { max-width: none; }
+.app-main > .wrap,
+.app-main > .main-with-rail {
+  width: 100%;
+  max-width: var(--page-max);
+  margin-left: auto;
+  margin-right: auto;
+}
+/* El footer va debajo de todo el shell; con el sidebar a la izquierda su
+   contenido centrado en el viewport quedaba desalineado del contenido
+   (centrado en el area a la derecha del sidebar): 124px a 2560px. Con este
+   padding ambos comparten el mismo eje. Solo escritorio: en movil no hay
+   columna de sidebar. */
+@media (min-width: 841px) {
+  .site-footer { padding-left: var(--sidebar-w); }
+}
+
 /* El drawer mobile reusa el mecanismo/nombre de clase ya existente en
    el topbar (.nav-open + #topbarBurger) -- mismo patrón, ahora
    controla .app-sidebar en vez de #topbarNav. */
@@ -362,4 +392,36 @@
     .app-sidebar { transition: none; }
   }
   .col-span-3, .col-span-4, .col-span-6, .col-span-8, .col-span-9 { grid-column: span 12; }
+}
+
+/* ---- Topbar en pantallas chicas (2026-09-24) ---------------------------
+   Los 4 links externos + burger miden ~222px fijos; por debajo de ~400px el
+   nombre "Gap Hunter Labs" (nowrap) quedaba debajo de ellos y se cortaba
+   (a 320px se pisaban ~105px). Ahora el logo y el texto se achican con el
+   ancho, el nombre puede partirse en 2 lineas ("GAP HUNTER / LABS") en vez
+   de cortarse, y los botones ceden un poco de ancho. Los selectores llevan
+   .topbar delante para ganarle en especificidad a los @media inline de cada
+   pagina (que fijan min-width:44px en los links). */
+@media (max-width: 520px) {
+  .topbar .topbar-inner { padding: 0 12px; gap: 8px; }
+  .topbar .topbar-brand { gap: 8px; }
+  .topbar .topbar-mark,
+  .topbar .topbar-mark svg { width: 28px; height: 28px; }
+  .topbar .tw-name {
+    white-space: normal;
+    font-size: clamp(10px, 3vw, 13px);
+    letter-spacing: 0.04em;
+    line-height: 1.1;
+  }
+  .topbar .topbar-ext { height: 40px; }
+  .topbar .topbar-ext-link { min-width: 36px; padding: 0 8px; }
+  .topbar .topbar-burger { width: 40px; }
+}
+@media (max-width: 380px) {
+  .topbar .topbar-inner { padding: 0 8px; gap: 6px; }
+  .topbar .topbar-brand { gap: 6px; }
+  .topbar .topbar-mark,
+  .topbar .topbar-mark svg { width: 22px; height: 22px; }
+  .topbar .topbar-ext-link { min-width: 32px; padding: 0 6px; }
+  .topbar .topbar-burger { width: 36px; }
 }
