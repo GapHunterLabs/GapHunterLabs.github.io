@@ -282,6 +282,7 @@ def md_inline(text) -> str:
 def plain_text(value) -> str:
     """Igual que plain_text() de auto_update_catalog.py: markdown fuera."""
     text = "" if value is None else str(value)
+    text = re.sub(r"\[([^\]]+)\]\([^)]*\)", r"\1", text)
     text = re.sub(r"`+", "", text)
     text = re.sub(r"\*\*([^*]+)\*\*", r"\1", text)
     text = re.sub(r"\*([^*]+)\*", r"\1", text)

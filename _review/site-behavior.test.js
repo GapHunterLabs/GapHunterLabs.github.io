@@ -115,7 +115,7 @@ async function run() {
       throw new Error('Table open state did not synchronize: ' + JSON.stringify(opened));
     }
     const closed = await evaluate("(()=>{document.querySelector('.dossier-close').click();return{hash:location.hash,title:document.title,expanded:[...document.querySelectorAll('tr.row')].some(row=>row.getAttribute('aria-expanded')==='true')}})()");
-    if (closed.hash || closed.expanded || closed.title !== 'Gap Hunter Labs — IntelliJ & JetBrains Plugin Catalog') {
+    if (closed.hash || closed.expanded || closed.title !== 'Plugin Catalog for IntelliJ & JetBrains IDEs | Gap Hunter Labs') {
       throw new Error('Table close state did not synchronize: ' + JSON.stringify(closed));
     }
 

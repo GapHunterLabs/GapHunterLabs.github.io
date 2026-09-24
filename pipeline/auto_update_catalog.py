@@ -185,6 +185,7 @@ JSONLD_RE = re.compile(
 )
 def plain_text(s):
     s = "" if s is None else str(s)
+    s = re.sub(r"\[([^\]]+)\]\([^)]*\)", r"\1", s)
     s = re.sub(r"`+", "", s)
     s = re.sub(r"\*\*([^*]+)\*\*", r"\1", s)
     s = re.sub(r"\*([^*]+)\*", r"\1", s)
