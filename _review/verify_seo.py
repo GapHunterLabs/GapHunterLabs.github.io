@@ -101,6 +101,25 @@ def main() -> int:
         if og_url and og_url != url:
             fail(where, "og:url %r != canonical" % og_url)
 
+        # ---- og:image por plugin (Fase 3b) ---------------------------------
+        # media/<slug>/og.png lo genera pipeline/build_og_images.py aparte
+        # (Chromium headless, no corre en cada build). Si existe en disco,
+        # el <head> generado por build_plugin_pages.py tiene que apuntarle
+        # -- si todavia no existe, debe caer a la og-image.png generica,
+        # nunca a una URL de media/ inexistente.
+        has_own_og = (ROOT / "media" / slug / "og.png").exists()
+        expected_og = "%s/media/%s/og.png" % (SITE, slug) if has_own_og else "%s/og-image.png" % SITE
+        for prop, label in ((r'<meta property="og:image" content="([^"]*)">', "og:image"),
+                             (r'<meta property="og:image:secure_url" content="([^"]*)">', "og:image:secure_url"),
+                             (r'<meta name="twitter:image" content="([^"]*)">', "twitter:image")):
+            found = one(prop, page_html, where, label)
+            if found and found != expected_og:
+                fail(where, "%s %r != %r esperado" % (label, found, expected_og))
+        if has_own_og:
+            alt = one(r'<meta property="og:image:alt" content="([^"]*)">', page_html, where, "og:image:alt")
+            if alt and alt == "Gap Hunter Labs - Plugin Intelligence Catalog Report":
+                fail(where, "og:image:alt sigue siendo el generico aunque tiene imagen propia")
+
         title = one(r"<title>(.*?)</title>", page_html, where, "title")
         if title:
             titles[title].append(slug)
