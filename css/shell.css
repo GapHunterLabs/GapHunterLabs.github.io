@@ -162,6 +162,37 @@
 }
 .sidebar-link[aria-current="page"]:hover { color: #fff; background: var(--accent); }
 
+/* Grupo "Legal" (2026-09-24): <details>/<summary> nativo -- abre/cierra sin JS
+   (la CSP ya no permite scripts inline) y con teclado de fabrica (Enter/Espacio
+   sobre el summary). En Security/Privacy/Terms llega ya abierto, con el
+   subenlace de la pagina actual resaltado como el resto del sidebar. */
+.sidebar-group > summary { list-style: none; cursor: pointer; }
+.sidebar-group > summary::-webkit-details-marker { display: none; }
+.sidebar-group > summary::marker { content: ""; }
+.sidebar-link .sidebar-chevron {
+  width: 16px; height: 16px; margin-left: auto;
+  transition: transform var(--duration-base) ease;
+}
+.sidebar-group[open] > summary .sidebar-chevron { transform: rotate(180deg); }
+.sidebar-group.has-current > summary { color: var(--text); }
+.sidebar-sub {
+  display: flex; flex-direction: column; gap: 2px;
+  margin: 2px 0 6px 21px; padding-left: 12px;
+  border-left: 1px solid var(--border);
+}
+.sidebar-sublink {
+  display: block; padding: 8px 12px; border-radius: var(--radius-md);
+  font-family: var(--sans); font-size: 13.5px; font-weight: 600;
+  color: var(--text-dim); text-decoration: none;
+}
+.sidebar-sublink:hover { color: var(--text); background: var(--surface-2); }
+.sidebar-sublink:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+.sidebar-sublink[aria-current="page"] { color: #fff; background: var(--accent); }
+.sidebar-sublink[aria-current="page"]:hover { color: #fff; background: var(--accent); }
+/* Con el grupo abierto el sidebar crece ~110px; si la ventana es muy baja, la
+   lista de navegacion (no el logo del pie) es la que hace scroll. */
+.app-sidebar .sidebar-nav { min-height: 0; overflow-y: auto; }
+
 .sidebar-footer {
   margin-top: auto;
   padding-top: var(--space-5);

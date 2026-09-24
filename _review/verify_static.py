@@ -155,18 +155,27 @@ for display_name, rel_path, active in (
     ("catalog.html", "catalog/index.html", "Catalog"),
     ("methodology.html", "methodology/index.html", "Methodology"),
     ("laboratorio.html", "laboratorio/index.html", "Laboratorie"),
-    ("security.html", "security/index.html", None),
+    ("security.html", "security/index.html", "Security"),
     ("contact.html", "contact/index.html", "Contact"),
-    ("privacy/index.html", "privacy/index.html", None),
-    ("terms/index.html", "terms/index.html", None),
+    ("privacy/index.html", "privacy/index.html", "Privacy"),
+    ("terms/index.html", "terms/index.html", "Terms"),
 ):
     text = (ROOT / rel_path).read_text(encoding="utf-8")
     sidebar_match = re.search(r'<aside class="app-sidebar" id="appSidebar">(.*?)</aside>', text, re.S)
     if sidebar_match:
         nav = re.search(r'<nav class="sidebar-nav"[^>]*>(.*?)</nav>', sidebar_match.group(1), re.S).group(1)
-        links = re.findall(r"<a .*?</a>", nav)
-        labels = [re.sub("<.*?>", "", item) for item in links]
+        # Enlaces primarios (class="sidebar-link") vs subenlaces del grupo
+        # "Legal" (class="sidebar-sublink", dentro de <details>): Security,
+        # Privacy y Terms dejaron de ser huerfanos del sidebar (2026-09-24).
+        links = re.findall(r'<a class="sidebar-link".*?</a>', nav, re.S)
+        labels = [re.sub("<.*?>", "", item).strip() for item in links]
         assert labels == ["Home", "Catalog", "Methodology", "Laboratorie", "Contact"], (display_name, labels)
+        sub = [re.sub("<.*?>", "", item).strip() for item in re.findall(r'<a class="sidebar-sublink".*?</a>', nav, re.S)]
+        assert sub == ["Security", "Privacy", "Terms"], (display_name, "subenlaces de Legal", sub)
+        group = re.search(r'<details class="sidebar-group[^"]*"([^>]*)>', nav)
+        assert group and "Legal" in nav, (display_name, "falta el grupo Legal")
+        has_current_sub = re.search(r'<a class="sidebar-sublink"[^>]*aria-current="page"', nav) is not None
+        assert (" open" in group.group(1)) == has_current_sub, (display_name, "el grupo Legal debe llegar abierto solo en Security/Privacy/Terms")
     else:
         nav = re.search(r'<div class="topbar-nav" id="topbarNav">(.*?)</div>', text, re.S).group(1)
         assert [re.sub("<.*?>", "", item) for item in re.findall(r"<a .*?</a>", nav)] == [
@@ -175,7 +184,7 @@ for display_name, rel_path, active in (
             "Contact",
         ]
     current = re.findall(r'<a[^>]*aria-current="page"[^>]*>(.*?)</a>', nav, re.S)
-    current = [re.sub("<.*?>", "", c) for c in current]
+    current = [re.sub("<.*?>", "", c).strip() for c in current]
     assert current == ([] if active is None else [active]), (display_name, current)
 
 # Redirect stubs: the 5 old top-level *.html URLs (already indexed by
