@@ -1,33 +1,6 @@
-
-(function () {
-  var topbar = document.getElementById('topbar');
-  var burger = document.getElementById('topbarBurger');
-  if (!topbar || !burger) return;
-  burger.addEventListener('click', function () {
-    var open = topbar.classList.toggle('nav-open');
-    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
-  });
-  document.querySelectorAll('#appSidebar a').forEach(function (link) {
-    link.addEventListener('click', function () {
-      topbar.classList.remove('nav-open');
-      burger.setAttribute('aria-expanded', 'false');
-    });
-  });
-  // Fade el logo del pie del sidebar cuando el <footer> real entra en
-  // viewport -- evita que ambas marcas queden casi superpuestas al
-  // llegar abajo de la página (ver comentario en css/shell.css).
-  var siteFooter = document.querySelector('.site-footer');
-  var sidebarFooter = document.querySelector('.sidebar-footer');
-  if (siteFooter && sidebarFooter && 'IntersectionObserver' in window) {
-    new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        sidebarFooter.classList.toggle('is-near-footer', entry.isIntersecting);
-      });
-    }).observe(siteFooter);
-  }
-})();
-
-
+/* Contact desk: los formularios arman un enlace de "nuevo issue" de GitHub prellenado (sin backend).
+   Movido desde un <script> inline el 2026-09-24 para poder quitar
+   'unsafe-inline' del script-src de la CSP (ver DOCUMENTATION.md). */
 // Contact desk: 3 quick actions (Submit a gap / Report a plugin /
 // Partnership) cada uno con su propio set de campos -- "Security
 // report" NO es un form, es un link directo a security.html#sec-report

@@ -1,4 +1,6 @@
-
+/* Shell compartido por las paginas secundarias: menu movil del topbar (burger + cierre al elegir un enlace) y fade del logo del sidebar cerca del footer.
+   Movido desde un <script> inline el 2026-09-24 para poder quitar
+   'unsafe-inline' del script-src de la CSP (ver DOCUMENTATION.md). */
 (function () {
   var topbar = document.getElementById('topbar');
   var burger = document.getElementById('topbarBurger');
@@ -14,8 +16,6 @@
       });
     });
   }
-  // Fade el logo del pie del sidebar cuando el <footer> real entra en
-  // viewport (ver comentario en css/shell.css).
   var siteFooter = document.querySelector('.site-footer');
   var sidebarFooter = document.querySelector('.sidebar-footer');
   if (siteFooter && sidebarFooter && 'IntersectionObserver' in window) {

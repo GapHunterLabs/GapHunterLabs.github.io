@@ -96,6 +96,25 @@ What a shared link or a crawler actually sees, and where each piece lives. `_rev
 - **X / Twitter** — account is `@GapHunterLabs` (https://x.com/GapHunterLabs): `twitter:site` on every page (home, catalog, plugin pages via the catalog shell, secondary pages, redirect stubs) and listed in the `Organization` `sameAs`. It is deliberately *not* in the topbar/footer link lists yet (only LinkedIn/GitHub/JetBrains/VS Code are) — adding it there is a UI change, not an SEO fix.
 - **Not done (needs a decision/asset):** no visible "share" buttons on plugin pages.
 
+## Scripts and the Content-Security-Policy
+
+Since 2026-09-24 every page's CSP has `script-src 'self' https://gc.zgo.at` — **no `'unsafe-inline'`** (home and catalog add `'inline-speculation-rules'`, which is what lets their `<script type="speculationrules">` block keep working). All page JavaScript is a file under `js/`, loaded with `defer`:
+
+| File | Used by |
+|---|---|
+| `js/shell.js` | methodology, contact, security, laboratorio, privacy, terms — mobile burger menu + sidebar-logo fade near the footer |
+| `js/methodology.js` | methodology — decision-diagram "draw on scroll" animation |
+| `js/contact.js` | contact — the forms that open a pre-filled GitHub issue |
+| `js/security-rail.js` | security — "Platform Insights" rail (needs `js/catalog-shared.js`) |
+| `js/home.js` | home — featured slider, burger, footer fade |
+| `js/catalog.js`, `js/catalog-vsx.js` | catalog — filter/sort/paginate over the pre-rendered HTML; VS Code extensions section |
+| `js/slug-shim.js` | home, catalog — legacy `#slug` links → `/catalog/<slug>/`. The slug list is written between the `/*SLUGS*/…/*ENDSLUGS*/` markers by `build_plugin_pages.py --inject`, and the daily workflow's `TRACKED` list includes this file (otherwise a new plugin would leave the shim stale without a commit). The legacy `catalog.html` stub keeps its own inline copy — stubs have no CSP. |
+| `js/plugin-page.js` | the 146 plugin pages — burger, footer fade, copy repo name, Share → Copy link |
+
+**Rules.** Never add an inline `<script>` or an `on…=` handler: with this CSP it silently does not run (the page still renders, the feature is just dead). `_review/verify_static.py` fails if an executable inline script comes back or `script-src` regains `'unsafe-inline'`, and syntax-checks every `js/*.js`. `defer` means scripts run after parsing, in document order — a legacy `#slug` link can therefore flash the page for a moment before the shim redirects (accepted trade-off vs a render-blocking script on every visit).
+
+**Still `style-src 'unsafe-inline'`:** the pages use `style=""` attributes heavily (~300 on the catalog alone, per-category `--cat` colors), which can't be allow-listed by hash without `'unsafe-hashes'`. Script injection is the meaningful risk; inline styles are not.
+
 ## Common maintenance
 
 Refresh live data and all generated catalog surfaces:
