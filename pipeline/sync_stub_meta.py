@@ -80,6 +80,7 @@ def main() -> None:
             '<meta property="og:image:alt" content="%s">' % OG_ALT,
             '<meta property="og:locale" content="en_US">',
             '<meta name="twitter:card" content="summary_large_image">',
+            '<meta name="twitter:site" content="@GapHunterLabs">',
             '<meta name="twitter:title" content="%s">' % title_attr,
             '<meta name="twitter:description" content="%s">' % desc,
             '<meta name="twitter:image" content="%s">' % OG_IMAGE,

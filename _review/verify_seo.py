@@ -353,6 +353,8 @@ def main() -> int:
                 fail(rel, "falta %s (sin dimensiones el primer share en Facebook/LinkedIn sale sin imagen)" % prop)
         if not meta_of(text, "name", "twitter:image:alt"):
             fail(rel, "falta twitter:image:alt")
+        if meta_of(text, "name", "twitter:site") != "@GapHunterLabs":
+            fail(rel, "falta twitter:site=@GapHunterLabs (atribucion de la tarjeta en X)")
         icon = re.findall(r'<link rel="icon"[^>]*href="([^"]*)"', text)
         if not icon or any(i.startswith("data:") for i in icon):
             fail(rel, "favicon ausente o solo como data: URI (Google Search no lo puede usar)")
@@ -377,9 +379,14 @@ def main() -> int:
                 fail(stub, "falta %s (correr pipeline/sync_stub_meta.py)" % prop)
         if meta_of(text, "property", "og:url") != SITE + target:
             fail(stub, "og:url no apunta a la URL limpia %s" % target)
+        if meta_of(text, "name", "twitter:site") != "@GapHunterLabs":
+            fail(stub, "falta twitter:site (correr pipeline/sync_stub_meta.py)")
 
     for slug in slugs:
-        d = meta_of((ROOT / "catalog" / slug / "index.html").read_text(encoding="utf-8"), "name", "description") or ""
+        ptext = (ROOT / "catalog" / slug / "index.html").read_text(encoding="utf-8")
+        if meta_of(ptext, "name", "twitter:site") != "@GapHunterLabs":
+            fail("catalog/%s/" % slug, "falta twitter:site (viene del <head> de catalog/index.html)")
+        d = meta_of(ptext, "name", "description") or ""
         if re.search(r"\]\(|\*\*|`", d):
             fail("catalog/%s/" % slug, "la description arrastra sintaxis markdown cruda: %r" % d[:80])
 
