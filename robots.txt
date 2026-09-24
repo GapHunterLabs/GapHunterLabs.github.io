@@ -14,4 +14,10 @@ Disallow: /pipeline/
 # baja calidad si no se excluye explicitamente.
 Disallow: /og-image-source.html
 
+# 2026-09-24 (auditoria SEO final): con .nojekyll GitHub Pages sirve TODO el repo. Estos dos
+# son andamiaje interno sin valor de busqueda (scripts de verificacion, doc de arquitectura) --
+# se excluyen del crawl (no del acceso: robots.txt no es una medida de seguridad).
+Disallow: /_review/
+Disallow: /DOCUMENTATION.md
+
 Sitemap: https://gaphunterlabs.github.io/sitemap.xml
