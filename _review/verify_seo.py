@@ -355,6 +355,8 @@ def main() -> int:
             fail(rel, "falta twitter:image:alt")
         if meta_of(text, "name", "twitter:site") != "@GapHunterLabs":
             fail(rel, "falta twitter:site=@GapHunterLabs (atribucion de la tarjeta en X)")
+        if 'href="https://x.com/GapHunterLabs"' not in text:
+            fail(rel, "el footer no enlaza la cuenta de X (https://x.com/GapHunterLabs)")
         icon = re.findall(r'<link rel="icon"[^>]*href="([^"]*)"', text)
         if not icon or any(i.startswith("data:") for i in icon):
             fail(rel, "favicon ausente o solo como data: URI (Google Search no lo puede usar)")
@@ -386,6 +388,10 @@ def main() -> int:
         ptext = (ROOT / "catalog" / slug / "index.html").read_text(encoding="utf-8")
         if meta_of(ptext, "name", "twitter:site") != "@GapHunterLabs":
             fail("catalog/%s/" % slug, "falta twitter:site (viene del <head> de catalog/index.html)")
+        if "share-row" not in ptext or "x.com/intent/post" not in ptext or "linkedin.com/sharing/share-offsite" not in ptext:
+            fail("catalog/%s/" % slug, "falta la fila Share (X / LinkedIn) de la ficha")
+        elif 'class="share-btn share-copy"' in ptext and " hidden>" not in ptext.split('share-copy"', 1)[1][:200]:
+            fail("catalog/%s/" % slug, "Copy link debe salir con [hidden] (sin JS seria un boton muerto)")
         d = meta_of(ptext, "name", "description") or ""
         if re.search(r"\]\(|\*\*|`", d):
             fail("catalog/%s/" % slug, "la description arrastra sintaxis markdown cruda: %r" % d[:80])

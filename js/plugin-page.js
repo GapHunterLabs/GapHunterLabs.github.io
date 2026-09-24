@@ -42,6 +42,28 @@
     });
   }
 
+  // "Copy link" de la fila Share: el boton viene con [hidden] y solo se
+  // muestra si hay clipboard, para no ofrecer un boton muerto.
+  var shareCopy = document.querySelector('.share-copy');
+  if (shareCopy && navigator.clipboard && navigator.clipboard.writeText) {
+    shareCopy.hidden = false;
+    var shareLabel = shareCopy.querySelector('span');
+    shareCopy.addEventListener('click', function () {
+      navigator.clipboard.writeText(shareCopy.getAttribute('data-copy')).then(function () {
+        if (shareCopy.dataset.copied) return;
+        var original = shareLabel.textContent;
+        shareLabel.textContent = 'Copied';
+        shareCopy.classList.add('copied');
+        shareCopy.dataset.copied = '1';
+        setTimeout(function () {
+          shareLabel.textContent = original;
+          shareCopy.classList.remove('copied');
+          delete shareCopy.dataset.copied;
+        }, 1400);
+      }).catch(function () {});
+    });
+  }
+
   // Fade del logo al pie del sidebar cuando entra el <footer> real
   // (misma regla que ya aplica el catalogo, ver css/shell.css).
   var siteFooter = document.querySelector('.site-footer');

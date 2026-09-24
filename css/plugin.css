@@ -1856,6 +1856,27 @@
   .dossier-links { display: flex; flex-direction: column; gap: 8px; margin-top: auto; }
   .dossier-gif + .dossier-links { margin-top: 0; }
   .dossier-links .btn { flex: none; text-align: center; justify-content: center; }
+  /* Fila "Share" de cada ficha (2026-09-24): X y LinkedIn son enlaces
+     planos; "Copy link" es un boton que plugin-page.js muestra solo si hay
+     clipboard. [hidden] explicito: .share-btn fija display, que le ganaria
+     al [hidden] del navegador (mismo bug que ya paso con .plugin-card). */
+  .share-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 2px; }
+  .share-label {
+    font-family: var(--mono); font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--text-faint); margin-right: 2px;
+  }
+  .share-btn {
+    display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px;
+    font-family: var(--mono); font-size: 11.5px; font-weight: 600; line-height: 1.2;
+    color: var(--text-dim); background: transparent; border: 1px solid var(--border);
+    border-radius: var(--radius-md); text-decoration: none; cursor: pointer;
+    transition: color var(--duration-base) ease, background var(--duration-base) ease, border-color var(--duration-base) ease;
+  }
+  .share-btn svg { width: 13px; height: 13px; flex: none; }
+  .share-btn:hover { color: var(--text); background: var(--surface-2); }
+  .share-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .share-btn.copied { color: var(--good); border-color: color-mix(in srgb, var(--good) 45%, var(--border)); }
+  .share-btn[hidden] { display: none; }
 
   .btn {
     font-family: var(--mono);
