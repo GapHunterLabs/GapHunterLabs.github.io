@@ -30,7 +30,7 @@ TITLE_MAX = 70
 DESC_MAX = 160
 SLUG_MARK = "/*SLUGS*/"
 SLUG_MARK_END = "/*ENDSLUGS*/"
-SHIM_TARGETS = ("catalog/index.html", "index.html", "catalog.html")
+SHIM_TARGETS = ("js/slug-shim.js", "catalog.html")
 STATIC_URLS = (
     SITE + "/", SITE + "/catalog/", SITE + "/methodology/",
     SITE + "/security/", SITE + "/contact/", SITE + "/laboratorio/",
@@ -388,6 +388,9 @@ def main() -> int:
         ptext = (ROOT / "catalog" / slug / "index.html").read_text(encoding="utf-8")
         if meta_of(ptext, "name", "twitter:site") != "@GapHunterLabs":
             fail("catalog/%s/" % slug, "falta twitter:site (viene del <head> de catalog/index.html)")
+        pcsp = re.search(r'<meta http-equiv="Content-Security-Policy" content="([^"]*)"', ptext)
+        if not pcsp or "'unsafe-inline'" in re.search(r"script-src ([^;]*)", pcsp.group(1)).group(1):
+            fail("catalog/%s/" % slug, "script-src permite 'unsafe-inline' (viene del <head> de catalog/index.html)")
         if "share-row" not in ptext or "x.com/intent/post" not in ptext or "linkedin.com/sharing/share-offsite" not in ptext:
             fail("catalog/%s/" % slug, "falta la fila Share (X / LinkedIn) de la ficha")
         elif 'class="share-btn share-copy"' in ptext and " hidden>" not in ptext.split('share-copy"', 1)[1][:200]:

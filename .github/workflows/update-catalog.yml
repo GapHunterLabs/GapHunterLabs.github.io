@@ -158,7 +158,7 @@ jobs:
           # ese mismo script escribe; _review/plugin_lastmod.json es su
           # huella persistida entre corridas.
           TRACKED="data/catalog-data.json catalog/index.html catalog/*/index.html \
-            css/plugin.css index.html catalog.html sitemap.xml \
+            css/plugin.css js/slug-shim.js index.html catalog.html sitemap.xml \
             _review/plugin_lastmod.json pipeline/catalog_daily_history.json \
             pipeline/catalog_latest_data.json"
           if git diff --quiet -- $TRACKED; then

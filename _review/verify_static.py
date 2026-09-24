@@ -39,35 +39,55 @@ RELATIVE_ASSET_REGRESSION = re.compile(
 for display_name, rel_path in PAGES:
     text = (ROOT / rel_path).read_text(encoding="utf-8")
     scripts = re.findall(r"<script(?![^>]*\bsrc=)([^>]*)>(.*?)</script>", text, re.S | re.I)
-    # application/ld+json is data, not code; speculationrules (Fase 3,
-    # 2026-09-23) is a JSON body too (a bare object literal isn't valid
-    # top-level JS -- "{" at statement position parses as a block, and
-    # a key like "prefetch": trips on the colon) -- both are excluded
-    # from the executable-JS syntax check the same way.
+    # application/ld+json and speculationrules are data, not code (a bare
+    # object literal isn't valid top-level JS), so they're allowed inline.
+    # Everything else must be an external /js/*.js file: since 2026-09-24
+    # the CSP's script-src has NO 'unsafe-inline', so an inline executable
+    # script would simply not run in the browser (silently -- the page still
+    # renders, the feature just dies). This is the regression guard for that.
     NON_EXECUTABLE_TYPES = ("application/ld+json", "speculationrules")
-    executable = [body for attrs, body in scripts if not any(t in attrs for t in NON_EXECUTABLE_TYPES)]
-    code = "\n".join(executable)
-    # display_name (not rel_path) keeps these filenames flat and
-    # collision-free -- every migrated page is literally named
-    # index.html on disk now.
-    script_path = ROOT / "_review" / f"{display_name}.js"
-    script_path.write_text(code, encoding="utf-8")
-    encoded_path = json.dumps(str(script_path))
-    subprocess.run(
-        [
-            "node",
-            "-e",
-            f"new Function(require('fs').readFileSync({encoded_path},'utf8'));"
-            f"console.log('{display_name}: syntax OK')",
-        ],
-        check=True,
-    )
+    inline_exec = [body for attrs, body in scripts if not any(t in attrs for t in NON_EXECUTABLE_TYPES)]
+    assert not inline_exec, (display_name, "script inline ejecutable: la CSP ya no tiene 'unsafe-inline'; moverlo a /js/")
+    csp = re.search(r'<meta http-equiv="Content-Security-Policy" content="([^"]*)"', text).group(1)
+    script_src = re.search(r"script-src ([^;]*)", csp).group(1)
+    assert "'unsafe-inline'" not in script_src, (display_name, "script-src volvio a permitir 'unsafe-inline'")
+    for src in re.findall(r'<script[^>]*\bsrc="(/[^"]*)"', text):
+        assert (ROOT / src.lstrip("/")).is_file(), (display_name, "script inexistente", src)
+    print(f"{display_name}: no inline scripts, CSP script-src = {script_src}")
     assert not PROHIBITED.search(text), display_name
     assert not RELATIVE_ASSET_REGRESSION.search(text), (display_name, "relative asset path regression")
     for tag in ("html", "head", "body"):
         opens = len(re.findall(rf"<{tag}[ >]", text, re.I))
         closes = len(re.findall(rf"</{tag}>", text, re.I))
         assert opens == closes == 1, (display_name, tag, opens, closes)
+
+# Los scripts que antes vivian inline ahora son archivos: se sigue verificando
+# que TODOS parseen (new Function no ejecuta nada, solo compila).
+for js_file in sorted((ROOT / "js").glob("*.js")):
+    subprocess.run(
+        ["node", "-e",
+         f"new Function(require('fs').readFileSync({json.dumps(str(js_file))},'utf8'));"
+         f"console.log('js/{js_file.name}: syntax OK')"],
+        check=True,
+    )
+
+# Todo `shared.X` que un script pide a catalog-shared.js (GapCatalog.ready)
+# tiene que ser un export real: el rail de /security/ leia shared.GIF_URL,
+# renombrado a DEMO_MEDIA en la Fase 3, y el TypeError resultante lo
+# tragaba un .catch -- el rail quedo oculto durante dias sin que nada fallara.
+shared_src = (ROOT / "js" / "catalog-shared.js").read_text(encoding="utf-8")
+api_start = shared_src.index("var api = {")
+api_block = shared_src[api_start:shared_src.index("};", api_start)]
+exports = set(re.findall(r"^\s+([A-Za-z_]+):", api_block, re.M))
+assert {"DEMO_MEDIA", "plugins", "esc"} <= exports, ("no pude leer el objeto api de catalog-shared.js", sorted(exports))
+for js_file in sorted((ROOT / "js").glob("*.js")):
+    if js_file.name == "catalog-shared.js":
+        continue
+    # (?<![-/\w]) y (?!js\b): no confundir "catalog-shared.js" (un nombre de
+    # archivo en un comentario) con un acceso a la propiedad shared.<export>.
+    used = set(re.findall(r"(?<![-/\w])shared\.(?!js\b)([A-Za-z_]+)", js_file.read_text(encoding="utf-8")))
+    missing_exports = sorted(u for u in used if u not in exports)
+    assert not missing_exports, (js_file.name, "pide a catalog-shared.js exports que no existen", missing_exports)
 
 # The two shared JS modules must fetch their JSON data with an absolute
 # path -- a relative fetch('data/...') resolves against the *page's*
