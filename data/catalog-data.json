@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-24 09:44:06 UTC",
+  "generatedAt": "2026-09-25 00:11:21 UTC",
   "totalPlugins": 146,
   "totalDownloads": 5689,
   "pending": 0,
@@ -7,10 +7,6 @@
   "totalReviews": 0,
   "avgRating": null,
   "trend7d": [
-    {
-      "date": "2026-09-18",
-      "totalDownloads": 5019
-    },
     {
       "date": "2026-09-19",
       "totalDownloads": 5077
@@ -34,45 +30,13 @@
     {
       "date": "2026-09-24",
       "totalDownloads": 5689
+    },
+    {
+      "date": "2026-09-25",
+      "totalDownloads": 5689
     }
   ],
-  "recentChanges": [
-    {
-      "date": "2026-09-24",
-      "type": "growth",
-      "name": "Mermaid Companion",
-      "niche": "Diagrams",
-      "delta": 62
-    },
-    {
-      "date": "2026-09-24",
-      "type": "growth",
-      "name": "React Native Companion",
-      "niche": "React Native Tooling",
-      "delta": 26
-    },
-    {
-      "date": "2026-09-24",
-      "type": "growth",
-      "name": "Dependency Vulnerability Companion",
-      "niche": "Dependency / SCA Security",
-      "delta": 25
-    },
-    {
-      "date": "2026-09-24",
-      "type": "growth",
-      "name": "SQL String Concatenation Companion",
-      "niche": "SQL Injection Detection",
-      "delta": 21
-    },
-    {
-      "date": "2026-09-24",
-      "type": "growth",
-      "name": "PHP Composer Script Companion",
-      "niche": "Node.js / npm Tooling",
-      "delta": 19
-    }
-  ],
+  "recentChanges": [],
   "plugins": [
     {
       "xmlId": "dev.gaphunter.mermaidcompanion",
@@ -275,7 +239,7 @@
       "repo": "firestore-companion",
       "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33330-firestore-companion",
       "downloads": 102,
-      "pricing": "FREE",
+      "pricing": "FREEMIUM",
       "reviews": 0,
       "rating": null,
       "stars": 0,
