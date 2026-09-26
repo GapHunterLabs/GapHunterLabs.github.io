@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-25 10:00:59 UTC",
+  "generatedAt": "2026-09-26 00:17:43 UTC",
   "totalPlugins": 146,
   "totalDownloads": 6019,
   "pending": 0,
@@ -7,10 +7,6 @@
   "totalReviews": 0,
   "avgRating": null,
   "trend7d": [
-    {
-      "date": "2026-09-19",
-      "totalDownloads": 5077
-    },
     {
       "date": "2026-09-20",
       "totalDownloads": 5108
@@ -34,45 +30,13 @@
     {
       "date": "2026-09-25",
       "totalDownloads": 6019
+    },
+    {
+      "date": "2026-09-26",
+      "totalDownloads": 6019
     }
   ],
-  "recentChanges": [
-    {
-      "date": "2026-09-25",
-      "type": "growth",
-      "name": "Cert Companion",
-      "niche": "Certificates / X.509",
-      "delta": 31
-    },
-    {
-      "date": "2026-09-25",
-      "type": "growth",
-      "name": "AsyncAPI Companion",
-      "niche": "AsyncAPI Tooling",
-      "delta": 20
-    },
-    {
-      "date": "2026-09-25",
-      "type": "growth",
-      "name": "N+1 Query Companion",
-      "niche": "Database Performance",
-      "delta": 15
-    },
-    {
-      "date": "2026-09-25",
-      "type": "growth",
-      "name": "XSD Companion",
-      "niche": "XSD/WSDL Tooling",
-      "delta": 14
-    },
-    {
-      "date": "2026-09-25",
-      "type": "growth",
-      "name": "Unused npm Script Companion",
-      "niche": "Node.js / npm Tooling",
-      "delta": 14
-    }
-  ],
+  "recentChanges": [],
   "plugins": [
     {
       "xmlId": "dev.gaphunter.mermaidcompanion",
