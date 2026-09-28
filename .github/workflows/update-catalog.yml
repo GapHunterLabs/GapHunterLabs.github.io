@@ -135,15 +135,16 @@ jobs:
               sys.exit("catalog-jsonld script block not found")
           ld = json.loads(m.group(1))
           # Fase 2 (2026-09-22): ya no hay noscript de respaldo -- la
-          # grilla y la tabla reales (pipeline/build_catalog_grid.py) SON
-          # el contenido visible sin JS, asi que la paridad se mide contra
-          # ellas, no contra una lista aparte.
+          # grilla real (pipeline/build_catalog_grid.py) ES el contenido
+          # visible sin JS, asi que la paridad se mide contra ella, no
+          # contra una lista aparte. Desde el sitio v2 (2026-09-28) la
+          # tabla ya no va en el HTML: catalog.js la arma en el navegador
+          # desde esas mismas tarjetas, asi que contar sus filas daba 0.
           totals = (data.get("totalPlugins"), len(data.get("plugins", [])),
                     ld.get("mainEntity", {}).get("numberOfItems"),
-                    len(re.findall(r'class="plugin-card"', catalog)),
-                    len(re.findall(r'<tr class="row"', catalog)))
+                    len(re.findall(r'class="plugin-card"', catalog)))
           if len(set(totals)) != 1:
-              sys.exit("catalog count mismatch: data/rows/jsonld/cards/rows=%r" % (totals,))
+              sys.exit("catalog count mismatch: data/rows/jsonld/cards=%r" % (totals,))
           print("catalog JSON/SEO parity OK (%s plugins)" % totals[0])
           PYEOF
 
