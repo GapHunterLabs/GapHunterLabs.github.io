@@ -33,7 +33,8 @@ SLUG_MARK_END = "/*ENDSLUGS*/"
 SHIM_TARGETS = ("js/slug-shim.js", "catalog.html")
 STATIC_URLS = (
     SITE + "/", SITE + "/catalog/", SITE + "/methodology/",
-    SITE + "/security/", SITE + "/contact/", SITE + "/laboratorio/",
+    SITE + "/security/", SITE + "/contact/", SITE + "/engineering-evidence/",
+    SITE + "/engineering-evidence/case-studies/", SITE + "/engineering-evidence/jetbrains-platform-tickets/",
     SITE + "/privacy/", SITE + "/terms/",
 )
 
@@ -262,9 +263,11 @@ def main() -> int:
     if re.search(r'id="siteLoader"|<html[^>]*\bclass="boot"', catalog_text):
         fail("catalog/index.html", "volvio el loader (markup real, no solo la CSS muerta que queda)")
     n_cards = len(re.findall(r'class="plugin-card"', catalog_text))
+    # 2026-09-27: la tabla la arma js/catalog.js desde las tarjetas; ya no
+    # debe venir pre-renderizada (duplicaba ~137 KB de la grilla).
     n_rows = len(re.findall(r'<tr class="row"', catalog_text))
-    if n_cards != len(slugs) or n_rows != len(slugs):
-        fail("catalog/index.html", "%d tarjetas / %d filas pre-renderizadas, se esperaban %d de cada una "
+    if n_cards != len(slugs) or n_rows != 0:
+        fail("catalog/index.html", "%d tarjetas / %d filas pre-renderizadas, se esperaban %d tarjetas y 0 filas "
              "(correr pipeline/build_catalog_grid.py)" % (n_cards, n_rows, len(slugs)))
     href_slugs = set(re.findall(r'/catalog/([a-z0-9-]+)/"', catalog_text))
     missing_hrefs = set(slugs) - href_slugs
@@ -329,7 +332,10 @@ def main() -> int:
 
     static_pages = (("index.html", "/"), ("catalog/index.html", "/catalog/"),
                     ("methodology/index.html", "/methodology/"), ("security/index.html", "/security/"),
-                    ("laboratorio/index.html", "/laboratorio/"), ("contact/index.html", "/contact/"),
+                    ("engineering-evidence/index.html", "/engineering-evidence/"),
+                    ("engineering-evidence/case-studies/index.html", "/engineering-evidence/case-studies/"),
+                    ("engineering-evidence/jetbrains-platform-tickets/index.html", "/engineering-evidence/jetbrains-platform-tickets/"),
+                    ("contact/index.html", "/contact/"),
                     ("privacy/index.html", "/privacy/"), ("terms/index.html", "/terms/"))
     seen_titles, seen_descs = {}, {}
     for rel, path in static_pages:
@@ -371,7 +377,7 @@ def main() -> int:
 
     for stub, target in (("catalog.html", "/catalog/"), ("methodology.html", "/methodology/"),
                          ("contact.html", "/contact/"), ("security.html", "/security/"),
-                         ("laboratorio.html", "/laboratorio/")):
+                         ("laboratorio.html", "/engineering-evidence/"), ("laboratorio/index.html", "/engineering-evidence/")):
         text = (ROOT / stub).read_text(encoding="utf-8")
         st = html.unescape(re.search(r"<title>(.*?)</title>", text, re.S).group(1))
         if "redirecting" in st.lower():

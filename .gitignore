@@ -13,3 +13,6 @@ _review/*.png
 # servido ni del build de CI, asi que no se commitea.
 pipeline/node_modules/
 pipeline/package-lock.json
+
+# Archivo de trabajo de build_i18n.py --extract (se regenera)
+pipeline/i18n/es.todo.json

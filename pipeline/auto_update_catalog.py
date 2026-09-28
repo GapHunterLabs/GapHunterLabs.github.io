@@ -176,7 +176,11 @@ def compute_recent_changes(history, rows, days=14, max_events=8):
     return events[:max_events]
 
 
-SITE = "https://gaphunterlabs.github.io/"
+import sys as _sys
+from pathlib import Path as _Path
+_sys.path.insert(0, str(_Path(__file__).resolve().parent))
+from site_config import SITE_URL  # noqa: E402
+SITE = SITE_URL + "/"
 CATALOG_URL = SITE + "catalog/"
 
 JSONLD_RE = re.compile(

@@ -18,18 +18,55 @@
   var filterPricing = '';
   var mode = 'field';
   var catalogPage = 1;
+  // 2026-09-27: la misma logica sirve la version en espanol (/es/catalogo/).
+  var ES = document.documentElement.lang === 'es';
 
   var board = document.querySelector('.cat-board');
   var knownCats = board
     ? Array.prototype.map.call(board.querySelectorAll('[data-cat]'), function (b) { return b.getAttribute('data-cat'); })
     : [];
   var categoryParam = new URLSearchParams(location.search).get('category') || '';
+  // 2026-09-27: ?pricing=free|freemium|paid|pending, y "paid" desde la home
+  // significa FREEMIUM + PAID ("Paid & Pro", valor PAIDANY del select).
+  var pricingParam = (new URLSearchParams(location.search).get('pricing') || '').toUpperCase();
+  if (pricingParam === 'PAID' && location.search.indexOf('pricing=paid') !== -1) pricingParam = 'PAIDANY';
+  if (['FREE', 'FREEMIUM', 'PAID', 'PAIDANY', 'PENDING'].indexOf(pricingParam) !== -1) filterPricing = pricingParam;
   var filterCategory = knownCats.indexOf(categoryParam) !== -1 ? categoryParam : '';
 
   var gridEl = document.getElementById('catalogGrid');
   var gridPagerHost = document.getElementById('fieldPager');
   var gridCards = gridEl ? Array.prototype.slice.call(gridEl.children) : [];
   var tbody = document.getElementById('tbody');
+  // 2026-09-27: la tabla ya no viaja pre-renderizada (duplicaba los 146
+  // items de la grilla, ~137 KB). Se arma aqui desde las tarjetas, que ya
+  // traen todos los datos en sus atributos data-*; sin JS queda la grilla.
+  function buildRowsFromCards() {
+    if (!tbody || tbody.children.length || !gridCards.length) return;
+    var fmt = function (n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); };
+    var priceLabel = { FREE: ES ? 'Gratis' : 'Free', FREEMIUM: 'Freemium', PAID: ES ? 'De pago' : 'Paid' };
+    var L = ES ? { dl: 'Descargas', rv: 'Reseñas', rt: 'Valoración', st: 'GitHub ★', pr: 'Precio', pb: 'Publicado' }
+               : { dl: 'Downloads', rv: 'Reviews', rt: 'Rating', st: 'GitHub ★', pr: 'Pricing', pb: 'Published' };
+    var html = gridCards.map(function (c) {
+      var d = c.dataset;
+      var attrs = Array.prototype.filter.call(c.attributes, function (a) { return a.name.indexOf('data-') === 0; })
+        .map(function (a) { return a.name + '="' + a.value.replace(/"/g, '&quot;') + '"'; }).join(' ');
+      var name = c.querySelector('.card-name'), niche = c.querySelector('.card-niche');
+      var pending = c.hasAttribute('data-pending');
+      var price = pending ? '<span class="price-badge price-pending">' + (ES ? 'Pendiente' : 'Pending') + '</span>'
+        : '<span class="price-badge price-' + (d.pricing || 'FREE').toLowerCase() + '">' + (priceLabel[d.pricing] || priceLabel.FREE) + '</span>';
+      return '<tr class="row" ' + attrs + '>' +
+        '<td class="name-cell"><a href="' + c.getAttribute('href') + '"><div class="plugin-name">' + (name ? name.innerHTML : '') + '</div>' +
+        '<div class="niche">' + (niche ? niche.innerHTML : '') + '</div></a></td>' +
+        '<td class="num-cell" data-label="' + L.dl + '">' + (pending ? '—' : fmt(d.downloads)) + '</td>' +
+        '<td class="num-cell tbl-optional" data-label="' + L.rv + '">' + (d.reviews != null ? d.reviews : '—') + '</td>' +
+        '<td class="num-cell tbl-optional" data-label="' + L.rt + '">' + (d.rating != null ? Number(d.rating).toFixed(2) : '—') + '</td>' +
+        '<td class="num-cell" data-label="' + L.st + '">' + (d.stars != null ? d.stars : '—') + '</td>' +
+        '<td data-label="' + L.pr + '">' + price + '</td>' +
+        '<td class="num-cell" data-label="' + L.pb + '" style="text-align:left">' + (d.firstpublished || '—') + '</td></tr>';
+    }).join('');
+    tbody.innerHTML = html;
+  }
+  buildRowsFromCards();
   var tableRows = tbody ? Array.prototype.slice.call(tbody.children) : [];
   var noResults = document.getElementById('noResults');
   var tablePagerHost = document.getElementById('tablePager');
@@ -44,7 +81,9 @@
     var isPending = el.hasAttribute('data-pending');
     if (filterPricing) {
       if (filterPricing === 'PENDING' && !isPending) return false;
-      if (filterPricing !== 'PENDING' && (el.dataset.pricing || '') !== filterPricing) return false;
+      if (filterPricing === 'PAIDANY') {
+        if (['FREEMIUM', 'PAID'].indexOf(el.dataset.pricing || '') === -1) return false;
+      } else if (filterPricing !== 'PENDING' && (el.dataset.pricing || '') !== filterPricing) return false;
     }
     if (filterCategory && el.dataset.cat !== filterCategory) return false;
     if (!filterText) return true;
@@ -77,10 +116,10 @@
   function pagerHtml(total) {
     var pages = Math.max(1, Math.ceil(total / PAGE_SIZE));
     if (pages <= 1) return '';
-    return '<nav class="catalog-pager" aria-label="Catalog pages">' +
-      '<button type="button" class="btn catalog-pager-btn" data-page-dir="-1" aria-label="Previous page"' + (catalogPage <= 1 ? ' disabled' : '') + '>Previous</button>' +
-      '<span class="catalog-pager-status" aria-live="polite">Page ' + catalogPage + ' of ' + pages + '</span>' +
-      '<button type="button" class="btn catalog-pager-btn" data-page-dir="1" aria-label="Next page"' + (catalogPage >= pages ? ' disabled' : '') + '>Next</button>' +
+    return '<nav class="catalog-pager" aria-label="' + (ES ? 'Paginas del catalogo' : 'Catalog pages') + '">' +
+      '<button type="button" class="btn catalog-pager-btn" data-page-dir="-1" aria-label="' + (ES ? 'Pagina anterior' : 'Previous page') + '"' + (catalogPage <= 1 ? ' disabled' : '') + '>' + (ES ? 'Anterior' : 'Previous') + '</button>' +
+      '<span class="catalog-pager-status" aria-live="polite">' + (ES ? 'P\u00e1gina ' + catalogPage + ' de ' + pages : 'Page ' + catalogPage + ' of ' + pages) + '</span>' +
+      '<button type="button" class="btn catalog-pager-btn" data-page-dir="1" aria-label="' + (ES ? 'Pagina siguiente' : 'Next page') + '"' + (catalogPage >= pages ? ' disabled' : '') + '>' + (ES ? 'Siguiente' : 'Next') + '</button>' +
       '</nav>';
   }
 
@@ -116,18 +155,35 @@
     return visible.length;
   }
 
+  // Busqueda sin resultados = demanda expresada: ofrece construirlo.
+  function missHtml() {
+    var term = (filterText || '').trim();
+    var safe = term.replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; });
+    var href = (ES ? '/es/contacto/' : '/contact/') + '?intent=hire' + (term ? '&need=' + encodeURIComponent(term.slice(0, 120)) : '');
+    var lead = ES ? (term ? 'Todav\u00eda no hay nada para \u201c' + safe + '\u201d. ' : 'No hay resultados para ese filtro. ')
+                  : (term ? 'Nothing here matches \u201c' + safe + '\u201d yet. ' : 'No results for that filter. ');
+    return lead + '<a class="miss-cta" href="' + href + '" data-goatcounter-click="cta-search-miss-hire">' +
+      (ES ? '\u00bfNecesitas que se construya? Trabaja con Joel \u2192' : 'Need it built? Work with Joel \u2192') + '</a>';
+  }
+
   function renderGrid() {
     if (!gridEl) return;
     var total = applyToNodes(gridEl, gridCards);
     var noResultsEl = document.getElementById('fieldNoResults');
-    if (noResultsEl) noResultsEl.hidden = total !== 0;
+    if (noResultsEl) {
+      noResultsEl.hidden = total !== 0;
+      if (total === 0) noResultsEl.innerHTML = missHtml();
+    }
     wirePager(gridPagerHost, total, renderGrid);
   }
 
   function renderTable() {
     if (!tbody) return;
     var total = applyToNodes(tbody, tableRows);
-    if (noResults) noResults.style.display = total === 0 ? 'block' : 'none';
+    if (noResults) {
+      noResults.style.display = total === 0 ? 'block' : 'none';
+      if (total === 0) noResults.innerHTML = missHtml();
+    }
     wirePager(tablePagerHost, total, renderTable);
   }
 
@@ -261,8 +317,16 @@
       renderAll();
     }, 120);
   });
-  document.getElementById('pricingFilter').addEventListener('change', function (e) {
+  var pricingSelect = document.getElementById('pricingFilter');
+  if (pricingSelect && filterPricing) pricingSelect.value = filterPricing;
+  pricingSelect.addEventListener('change', function (e) {
     filterPricing = e.target.value;
+    try {
+      var url = new URL(location.href);
+      if (filterPricing) url.searchParams.set('pricing', filterPricing === 'PAIDANY' ? 'paid' : filterPricing.toLowerCase());
+      else url.searchParams.delete('pricing');
+      history.replaceState(null, '', url.pathname + url.search + url.hash);
+    } catch (err) { /* sin History API: el filtro igual funciona */ }
     catalogPage = 1;
     renderAll();
   });

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="/js/theme-init.js?v=d220b9f1"></script>
+<script src="/js/site-chrome.js?v=d59cb458" defer></script>
+<meta name="description" content="Cómo evalúa Gap Hunter Labs las ideas de plugins y cómo reporta los datos públicos del catálogo.">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://gc.zgo.at; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; media-src 'self'; manifest-src 'self'; connect-src https://gaphunterlabs.goatcounter.com; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="theme-color" content="#0B1B34">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://gaphunterlabs.github.io/es/metodologia/">
+<!-- HREFLANG:START -->
+<link rel="alternate" hreflang="en" href="https://gaphunterlabs.github.io/methodology/">
+<link rel="alternate" hreflang="es" href="https://gaphunterlabs.github.io/es/metodologia/">
+<link rel="alternate" hreflang="x-default" href="https://gaphunterlabs.github.io/methodology/">
+<link rel="alternate" type="application/rss+xml" title="Gap Hunter Labs — nuevos plugins" href="/feed.xml">
+<!-- HREFLANG:END -->
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="preload" href="/fonts/IBMPlexSans-Latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/JetBrainsMono-Latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preconnect" href="https://gc.zgo.at">
+<link rel="preconnect" href="https://gaphunterlabs.goatcounter.com">
+<title>Metodología &mdash; Gap Hunter Labs</title>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Gap Hunter Labs">
+<meta property="og:url" content="https://gaphunterlabs.github.io/es/metodologia/">
+<meta property="og:title" content="Metodología — Gap Hunter Labs">
+<meta property="og:description" content="Cómo evalúa Gap Hunter Labs las ideas de plugins y cómo reporta los datos públicos del catálogo.">
+<meta property="og:image" content="https://gaphunterlabs.github.io/og-image.png">
+<meta property="og:image:secure_url" content="https://gaphunterlabs.github.io/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Gap Hunter Labs — Informe del catálogo Plugin Intelligence">
+<meta property="og:locale" content="es_ES">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@GapHunterLabs">
+<meta name="twitter:title" content="Metodología — Gap Hunter Labs">
+<meta name="twitter:description" content="Cómo evalúa Gap Hunter Labs las ideas de plugins y cómo reporta los datos públicos del catálogo.">
+<meta name="twitter:image" content="https://gaphunterlabs.github.io/og-image.png">
+<meta name="twitter:image:alt" content="Gap Hunter Labs — Informe del catálogo Plugin Intelligence">
+<link rel="stylesheet" href="/css/theme.css?v=9272a196">
+<link rel="stylesheet" href="/css/base.css?v=c6a46ea1">
+<style>
+  @font-face {
+    font-family: "IBM Plex Sans";
+    src: url("/fonts/IBMPlexSans-Latin.woff2") format("woff2");
+    font-weight: 100 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "JetBrains Mono";
+    src: url("/fonts/JetBrainsMono-Latin.woff2") format("woff2");
+    font-weight: 100 800;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  
+
+  .methodology-main {
+    flex: 1;
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 40px var(--page-pad) 56px;
+  }
+
+  .methodology-main h1 {
+    margin: 0 0 16px;
+    font-size: 32px;
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .contact-section {
+    margin: 0 0 32px;
+    padding: 0;
+    border: 0;
+  }
+  .contact-section h2 {
+    margin: 0 0 10px;
+    font-size: 18px;
+    font-weight: 650;
+    letter-spacing: -0.01em;
+  }
+  .contact-section p,
+  .contact-section li {
+    color: var(--text-dim);
+    line-height: 1.65;
+  }
+  .contact-section p { margin: 0 0 10px; }
+  .contact-section ul {
+    margin: 0;
+    padding-left: 1.2em;
+  }
+  .contact-section li { margin: 0 0 8px; }
+  .contact-section li:last-child { margin-bottom: 0; }
+  .channel-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .channel-list li {
+    margin: 0;
+    padding: var(--card-pad);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text-dim);
+  }
+  .channel-list strong {
+    display: block;
+    color: var(--text);
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+
+  
+
+  
+
+  @media (max-width: 760px) {
+        .methodology-main { padding-top: 28px; }
+        .methodology-main h1 { font-size: 26px; }
+  }
+
+  .methodology-main { max-width: var(--page-max); }
+  .method-intro { max-width: 760px; }
+  .decision-figure {
+    margin: 0 0 36px;
+    padding: var(--card-pad);
+    min-width: 0;
+    max-width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+  .decision-figure h2 { margin: 0 0 6px; font-size: 20px; }
+  .decision-figure > p { margin: 0 0 16px; color: var(--text-dim); }
+  .diagram-scroll {
+    max-width: 100%;
+    padding-bottom: 4px;
+  }
+  /* Sin min-width: el SVG (viewBox fijo) escala proporcionalmente al
+     ancho real del box en vez de forzar overflow horizontal -- a
+     pedido explícito 2026-09-10 (antes tenía min-width:720px + scroll
+     interno para no achicar el texto de más; ahora prioriza encajar
+     siempre en el box, incluso si el texto queda más chico en
+     viewports angostos). */
+  .decision-diagram { display: block; width: 100%; height: auto; }
+  .decision-diagram .node { fill: var(--surface-2); stroke: var(--border); stroke-width: 2; transition: stroke var(--duration-base) ease; }
+  .decision-diagram .node:hover { stroke: var(--accent); }
+  .decision-diagram .node-built { stroke: var(--good); }
+  .decision-diagram .node-built:hover { stroke: var(--good); }
+  /* Trazo punteado + relleno más apagado -- distingue un nodo terminal
+     de rechazo ("Not built") de un nodo de decisión real, sin inventar
+     un color nuevo (esta página no tiene token --bad). */
+  .decision-diagram .node-reject { fill: color-mix(in srgb, var(--border) 35%, var(--bg)); stroke: var(--text-faint); stroke-dasharray: 4 3; }
+  .decision-diagram .node-reject:hover { stroke: var(--text-faint); }
+  .decision-diagram .connector { fill: none; stroke: var(--border); stroke-width: 2; stroke-linecap: square; stroke-linejoin: miter; }
+  .decision-diagram .label { fill: var(--text); font: 600 16px var(--sans); text-anchor: middle; }
+  .decision-diagram .small { fill: var(--text-dim); font: 14px var(--sans); text-anchor: middle; }
+  .decision-diagram .branch { fill: var(--text-faint); font: 600 13px var(--mono); }
+  .decision-diagram .built { fill: var(--good); }
+
+  /* Dinamismo real: el diagrama "se dibuja" al entrar en viewport --
+     los nodos aparecen con un fade+scale escalonado (delay puesto por
+     JS según su orden real en el flujo) y los conectores se trazan
+     con la técnica clásica de stroke-dasharray/dashoffset.
+
+     Importante: el estado "oculto" NUNCA es el default en CSS puro --
+     es JS quien agrega .diagram-anim-ready (de forma síncrona, antes
+     de armar el IntersectionObserver) para activar el ocultamiento
+     inicial. Sin JS (o si algo en el script falla antes de esa línea),
+     el diagrama se queda con su apariencia normal, siempre visible --
+     nunca depende de que el observer llegue a disparar. */
+  .decision-diagram .node,
+  .decision-diagram .node-built,
+  .decision-diagram .connector {
+    transition: opacity 0.5s var(--ease-standard), transform 0.5s var(--ease-standard), stroke-dashoffset 0.7s var(--ease-standard), stroke var(--duration-base) ease;
+  }
+  .decision-figure.diagram-anim-ready .decision-diagram .node,
+  .decision-figure.diagram-anim-ready .decision-diagram .node-built {
+    opacity: 0; transform: scale(0.94); transform-origin: center;
+  }
+  .decision-figure.diagram-anim-ready .decision-diagram .connector {
+    stroke-dasharray: 900; stroke-dashoffset: 900;
+  }
+  .decision-figure.is-visible .decision-diagram .node,
+  .decision-figure.is-visible .decision-diagram .node-built { opacity: 1; transform: scale(1); }
+  .decision-figure.is-visible .decision-diagram .connector { stroke-dashoffset: 0; }
+  @media (prefers-reduced-motion: reduce) {
+    .decision-diagram .node, .decision-diagram .node-built, .decision-diagram .connector {
+      transition: none; opacity: 1; transform: none; stroke-dashoffset: 0;
+    }
+  }
+  /* .disclosure vivía antes en la columna principal ancha (18px
+     heading, 15px/1.65 de texto) -- ahora que las 4 secciones viven
+     solo en el rail derecho (300px), se compacta al mismo lenguaje
+     visual que el resto de boxes del rail (.pi-card en shell.css):
+     eyebrow chico en mono mayúscula en vez de <h2> grande, texto
+     11.5-12px, sin el acento lateral (ningún otro box del rail lo
+     tiene). Reescrito a pedido explícito 2026-09-10. */
+  .disclosure {
+    padding: var(--card-pad);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow, none);
+  }
+  .disclosure h2 {
+    margin: 0 0 var(--space-3, 12px);
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+  .disclosure ul { margin: 0; padding-left: 1.1em; }
+  .disclosure li { color: var(--text-dim); font-size: 12px; line-height: 1.45; margin-bottom: 6px; }
+  .disclosure li:last-child { margin-bottom: 0; }
+  .disclosure b { color: var(--text); }
+  @media (max-width: 760px) {
+    .decision-figure { padding: var(--card-pad); }
+  }
+</style>
+<link rel="stylesheet" href="/css/shell.css?v=7e5b2d2a">
+</head>
+<body>
+<div class="app-shell">
+<!-- CHROME:HEADER:START -->
+<header class="gh-header" id="topbar">
+  <div class="gh-header-inner">
+    <a class="gh-brand" href="/es/" aria-label="Inicio de Gap Hunter Labs"><svg class="gh-logo" viewBox="0 0 1024 1024" aria-hidden="true"><path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#0151FC"/><path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z" fill="#01B3FD"/><polygon points="569,413 695,413 695,539 569,539" fill="#02F172"/></svg><span class="gh-brand-name">Gap Hunter Labs</span></a>
+    <nav class="gh-nav" id="siteNav" aria-label="Principal"><a class="gh-nav-link" href="/es/catalogo/">Catálogo</a><div class="gh-menu gh-nav-group"><button type="button" class="gh-nav-link gh-nav-toggle" data-menu-toggle aria-expanded="false">Ingeniería y evidencia<svg class="gh-chevron" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 8l4 4 4-4"/></svg></button><div class="gh-pop gh-pop-wide" data-menu hidden><a class="gh-pop-link" href="/es/ingenieria-y-evidencia/"><strong>Resumen</strong><span>Qué cubre esta sección</span></a><a class="gh-pop-link" href="/es/ingenieria-y-evidencia/casos-de-estudio/"><strong>Casos de estudio</strong><span>Los plugins con la evidencia más sólida</span></a><a class="gh-pop-link" href="/es/ingenieria-y-evidencia/tickets-jetbrains-platform/"><strong>Tickets de JetBrains Platform</strong><span>Reportes de causa raíz en el tracker de IntelliJ Platform</span></a></div></div><a class="gh-nav-link" href="/es/metodologia/" aria-current="page">Metodología</a><a class="gh-nav-link" href="/es/contacto/">Contacto</a><a class="btn primary gh-nav-cta" href="/es/#work-with-joel" data-goatcounter-click="cta-nav-hire-mobile">Trabaja con Joel</a></nav>
+    <div class="gh-tools">
+      <!-- LANG:START --><div class="gh-menu gh-lang"><button type="button" class="gh-icon-btn gh-lang-btn" data-menu-toggle aria-expanded="false" aria-label="Idioma"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5"/><path d="M2.5 10h15M10 2.5c2.2 2.3 3.2 4.8 3.2 7.5s-1 5.2-3.2 7.5c-2.2-2.3-3.2-4.8-3.2-7.5s1-5.2 3.2-7.5z"/></svg><span class="gh-lang-code">ES</span></button><div class="gh-pop" data-menu hidden role="group" aria-label="Idioma"><a class="gh-pop-item" href="/methodology/" hreflang="en" lang="en">English</a><a class="gh-pop-item" href="/es/metodologia/" hreflang="es" lang="es" aria-current="true">Espa&ntilde;ol</a></div></div><!-- LANG:END -->
+      <div class="gh-menu">
+        <button type="button" class="gh-icon-btn" data-menu-toggle aria-expanded="false" aria-label="Tema de color"><span class="gh-ico gh-ico-system"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2.5" y="3.5" width="15" height="10" rx="1.5"/><path d="M7 17h6M10 13.5V17"/></svg></span><span class="gh-ico gh-ico-light"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.5"/><path d="M10 1.8v2M10 16.2v2M1.8 10h2M16.2 10h2M4.2 4.2l1.4 1.4M14.4 14.4l1.4 1.4M4.2 15.8l1.4-1.4M14.4 5.6l1.4-1.4"/></svg></span><span class="gh-ico gh-ico-dark"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16.5 12.3A7 7 0 0 1 7.7 3.5a7 7 0 1 0 8.8 8.8z"/></svg></span></button>
+        <div class="gh-pop" data-menu hidden role="group" aria-label="Tema de color"><button type="button" class="gh-pop-item" data-theme-choice="system" aria-pressed="false"><span class="gh-ico"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2.5" y="3.5" width="15" height="10" rx="1.5"/><path d="M7 17h6M10 13.5V17"/></svg></span>Sistema</button><button type="button" class="gh-pop-item" data-theme-choice="light" aria-pressed="false"><span class="gh-ico"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.5"/><path d="M10 1.8v2M10 16.2v2M1.8 10h2M16.2 10h2M4.2 4.2l1.4 1.4M14.4 14.4l1.4 1.4M4.2 15.8l1.4-1.4M14.4 5.6l1.4-1.4"/></svg></span>Claro</button><button type="button" class="gh-pop-item" data-theme-choice="dark" aria-pressed="false"><span class="gh-ico"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16.5 12.3A7 7 0 0 1 7.7 3.5a7 7 0 1 0 8.8 8.8z"/></svg></span>Oscuro</button></div>
+      </div>
+      <a class="btn primary gh-cta" href="/es/#work-with-joel" data-goatcounter-click="cta-nav-hire">Trabaja con Joel</a>
+      <button type="button" class="gh-burger" id="topbarBurger" aria-label="Abrir o cerrar la navegación" aria-expanded="false" aria-controls="siteNav"><span></span></button>
+    </div>
+  </div>
+</header>
+<!-- CHROME:HEADER:END -->
+
+<div class="app-main">
+<div class="main-with-rail">
+<main class="methodology-main">
+  <div class="page-hero method-intro band-dark gh-page-header">
+    <p class="contact-kicker">Gap Hunter Labs</p>
+    <h1>Metodología</h1>
+    <p class="contact-lead" style="margin-bottom:0">Cómo se evalúan las ideas de plugins, qué significan las cifras del catálogo y qué deja fuera este sitio a propósito.</p>
+  </div>
+
+  <figure class="decision-figure" aria-labelledby="greenlit-title">
+    <h2 id="greenlit-title">Cómo se aprueba un plugin</h2>
+    <p>Un plugin enfocado solo avanza cuando cada pregunta pública y basada en evidencia tiene una respuesta clara.</p>
+    <div class="diagram-scroll">
+      <svg class="decision-diagram" viewBox="0 0 900 720" role="img" aria-labelledby="diagram-title diagram-desc" xmlns="http://www.w3.org/2000/svg">
+        <title id="diagram-title">How a plugin gets greenlit</title>
+        <desc id="diagram-desc">A recurring documented complaint is checked for a repeated pattern, an existing focused Marketplace fix, and whether it can become one narrow plugin. A failing branch is not built. Passing all checks leads to a built, tested, published plugin with its evidence attached.</desc>
+        <defs><marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M1 1 L9 5 L1 9 Z" fill="var(--border)"/></marker></defs>
+        <path class="node" d="M250 24 H650 L680 54 V126 L650 156 H250 L220 126 V54 Z"/>
+        <text class="label" x="450" y="72"><tspan x="450">Documented, recurring complaint found</tspan><tspan class="small" x="450" dy="25">Marketplace reviews, ratings, bug reports</tspan></text>
+        <path class="connector" marker-end="url(#arrow)" d="M450 156 V190"/>
+
+        <path class="node" d="M270 196 H630 L658 224 V280 L630 308 H270 L242 280 V224 Z"/>
+        <text class="label" x="450" y="247"><tspan x="450">Is it a real, repeated pattern?</tspan></text>
+        <path class="connector" marker-end="url(#arrow)" d="M658 252 H758"/>
+        <text class="branch" x="685" y="241">NO</text>
+        <path class="node node-reject" d="M760 218 H876 V286 H760 L744 252 Z"/>
+        <text class="small" x="814" y="257">Not built</text>
+        <path class="connector" marker-end="url(#arrow)" d="M450 308 V342"/>
+        <text class="branch" x="462" y="330">YES</text>
+
+        <path class="node" d="M270 348 H630 L658 376 V442 L630 470 H270 L242 442 V376 Z"/>
+        <text class="label" x="450" y="397"><tspan x="450">Does a focused fix already exist</tspan><tspan x="450" dy="23">on the Marketplace?</tspan></text>
+        <path class="connector" marker-end="url(#arrow)" d="M658 409 H758"/>
+        <text class="branch" x="682" y="398">YES</text>
+        <path class="node node-reject" d="M760 371 H884 V447 H760 L744 409 Z"/>
+        <text class="small" x="818" y="405"><tspan x="818">Not built</tspan><tspan x="818" dy="20">(redundant)</tspan></text>
+        <path class="connector" marker-end="url(#arrow)" d="M450 470 V504"/>
+        <text class="branch" x="462" y="492">NO</text>
+
+        <path class="node" d="M270 510 H630 L658 538 V594 L630 622 H270 L242 594 V538 Z"/>
+        <text class="label" x="450" y="555"><tspan x="450">Buildable as one narrow,</tspan><tspan x="450" dy="23">single-purpose plugin?</tspan></text>
+        <path class="connector" marker-end="url(#arrow)" d="M658 566 H748"/>
+        <text class="branch" x="680" y="555">NO</text>
+        <path class="node node-reject" d="M750 520 H890 V612 H750 L734 566 Z"/>
+        <text class="small" x="815" y="550"><tspan x="815">Documented as a</tspan><tspan x="815" dy="19">known limit,</tspan><tspan x="815" dy="19">not built</tspan></text>
+        <path class="connector" marker-end="url(#arrow)" d="M450 622 V650"/>
+        <text class="branch" x="462" y="644">YES</text>
+
+        <path class="node node-built" d="M220 656 H680 L704 680 L680 710 H220 L196 680 Z"/>
+        <text class="label built" x="450" y="678"><tspan x="450">Built, tested, published</tspan><tspan class="small" x="450" dy="21">evidence stays attached to the listing</tspan></text>
+      </svg>
+    </div>
+  </figure>
+</main>
+<aside class="page-insights" aria-label="Notas de metodología">
+  <section class="disclosure" aria-labelledby="method-data"><h2 id="method-data">Metodología</h2><ul>
+    <li>Cada cifra de esta página &mdash; descargas, precio, valoración, fecha de primera publicación, GitHub &#9733; &mdash; viene directamente de los datos públicos de JetBrains Marketplace y GitHub. Nada aquí es una estimación ni está inventado.</li>
+    <li><b>Crecimiento</b> compara las descargas actuales de cada plugin con el primer punto del que tenemos datos reales, no solo con la última vez que se actualizó esta página &mdash; por eso la fecha base bajo el % puede variar de un plugin a otro. Un plugin sin un punto de datos anterior muestra &ldquo;&mdash;&rdquo; en lugar de una estimación.</li>
+    <li>Un plugin marcado como <b>Pendiente</b> se envió hace poco a Marketplace y sigue en moderación &mdash; su ficha existe, solo que todavía no aparece en las búsquedas. Es el tiempo normal de revisión, no un problema del plugin.</li>
+  </ul></section>
+  <section class="disclosure" aria-labelledby="method-gap"><h2 id="method-gap">La brecha / La solución</h2><ul>
+    <li><b>La brecha</b> es la evidencia real y citada de que este plugin necesitaba existir &mdash; un patrón documentado de quejas sobre una herramienta existente (reseñas, valoraciones, reportes de errores recurrentes), no una suposición sobre lo que los desarrolladores podrían querer.</li>
+    <li><b>La solución</b> es la descripción real y publicada del propio plugin sobre lo que hace. Ninguna de las dos partes se genera ni se adorna &mdash; cada afirmación remite a algo verificable públicamente.</li>
+  </ul></section>
+  <section class="disclosure" aria-labelledby="method-signals"><h2 id="method-signals">Reseñas, valoración y estrellas</h2><ul>
+    <li>Las reseñas, la valoración en Marketplace y las estrellas de GitHub usan las mismas fuentes públicas que las descargas. Este catálogo todavía es joven y está centrado en el producto, así que esas cifras viven aquí &mdash; no en la portada &mdash; hasta que describan el trabajo en lugar de celdas vacías.</li>
+  </ul></section>
+  <section class="disclosure" aria-labelledby="method-privacy"><h2 id="method-privacy">Lo que nunca se guarda aquí</h2><ul>
+    <li>Nunca publicamos identificadores privados de un competidor en las tiendas ni datos de contacto personales de un proveedor (correo, teléfono, dirección) &mdash; aunque la API pública que consultamos los exponga junto a los datos que sí usamos.</li>
+    <li>&ldquo;Visitantes de hoy&rdquo; cuenta visitas reales con GoatCounter &mdash; sin cookies, sin guardar direcciones IP y sin identificar nunca a ningún visitante. Cuenta sesiones, no páginas vistas en bruto, así que recargar esta página o recorrer varias secciones no infla la cifra.</li>
+  </ul></section>
+</aside>
+</div>
+</div>
+</div>
+<!-- CHROME:FOOTER:START -->
+<footer class="site-footer gh-footer band-dark">
+  <div class="gh-footer-inner">
+    <div class="gh-footer-top">
+      <div class="gh-footer-brand">
+        <a class="gh-brand" href="/es/"><svg class="gh-logo" viewBox="0 0 1024 1024" aria-hidden="true"><path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#0151FC"/><path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z" fill="#01B3FD"/><polygon points="569,413 695,413 695,539 569,539" fill="#02F172"/></svg><span class="gh-brand-name">Gap Hunter Labs</span></a>
+        <p>Plugins enfocados para JetBrains y VS Code que resuelven brechas documentadas en las herramientas para desarrolladores, y herramientas a medida para equipos.</p>
+        <a class="btn primary" href="/es/#work-with-joel" data-goatcounter-click="cta-footer-hire">Trabaja con Joel</a>
+      </div>
+      <nav class="gh-footer-cols" aria-label="Pie de página"><div class="gh-footer-col"><p class="gh-footer-title">Producto</p><a href="/es/catalogo/">Catálogo de plugins</a><a href="/es/catalogo/?pricing=paid">Plugins de pago y Pro</a><a href="/es/catalogo/?platform=vscode">Extensiones de VS Code</a></div><div class="gh-footer-col"><p class="gh-footer-title">Ingeniería y evidencia</p><a href="/es/ingenieria-y-evidencia/">Resumen</a><a href="/es/ingenieria-y-evidencia/casos-de-estudio/">Casos de estudio</a><a href="/es/ingenieria-y-evidencia/tickets-jetbrains-platform/">Tickets de JetBrains Platform</a></div><div class="gh-footer-col"><p class="gh-footer-title">Empresa</p><a href="/es/#work-with-joel">Trabaja con Joel</a><a href="/es/metodologia/">Metodología</a><a href="/es/contacto/">Contacto</a></div><div class="gh-footer-col"><p class="gh-footer-title">Tiendas</p><a href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" target="_blank" rel="noopener">JetBrains Marketplace</a><a href="https://marketplace.visualstudio.com/publishers/GapHunterLabs" target="_blank" rel="noopener">VS Code Marketplace</a><a href="https://github.com/GapHunterLabs" target="_blank" rel="noopener">GitHub</a></div><div class="gh-footer-col"><p class="gh-footer-title">Legal</p><a href="/es/seguridad/">Seguridad</a><a href="/es/privacidad/">Privacidad</a><a href="/es/terminos/">Términos</a></div></nav>
+    </div>
+    <div class="gh-footer-bottom">
+      <p class="gh-footer-legal">&copy; 2026 Gap Hunter Labs. Los datos de descargas vienen de las API de JetBrains Marketplace y GitHub, se actualizan dos veces al día y nada aquí es una estimación.</p>
+      <div class="gh-footer-social"><a class="gh-social" href="https://github.com/GapHunterLabs" target="_blank" rel="noopener" aria-label="Gap Hunter Labs en GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" stroke="none" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a><a class="gh-social" href="https://www.linkedin.com/in/joel-diaz-82687b428/?locale=en" target="_blank" rel="noopener" aria-label="Joel Diaz en LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" stroke="none" d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a><a class="gh-social" href="https://x.com/GapHunterLabs" target="_blank" rel="noopener" aria-label="Gap Hunter Labs en X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" stroke="none" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a></div>
+      <div class="gh-seg" role="group" aria-label="Tema de color"><button type="button" class="gh-seg-btn" data-theme-choice="system" aria-pressed="false" aria-label="Tema del sistema" title="Sistema"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2.5" y="3.5" width="15" height="10" rx="1.5"/><path d="M7 17h6M10 13.5V17"/></svg></button><button type="button" class="gh-seg-btn" data-theme-choice="light" aria-pressed="false" aria-label="Tema claro" title="Claro"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.5"/><path d="M10 1.8v2M10 16.2v2M1.8 10h2M16.2 10h2M4.2 4.2l1.4 1.4M14.4 14.4l1.4 1.4M4.2 15.8l1.4-1.4M14.4 5.6l1.4-1.4"/></svg></button><button type="button" class="gh-seg-btn" data-theme-choice="dark" aria-pressed="false" aria-label="Tema oscuro" title="Oscuro"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16.5 12.3A7 7 0 0 1 7.7 3.5a7 7 0 1 0 8.8 8.8z"/></svg></button></div>
+    </div>
+  </div>
+</footer>
+<!-- CHROME:FOOTER:END -->
+<script src="/js/shell.js?v=11496f72" defer></script>
+<script src="/js/methodology.js?v=23a6f0a7" defer></script>
+<script data-goatcounter="https://gaphunterlabs.goatcounter.com/count"
+        async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

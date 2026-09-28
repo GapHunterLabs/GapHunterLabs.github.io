@@ -1,0 +1,142 @@
+/* Gap Hunter Labs -- tokens de COLOR del sitio (fuente unica).
+   Tema claro "enterprise" con bandas oscuras (hero y footer), adoptado
+   2026-09-27. Se carga ANTES de cualquier otra hoja: base.css, home.css,
+   catalog.css, plugin.css y shell.css ya no declaran colores propios,
+   solo consumen estos tokens.
+
+   .band-dark redeclara los mismos tokens en azul marino: cualquier
+   componente dentro de una banda oscura se ve bien sin reescribirse.
+   Contraste WCAG verificado por script (texto >= 4.5:1, UI >= 3:1). */
+
+:root {
+    color-scheme: light;
+    --bg: #E4EBF5;
+    --surface: #F4F8FE;
+    --surface-2: #EAF1FB;
+    --surface-3: #DFE8F5;
+    --border: #CCD7E7;
+    --border-strong: #7A89A2;
+    --text: #0B1B34;
+    --text-dim: #3F4D66;
+    --text-faint: #515E77;
+    --accent: #0147E0;
+    --accent-hover: #0039B8;
+    --accent-ink: #FFFFFF;
+    --accent-soft: #DCE7FB;
+    --brand-navy: #0B1B34;
+    --cyan: #006AAD;
+    --good: #08703D;
+    --bad: #B52535;
+    --warn: #8C5200;
+    --pending: #44597D;
+    --pending-bg: #DDE6F4;
+    --good-bg: #DCF1E6;
+    --bad-bg: #F7E1E4;
+    --purple: #6236C4;
+    --amber: #8C5200;
+    --teal: #0B7068;
+    --shadow: 0 1px 2px rgba(11,27,52,0.06), 0 4px 14px rgba(11,27,52,0.07);
+    --shadow-lg: 0 2px 4px rgba(11,27,52,0.06), 0 12px 32px rgba(11,27,52,0.12);
+    --focus-ring: 0 0 0 3px rgba(1,71,224,0.35);
+}
+
+/* Tema oscuro (2026-09-27). "System" = sin data-theme: sigue al sistema
+   operativo. "Light"/"Dark" = data-theme en <html>, que /js/theme-init.js
+   aplica antes del primer pintado desde localStorage ("ghl-theme"). */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --bg: #0A1222;
+      --surface: #111C30;
+      --surface-2: #16233B;
+      --surface-3: #1C2C49;
+      --border: #26375A;
+      --border-strong: #6B7FA3;
+      --text: #E8EEF8;
+      --text-dim: #B4C1D8;
+      --text-faint: #98A7C2;
+      --accent: #5AA9FF;
+      --accent-hover: #7DBBFF;
+      --accent-ink: #06101F;
+      --accent-soft: rgba(90,169,255,0.14);
+      --brand-navy: #DCE6F7;
+      --cyan: #3CC4FF;
+      --good: #2EE58A;
+      --bad: #FF8A94;
+      --warn: #FFC04D;
+      --pending: #A9C0E6;
+      --pending-bg: #1A2C4E;
+      --good-bg: #123C2C;
+      --bad-bg: #3E2029;
+      --purple: #C4A0FF;
+      --amber: #FFC04D;
+      --teal: #4FE0D2;
+      --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 6px 18px rgba(0,0,0,0.30);
+      --shadow-lg: 0 2px 4px rgba(0,0,0,0.35), 0 16px 40px rgba(0,0,0,0.40);
+      --focus-ring: 0 0 0 3px rgba(90,169,255,0.45);
+  }
+}
+:root[data-theme="dark"] {
+    color-scheme: dark;
+    --bg: #0A1222;
+    --surface: #111C30;
+    --surface-2: #16233B;
+    --surface-3: #1C2C49;
+    --border: #26375A;
+    --border-strong: #6B7FA3;
+    --text: #E8EEF8;
+    --text-dim: #B4C1D8;
+    --text-faint: #98A7C2;
+    --accent: #5AA9FF;
+    --accent-hover: #7DBBFF;
+    --accent-ink: #06101F;
+    --accent-soft: rgba(90,169,255,0.14);
+    --brand-navy: #DCE6F7;
+    --cyan: #3CC4FF;
+    --good: #2EE58A;
+    --bad: #FF8A94;
+    --warn: #FFC04D;
+    --pending: #A9C0E6;
+    --pending-bg: #1A2C4E;
+    --good-bg: #123C2C;
+    --bad-bg: #3E2029;
+    --purple: #C4A0FF;
+    --amber: #FFC04D;
+    --teal: #4FE0D2;
+    --shadow: 0 1px 2px rgba(0,0,0,0.35), 0 6px 18px rgba(0,0,0,0.30);
+    --shadow-lg: 0 2px 4px rgba(0,0,0,0.35), 0 16px 40px rgba(0,0,0,0.40);
+    --focus-ring: 0 0 0 3px rgba(90,169,255,0.45);
+}
+
+.band-dark {
+    color-scheme: dark;
+    --bg: #0B1B34;
+    --surface: #12264A;
+    --surface-2: #183058;
+    --surface-3: #1E3A68;
+    --border: #2B4573;
+    --border-strong: #3A5890;
+    --text: #F1F4FA;
+    --text-dim: #BAC6DC;
+    --text-faint: #9EADC8;
+    --accent: #5AA9FF;
+    --accent-hover: #7DBBFF;
+    --accent-ink: #06101F;
+    --accent-soft: rgba(90,169,255,0.14);
+    --cyan: #3CC4FF;
+    --good: #2EE58A;
+    --bad: #FF8A94;
+    --warn: #FFC04D;
+    --pending: #A9C0E6;
+    --pending-bg: #1A2C4E;
+    --good-bg: #123C2C;
+    --bad-bg: #3E2029;
+    --purple: #C4A0FF;
+    --amber: #FFC04D;
+    --teal: #4FE0D2;
+    --shadow: 0 1px 2px rgba(0,0,0,0.30), 0 8px 24px rgba(0,0,0,0.30);
+    --shadow-lg: 0 2px 4px rgba(0,0,0,0.30), 0 16px 40px rgba(0,0,0,0.35);
+    --focus-ring: 0 0 0 3px rgba(90,169,255,0.45);
+    background: var(--bg);
+    color: var(--text);
+}

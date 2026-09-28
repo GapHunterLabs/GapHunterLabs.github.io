@@ -30,7 +30,11 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-SITE = "https://gaphunterlabs.github.io"
+import sys as _sys
+from pathlib import Path as _Path
+_sys.path.insert(0, str(_Path(__file__).resolve().parent))
+from site_config import SITE_URL  # noqa: E402
+SITE = SITE_URL
 OG_IMAGE = SITE + "/og-image.png"
 OG_ALT = "Gap Hunter Labs — Plugin Intelligence Catalog Report"
 
@@ -39,7 +43,8 @@ STUBS = (
     ("methodology.html", "methodology/index.html", "/methodology/"),
     ("contact.html", "contact/index.html", "/contact/"),
     ("security.html", "security/index.html", "/security/"),
-    ("laboratorio.html", "laboratorio/index.html", "/laboratorio/"),
+    ("laboratorio.html", "engineering-evidence/index.html", "/engineering-evidence/"),
+    ("laboratorio/index.html", "engineering-evidence/index.html", "/engineering-evidence/"),
 )
 OPEN, CLOSE = "<!--STUBMETA-->", "<!--/STUBMETA-->"
 

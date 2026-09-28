@@ -1,73 +1,96 @@
-/* Seccion de extensiones de VS Code del catalogo (paginada, lee GapVSCode de vscode-catalog.js).
-   Movido desde un <script> inline el 2026-09-24 para poder quitar
-   'unsafe-inline' del script-src de la CSP (ver DOCUMENTATION.md). */
+/* Seccion de extensiones de VS Code del catalogo (lee GapVSCode de vscode-catalog.js).
+   2026-09-27: pestana propia, buscador propio y tarjetas con el mismo
+   markup que pre-renderiza pipeline/build_catalog_grid.py (si cambia uno,
+   cambiar el otro). Paginada: 12 por pagina, con los mismos estilos de
+   paginador que la grilla de JetBrains. */
 (function () {
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
     });
   }
-  // 2026-09-11: paginated at the user's explicit request (31 extensions
-  // made the section a very long unbroken scroll) -- same
-  // .catalog-pager/.catalog-pager-btn/.catalog-pager-status classes the
-  // JetBrains grid's own pager uses above, for one consistent pager
-  // look site-wide, but with its own local page state: this section is
-  // a separate IIFE/data source (GapVSCode, not GapCatalog) so it can't
-  // share that pager's catalogPage variable.
-  var VSX_PAGE_SIZE = 10;
-  var vsxPage = 1;
+  var VS_ICON = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z"/></svg>';
+  var PAGE_SIZE = 12;
+  var page = 1;
+  var query = '';
+  var ES = document.documentElement.lang === 'es';
   var reducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  function thousands(n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
 
   GapVSCode.ready.then(function (data) {
     var section = document.getElementById('vsxSection');
     var grid = document.getElementById('vsxGrid');
-    var subtitle = document.getElementById('vsxSubtitle');
     var pagerHost = document.getElementById('vsxPager');
+    var search = document.getElementById('vsxSearch');
+    var empty = document.getElementById('vsxNoResults');
     if (!section || !grid || !data.extensions.length) return;
-    var extensions = data.extensions;
-    subtitle.textContent = extensions.length + ' extensions published for VS Code -- same evidence-driven approach, a different editor.';
+    var all = data.extensions;
 
-    function pageCount() { return Math.max(1, Math.ceil(extensions.length / VSX_PAGE_SIZE)); }
-    function cardHtml(e) {
-      return '<div class="vsx-card">' +
-        '<div class="vsx-card-name">' + esc(e.displayName) + '</div>' +
-        '<div class="vsx-card-niche">' + esc(e.niche) + '</div>' +
-        '<div class="vsx-card-pitch">' + esc(e.pitch) + '</div>' +
-        '<a class="vsx-card-link" href="' + esc(e.marketplaceUrl) + '" target="_blank" rel="noopener">' +
-        '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 5v14M5 12l7 7 7-7"/></svg>' +
-        'View on VS Code Marketplace</a>' +
-        '</div>';
-    }
-    function pagerHtml() {
-      var pages = pageCount();
-      if (pages <= 1) return '';
-      return '<nav class="catalog-pager" aria-label="VS Code extension pages">' +
-        '<button type="button" class="btn catalog-pager-btn" data-vsx-dir="-1" aria-label="Previous page"' + (vsxPage <= 1 ? ' disabled' : '') + '>Previous</button>' +
-        '<span class="catalog-pager-status" aria-live="polite">Page ' + vsxPage + ' of ' + pages + '</span>' +
-        '<button type="button" class="btn catalog-pager-btn" data-vsx-dir="1" aria-label="Next page"' + (vsxPage >= pages ? ' disabled' : '') + '>Next</button>' +
-        '</nav>';
-    }
-    function render() {
-      var pages = pageCount();
-      if (vsxPage > pages) vsxPage = pages;
-      if (vsxPage < 1) vsxPage = 1;
-      var start = (vsxPage - 1) * VSX_PAGE_SIZE;
-      grid.innerHTML = extensions.slice(start, start + VSX_PAGE_SIZE).map(cardHtml).join('');
-      if (!pagerHost) return;
-      pagerHost.innerHTML = pagerHtml();
-      Array.prototype.forEach.call(pagerHost.querySelectorAll('[data-vsx-dir]'), function (btn) {
-        btn.addEventListener('click', function () {
-          vsxPage = Math.min(pageCount(), Math.max(1, vsxPage + parseInt(btn.getAttribute('data-vsx-dir'), 10)));
-          render();
-          section.scrollIntoView({ block: 'start', behavior: reducedMotion ? 'auto' : 'smooth' });
-        });
+    function filtered() {
+      if (!query) return all;
+      return all.filter(function (e) {
+        return ((e.displayName || '') + ' ' + (e.niche || '') + ' ' + (e.pitch || '')).toLowerCase().indexOf(query) !== -1;
       });
     }
-    render();
-    section.hidden = false;
+    // 2026-09-27: cada extension tiene su ficha propia en /catalog/vscode/<name>/
+    // (la instalacion sigue en VS Code Marketplace, desde esa ficha).
+    function cardHtml(e) {
+      var n = e.installs || 0;
+      return '<a class="vsx-card" href="/catalog/vscode/' + esc(e.name) + '/" aria-label="' + esc(e.displayName) + (ES ? ' — detalles' : ' details') + '">' +
+        '<div class="card-header"><span class="card-cat vsx-mark" aria-hidden="true">' + VS_ICON + '</span>' +
+        '<span class="price-badge price-free">' + (ES ? 'Gratis' : 'Free') + '</span></div>' +
+        '<div class="card-top"><div class="card-name">' + esc(e.displayName) + '</div><div class="card-niche">' + esc(e.niche) + '</div></div>' +
+        '<p class="card-pitch">' + esc(e.pitch) + '</p>' +
+        '<div class="card-metrics"><span class="card-dl-wrap">' + thousands(n) +
+        (ES ? (n === 1 ? ' instalación' : ' instalaciones') : (n === 1 ? ' install' : ' installs')) + '</span>' +
+        '<span class="card-go">' + (ES ? 'Detalles &rarr;' : 'Details &rarr;') + '</span></div></a>';
+    }
+    function pagerHtml(pages) {
+      if (pages <= 1) return '';
+      return '<nav class="catalog-pager" aria-label="' + (ES ? 'Páginas de extensiones de VS Code' : 'VS Code extension pages') + '">' +
+        '<button type="button" class="btn catalog-pager-btn" data-vsx-dir="-1" aria-label="' + (ES ? 'Página anterior' : 'Previous page') + '"' + (page <= 1 ? ' disabled' : '') + '>' + (ES ? 'Anterior' : 'Previous') + '</button>' +
+        '<span class="catalog-pager-status" aria-live="polite">' + (ES ? 'Página ' + page + ' de ' + pages : 'Page ' + page + ' of ' + pages) + '</span>' +
+        '<button type="button" class="btn catalog-pager-btn" data-vsx-dir="1" aria-label="' + (ES ? 'Página siguiente' : 'Next page') + '"' + (page >= pages ? ' disabled' : '') + '>' + (ES ? 'Siguiente' : 'Next') + '</button>' +
+        '</nav>';
+    }
+    function render(scroll) {
+      var list = filtered();
+      var pages = Math.max(1, Math.ceil(list.length / PAGE_SIZE));
+      if (page > pages) page = pages;
+      if (page < 1) page = 1;
+      var start = (page - 1) * PAGE_SIZE;
+      grid.innerHTML = list.slice(start, start + PAGE_SIZE).map(cardHtml).join('');
+      if (empty) {
+        empty.hidden = list.length !== 0;
+        if (!list.length) {
+          var term = esc(query);
+          empty.innerHTML = (ES ? 'Todavía no hay nada para “' + term + '”. ' : 'Nothing here matches “' + term + '” yet. ') +
+            '<a class="miss-cta" href="' + (ES ? '/es/contacto/' : '/contact/') + '?intent=hire&amp;need=' + encodeURIComponent(query.slice(0, 120)) +
+            '" data-goatcounter-click="cta-search-miss-hire">' +
+            (ES ? '¿Necesitas que se construya? Trabaja con Joel →' : 'Need it built? Work with Joel →') + '</a>';
+        }
+      }
+      if (!pagerHost) return;
+      pagerHost.innerHTML = pagerHtml(pages);
+      Array.prototype.forEach.call(pagerHost.querySelectorAll('[data-vsx-dir]'), function (btn) {
+        btn.addEventListener('click', function () {
+          page += parseInt(btn.getAttribute('data-vsx-dir'), 10);
+          render(true);
+        });
+      });
+      if (scroll) section.scrollIntoView({ block: 'start', behavior: reducedMotion ? 'auto' : 'smooth' });
+    }
+    if (search) {
+      var timer;
+      search.addEventListener('input', function () {
+        clearTimeout(timer);
+        timer = setTimeout(function () { query = search.value.trim().toLowerCase(); page = 1; render(false); }, 120);
+      });
+    }
+    render(false);
   }).catch(function (error) {
-    // Non-fatal: this section is additive to the page, never gates it
-    // the way GapCatalog.ready gates the main catalog grid above.
+    // No es fatal: sin datos, la grilla pre-renderizada sigue visible.
     console.error('VS Code catalog failed to load', error);
   });
 })();
