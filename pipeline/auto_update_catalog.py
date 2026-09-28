@@ -30,7 +30,6 @@ STATIC_PATH = os.path.join(PIPELINE_DIR, "catalog_static_metadata.json")
 HISTORY_PATH = os.path.join(PIPELINE_DIR, "catalog_daily_history.json")
 LATEST_PATH = os.path.join(PIPELINE_DIR, "catalog_latest_data.json")
 DATA_PATH = os.path.join(ROOT, "data", "catalog-data.json")
-INDEX_PATH = os.path.join(ROOT, "index.html")
 # 2026-09-10 (clean-URL migration): the catalog page now lives at
 # catalog/index.html so GitHub Pages serves it at /catalog/ with no
 # ".html" in the address bar. catalog.html itself became a tiny
@@ -273,34 +272,17 @@ def refresh_seo_from_data():
     print("[auto_update] catalog SEO refreshed from external data (%d plugins)" % len(rows))
 
 
-def update_static_counts(path, rows):
-    with open(path, encoding="utf-8") as f:
-        page = f.read()
-    total = len(rows)
-    swaps = [
-        (re.compile(r'(id="footerStatusText">)\d+( plugins tracked)'), r"\g<1>%d\g<2>" % total),
-    ]
-    # 2026-09-11 (cron incident): a hero-subtitle marker used to live
-    # here too ("Real state of the N-plugin catalog"), but commit
-    # bcd7753 (2026-09-10, "Rewrite hero subtitle to lead with the
-    # mission") replaced that copy with a generic no-JS mission
-    # statement that embeds no count at all -- the live count now only
-    # ever reaches #heroSubtitle via the JS hydration in index.html
-    # (which sets its own textContent from data.totalPlugins at
-    # runtime, independent of this script). That silently broke every
-    # scheduled run since (regex stopped matching -> sys.exit here) --
-    # the marker is intentionally gone from the static HTML now, not a
-    # bug to restore; removing the dead swap instead of re-adding a
-    # count to copy that was deliberately rewritten to not have one.
-    for rx, repl in swaps:
-        page, count = rx.subn(repl, page, count=1)
-        if count != 1:
-            # os.path.basename alone would print "index.html" for both
-            # index.html and catalog/index.html -- use the path relative
-            # to ROOT so a failure here says which file actually broke.
-            sys.exit("[auto_update] ERROR: expected static count marker in %s" % os.path.relpath(path, ROOT))
-    with open(path, "w", encoding="utf-8") as f:
-        f.write(page)
+# Static page counts: this script used to rewrite count markers in the
+# static HTML itself (a hero subtitle until 2026-09-10, then the footer's
+# `id="footerStatusText">N plugins tracked`). Both are gone: the v2 footer
+# (commit fc7d5d9, 2026-09-28, pipeline/build_chrome.py) carries no count,
+# and every visible count on the home and the catalog is now written by
+# build_home.py and build_catalog_grid.py, which run right after this
+# script in the same workflow. The footer swap had become a dead marker
+# that aborted every scheduled run (2026-09-28 11:25 UTC); it is removed
+# rather than re-adding a count to a footer designed without one. The
+# "Sanity-check generated catalog" workflow step still fails the job if
+# the data, the JSON-LD, the cards and the table rows ever disagree.
 
 
 def main():
@@ -448,10 +430,8 @@ def main():
         json.dump(data, f, ensure_ascii=False, indent=2)
         f.write("\n")
 
-    update_static_counts(INDEX_PATH, rows)
-    update_static_counts(CATALOG_PATH, rows)
     refresh_seo_from_data()
-    print("[auto_update] external catalog JSON and static page counts updated")
+    print("[auto_update] external catalog JSON and catalog SEO updated")
 
     # sitemap.xml <lastmod>, 2026-08-23 (audit finding): the page's real
     # content changes twice a day via this same script, but the sitemap
