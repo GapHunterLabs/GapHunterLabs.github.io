@@ -327,6 +327,7 @@
     'refactor-simulator': { poster: "/media/refactor-simulator/poster.webp", mp4: "/media/refactor-simulator/demo.mp4", webm: "/media/refactor-simulator/demo.webm" },
     'regex-preview-companion': { poster: "/media/regex-preview-companion/poster.webp", mp4: "/media/regex-preview-companion/demo.mp4", webm: "/media/regex-preview-companion/demo.webm" },
     'spreadsheet-companion': { poster: "/media/spreadsheet-companion/poster.webp", mp4: "/media/spreadsheet-companion/demo.mp4", webm: "/media/spreadsheet-companion/demo.webm" },
+    'sql-concatenation-companion': { poster: "/media/sql-concatenation-companion/poster.webp", mp4: "/media/sql-concatenation-companion/demo.mp4", webm: "/media/sql-concatenation-companion/demo.webm" },
     'test-scaffold-companion': { poster: "/media/test-scaffold-companion/poster.webp", mp4: "/media/test-scaffold-companion/demo.mp4", webm: "/media/test-scaffold-companion/demo.webm" },
     'theme-companion': { poster: "/media/theme-companion/poster.webp", mp4: "/media/theme-companion/demo.mp4", webm: "/media/theme-companion/demo.webm" },
     'turbo-log-companion': { poster: "/media/turbo-log-companion/poster.webp", mp4: "/media/turbo-log-companion/demo.mp4", webm: "/media/turbo-log-companion/demo.webm" },
