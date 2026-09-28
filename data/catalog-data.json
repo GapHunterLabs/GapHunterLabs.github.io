@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-27 10:22:46 UTC",
+  "generatedAt": "2026-09-28 00:09:05 UTC",
   "totalPlugins": 146,
   "totalDownloads": 7409,
   "pending": 0,
@@ -7,10 +7,6 @@
   "totalReviews": 0,
   "avgRating": null,
   "trend7d": [
-    {
-      "date": "2026-09-21",
-      "totalDownloads": 5137
-    },
     {
       "date": "2026-09-22",
       "totalDownloads": 5384
@@ -34,45 +30,13 @@
     {
       "date": "2026-09-27",
       "totalDownloads": 7409
+    },
+    {
+      "date": "2026-09-28",
+      "totalDownloads": 7409
     }
   ],
-  "recentChanges": [
-    {
-      "date": "2026-09-27",
-      "type": "growth",
-      "name": "NPM Peer Dependency Companion",
-      "niche": "Node.js / npm Tooling",
-      "delta": 20
-    },
-    {
-      "date": "2026-09-27",
-      "type": "growth",
-      "name": "Regex Named Group Companion",
-      "niche": "Regex Tooling",
-      "delta": 18
-    },
-    {
-      "date": "2026-09-27",
-      "type": "growth",
-      "name": "ReDoS Catastrophic-Backtracking Companion",
-      "niche": "ReDoS Detection",
-      "delta": 17
-    },
-    {
-      "date": "2026-09-27",
-      "type": "growth",
-      "name": "Redisson Client Reuse Companion",
-      "niche": "Cache Client Reuse",
-      "delta": 17
-    },
-    {
-      "date": "2026-09-27",
-      "type": "growth",
-      "name": "Redis/Redisson Distributed Lock Missing TTL Companion",
-      "niche": "Distributed Locking",
-      "delta": 17
-    }
-  ],
+  "recentChanges": [],
   "plugins": [
     {
       "xmlId": "dev.gaphunter.mermaidcompanion",
