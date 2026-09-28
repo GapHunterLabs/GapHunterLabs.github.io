@@ -1,0 +1,374 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+build_i18n.py -- version nativa en espanol de las 10 paginas principales.
+
+Genera /es/... a partir de la pagina inglesa YA construida (despues de
+build_catalog_grid, build_home, build_plugin_pages y build_chrome), asi
+que las cifras y listados pre-renderizados que actualiza el CI llegan
+solos a la version en espanol. Correr ANTES de version_assets.py.
+
+Como traduce:
+  * Unidad de traduccion = el elemento mas externo que tiene texto propio y
+    ningun bloque adentro (un <p>, un boton, un titulo...), no fragmentos.
+  * Clave = su contenido normalizado: espacios colapsados, numeros -> {n},
+    SVG -> {svg}, ?v=hash -> {v}. Asi una cifra que cambia no invalida la
+    traduccion. Diccionario: pipeline/i18n/es.json (clave inglesa -> espanol).
+  * Tambien traduce aria-label/title/placeholder/alt, <title> y las meta de
+    descripcion/og/twitter.
+  * No traduce datos: nombres y descripciones de plugins, IDs de tickets,
+    la tabla del catalogo, codigo.
+  * Reescribe los enlaces internos a su equivalente en espanol, el idioma,
+    el canonical, og:url/og:locale y el selector de idioma.
+
+Uso:
+  python pipeline/build_i18n.py            # genera; avisa de lo que falte
+  python pipeline/build_i18n.py --strict   # ademas falla si falta algo
+  python pipeline/build_i18n.py --extract  # escribe pipeline/i18n/es.todo.json
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import re
+import sys
+from html.parser import HTMLParser
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from build_chrome import ES_PATHS, SITE, LANG_START, LANG_END, lang_switch_html  # noqa: E402
+
+ROOT = Path(__file__).resolve().parents[1]
+DICT_PATH = ROOT / "pipeline" / "i18n" / "es.json"
+TODO_PATH = ROOT / "pipeline" / "i18n" / "es.todo.json"
+
+VOID = {"area", "base", "br", "col", "embed", "hr", "img", "input", "link", "meta", "source", "track", "wbr", "param"}
+BLOCK = {"address", "article", "aside", "blockquote", "details", "dialog", "dd", "div", "dl", "dt", "fieldset",
+         "figcaption", "figure", "footer", "form", "h1", "h2", "h3", "h4", "h5", "h6", "header", "hr", "li", "main",
+         "nav", "ol", "p", "pre", "section", "table", "ul", "tbody", "thead", "tr", "td", "th", "summary", "video",
+         "picture", "select", "textarea", "iframe", "canvas", "noscript", "script", "style", "template", "option", "title"}
+OPAQUE = {"script", "style", "svg", "pre", "textarea", "template", "noscript"}
+SKIP_CLASSES = {"card-pitch", "card-name", "card-niche", "hs-name", "hs-niche", "paid-niche", "sc-name", "sc-niche",
+                "ticket-id", "code-window", "gh-brand-name", "gh-lang"}
+SKIP_IDS = {"tbody"}
+SKIP_IN = {"paid-card": {"h3", "p"}}   # ancestro con clase -> etiquetas de datos adentro
+ATTRS = ("aria-label", "title", "placeholder", "alt")
+META = ('name="description"', 'property="og:title"', 'property="og:description"', 'name="twitter:title"',
+        'name="twitter:description"', 'property="og:image:alt"', 'name="twitter:image:alt"')
+
+
+class Node:
+    __slots__ = ("tag", "attrs", "start", "open_end", "close_start", "end", "children", "parent")
+
+    def __init__(self, tag, attrs, start, open_end, parent):
+        self.tag, self.attrs, self.start, self.open_end, self.parent = tag, dict(attrs), start, open_end, parent
+        self.close_start = self.end = open_end
+        self.children = []
+
+    def classes(self):
+        return set((self.attrs.get("class") or "").split())
+
+
+class TreeBuilder(HTMLParser):
+    def __init__(self, text):
+        super().__init__(convert_charrefs=False)
+        self.text = text
+        self.line_starts = [0]
+        for m in re.finditer("\n", text):
+            self.line_starts.append(m.end())
+        self.root = Node("#root", [], 0, 0, None)
+        self.root.close_start = self.root.end = len(text)
+        self.stack = [self.root]
+
+    def _abs(self):
+        line, col = self.getpos()
+        return self.line_starts[line - 1] + col
+
+    def handle_starttag(self, tag, attrs):
+        start = self._abs()
+        node = Node(tag, attrs, start, start + len(self.get_starttag_text()), self.stack[-1])
+        self.stack[-1].children.append(node)
+        if tag not in VOID:
+            self.stack.append(node)
+
+    def handle_startendtag(self, tag, attrs):
+        start = self._abs()
+        node = Node(tag, attrs, start, start + len(self.get_starttag_text()), self.stack[-1])
+        self.stack[-1].children.append(node)
+
+    def handle_endtag(self, tag):
+        start = self._abs()
+        end = self.text.index(">", start) + 1
+        for i in range(len(self.stack) - 1, 0, -1):
+            if self.stack[i].tag == tag:
+                for node in self.stack[i + 1:]:          # cierres implicitos
+                    node.close_start = node.end = start
+                self.stack[i].close_start, self.stack[i].end = start, end
+                del self.stack[i:]
+                return
+
+
+def parse(text):
+    tb = TreeBuilder(text)
+    tb.feed(text)
+    tb.close()
+    return tb.root
+
+
+# ---- normalizacion de claves -------------------------------------------------
+NUM_RE = re.compile(r"\d(?:[\d,]*\d)?(?:\.\d+)?")  # "24, 2026" -> 24 y 2026 (la coma queda en el texto)
+
+
+def normalize(fragment):
+    """-> (clave, valores): SVG/hash/numeros pasan a marcadores."""
+    frag = re.sub(r"<!--.*?-->", "", fragment, flags=re.S)
+    vals = {"svg": [], "v": [], "n": []}
+
+    def keep_svg(m):
+        vals["svg"].append(m.group(0))
+        return "{svg}"
+    frag = re.sub(r"<svg\b.*?</svg>", keep_svg, frag, flags=re.S)
+
+    def keep_v(m):
+        vals["v"].append(m.group(1))
+        return "?v={v}"
+    frag = re.sub(r"\?v=([0-9a-f]+)", keep_v, frag)
+    out = []
+    for part in re.split(r"(<[^>]+>)", frag):
+        if part.startswith("<"):
+            out.append(part)
+        else:
+            def keep_n(m):
+                vals["n"].append(m.group(0))
+                return "{n}"
+            out.append(NUM_RE.sub(keep_n, re.sub(r"\s+", " ", part)))
+    key = re.sub(r"\s+", " ", "".join(out)).strip()
+    return key, vals
+
+
+def restore(template, vals):
+    it = {k: iter(v) for k, v in vals.items()}
+    out = re.sub(r"\{svg\}", lambda m: next(it["svg"], ""), template)
+    out = re.sub(r"\?v=\{v\}", lambda m: "?v=" + next(it["v"], ""), out)
+    return re.sub(r"\{n\}", lambda m: next(it["n"], ""), out)
+
+
+# Patrones para textos que llevan un nombre propio adentro (evita 146 entradas).
+PATTERNS = (
+    (re.compile(r"^(.+) details$"), r"Detalles de "),
+    (re.compile(r"^Show (.+)$"), r"Mostrar "),
+    (re.compile(r"^Share (.+) on (X|LinkedIn)$"), r"Compartir  en "),
+)
+
+
+def plugin_names():
+    names = set()
+    for rel, key in (("data/catalog-data.json", "name"), ("data/vscode-catalog-data.json", "displayName")):
+        f = ROOT / rel
+        if f.exists():
+            data = json.loads(f.read_text(encoding="utf-8"))
+            items = data.get("plugins") or data.get("extensions") or []
+            names.update(i.get(key) for i in items if i.get(key))
+    return names
+
+
+NAMES = plugin_names()
+
+
+def lookup(key, table):
+    """Traduccion de una clave: diccionario, patron o nombre propio (se deja igual)."""
+    if table.get(key):
+        return table[key]
+    for rx, repl in PATTERNS:
+        if rx.match(key):
+            return rx.sub(repl, key)
+    if key in NAMES:
+        return key
+    return None
+
+
+def has_letters(key):
+    stripped = re.sub(r"<[^>]+>|\{svg\}|\{n\}|\{v\}|&[a-z#0-9]+;", "", key)
+    return re.search(r"[A-Za-z]", stripped) is not None
+
+
+# ---- recorrido ---------------------------------------------------------------
+def skipped(node):
+    cls = node.classes()
+    if cls & SKIP_CLASSES or node.attrs.get("id") in SKIP_IDS:
+        return True
+    anc = node.parent
+    while anc is not None:
+        for c, tags in SKIP_IN.items():
+            if c in anc.classes() and node.tag in tags:
+                return True
+        anc = anc.parent
+    return False
+
+
+def has_block(node):
+    return any(c.tag in BLOCK or has_block(c) for c in node.children)
+
+
+def direct_segments(node, text):
+    """Trozos de texto directo de un nodo: (inicio, fin)."""
+    segs, pos = [], node.open_end
+    for c in node.children:
+        segs.append((pos, c.start))
+        pos = c.end
+    segs.append((pos, node.close_start))
+    return [(a, b) for a, b in segs if b > a]
+
+
+def has_direct_text(node, text):
+    return any(re.sub(r"<!--.*?-->", "", text[a:b], flags=re.S).strip() for a, b in direct_segments(node, text))
+
+
+def collect(node, text, units):
+    if node.tag in OPAQUE or skipped(node):
+        return
+    if node.tag != "#root" and node.tag not in VOID and has_direct_text(node, text) and not has_block(node):
+        units.append((node.open_end, node.close_start))
+        return
+    if node.tag != "#root" and node.tag not in VOID and has_direct_text(node, text):
+        for a, b in direct_segments(node, text):          # texto suelto en un bloque mixto
+            if re.sub(r"<!--.*?-->", "", text[a:b], flags=re.S).strip():
+                units.append((a, b))
+    for c in node.children:
+        collect(c, text, units)
+
+
+# ---- traduccion de una pagina ------------------------------------------------
+def translate(text, table, missing, page):
+    root = parse(text)
+    units = []
+    collect(root, text, units)
+    edits = []
+    for a, b in units:
+        frag = text[a:b]
+        key, vals = normalize(frag)
+        if not key or not has_letters(key):
+            continue
+        tr = lookup(key, table)
+        if tr is not None:
+            lead = re.match(r"\s*", frag).group(0)
+            trail = re.search(r"\s*$", frag).group(0)
+            edits.append((a, b, lead + restore(tr, vals) + trail))
+        else:
+            missing.setdefault(key, set()).add(page)
+    for a, b, new in sorted(edits, reverse=True):
+        text = text[:a] + new + text[b:]
+
+    # atributos
+    def attr_sub(m):
+        key, vals = normalize(m.group(2))
+        if not has_letters(key):
+            return m.group(0)
+        tr = lookup(key, table)
+        if tr is not None:
+            return '%s="%s"' % (m.group(1), restore(tr, vals))
+        missing.setdefault(key, set()).add(page)
+        return m.group(0)
+
+    def tag_sub(m):
+        tag = m.group(0)
+        if tag.startswith("<svg") or tag.startswith("<path"):
+            return tag
+        return re.sub(r'\b(%s)="([^"]*)"' % "|".join(ATTRS), attr_sub, tag)
+    text = re.sub(r"<(?!/|!|script|style)[a-zA-Z][^>]*>", tag_sub, text)
+
+    for sel in META:
+        def meta_sub(m):
+            key, vals = normalize(m.group(2))
+            tr = lookup(key, table)
+            if tr is not None:
+                return m.group(1) + restore(tr, vals) + m.group(3)
+            missing.setdefault(key, set()).add(page)
+            return m.group(0)
+        text = re.sub(r'(<meta %s content=")([^"]*)(")' % re.escape(sel), meta_sub, text, count=1)
+    return text
+
+
+# ---- ajustes estructurales ---------------------------------------------------
+def localize_links(text):
+    def href_sub(m):
+        url = m.group(1)
+        path, sep, rest = re.match(r"([^?#]*)([?#]?)(.*)", url).groups()
+        if path in ES_PATHS:
+            return 'href="%s%s%s"' % (ES_PATHS[path], sep, rest)
+        return m.group(0)
+    # el selector de idioma se regenera aparte; los <link> del <head> no se tocan
+    head, body = text.split("</head>", 1)
+    body = re.sub(r'href="(/[^"]*)"', href_sub, body)
+    return head + "</head>" + body
+
+
+def structural(text, en_path, es_path):
+    text = text.replace('<html lang="en"', '<html lang="es"', 1)
+    en_url, es_url = SITE + en_path, SITE + es_path
+    text = text.replace('<link rel="canonical" href="%s">' % en_url, '<link rel="canonical" href="%s">' % es_url, 1)
+    text = text.replace('<meta property="og:url" content="%s">' % en_url, '<meta property="og:url" content="%s">' % es_url, 1)
+    text = text.replace('<meta property="og:locale" content="en_US">',
+                        '<meta property="og:locale" content="es_ES">\n<meta property="og:locale:alternate" content="en_US">', 1)
+    text = localize_links(text)
+    text = re.sub(re.escape(LANG_START) + r".*?" + re.escape(LANG_END),
+                  lambda _m: lang_switch_html("es", en_path, es_path), text, count=1, flags=re.S)
+    return text
+
+
+def ensure_sitemap(today):
+    """Agrega al sitemap las URLs en espanol que falten (despues de las
+    estaticas inglesas y antes de las fichas); no toca las existentes."""
+    sitemap = ROOT / "sitemap.xml"
+    text = sitemap.read_text(encoding="utf-8")
+    entries = re.findall(r"<loc>([^<]+)</loc>\s*<lastmod>([^<]+)</lastmod>", text)
+    have = {loc for loc, _ in entries}
+    missing = [SITE + p for p in ES_PATHS.values() if SITE + p not in have]
+    if not missing:
+        return 0
+    static = [e for e in entries if "/catalog/" not in e[0] or e[0].endswith("/catalog/")]
+    rest = [e for e in entries if e not in static]
+    ordered = static + [(loc, today) for loc in missing] + rest
+    lines = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
+    for loc, lastmod in ordered:
+        lines += ["  <url>", "    <loc>%s</loc>" % loc, "    <lastmod>%s</lastmod>" % lastmod, "  </url>"]
+    lines.append("</urlset>")
+    sitemap.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    return len(missing)
+
+
+def file_for(path):
+    return ROOT / ("index.html" if path == "/" else path.strip("/") + "/index.html")
+
+
+def main() -> int:
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--strict", action="store_true")
+    ap.add_argument("--extract", action="store_true")
+    args = ap.parse_args()
+    table = json.loads(DICT_PATH.read_text(encoding="utf-8")) if DICT_PATH.exists() else {}
+    missing: dict[str, set] = {}
+    for en_path, es_path in ES_PATHS.items():
+        src = file_for(en_path).read_text(encoding="utf-8")
+        out = structural(translate(src, table, missing, en_path), en_path, es_path)
+        if not args.extract:
+            dest = file_for(es_path)
+            dest.parent.mkdir(parents=True, exist_ok=True)
+            dest.write_text(out, encoding="utf-8")
+    if args.extract:
+        TODO_PATH.parent.mkdir(parents=True, exist_ok=True)
+        TODO_PATH.write_text(json.dumps({k: "" for k in sorted(missing)}, ensure_ascii=False, indent=1), encoding="utf-8")
+        print("[build_i18n] %d textos sin traducir -> %s" % (len(missing), TODO_PATH.relative_to(ROOT)))
+        return 0
+    from datetime import date
+    added = ensure_sitemap(date.today().isoformat())
+    print("[build_i18n] %d paginas en espanol generadas; %d textos sin traducir; %d URLs nuevas en el sitemap"
+          % (len(ES_PATHS), len(missing), added))
+    if missing:
+        for k in sorted(missing)[:15]:
+            print("   sin traducir:", k[:110])
+    return 1 if (args.strict and missing) else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -18,14 +18,28 @@ PAGES = (
     ("methodology.html", "methodology/index.html"),
     ("contact.html", "contact/index.html"),
     ("security.html", "security/index.html"),
-    ("laboratorio.html", "laboratorio/index.html"),
+    ("engineering-evidence", "engineering-evidence/index.html"),
+    ("case-studies", "engineering-evidence/case-studies/index.html"),
+    ("jetbrains-platform-tickets", "engineering-evidence/jetbrains-platform-tickets/index.html"),
     ("privacy.html", "privacy/index.html"),
     ("terms.html", "terms/index.html"),
 )
-PROHIBITED = re.compile(
-    r"internal-doc.md|internal-doc.md|internal-doc.md|"
-    r"internal-doc.md|internal-doc.md"
-)
+# Patrones de texto que nunca deben aparecer en una pagina publica. La
+# lista vive FUERA de este repo publico (un archivo local del operador,
+# una expresion regular por linea) para que el propio chequeo no publique
+# lo que protege. Ruta configurable con GHL_PROHIBITED_PATTERNS_FILE; si
+# el archivo no existe (p. ej. en CI) este chequeo se omite con aviso.
+import os
+_patterns_file = Path(os.environ.get(
+    "GHL_PROHIBITED_PATTERNS_FILE",
+    ROOT.parent / "pipeline" / "site_prohibited_patterns.txt",
+))
+if _patterns_file.is_file():
+    _lines = [l.strip() for l in _patterns_file.read_text(encoding="utf-8").splitlines()]
+    PROHIBITED = re.compile("|".join(l for l in _lines if l and not l.startswith("#")))
+else:
+    print(f"AVISO: {_patterns_file} no existe; se omite el chequeo de texto prohibido")
+    PROHIBITED = re.compile(r"(?!x)x")  # no coincide con nada
 # Regression guard for the clean-URL migration itself: these are the
 # exact relative asset references that were real bugs the first time
 # (they broke the moment the page moved into a subdirectory) -- a
@@ -52,7 +66,7 @@ for display_name, rel_path in PAGES:
     script_src = re.search(r"script-src ([^;]*)", csp).group(1)
     assert "'unsafe-inline'" not in script_src, (display_name, "script-src volvio a permitir 'unsafe-inline'")
     for src in re.findall(r'<script[^>]*\bsrc="(/[^"]*)"', text):
-        assert (ROOT / src.lstrip("/")).is_file(), (display_name, "script inexistente", src)
+        assert (ROOT / src.lstrip("/").split("?", 1)[0]).is_file(), (display_name, "script inexistente", src)
     print(f"{display_name}: no inline scripts, CSP script-src = {script_src}")
     assert not PROHIBITED.search(text), display_name
     assert not RELATIVE_ASSET_REGRESSION.search(text), (display_name, "relative asset path regression")
@@ -121,13 +135,16 @@ counts = (
     len(data["plugins"]),
     jsonld["mainEntity"]["numberOfItems"],
     len(re.findall(r'class="plugin-card"', catalog)),
-    len(re.findall(r'<tr class="row"', catalog)),
 )
 assert len(set(counts)) == 1, counts
+# 2026-09-27: las filas de la tabla las arma js/catalog.js; no deben volver
+# a pre-renderizarse (duplicaban la grilla completa).
+assert not re.search(r'<tr class="row"', catalog), "la tabla del catalogo volvio a pre-renderizarse"
 
 sitemap_text = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
 ElementTree.parse(ROOT / "sitemap.xml")
-for slug in ("catalog", "methodology", "contact", "security", "laboratorio", "privacy", "terms"):
+for slug in ("catalog", "methodology", "contact", "security", "engineering-evidence",
+             "engineering-evidence/case-studies", "engineering-evidence/jetbrains-platform-tickets", "privacy", "terms"):
     assert f"https://gaphunterlabs.github.io/{slug}/</loc>" in sitemap_text, (
         "sitemap.xml missing clean-URL entry for", slug
     )
@@ -150,42 +167,39 @@ for slug in ("catalog", "methodology", "contact", "security", "laboratorio", "pr
 # security.html no tiene entrada propia en el sidebar de 5 ítems (se
 # llega vía el footer nav / el botón "Security Report" de contact) --
 # por eso su active esperado es None, no falta un ítem.
-for display_name, rel_path, active in (
-    ("index.html", "index.html", "Home"),
-    ("catalog.html", "catalog/index.html", "Catalog"),
-    ("methodology.html", "methodology/index.html", "Methodology"),
-    ("laboratorio.html", "laboratorio/index.html", "Laboratorie"),
-    ("security.html", "security/index.html", "Security"),
-    ("contact.html", "contact/index.html", "Contact"),
-    ("privacy/index.html", "privacy/index.html", "Privacy"),
-    ("terms/index.html", "terms/index.html", "Terms"),
+# 2026-09-27: la barra lateral se reemplazo por un encabezado horizontal
+# (pipeline/build_chrome.py). "Laboratorie" paso a "Engineering & Evidence",
+# un submenu con Overview + 2 subpaginas (pedido explicito del usuario).
+# Security/Privacy/Terms viven en el pie: su enlace activo se marca ahi.
+import html as _html
+TOP_LABELS = ["Catalog", "Engineering & Evidence", "Methodology", "Contact"]
+SUB_LABELS = ["Overview", "Case studies", "JetBrains Platform tickets"]
+for display_name, rel_path, active, footer_active in (
+    ("index.html", "index.html", None, None),
+    ("catalog.html", "catalog/index.html", "Catalog", None),
+    ("methodology.html", "methodology/index.html", "Methodology", None),
+    ("engineering-evidence", "engineering-evidence/index.html", "Overview", None),
+    ("case-studies", "engineering-evidence/case-studies/index.html", "Case studies", None),
+    ("jetbrains-platform-tickets", "engineering-evidence/jetbrains-platform-tickets/index.html", "JetBrains Platform tickets", None),
+    ("security.html", "security/index.html", None, "Security"),
+    ("contact.html", "contact/index.html", "Contact", None),
+    ("privacy/index.html", "privacy/index.html", None, "Privacy"),
+    ("terms/index.html", "terms/index.html", None, "Terms"),
 ):
     text = (ROOT / rel_path).read_text(encoding="utf-8")
-    sidebar_match = re.search(r'<aside class="app-sidebar" id="appSidebar">(.*?)</aside>', text, re.S)
-    if sidebar_match:
-        nav = re.search(r'<nav class="sidebar-nav"[^>]*>(.*?)</nav>', sidebar_match.group(1), re.S).group(1)
-        # Enlaces primarios (class="sidebar-link") vs subenlaces del grupo
-        # "Legal" (class="sidebar-sublink", dentro de <details>): Security,
-        # Privacy y Terms dejaron de ser huerfanos del sidebar (2026-09-24).
-        links = re.findall(r'<a class="sidebar-link".*?</a>', nav, re.S)
-        labels = [re.sub("<.*?>", "", item).strip() for item in links]
-        assert labels == ["Home", "Catalog", "Methodology", "Laboratorie", "Contact"], (display_name, labels)
-        sub = [re.sub("<.*?>", "", item).strip() for item in re.findall(r'<a class="sidebar-sublink".*?</a>', nav, re.S)]
-        assert sub == ["Security", "Privacy", "Terms"], (display_name, "subenlaces de Legal", sub)
-        group = re.search(r'<details class="sidebar-group[^"]*"([^>]*)>', nav)
-        assert group and "Legal" in nav, (display_name, "falta el grupo Legal")
-        has_current_sub = re.search(r'<a class="sidebar-sublink"[^>]*aria-current="page"', nav) is not None
-        assert (" open" in group.group(1)) == has_current_sub, (display_name, "el grupo Legal debe llegar abierto solo en Security/Privacy/Terms")
-    else:
-        nav = re.search(r'<div class="topbar-nav" id="topbarNav">(.*?)</div>', text, re.S).group(1)
-        assert [re.sub("<.*?>", "", item) for item in re.findall(r"<a .*?</a>", nav)] == [
-            "Catalog",
-            "Methodology",
-            "Contact",
-        ]
-    current = re.findall(r'<a[^>]*aria-current="page"[^>]*>(.*?)</a>', nav, re.S)
-    current = [re.sub("<.*?>", "", c).strip() for c in current]
+    assert 'id="appSidebar"' not in text, (display_name, "quedo la barra lateral vieja")
+    nav = re.search(r'<nav class="gh-nav" id="siteNav"[^>]*>(.*?)</nav>', text, re.S).group(1)
+    clean = lambda frag: _html.unescape(re.sub("<.*?>", "", frag)).strip()
+    top = [clean(m) for m in re.findall(r'<(?:a|button) [^>]*class="gh-nav-link[^"]*"[^>]*>(.*?)</(?:a|button)>', nav, re.S)]
+    assert top == TOP_LABELS, (display_name, top)
+    subs = [clean(m) for m in re.findall(r'<a class="gh-pop-link"[^>]*><strong>(.*?)</strong>', nav, re.S)]
+    assert subs == SUB_LABELS, (display_name, subs)
+    current = [clean(m) for m in re.findall(r'<a[^>]*aria-current="page"[^>]*>(?:<strong>)?(.*?)(?:</strong>.*?)?</a>', nav, re.S)]
     assert current == ([] if active is None else [active]), (display_name, current)
+    footer = re.search(r'<footer class="site-footer[^"]*">(.*?)</footer>', text, re.S).group(1)
+    fcur = [clean(m) for m in re.findall(r'<a[^>]*aria-current="page"[^>]*>(.*?)</a>', footer, re.S)]
+    assert fcur == ([] if footer_active is None else [footer_active]), (display_name, "pie", fcur)
+    assert 'data-theme-choice="system"' in text and "/js/theme-init.js" in text, (display_name, "falta el selector de tema")
 
 # Redirect stubs: the 5 old top-level *.html URLs (already indexed by
 # search engines) must keep working as redirects to their new clean
@@ -199,7 +213,8 @@ REDIRECT_STUBS = (
     ("methodology.html", "/methodology/"),
     ("contact.html", "/contact/"),
     ("security.html", "/security/"),
-    ("laboratorio.html", "/laboratorio/"),
+    ("laboratorio.html", "/engineering-evidence/"),
+    ("laboratorio/index.html", "/engineering-evidence/"),
 )
 for stub_name, target in REDIRECT_STUBS:
     stub_text = (ROOT / stub_name).read_text(encoding="utf-8")

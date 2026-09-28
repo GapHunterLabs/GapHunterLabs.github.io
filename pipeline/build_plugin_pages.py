@@ -48,7 +48,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 
-SITE = "https://gaphunterlabs.github.io"
+import sys as _sys
+from pathlib import Path as _Path
+_sys.path.insert(0, str(_Path(__file__).resolve().parent))
+from site_config import SITE_URL  # noqa: E402
+SITE = SITE_URL
 ORG_ID = SITE + "/#org"
 CATALOG_URL = SITE + "/catalog/"
 
@@ -294,6 +298,31 @@ def md_inline(text) -> str:
     return rebuilt
 
 
+def md_block(text) -> str:
+    """Parrafos + listas "- " + *cursiva* sobre md_inline (2026-09-27): el
+    "why" completo de cada plugin trae citas en lista, no solo una linea."""
+    blocks, items = [], []
+
+    def inline(s):
+        out = md_inline(s)
+        return re.sub(r"(?<![*\w])\*(?!\s)(.+?)(?<!\s)\*(?![*\w])", r"<em>\1</em>", out)
+
+    def flush_items():
+        if items:
+            blocks.append('<ul class="pb-quotes">%s</ul>' % "".join("<li>%s</li>" % inline(i) for i in items))
+            items.clear()
+
+    for chunk in re.split(r"\n\s*\n", (text or "").strip()):
+        for line in chunk.split("\n"):
+            if line.startswith("- "):
+                items.append(line[2:])
+            elif line.strip():
+                flush_items()
+                blocks.append("<p>%s</p>" % inline(line))
+        flush_items()
+    return "".join(blocks) or "<p>—</p>"
+
+
 def plain_text(value) -> str:
     """Igual que plain_text() de auto_update_catalog.py: markdown fuera."""
     text = "" if value is None else str(value)
@@ -342,14 +371,19 @@ class Sources:
 
         # Cross-reference real a VS Code, por el mismo slug de repo.
         self.vsx_by_repo = {}
+        self.vsx_list = []
         if VSX_DATA_FILE.exists():
             vsx = json.loads(VSX_DATA_FILE.read_text(encoding="utf-8"))
             for e in vsx.get("extensions", []):
                 if e.get("name"):
                     self.vsx_by_repo[e["name"]] = e
+                    self.vsx_list.append(e)
 
         self.css = self._build_css()
         self.cat_color = self._resolve_category_colors()
+        # Para el HTML: la variable CSS (se adapta a tema claro/oscuro). El hex
+        # resuelto queda solo para build_og_images.py (render fuera del sitio).
+        self.cat_var = {c["key"]: "var(%s)" % c["colorToken"] for c in self.categories}
         for p in self.plugins:
             p["categoryKey"] = self.niche_to_category.get(p.get("niche"), "other")
         self.cat_by_key = {c["key"]: c for c in self.categories}
@@ -362,9 +396,12 @@ class Sources:
         # excluyen antes de extraer nada.
         without_noscript = re.sub(r"<noscript>.*?</noscript>", "", self.catalog_html, flags=re.S)
         blocks = re.findall(r"<style>(.*?)</style>", without_noscript, re.S)
-        if not blocks:
-            die("catalog/index.html no tiene bloques <style> -- shell cambiado")
-        css = "\n".join(blocks)
+        # 2026-09-27: el CSS principal del catalogo vive en /css/catalog.css
+        # (antes era un <style> inline); los <style> inline que quedan se suman.
+        catalog_css = ROOT / "css" / "catalog.css"
+        if not catalog_css.exists():
+            die("falta css/catalog.css -- shell cambiado")
+        css = "\n".join([catalog_css.read_text(encoding="utf-8")] + blocks)
         # El dossier estatico usa <h1> donde el overlay usaba <h2>: una
         # pagina, un H1. Se amplia el selector en vez de duplicar la regla.
         css, n = re.subn(r"\.dossier-title-row h2\b", ".dossier-title-row :is(h1, h2)", css)
@@ -375,9 +412,11 @@ class Sources:
     def _resolve_category_colors(self) -> dict:
         """CATEGORIES guarda el nombre del token (--accent); en el navegador
         lo resuelve getComputedStyle. Aca se resuelve leyendo el :root."""
-        root = re.search(r":root\s*\{(.*?)\}", self.css, re.S)
+        # Los tokens de color viven en /css/theme.css desde 2026-09-27.
+        theme = (ROOT / "css" / "theme.css").read_text(encoding="utf-8")
+        root = re.search(r":root\s*\{(.*?)\}", theme, re.S)
         if not root:
-            die("no se encontro un bloque :root en el CSS del catalogo")
+            die("no se encontro un bloque :root en css/theme.css")
         tokens = dict(re.findall(r"(--[\w-]+)\s*:\s*([^;]+);", root.group(1)))
         colors = {}
         for cat in self.categories:
@@ -389,6 +428,107 @@ class Sources:
 
 
 PLUGIN_PAGE_CSS = """
+/* 2026-09-27 (v2 de la parte baja): brecha a todo el ancho con citas,
+   datos en grilla y relacionados con la tarjeta del catalogo. */
+.pb-gap { margin-top: 24px; }
+.pb-text p { margin: 0 0 12px; }
+.pb-text p:last-child { margin-bottom: 0; }
+.pb-text em { color: var(--text); }
+.pb-quotes { display: grid; gap: 10px; margin: 4px 0 0; padding: 0; list-style: none; }
+.pb-quotes li { padding: 12px 16px; border-left: 3px solid var(--accent); border-radius: 0 8px 8px 0;
+  background: var(--surface-2); color: var(--text-dim); font-size: 15px; line-height: 1.6; }
+.pb-facts { margin-top: 16px; }
+.pb-facts-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.pb-facts-head .pb-title { margin: 0; }
+.pb-facts-head .share-row { margin: 0; padding: 0; border: 0; }
+.facts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1px; margin: 0; overflow: hidden;
+  border: 1px solid var(--border); border-radius: 10px; background: var(--border); }
+.facts-grid .fact { display: flex; flex-direction: column; gap: 4px; min-width: 0; padding: 14px 16px; background: var(--surface); }
+.facts-grid dt { color: var(--text-faint); font: 500 12.5px var(--sans); }
+.facts-grid dd { display: flex; align-items: center; gap: 6px; margin: 0; color: var(--text); font: 600 15px var(--sans); overflow-wrap: anywhere; }
+.facts-grid dd code { padding: 1px 6px; border-radius: 6px; background: var(--surface-2); font: 500 13px var(--mono); }
+.similar-section { margin-top: 32px; }
+.similar-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.similar-head h2.similar-title { margin: 0; }
+.similar-all { color: var(--accent); font: 600 14px var(--sans); text-decoration: none; }
+.similar-all:hover { text-decoration: underline; }
+.similar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+.rel-card { display: flex; flex-direction: column; gap: 8px; min-width: 0; padding: 20px; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); color: var(--text); text-decoration: none;
+  transition: border-color .15s ease, box-shadow .15s ease, transform .15s ease; }
+.rel-card:hover { border-color: var(--accent); box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+.rel-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.rel-card .card-cat { position: static; display: inline-flex; align-items: center; justify-content: center; flex: none;
+  width: 38px; height: 38px; border-radius: 10px; color: var(--cat); background: color-mix(in srgb, var(--cat) 12%, var(--surface)); }
+.rel-card .card-cat svg { width: 20px; height: 20px; }
+.rel-name { font: 600 16px / 1.3 var(--sans); }
+.rel-niche { color: var(--text-faint); font: 500 13px var(--sans); }
+.rel-pitch { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+  margin: 0; color: var(--text-dim); font-size: 14px; line-height: 1.55; }
+.rel-foot { display: flex; justify-content: space-between; gap: 10px; margin-top: auto; padding-top: 12px;
+  border-top: 1px solid var(--border); color: var(--text-faint); font: 500 13px var(--sans); }
+.rel-go { color: var(--accent); font-weight: 600; }
+@media (prefers-reduced-motion: reduce) { .rel-card { transition: none; } .rel-card:hover { transform: none; } }
+/* 2026-09-27: ficha con el sistema nuevo (encabezado de marca + tarjetas). */
+.crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 16px 0 12px; color: var(--text-faint); font: 500 14px var(--sans); }
+.crumbs a { color: var(--accent); text-decoration: none; }
+.crumbs a:hover { text-decoration: underline; }
+.plugin-hero.gh-page-header { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); align-items: center; gap: 32px 40px; margin: 0; }
+.plugin-hero.no-media { grid-template-columns: 1fr; }
+.plugin-hero.gh-page-header .ph-title-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 14px; }
+.plugin-hero.gh-page-header .ph-title-row h1 { margin: 0; max-width: none; }
+.plugin-hero .ph-niche { margin: 8px 0 0; color: var(--text-faint); font: 500 15px var(--sans); }
+.plugin-hero .ph-lead { max-width: 60ch; margin: 14px 0 0; color: var(--text-dim); font-size: 17px; line-height: 1.65; }
+.plugin-hero .ph-lead code, .pb-text code { padding: 1px 6px; border-radius: 6px; background: var(--surface-2); color: var(--text); font: 500 .9em var(--mono); }
+.plugin-hero .ph-lead strong { color: var(--text); }
+.ph-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+.ph-actions .btn, .hire-band .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; border: 1px solid var(--border-strong);
+  border-radius: 8px; background: var(--surface); color: var(--text); font: 600 14px var(--sans); text-decoration: none; text-transform: none; letter-spacing: 0; }
+.ph-actions .btn:hover { border-color: var(--accent); }
+.ph-actions .btn.primary, .hire-band .btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.ph-actions .btn.primary:hover, .hire-band .btn.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); }
+.ph-actions .btn-icon { display: inline-flex; }
+.ph-actions .btn-icon svg { width: 16px; height: 16px; }
+.ph-stats { margin-top: 24px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.ph-media { overflow: hidden; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); box-shadow: var(--shadow-lg); }
+.ph-media img, .ph-media video { display: block; width: 100%; height: auto; }
+.plugin-body { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); align-items: start; gap: 16px; margin-top: 24px; }
+.pb-card { padding: 24px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); }
+.pb-title { display: flex; align-items: center; gap: 10px; margin: 0 0 12px; color: var(--text); font: 700 18px var(--sans); letter-spacing: 0; text-transform: none; }
+.pb-text { color: var(--text-dim); font-size: 15.5px; line-height: 1.7; }
+.pb-facts .facts-list { display: flex; flex-direction: column; margin: 0; padding: 0; list-style: none; }
+.pb-facts .facts-list li { display: flex; justify-content: space-between; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); font: 400 14px var(--sans); }
+.pb-facts .facts-list li:last-child { border-bottom: 0; }
+.pb-facts .fk { color: var(--text-faint); text-transform: none; letter-spacing: 0; font: 400 14px var(--sans); }
+.pb-facts .fv { display: inline-flex; align-items: center; gap: 6px; min-width: 0; color: var(--text); font: 600 14px var(--sans); text-align: right; overflow-wrap: anywhere; }
+.pb-facts .share-row { margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+.share-label { font: 600 12px var(--sans); letter-spacing: .06em; }
+.share-btn { font-family: var(--sans); }
+.similar-section { margin-top: 32px; }
+h2.similar-title { margin: 0 0 16px; color: var(--text); font: 700 22px var(--sans); letter-spacing: 0; text-transform: none; }
+.similar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+.similar-card { display: flex; flex-direction: column; gap: 6px; padding: 18px; background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; box-shadow: var(--shadow); color: var(--text); text-decoration: none; transition: border-color .15s ease; }
+.similar-card:hover { border-color: var(--accent); }
+.similar-card .card-cat { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 10px;
+  color: var(--cat); background: color-mix(in srgb, var(--cat) 12%, var(--surface)); }
+.similar-card .card-cat svg { width: 18px; height: 18px; }
+.sc-name { font: 600 15px var(--sans); }
+.sc-niche { color: var(--text-faint); font: 500 13px var(--sans); text-transform: none; letter-spacing: 0; }
+.sc-dl { margin-top: auto; color: var(--text-dim); font: 500 13px var(--sans); }
+.plugin-asof { margin: 20px 0 0; color: var(--text-faint); font-size: 13px; }
+@media (max-width: 900px) {
+  .plugin-hero.gh-page-header, .plugin-body { grid-template-columns: 1fr; }
+  .ph-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+/* 2026-09-27: h2 semanticos (antes span/div) + banda de contratacion. */
+h2.ib-title, h2.similar-title { margin: 0; font: inherit; font-weight: 700; color: inherit; }
+.hire-band { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px;
+  margin-top: 24px; padding: 20px 22px; border: 1px solid var(--accent); border-radius: 12px;
+  background: linear-gradient(180deg, var(--accent-soft), var(--surface) 80%); }
+.hire-band > div { display: flex; flex-direction: column; gap: 4px; }
+.hire-band strong { color: var(--text); font-size: 16px; }
+.hire-band span { color: var(--text-dim); }
 
 /* ------------------------------------------------------------------
    Generado por pipeline/build_plugin_pages.py -- NO editar a mano.
@@ -495,7 +635,7 @@ class PluginRenderer:
             loading = "" if eager else ' loading="lazy"'
             return '<img class="%s" src="%s" alt="%s"%s decoding="async">' % (
                 css_class, esc(poster), esc(alt_text), loading)
-        preload = "auto" if eager else "metadata"
+        preload = "metadata"  # 2026-09-27: el poster es el LCP; el video se carga al reproducirse
         aria = "" if decorative else (' aria-label="%s"' % esc(alt_text))
         return (
             '<video class="%s" poster="%s" muted loop playsinline autoplay preload="%s"%s>'
@@ -504,24 +644,30 @@ class PluginRenderer:
 
     def similar_card_html(self, s):
         cat = self.src.cat_by_key.get(s["categoryKey"], self.src.cat_by_key["other"])
-        color = self.src.cat_color[cat["key"]]
-        dl = "Pending" if s.get("downloads") is None else thousands(s["downloads"]) + " downloads"
+        color = self.src.cat_var[cat["key"]]
+        pending = s.get("downloads") is None
+        dl = "Pending moderation" if pending else thousands(s["downloads"]) + " downloads"
+        price_key = "pending" if pending else (s.get("pricing") or "FREE").lower()
+        price = "Pending" if pending else {"FREE": "Free", "FREEMIUM": "Freemium", "PAID": "Paid"}.get(s.get("pricing"), "Free")
         return (
-            '<a class="similar-card" href="/catalog/%s/" aria-label="%s details">'
-            '<span class="card-cat" style="--cat:%s" title="%s" aria-hidden="true">%s</span>'
-            '<div class="sc-name">%s</div><div class="sc-niche">%s</div>'
-            '<div class="sc-dl">%s</div></a>'
-        ) % (esc(s["repo"]), esc(s["name"]), color, esc(cat["label"]),
-             self.cat_icon_html(s["categoryKey"]), esc(s["name"]), esc(s.get("niche")), dl)
+            '<a class="rel-card" href="/catalog/%s/" aria-label="%s details">'
+            '<div class="rel-head"><span class="card-cat" style="--cat:%s" title="%s" aria-hidden="true">%s</span>'
+            '<span class="price-badge price-%s">%s</span></div>'
+            '<div class="rel-name">%s</div><div class="rel-niche">%s</div>'
+            '<p class="rel-pitch">%s</p>'
+            '<div class="rel-foot"><span>%s</span><span class="rel-go">Details &rarr;</span></div></a>'
+        ) % (esc(s["repo"]), esc(s["name"]), color, esc(cat["label"]), self.cat_icon_html(s["categoryKey"]),
+             price_key, price, esc(s["name"]), esc(s.get("niche")), esc(plain_text(s.get("pitch")) or ""), dl)
 
     # ---- compartir --------------------------------------------------------
     # Enlaces planos (X, LinkedIn): no cargan ningun script de terceros ni
     # necesitan JS, asi que la CSP no cambia. "Copy link" si necesita JS
     # (plugin-page.js) y sale con [hidden]: sin JS/clipboard no se muestra un
     # boton muerto.
-    def share_html(self, p):
+    def share_html(self, p, platform="IntelliJ IDEs"):
         url = "%s/catalog/%s/" % (SITE, p["repo"])
-        text = "%s — %s plugin for IntelliJ IDEs" % (p["name"], plain_text(p.get("niche")) or "developer tooling")
+        kind = "plugin" if platform == "IntelliJ IDEs" else "extension"
+        text = "%s — %s %s for %s" % (p["name"], plain_text(p.get("niche")) or "developer tooling", kind, platform)
         q = lambda s: urllib.parse.quote(s, safe="")
         x_url = "https://x.com/intent/post?text=%s&url=%s&via=GapHunterLabs" % (q(text), q(url))
         li_url = "https://www.linkedin.com/sharing/share-offsite/?url=%s" % q(url)
@@ -537,102 +683,215 @@ class PluginRenderer:
 
     # ---- cuerpo de la ficha ---------------------------------------------
     def body_html(self, p):
+        # 2026-09-27: ficha reconstruida con el sistema nuevo -- encabezado de
+        # marca (.gh-page-header) con acciones, cifras (.hdr-stats) y demo;
+        # debajo "The gap it fixes" + datos y precio, relacionados y la banda
+        # de contratacion. Se quito "What it does": repetia la bajada tal cual.
         src, icons = self.src, self.src.icons
         is_pending = p.get("downloads") is None
         pr_cls, pr_text = self.pricing_label(p.get("pricing"), is_pending)
         cat = src.cat_by_key.get(p["categoryKey"], src.cat_by_key["other"])
-        color = src.cat_color[cat["key"]]
         mp_id = self.marketplace_id(p)
+        is_paid = p.get("pricing") in ("FREEMIUM", "PAID")
+        price_key = "pending" if is_pending else (p.get("pricing") or "FREE").lower()
+        price_text = "Pending" if is_pending else {"FREE": "Free", "FREEMIUM": "Freemium", "PAID": "Paid"}.get(
+            p.get("pricing"), pr_text)
 
         similar = sorted(
             (o for o in src.plugins
              if o["repo"] != p["repo"] and o["categoryKey"] == p["categoryKey"]),
             key=lambda o: o.get("downloads") or 0, reverse=True)[:SIMILAR_MAX]
 
+        media = self.demo_media_html(p["repo"], "dossier-gif", p["name"], eager=True)
         h = []
         h.append('<nav class="crumbs" aria-label="Breadcrumb">'
                  '<a href="/">Home</a><span class="crumb-sep">›</span>'
                  '<a href="/catalog/">Catalog</a><span class="crumb-sep">›</span>'
                  '<span aria-current="page">%s</span></nav>' % esc(p["name"]))
-        h.append('<div class="dossier-sheet"><div class="dossier-card">')
-        h.append('<a class="dossier-back" href="/catalog/">← All plugins</a>')
-        h.append('<div class="dossier-top">')
-        h.append('<div class="dossier-intro"><div class="dossier-title-row"><h1>%s</h1>'
-                 '<span class="chip %s">%s</span>'
-                 '<span class="chip" style="background:color-mix(in srgb, %s 20%%, transparent); color:%s">%s</span></div>'
-                 '<div class="dossier-niche">%s</div>'
-                 '<div class="dossier-pitch">%s</div>'
-                 % (esc(p["name"]), pr_cls, esc(pr_text), color, color, esc(cat["label"]),
-                    esc(p.get("niche")), md_inline(p.get("pitch") or "—")))
-        h.append('<div class="dossier-stats">')
-        h.append('<div class="stat"><span class="stat-icon">%s</span><div><div class="num">%s</div>'
-                 '<div class="label">Downloads%s</div></div></div>'
-                 % (icons["downloads"],
-                    "—" if is_pending else thousands(p["downloads"]),
-                    "" if is_pending else " " + self.growth_markup(p)))
-        h.append('<div class="stat"><span class="stat-icon">%s</span><div><div class="num">%s</div>'
-                 '<div class="label">GitHub stars</div></div></div>'
-                 % (icons["github"], p.get("stars") if p.get("stars") is not None else "—"))
-        h.append('<div class="stat"><span class="stat-icon">%s</span><div><div class="num">%s</div>'
-                 '<div class="label">Published</div></div></div>'
-                 % (icons["calendar"], esc(p.get("firstPublished") or "—")))
-        h.append('</div></div>')
+        h.append('<header class="plugin-hero page-hero band-dark gh-page-header%s">' % ("" if media else " no-media"))
+        h.append('<div class="ph-copy">')
+        h.append('<p class="contact-kicker">%s &middot; JetBrains plugin</p>' % esc(cat["label"]))
+        h.append('<div class="ph-title-row"><h1>%s</h1><span class="price-badge price-%s">%s</span></div>'
+                 % (esc(p["name"]), price_key, esc(price_text)))
+        h.append('<p class="ph-niche">%s</p>' % esc(p.get("niche")))
+        h.append('<p class="ph-lead">%s</p>' % md_inline(p.get("pitch") or "—"))
 
-        h.append('<div class="dossier-side"><div class="dossier-links">')
+        h.append('<div class="ph-actions">')
         if p.get("marketplaceUrl"):
-            h.append('<a class="btn primary" href="%s" target="_blank" rel="noopener">'
-                     '<span class="btn-icon">%s</span>Install on JetBrains ↗</a>'
-                     % (esc(safe_url(p["marketplaceUrl"])), icons["jetbrains"]))
-        h.append('<a class="btn" href="%s" target="_blank" rel="noopener">'
-                 '<span class="btn-icon">%s</span>View on GitHub ↗</a>'
-                 % (esc(safe_url(p.get("githubUrl"))), icons["github"]))
+            h.append('<a class="btn primary" href="%s" target="_blank" rel="noopener" data-goatcounter-click="out-%s-%s">'
+                     '<span class="btn-icon">%s</span>%s ↗</a>'
+                     % (esc(safe_url(p["marketplaceUrl"])), "trial" if is_paid else "install", esc(p["repo"]),
+                        icons["jetbrains"], "Start free trial on JetBrains" if is_paid else "Install on JetBrains"))
+        if is_paid:
+            h.append('<a class="btn" href="/contact/?intent=hire&amp;plugin=%s" data-goatcounter-click="cta-team-%s">'
+                     'Team licenses</a>' % (esc(p["repo"]), esc(p["repo"])))
+        h.append('<a class="btn" href="%s" target="_blank" rel="noopener" data-goatcounter-click="out-github-%s">'
+                 '<span class="btn-icon">%s</span>GitHub ↗</a>'
+                 % (esc(safe_url(p.get("githubUrl"))), esc(p["repo"]), icons["github"]))
         vsx = src.vsx_by_repo.get(p["repo"])
         if vsx:
             h.append('<a class="btn" href="%s" target="_blank" rel="noopener">'
-                     '<span class="btn-icon">%s</span>Download for VS Code ↗</a>'
+                     '<span class="btn-icon">%s</span>Also for VS Code ↗</a>'
                      % (esc(safe_url(vsx.get("marketplaceUrl"))), icons["vscode"]))
-        h.append(self.share_html(p))
-        h.append('</div>')
-        h.append(self.demo_media_html(p["repo"], "dossier-gif", p["name"], eager=True))
-        h.append('</div></div></div>')
-
-        h.append('<div class="dossier-body">')
-        h.append('<div class="info-block"><div class="ib-head"><span class="ib-icon gap">!</span>'
-                 '<span class="ib-title">The Gap</span></div><div class="ib-body">%s</div></div>'
-                 % md_inline(self.gap_text(p)))
-        h.append('<div class="info-block"><div class="ib-head"><span class="ib-icon fix">✓</span>'
-                 '<span class="ib-title">The Fix</span></div><div class="ib-body">%s</div></div>'
-                 % md_inline(p.get("pitch") or "—"))
         h.append('</div>')
 
-        h.append('<div class="info-block facts-block"><div class="ib-head">'
-                 '<span class="ib-icon facts">⚙</span><span class="ib-title">Facts</span></div>'
-                 '<ul class="facts-list">'
-                 '<li><span class="fk">Category</span><span class="fv">%s</span></li>'
-                 '<li><span class="fk">Pricing</span><span class="fv">%s</span></li>'
-                 '<li><span class="fk">Platform</span><span class="fv">%s</span></li>'
-                 '<li><span class="fk">First published</span><span class="fv">%s</span></li>'
-                 '<li><span class="fk">Marketplace ID</span><span class="fv">%s</span></li>'
-                 '<li><span class="fk">Repository</span><span class="fv"><code>%s</code>'
-                 '<button type="button" class="copy-btn" data-copy="%s" aria-label="Copy repository name">%s</button>'
-                 '</span></li>'
-                 '<li><span class="fk">Growth</span><span class="fv">%s</span></li>'
-                 '</ul></div>'
-                 % (esc(cat["label"]), esc(pr_text), esc(self.platform_of(p)),
-                    esc(p.get("firstPublished") or "—"),
-                    ("#" + esc(mp_id)) if mp_id else ("Pending" if is_pending else "—"),
-                    esc(p["repo"]), esc(p["repo"]), icons["copy"],
-                    esc(self.growth_fact_line(p))))
+        stat = lambda num, label: ('<div class="hdr-stat"><span class="hdr-stat-num">%s</span>'
+                                   '<span class="hdr-stat-label">%s</span></div>' % (num, label))
+        h.append('<div class="hdr-stats ph-stats">%s%s%s%s</div>' % (
+            stat("—" if is_pending else thousands(p["downloads"]), "Downloads"),
+            stat(p.get("stars") if p.get("stars") is not None else "—", "GitHub stars"),
+            stat(esc(p.get("firstPublished") or "—"), "Published"),
+            stat(esc(price_text), "Pricing")))
+        h.append('</div>')
+        if media:
+            h.append('<div class="ph-media">%s</div>' % media)
+        h.append('</header>')
+
+        # 2026-09-27: la brecha va a todo el ancho y con su evidencia completa
+        # (citas en lista); los datos pasan a una grilla y los relacionados
+        # usan la misma tarjeta que el catalogo.
+        h.append('<section class="pb-card pb-gap"><h2 class="pb-title"><span class="ib-icon gap">!</span>The gap it fixes</h2>'
+                 '<div class="pb-text">%s</div></section>' % md_block(self.gap_text(p)))
+        fact = lambda k, v: '<div class="fact"><dt>%s</dt><dd>%s</dd></div>' % (k, v)
+        h.append('<section class="pb-card pb-facts"><div class="pb-facts-head"><h2 class="pb-title">Facts and pricing</h2>%s</div>'
+                 '<dl class="facts-grid">%s</dl></section>' % (self.share_html(p), "".join((
+                     fact("Category", esc(cat["label"])),
+                     fact("Pricing", esc(pr_text)),
+                     fact("Platform", esc(self.platform_of(p))),
+                     fact("First published", esc(p.get("firstPublished") or "—")),
+                     fact("Marketplace ID", ("#" + esc(mp_id)) if mp_id else ("Pending" if is_pending else "—")),
+                     fact("Repository", '<code>%s</code><button type="button" class="copy-btn" data-copy="%s" '
+                                        'aria-label="Copy repository name">%s</button>' % (esc(p["repo"]), esc(p["repo"]), icons["copy"])),
+                     fact("Growth", esc(self.growth_fact_line(p))),
+                 ))))
 
         if similar:
-            h.append('<div class="similar-section"><div class="similar-title">'
-                     'Similar plugins you might like</div><div class="similar-grid">')
+            h.append('<section class="similar-section"><div class="similar-head"><h2 class="similar-title">Related plugins</h2>'
+                     '<a class="similar-all" href="/catalog/?category=%s">All %s plugins &rarr;</a></div><div class="similar-grid">'
+                     % (esc(cat["key"]), esc(cat["label"])))
             h.extend(self.similar_card_html(s) for s in similar)
-            h.append('</div></div>')
+            h.append('</div></section>')
 
-        h.append('</div>')
+        h.append('<div class="hire-band"><div><strong>Need a tool like this built for your codebase?</strong>'
+                 '<span>Custom static-analysis rules, CI/CD integration and private plugin distribution.</span></div>'
+                 '<a class="btn primary" href="/contact/?intent=hire&amp;plugin=%s" data-goatcounter-click="cta-plugin-hire-%s">'
+                 'Work with Joel</a></div>' % (esc(p["repo"]), esc(p["repo"])))
         h.append('<p class="plugin-asof">Download and star counts as of %s, refreshed twice daily '
                  'from the JetBrains Marketplace and GitHub APIs.</p>'
+                 % esc((self.src.data.get("generatedAt") or "")[:10]))
+        return "".join(h)
+
+    # ---- fichas de extensiones VS Code (2026-09-27) ------------------------
+    # Misma plantilla y estructura que las fichas JetBrains, en
+    # /catalog/vscode/<name>/. VS Code Marketplace no cobra: todas son Free.
+    def vsx_path(self, e):
+        return "vscode/%s" % e["name"]
+
+    def vsx_title(self, e):
+        base = "%s for VS Code" % e["displayName"]
+        branded = base + " | Gap Hunter Labs"
+        return branded if len(branded) <= TITLE_SOFT_MAX else truncate(base, TITLE_SOFT_MAX)
+
+    def vsx_description(self, e):
+        text = plain_text(e.get("pitch")) or ("%s for Visual Studio Code." % e["displayName"])
+        limit = DESC_MAX
+        result = truncate(text, limit)
+        while len(esc(result)) > DESC_MAX and limit > 40:
+            limit -= 10
+            result = truncate(text, limit)
+        return result
+
+    def vsx_jsonld(self, e, url):
+        app = {
+            "@type": "SoftwareApplication", "@id": url + "#app", "name": e["displayName"], "url": url,
+            "description": plain_text(e.get("pitch")), "applicationCategory": "DeveloperApplication",
+            "operatingSystem": "Visual Studio Code", "publisher": {"@id": ORG_ID},
+            "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+            "sameAs": [u for u in (e.get("marketplaceUrl"), e.get("githubUrl")) if u],
+        }
+        if e.get("marketplaceUrl"):
+            app["downloadUrl"] = e["marketplaceUrl"]
+        if e.get("version"):
+            app["softwareVersion"] = e["version"]
+        if e.get("publishedDate"):
+            app["datePublished"] = e["publishedDate"][:10]
+        crumbs = {"@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": "Home", "item": SITE + "/"},
+            {"@type": "ListItem", "position": 2, "name": "Catalog", "item": CATALOG_URL},
+            {"@type": "ListItem", "position": 3, "name": "VS Code extensions", "item": CATALOG_URL + "?platform=vscode"},
+            {"@type": "ListItem", "position": 4, "name": e["displayName"]}]}
+        return json.dumps({"@context": "https://schema.org", "@graph": [app, crumbs]}, ensure_ascii=False)
+
+    def vsx_card_html(self, o):
+        n = o.get("installs") or 0
+        return (
+            '<a class="rel-card" href="/catalog/vscode/%s/" aria-label="%s details">'
+            '<div class="rel-head"><span class="card-cat" style="--cat:var(--accent)" aria-hidden="true">%s</span>'
+            '<span class="price-badge price-free">Free</span></div>'
+            '<div class="rel-name">%s</div><div class="rel-niche">%s</div><p class="rel-pitch">%s</p>'
+            '<div class="rel-foot"><span>%s %s</span><span class="rel-go">Details &rarr;</span></div></a>'
+        ) % (esc(o["name"]), esc(o["displayName"]), self.src.icons["vscode"], esc(o["displayName"]),
+             esc(o.get("niche")), esc(plain_text(o.get("pitch")) or ""), thousands(n), "install" if n == 1 else "installs")
+
+    def vsx_body_html(self, e):
+        src, icons = self.src, self.src.icons
+        n = e.get("installs") or 0
+        jb = next((p for p in src.plugins if p["repo"] == e["name"]), None)
+        others = sorted((o for o in src.vsx_list if o["name"] != e["name"]),
+                        key=lambda o: (o.get("niche") != e.get("niche"), -(o.get("installs") or 0)))[:SIMILAR_MAX]
+        h = ['<nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a><span class="crumb-sep">›</span>'
+             '<a href="/catalog/">Catalog</a><span class="crumb-sep">›</span>'
+             '<a href="/catalog/?platform=vscode">VS Code</a><span class="crumb-sep">›</span>'
+             '<span aria-current="page">%s</span></nav>' % esc(e["displayName"])]
+        h.append('<header class="plugin-hero page-hero band-dark gh-page-header no-media"><div class="ph-copy">')
+        h.append('<p class="contact-kicker">VS Code extension</p>')
+        h.append('<div class="ph-title-row"><h1>%s</h1><span class="price-badge price-free">Free</span></div>' % esc(e["displayName"]))
+        h.append('<p class="ph-niche">%s</p>' % esc(e.get("niche")))
+        h.append('<p class="ph-lead">%s</p>' % md_inline(e.get("pitch") or "—"))
+        h.append('<div class="ph-actions">')
+        if e.get("marketplaceUrl"):
+            h.append('<a class="btn primary" href="%s" target="_blank" rel="noopener" data-goatcounter-click="out-vsx-install-%s">'
+                     '<span class="btn-icon">%s</span>Install from VS Code Marketplace ↗</a>'
+                     % (esc(safe_url(e["marketplaceUrl"])), esc(e["name"]), icons["vscode"]))
+        if e.get("githubUrl"):
+            h.append('<a class="btn" href="%s" target="_blank" rel="noopener" data-goatcounter-click="out-github-vsx-%s">'
+                     '<span class="btn-icon">%s</span>GitHub ↗</a>' % (esc(safe_url(e["githubUrl"])), esc(e["name"]), icons["github"]))
+        if jb:
+            h.append('<a class="btn" href="/catalog/%s/"><span class="btn-icon">%s</span>Also for JetBrains IDEs</a>'
+                     % (esc(jb["repo"]), icons["jetbrains"]))
+        h.append('</div>')
+        stat = lambda num, label: ('<div class="hdr-stat"><span class="hdr-stat-num">%s</span>'
+                                   '<span class="hdr-stat-label">%s</span></div>' % (num, label))
+        h.append('<div class="hdr-stats ph-stats">%s%s%s%s</div>' % (
+            stat(thousands(n), "Installs"), stat(esc(e.get("version") or "—"), "Version"),
+            stat(esc((e.get("publishedDate") or "—")[:10]), "Published"),
+            stat(esc((e.get("lastUpdated") or "—")[:10]), "Last updated")))
+        h.append('</div></header>')
+
+        fact = lambda k, v: '<div class="fact"><dt>%s</dt><dd>%s</dd></div>' % (k, v)
+        item = (e.get("marketplaceUrl") or "").split("itemName=")[-1]
+        share_item = {"repo": self.vsx_path(e), "name": e["displayName"], "niche": e.get("niche")}
+        h.append('<section class="pb-card pb-facts pb-gap"><div class="pb-facts-head"><h2 class="pb-title">Facts and pricing</h2>%s</div>'
+                 '<dl class="facts-grid">%s</dl></section>' % (self.share_html(share_item, platform="VS Code"), "".join((
+                     fact("Platform", "Visual Studio Code"),
+                     fact("Pricing", "Free"),
+                     fact("Version", esc(e.get("version") or "—")),
+                     fact("First published", esc((e.get("publishedDate") or "—")[:10])),
+                     fact("Last updated", esc((e.get("lastUpdated") or "—")[:10])),
+                     fact("Marketplace ID", "<code>%s</code>" % esc(item) if item else "—"),
+                     fact("Repository", '<code>%s</code><button type="button" class="copy-btn" data-copy="%s" '
+                                        'aria-label="Copy repository name">%s</button>' % (esc(e.get("repo") or ""), esc(e.get("repo") or ""), icons["copy"])),
+                 ))))
+        if others:
+            h.append('<section class="similar-section"><div class="similar-head"><h2 class="similar-title">Related extensions</h2>'
+                     '<a class="similar-all" href="/catalog/?platform=vscode">All VS Code extensions &rarr;</a></div><div class="similar-grid">')
+            h.extend(self.vsx_card_html(o) for o in others)
+            h.append('</div></section>')
+        h.append('<div class="hire-band"><div><strong>Need a tool like this built for your codebase?</strong>'
+                 '<span>Custom static-analysis rules, CI/CD integration and private plugin distribution.</span></div>'
+                 '<a class="btn primary" href="/contact/?intent=hire&amp;plugin=%s" data-goatcounter-click="cta-vsx-hire-%s">'
+                 'Work with Joel</a></div>' % (esc(e["name"]), esc(e["name"])))
+        h.append('<p class="plugin-asof">Install counts as of %s, refreshed daily from the VS Code Marketplace API.</p>'
                  % esc((self.src.data.get("generatedAt") or "")[:10]))
         return "".join(h)
 
@@ -660,6 +919,9 @@ class PluginRenderer:
 
     def description(self, p):
         text = plain_text(p.get("pitch")) or plain_text(self.gap_text(p))
+        # 35 pitches empiezan con "IntelliJ-family plugin." -- desperdicia el
+        # inicio del snippet; el titulo ya dice "for IntelliJ".
+        text = re.sub(r"^IntelliJ-family plugin\.\s*", "", text)
         # truncate() acota la longitud del texto plano, pero esc() (que
         # va a envolver este valor en un atributo HTML) puede inflarlo --
         # cada `"` o `&` que sobreviva al corte suma varios caracteres al
@@ -724,7 +986,7 @@ MAIN_RE = re.compile(r'(<main class="wrap">).*?(</main>)', re.S)
 # pipeline/build_catalog_grid.py) -- el ancla pasa a ser vscode-catalog.js,
 # el unico <script src> que le sigue quedando antes de sus scripts inline.
 TAIL_SCRIPTS_RE = re.compile(
-    r'<script src="/js/vscode-catalog\.js"></script>.*?(?=<script data-goatcounter)', re.S)
+    r'<script src="/js/vscode-catalog\.js(?:\?v=[0-9a-f]+)?"></script>.*?(?=<script data-goatcounter)', re.S)
 STYLE_RE = re.compile(r"<style>.*?</style>\s*", re.S)
 
 
@@ -745,7 +1007,7 @@ class Shell:
         # El shim hash -> ruta solo tiene sentido en el catalogo y en la
         # home: una ficha ya ES el destino, y su lista de 146 slugs pesa
         # mas que todo el resto del <head>.
-        html = cut(re.compile(r'<script src="/js/slug-shim\.js" defer></script>\s*'),
+        html = cut(re.compile(r'<script src="/js/slug-shim\.js(?:\?v=[0-9a-f]+)?" defer></script>\s*'),
                    "", "shim de slugs")
         html = cut(CATALOG_JSONLD_RE, "@@JSONLD@@\n", "catalog-jsonld")
         html = cut(TAIL_SCRIPTS_RE, '<script src="/js/plugin-page.js" defer></script>\n', "scripts del catalogo")
@@ -753,15 +1015,11 @@ class Shell:
 
         # Todo el CSS inline pasa a /css/plugin.css: una descarga cacheada
         # por las 146 fichas en vez de ~107 KB repetidos en cada una.
-        n_styles = len(STYLE_RE.findall(html))
-        if n_styles < 1:
-            die("no quedan bloques <style> que reemplazar")
         html = STYLE_RE.sub("", html)
-        html = html.replace('<link rel="stylesheet" href="/css/shell.css">',
-                            '<link rel="stylesheet" href="/css/plugin.css">\n'
-                            '<link rel="stylesheet" href="/css/shell.css">', 1)
-        if "/css/plugin.css" not in html:
-            die("no se encontro el <link> a /css/shell.css para anclar plugin.css")
+        html = re.sub(r'<link rel="stylesheet" href="/css/catalog\.css(?:\?v=[0-9a-f]+)?">',
+                      '<link rel="stylesheet" href="/css/plugin.css">', html, count=1)
+        if "/css/plugin.css" not in html or "/css/theme.css" not in html:
+            die("no se encontro el <link> a /css/catalog.css (o theme.css) para anclar plugin.css")
 
         html = html.replace('<html lang="en" class="boot">', '<html lang="en">', 1)
         if 'class="boot"' in html:
@@ -773,7 +1031,7 @@ class Shell:
         # copias generadas; el original no se toca.
         html = re.sub(r"<!--(?!\[if).*?-->\s*", "", html, flags=re.S)
         for marker in ('<meta charset="UTF-8">', '@@BODY@@', '@@JSONLD@@',
-                       'id="topbarBurger"', 'class="site-footer"'):
+                       'id="topbarBurger"', 'class="site-footer'):
             if marker not in html:
                 die("se perdio %r al quitar los comentarios del shell" % marker)
 
@@ -804,6 +1062,13 @@ class Shell:
             html, n = re.subn(pattern, replacement, html, count=1, flags=re.S)
             if n != 1:
                 die("no se pudo reemplazar %s en el <head> del shell" % label)
+        # 2026-09-27: las fichas no tienen version en espanol -- fuera los
+        # hreflang heredados del catalogo; en el selector de idioma,
+        # "English" apunta a la propia ficha (Espanol lleva al catalogo en ES).
+        html = re.sub(r'<link rel="alternate" hreflang="[^"]*" href="[^"]*">\s*', "", html)
+        html, n = re.subn(r'href="/catalog/" hreflang="en"', 'href="@@PATH@@" hreflang="en"', html, count=1)
+        if n != 1:
+            die("no se encontro el enlace English del selector de idioma en el shell")
         return html
 
     def render(self, *, title, og_title, desc, url, jsonld, body, og_image, og_image_alt):
@@ -812,6 +1077,7 @@ class Shell:
         out = out.replace("@@OGTITLE@@", esc(og_title))
         out = out.replace("@@DESC@@", esc(desc))
         out = out.replace("@@URL@@", esc(url))
+        out = out.replace("@@PATH@@", esc(url[len(SITE):] if url.startswith(SITE) else url))
         out = out.replace("@@OGIMAGE@@", esc(og_image))
         out = out.replace("@@OGIMAGEALT@@", esc(og_image_alt))
         out = out.replace("@@JSONLD@@",
@@ -983,6 +1249,33 @@ def main():
         out.write_text(page, encoding="utf-8")
         written += 1
 
+    # ---- fichas de extensiones VS Code (2026-09-27) --------------------------
+    jb_slugs = [s for s, _ in lastmods]
+    vsx_written = 0
+    for e in ([] if args.limit else src.vsx_list):
+        if not re.match(r"^[a-z0-9]+(?:-[a-z0-9]+)*$", e["name"]):
+            die("nombre de extension invalido como ruta: %r" % e["name"])
+        slug = renderer.vsx_path(e)
+        url = "%s/catalog/%s/" % (SITE, slug)
+        page = shell.render(
+            title=renderer.vsx_title(e), og_title="%s — Gap Hunter Labs" % e["displayName"],
+            desc=renderer.vsx_description(e), url=url, jsonld=renderer.vsx_jsonld(e, url),
+            body=renderer.vsx_body_html(e), og_image=OG_IMAGE, og_image_alt=OG_IMAGE_ALT)
+        page = page.replace('<div class="app-main">', '<div class="app-main plugin-page">', 1)
+        fingerprint = json.dumps({k: e.get(k) for k in ("displayName", "pitch", "niche", "version", "marketplaceUrl")},
+                                 ensure_ascii=False, sort_keys=True)
+        prev = store.get(slug, {})
+        lastmod = prev.get("lastmod", today) if prev.get("fingerprint") == fingerprint else today
+        lastmods.append((slug, lastmod))
+        store[slug] = {"fingerprint": fingerprint, "lastmod": lastmod}
+        out = ROOT / "catalog" / slug / "index.html"
+        if args.dry_run or (out.exists() and out.read_text(encoding="utf-8") == page):
+            continue
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(page, encoding="utf-8")
+        vsx_written += 1
+    print("[build] %d fichas VS Code escritas -> catalog/vscode/<name>/index.html" % vsx_written)
+
     if args.dry_run:
         print("[dry-run] %d fichas renderizadas, nada escrito" % written)
         return
@@ -1001,7 +1294,7 @@ def main():
         print("[build] sitemap.xml: %d estaticas + %d fichas" % (len(read_static_entries()), len(lastmods)))
 
     if args.inject:
-        touched, missing = inject_slugs([s for s, _ in lastmods])
+        touched, missing = inject_slugs(jb_slugs)   # el shim de rutas es solo de fichas JetBrains
         print("[build] shim actualizado en: %s" % (touched or "nada que actualizar"))
         if missing:
             print("[build] AVISO: falta el bloque %s en %s" % (SLUG_MARK_OPEN, missing))

@@ -1,0 +1,2961 @@
+/* Gap Hunter Labs -- estilos de la home (index.html). Extraido del
+   <style> inline el 2026-09-27 para que el navegador lo cachee entre
+   visitas. Los colores vienen de /css/theme.css (se carga antes). */
+
+/* Self-hosted OFL families (IBM Plex Sans + JetBrains Mono).
+     default-src is 'none', so font-src 'self' on the CSP meta is
+     required for these files to load. font-display: swap keeps the
+     existing system-font stack visible until the files arrive. */
+  @font-face {
+    font-family: "IBM Plex Sans";
+    src: url("/fonts/IBMPlexSans-Latin.woff2") format("woff2");
+    font-weight: 100 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "JetBrains Mono";
+    src: url("/fonts/JetBrainsMono-Latin.woff2") format("woff2");
+    font-weight: 100 800;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  /* Deliberately single-theme (always dark) -- a brand-consistency
+     choice made explicitly by the team, not an omission: every
+     visitor sees the same look regardless of their own system
+     setting. Brand palette pulled directly from
+     pluginIcon.svg/pluginIcon_dark.svg (the same mark shared by all
+     34 plugins) -- never invented: #0151FC (primary blue) lightened
+     to var(--accent) for legibility on a dark ground (mirrors how the
+     icon's own dark variant uses the lighter cyan-blue on a
+     transparent/dark background, not the darker blue meant for
+     white), #02F172 (accent green, used directly for growth-up).
+     2026-08-15: added a "Hunting Field" categorical palette (8 hues)
+     for the new Field mode -- 3 of the 8 reuse literal brand colors
+     (--accent for API, --good for DevOps, --cyan for Codegen), the
+     other 5 are new but chosen to stay visually distinct from those
+     3 and from each other at a glance (color alone is never the only
+     signal -- every category also has a text label). */
+  :root {
+    /* Lightened from #6C7793 (2026-08-21): that value contrasted
+       against --bg at only 4.35:1, below WCAG AA's 4.5:1 minimum for
+       normal text. #727EA0 (chosen then) cleared 4.82:1 against --bg --
+       but a follow-up audit (2026-08-23) found several real uses of
+       this token sit on --surface/--surface-2 instead (.card-niche,
+       .card-pricing, .sc-niche, .log-entry li), where #727EA0 only
+       measured 4.43:1 / 3.93:1 -- both still below AA. #8894B8 clears
+       AA against all three backgrounds this token actually renders on
+       (5.94:1 / 5.27:1 / 6.45:1 vs surface/surface-2/bg), confirmed via
+       WCAG's own relative-luminance formula, same hue kept again. */
+    --mono: "JetBrains Mono", ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    --sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --radius: 10px;
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 12px;
+    --page-max: 1280px;
+    --page-pad: 24px;
+    --page-pad-sm: 16px;
+    --control-h: 44px;
+    --section-gap: 20px;
+    --duration-fast: 120ms;
+    --duration-base: 150ms;
+    --duration-slow: 300ms;
+    --ease-standard: cubic-bezier(.65,0,.35,1);
+    --ease-emphasized: cubic-bezier(.2,.7,.3,1);
+  }
+
+  * { box-sizing: border-box; }
+
+  /* Scrollbar tuned to the page's own palette instead of the browser
+     default (light track) -- track matches --bg exactly so it blends
+     into the page, thumb uses --border (the same hairline tone used
+     everywhere else) so it's still findable, not literally invisible. */
+  html { scrollbar-color: var(--border) var(--bg); scrollbar-width: thin; }
+  ::-webkit-scrollbar { width: 11px; height: 11px; }
+  ::-webkit-scrollbar-track { background: var(--bg); }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: var(--radius-md); border: 2px solid var(--bg); }
+  ::-webkit-scrollbar-thumb:hover { background: var(--text-faint); }
+
+  /* Background texture, 2026-08-17: a faint dot-grid (same technique
+     .hero-dotgrid used before it was removed 2026-08-28 -- user report,
+     just scaled up and dialed way down here) plus a soft radial wash
+     of the brand blue near the top, as if the
+     header were the page's own light source. Pure CSS, no image asset
+     -- consistent with the rest of the site (every mark on this page is
+     hand-coded SVG/CSS, nothing rasterized). Panels/cards all paint
+     their own opaque --surface, so this only ever shows in the empty
+     space between them -- margins, the hero, page gutters -- never
+     competing with text contrast. */
+  body {
+    margin: 0;
+    background-color: var(--bg);
+    background-image: radial-gradient(ellipse 1200px 640px at 50% 0%, color-mix(in srgb, var(--accent) 7%, transparent), transparent 60%);
+    background-repeat: no-repeat;
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    padding: 16px var(--page-pad) 32px;
+  }
+
+  /* ==================== TOP BAR ====================
+     A distinct, always-visible strip above the brand row -- separate
+     surface tone (--bg, not --surface) with a live-scan hairline under
+     it, so it reads as chrome/wayfinding rather than another content
+     block. Sticky, not fixed: it should get out of the way of nothing
+     on a one-page site, but stay reachable while scrolling the (long)
+     Table view or the footer. */
+  #top, #identity { scroll-margin-top: 72px; }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    background: color-mix(in srgb, var(--bg) 94%, transparent);
+    border-bottom: 1px solid var(--border);
+  }
+
+  /* Scanline: a 2px accent hairline that lives at the bottom edge and
+     sweeps left-to-right on load, then sits still -- a single "boot"
+     read, not a looping distraction. Kept on its own pseudo-element so
+     it never fights the border-bottom for the same pixel row. */
+  .topbar::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: -1px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), var(--cyan), var(--good), transparent);
+    background-size: 200% 100%;
+    background-position: 100% 0;
+    opacity: 0.9;
+    animation: topbarScan 2.4s var(--ease-emphasized) var(--duration-base) 1 both;
+  }
+
+  @keyframes topbarScan {
+    0%   { background-position: 100% 0; opacity: 0; }
+    8%   { opacity: 1; }
+    70%  { background-position: 0% 0; opacity: 1; }
+    100% { background-position: 0% 0; opacity: 0; }
+  }
+
+  .topbar-inner {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    padding: 0 var(--page-pad);
+    height: 56px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: 16px;
+    min-width: 0;
+  }
+
+  .topbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-self: start;
+    min-width: 0;
+    text-decoration: none;
+    color: inherit;
+    border-radius: var(--radius-md);
+  }
+  .topbar-brand:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .topbar-mark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+    width: 32px;
+    height: 32px;
+  }
+  .topbar-mark svg { width: 32px; height: 32px; display: block; }
+
+  .topbar-wordmark {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+  }
+  .tw-name {
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    line-height: 1.15;
+    white-space: nowrap;
+  }
+  .tw-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    line-height: 1.2;
+  }
+
+  .topbar-nav {
+    display: flex;
+    align-items: center;
+    justify-self: center;
+    gap: 0;
+    flex: none;
+    padding: 3px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+  }
+
+  .topbar-link {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--text-faint);
+    text-decoration: none;
+    padding: 7px 14px;
+    border-radius: var(--radius-md);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+
+  .topbar-link:hover {
+    color: var(--text);
+    background: var(--surface-2);
+  }
+
+  .topbar-link.active { color: var(--text); background: var(--surface-2); }
+  .topbar-link:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .topbar-actions {
+    display: flex;
+    align-items: center;
+    justify-self: end;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  .topbar-ext {
+    display: flex;
+    align-items: stretch;
+    height: 36px;
+    flex: none;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+  }
+
+  .topbar-ext-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.03em;
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 0 12px;
+    border: 0;
+    border-left: 1px solid var(--border);
+    background: transparent;
+    border-radius: 0;
+    transition: color var(--duration-base) ease, background var(--duration-base) ease;
+  }
+
+  .topbar-ext-link:hover {
+    color: var(--text);
+    background: var(--surface-2);
+  }
+  .topbar-ext-link:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+    color: var(--text);
+  }
+
+  .topbar-ext-link svg { width: 15px; height: 15px; flex: none; }
+
+  .topbar-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--text-dim);
+    padding: 0 12px 0 10px;
+    background: transparent;
+    border: 0;
+    white-space: nowrap;
+  }
+
+  .topbar-status .dot {
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--good);
+    box-shadow: none;
+    animation: statusBlink 1.8s ease-in-out infinite;
+    flex: none;
+  }
+
+  @keyframes statusBlink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
+  }
+
+  .topbar-burger {
+    display: none;
+    flex: none;
+    width: 44px;
+    height: auto;
+    align-self: stretch;
+    border-radius: 0;
+    border: 0;
+    border-left: 1px solid var(--border);
+    background: transparent;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .topbar-burger:hover { background: var(--surface-2); }
+  .topbar-burger:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+  }
+
+
+  .topbar-burger span,
+  .topbar-burger::before,
+  .topbar-burger::after {
+    content: "";
+    display: block;
+    width: 16px;
+    height: 1.85px;
+    background: var(--text-dim);
+    position: relative;
+    transition: transform var(--duration-base) ease, opacity var(--duration-base) ease;
+  }
+
+  .topbar-burger::before { position: absolute; transform: translateY(-5.75px); }
+  .topbar-burger::after { position: absolute; transform: translateY(5.75px); }
+
+  .topbar.nav-open .topbar-burger span { opacity: 0; }
+  .topbar.nav-open .topbar-burger::before { transform: translateY(0) rotate(45deg); }
+  .topbar.nav-open .topbar-burger::after { transform: translateY(0) rotate(-45deg); }
+  @media (prefers-reduced-motion: reduce) {
+    .topbar-burger span,
+    .topbar-burger::before,
+    .topbar-burger::after { transition: none; }
+  }
+
+  @media (max-width: 900px) {
+    .tw-tag { display: none; }
+    .topbar-ext-label { display: none; }
+    .topbar-status-unit { display: none; }
+    .topbar-ext { height: 44px; }
+    .topbar-ext-link { min-width: 44px; padding: 0 12px; }
+  }
+
+  @media (max-width: 840px) {
+    /* Nav collapses into the burger at the same width the inline
+       labels would otherwise disappear, so the bar never shows bare
+       01/02/03 with no names. */
+    .topbar-inner {
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+    }
+    .topbar-actions { gap: 6px; }
+    .topbar-nav { display: none; }
+    .topbar-burger { display: flex; }
+    .topbar.nav-open .topbar-nav {
+      display: flex;
+      position: absolute;
+      top: 56px; left: 0; right: 0;
+      flex-direction: column;
+      align-items: stretch;
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      border-radius: 0;
+      padding: 6px;
+      gap: 2px;
+      animation: navDropIn var(--duration-base) ease;
+      transform-origin: top;
+    }
+    @keyframes navDropIn {
+      from { opacity: 0; transform: scaleY(0.94); }
+      to   { opacity: 1; transform: scaleY(1); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .topbar.nav-open .topbar-nav { animation: none; }
+    }
+    .topbar.nav-open .topbar-link { padding: 12px 14px; }
+  }
+
+  /* .brand-mark is still used by the site-footer's own brand row
+     (.footer-brand-row .brand-mark) -- kept here even though the hero
+     below no longer uses the old compact .brand-row treatment. */
+  .brand-mark {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: none;
+  }
+
+  .brand-mark svg { width: 24px; height: 24px; }
+
+  /* ---- Field/Table view toggle -- lives in the controls row, right
+     before the category filter, so it reads as "one more control that
+     shapes what the Hunting Field shows" rather than a hero element.
+     Distinguished from the two plain <select> boxes beside it by a
+     sliding highlight "thumb" instead of a static border -- the one
+     bit of motion the user asked for, nothing louder. The thumb's
+     position is driven declaratively by :has(), reading whichever
+     button switchMode() already marked .active -- no extra JS. */
+  .view-toggle {
+    position: relative;
+    display: inline-flex;
+    align-items: stretch;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 3px;
+    flex: none;
+    height: var(--control-h);
+  }
+
+  .view-toggle .vt-thumb {
+    position: absolute;
+    top: 3px; bottom: 3px; left: 3px;
+    width: calc(50% - 3px);
+    background: var(--accent);
+    border-radius: var(--radius-md);
+    box-shadow: none;
+    transition: transform var(--duration-slow) var(--ease-standard);
+    z-index: 0;
+  }
+
+  .view-toggle:has(button[data-mode="table"].active) .vt-thumb {
+    transform: translateX(100%);
+  }
+
+  .view-toggle button {
+    position: relative;
+    z-index: 1;
+    flex: 1 1 0;
+    min-width: 0;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 0 14px;
+    border-radius: var(--radius-md);
+    border: none;
+    background: transparent;
+    color: var(--text);
+    cursor: pointer;
+    transition: color var(--duration-base) ease 0.05s;
+  }
+
+  .view-toggle button.active { color: var(--accent-ink); }
+
+  /* ---- stat tiles -- still used by the Plugin Dossier's own stat
+     row (.dossier-stats .stat, see dossierBodyHtml()). The hero's own
+     telemetry column below is a separate .tele-* system so redesigning
+     the hero never touches this Field-mode dossier look. ---- */
+  .stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 6px 8px;
+    box-shadow: var(--shadow);
+    transition: border-color var(--duration-slow) ease;
+  }
+
+  /* Decode reveal, see decodeNumber() in JS -- accent-colored glow
+     while scrambling, settles back to normal once the real value lands. */
+  .stat.decoding { border-color: var(--accent); }
+  .stat.decoding .num {
+    color: var(--accent);
+    text-shadow: none;
+    transition: color var(--duration-slow) ease var(--duration-slow), text-shadow var(--duration-slow) ease var(--duration-slow);
+  }
+
+  .stat .num {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.15;
+    min-height: 1em;
+    overflow-wrap: anywhere;
+  }
+
+  .stat .num.accent { color: var(--accent); }
+  .stat .num .stat-growth { font-size: 10px; margin-left: 5px; color: var(--good); vertical-align: 2px; }
+
+  .stat .label {
+    margin-top: 3px;
+    font-size: 8px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+
+  /* ==================== HERO ====================
+     Brand, featured-plugin slider, telemetry. Section nav lives only
+     in the top bar — a second rail here duplicated Overview / Table /
+     Methodology and fought the header. */
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    grid-template-areas: "brand slider";
+    gap: var(--section-gap);
+    padding: 20px 0 24px;
+    align-items: stretch;
+    min-width: 0;
+  }
+
+  .hero-brand {
+    grid-area: brand;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    position: relative;
+    padding: 4px 0 0;
+    min-width: 0;
+  }
+
+  .hero-title {
+    margin: 0;
+    min-width: 0;
+    max-width: 100%;
+    font-family: var(--mono);
+    font-weight: 800;
+    font-size: clamp(22px, 3.4vw, 42px);
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .hero-title .accent { color: var(--accent); }
+
+  .hero-kicker {
+    display: block;
+    /* .hero-title es nowrap (marca, una sola linea); este span vive
+       adentro para que "Gap Hunter Labs" siga siendo el <h1> visible
+       en pantalla y a la vez el H1 real incluya la frase descriptiva
+       que el <title> ya usa (auditoria 2026-08-23: antes el H1 era
+       100% marca, 0% keyword) -- white-space:normal explicito porque
+       si no heredaria el nowrap de .hero-title y no envolveria en
+       mobile.
+       2026-09-23 (Fase 0/4 del SuperPlan de SEO): promovido de <p>
+       hermano del H1 a <span> adentro del H1. */
+    white-space: normal;
+    margin: 8px 0 0;
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--good);
+    line-height: 1.3;
+  }
+
+  .hero-spine { display: none; }
+
+  .hero-subtitle { margin: 10px 0 0; color: var(--text-dim); font-size: 13.5px; max-width: 58ch; line-height: 1.55; }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-top: auto;
+    padding-top: 20px;
+    padding-bottom: 8px;
+    width: 100%;
+    flex-shrink: 0;
+  }
+  .hero-actions .btn {
+    min-height: var(--control-h);
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  /* Featured-plugin carousel — the secondary focal point. */
+  .hero-slider {
+    grid-area: slider;
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: color-mix(in srgb, var(--surface) 45%, transparent);
+    border: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+    border-radius: var(--radius);
+    overflow: hidden;
+  }
+  .hs-viewport {
+    position: relative;
+    overflow: hidden;
+    flex: 1 1 auto;
+    min-height: 200px;
+  }
+  .hs-track {
+    display: flex;
+    height: 100%;
+    align-items: stretch;
+    transition: transform 0.45s var(--ease-standard);
+  }
+  .hs-slide {
+    flex: 0 0 100%;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    text-decoration: none;
+  }
+  .hs-slide:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: -2px;
+  }
+  .hs-media {
+    position: relative;
+    display: block;
+    overflow: hidden;
+    flex: 1 1 auto;
+    min-height: 200px;
+    background: var(--surface-2);
+    --hs-ox: 50%;
+    --hs-oy: 18%;
+  }
+  .hs-slide img, .hs-slide video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 50% 0%;
+    display: block;
+    transform-origin: var(--hs-ox) var(--hs-oy);
+    transition: transform var(--duration-slow) ease;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .hs-slide:hover img, .hs-slide:hover video,
+    .hs-slide:focus-visible img, .hs-slide:focus-visible video {
+      /* Zoom 75% (a pedido explícito 2026-09-10) -- 1.75x, con
+         transform-origin siguiendo al mouse en vez de un punto fijo
+         (ver mousemove en initHeroSlider()). */
+      transform: scale(1.75);
+    }
+  }
+  .hs-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 10px 12px 12px;
+  }
+  .hs-kicker {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .hs-name {
+    font-family: var(--mono);
+    font-weight: 700;
+    font-size: 15px;
+    overflow-wrap: anywhere;
+  }
+  .hs-niche {
+    font-size: 12px;
+    color: var(--text-faint);
+    overflow-wrap: anywhere;
+  }
+  .hs-bar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 6px 8px;
+    border-top: 1px solid var(--border);
+    flex-shrink: 0;
+    min-width: 0;
+  }
+  .hs-nav {
+    flex: none;
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    color: var(--text);
+    cursor: pointer;
+  }
+  .hs-nav:hover { border-color: var(--accent); color: var(--accent); }
+  .hs-nav:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+  }
+  .hs-nav svg { width: 16px; height: 16px; }
+  .hs-dots {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 5px;
+    flex: 1;
+    min-width: 0;
+    height: 28px;
+  }
+  .hs-dot {
+    width: 16px;
+    height: 28px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  .hs-dot::after {
+    content: "";
+    width: 100%;
+    height: 5px;
+    border-radius: 1px;
+    background: var(--border);
+  }
+  .hs-dot:nth-child(3n)::after {
+    height: 9px;
+    background: var(--text-faint);
+  }
+  .hs-dot.is-active::after {
+    height: 14px;
+    background: var(--accent);
+    box-shadow: none;
+  }
+  .hs-dot:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hs-track { transition: none; }
+    .hs-slide img, .hs-slide video { transition: none; }
+    .hs-slide:hover img, .hs-slide:hover video,
+    .hs-slide:focus-visible img, .hs-slide:focus-visible video { transform: none; }
+    .topbar-status .dot,
+    .hf-live-dot,
+    .footer-status .dot,
+    .log-head::after {
+      animation: none;
+    }
+  }
+
+  /* ---- telemetry: continuous instrumentation column. Deliberately
+     its own .tele-* classes, NOT a reuse of .stat/.num/.label -- those
+     stay exactly as they were for the Plugin Dossier, see the comment
+     above .stat. ---- */
+  .telemetry {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+    max-width: 30rem;
+    margin-top: 16px;
+    min-width: 0;
+  }
+  /* Antes era un solo box con un divisor interno -- ahora son 2 cards
+     reales con su propio borde/hover, mismo lenguaje que .pi-card/
+     .qa-item en el resto del sitio (mejora pedida 2026-09-10). */
+  .tele-row {
+    display: flex; flex-direction: row; align-items: center; gap: 10px;
+    padding: 12px 14px; min-width: 0;
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    transition: border-color var(--duration-base) ease;
+  }
+  .tele-row:hover { border-color: var(--accent); }
+
+  .tele-icon {
+    flex: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: color-mix(in srgb, currentColor 14%, var(--surface-2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .tele-icon svg { width: 16px; height: 16px; }
+
+  /* min-width:0 -- a flex item's default min-width:auto refuses to
+     shrink below its own content's min-content size, same underlying
+     rule as the grid-track gotcha fixed on .telemetry/.process-steps
+     above, just one nesting level deeper. Without this, .tele-row's
+     text half wouldn't actually wrap even once the OUTER 2-column grid
+     was allowed to shrink -- confirmed as the real remaining cause via
+     a real ~360 CSS px screenshot still showing "DOWNLOADS TOTAL"
+     clipped after the grid-level fix alone. */
+  .tele-body { min-width: 0; }
+
+  .tele-body.decoding .tele-num {
+    color: var(--accent);
+  }
+
+  .tele-num { font-family: var(--mono); font-variant-numeric: tabular-nums; font-size: 19px; font-weight: 700; line-height: 1.15; min-height: 1em; overflow-wrap: anywhere; color: var(--text); }
+  .tele-num.accent { color: var(--accent); }
+  .tele-num .stat-growth { font-size: 11px; margin-left: 4px; color: var(--good); vertical-align: 1px; }
+
+  .tele-label { margin-top: 3px; font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-faint); overflow-wrap: break-word; }
+
+  /* ---- shared corner-mark accent: small L-shaped technical markers --
+     the brief's "experimental geometry through layout", not a
+     decorative shape. ---- */
+  .corner-frame { position: relative; }
+  .corner-frame::before, .corner-frame::after {
+    content: "";
+    position: absolute;
+    width: 12px; height: 12px;
+    border: 2px solid color-mix(in srgb, var(--accent) 45%, var(--border));
+    opacity: 0.95;
+    filter: none;
+    pointer-events: none;
+  }
+  .corner-frame::before { top: -14px; left: -14px; border-right: none; border-bottom: none; }
+  .corner-frame::after { bottom: -14px; right: -14px; border-left: none; border-top: none; }
+
+  @media (max-width: 1080px) {
+    .hero {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+      grid-template-areas: "brand slider";
+      row-gap: var(--section-gap);
+    }
+  }
+
+  /* Brand + slider stay side by side here; full stacking is reserved
+     for the narrower breakpoint below. */
+  @media (max-width: 840px) {
+    .hero {
+      /* minmax(0, 1fr), not bare 1fr -- a bare 1fr track won't shrink
+         below its content's min-content width (the longest unbreakable
+         word), which was forcing the whole grid -- and so the page --
+         wider than a narrow phone's actual viewport instead of letting
+         text wrap. Real overflow, found on a real ~360 CSS px screenshot
+         (right-edge text silently clipped, not wrapped). Same fix
+         applied to .telemetry/.process-steps/.footer-grid below. */
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-areas: "brand slider";
+      row-gap: 22px;
+      column-gap: 24px;
+      padding: 20px 0 16px;
+    }
+    .hero-brand { padding-left: 0; padding-bottom: 4px; }
+    .hero-title { font-size: clamp(18px, 3.2vw, 28px); }
+  }
+
+  /* Below this, 2 columns gets too tight for the number+label pairs --
+     back to a single column, with the border logic reset to match. */
+  /* 340px, not 460 -- 460 was reverting to a single column on most
+     real Android phones (measured against a real 1080x2400 device
+     screenshot, ~411 CSS px at a typical ~2.625 DPR for that
+     resolution class), which is exactly the width this 2-column grid
+     should still be serving. Real phones below ~340 CSS px are rare
+     enough now that a single column there is a reasonable floor. */
+  @media (max-width: 340px) {
+    .telemetry { grid-template-columns: 1fr; }
+    .hero-title { font-size: clamp(16px, 6.4vw, 22px); }
+  }
+
+  /* Same real-phone-width finding as .telemetry above: stacking brand
+     and thesis at 480px still left a cramped two-column hero on real
+     ~411 CSS px phones. 640px is where a half-width column stops
+     fitting the title clamp comfortably. */
+  @media (max-width: 640px) {
+    .hero {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: "brand" "slider";
+      column-gap: 0;
+    }
+    .hero-title { font-size: clamp(18px, 5.6vw, 26px); }
+    /* Ritmo vertical más prolijo (a pedido explícito 2026-09-10,
+       "dale un orden a todos los elementos") -- kicker/subtítulo/stats/
+       botones con el mismo gap consistente en vez de valores sueltos
+       heredados del layout de escritorio. */
+    .hero-kicker { margin-top: 6px; }
+    .hero-subtitle { margin-top: 8px; }
+    .telemetry { margin-top: 14px; }
+    .hero-actions { margin-top: 14px; padding-bottom: 0; }
+    .hs-media, .hs-viewport { min-height: 148px; }
+    .hs-nav { width: 40px; height: 40px; }
+    /* Boxes de stats reducidos ~50% (a pedido explícito 2026-09-10) --
+       antes 8px/10px de padding + ícono de 34px se sentían igual de
+       grandes que en escritorio, desproporcionados en un hero angosto. */
+    .tele-row { padding: 5px 8px; gap: 6px; }
+    .tele-icon { width: 20px; height: 20px; }
+    .tele-icon svg { width: 10px; height: 10px; }
+    .tele-num { font-size: 14px; }
+    .tele-label { font-size: 8px; margin-top: 1px; }
+    .tele-num .stat-growth { display: block; margin-left: 0; font-size: 9px; }
+    .hs-copy { padding: 8px 10px 10px; }
+    .hs-name { font-size: 14px; }
+    .telemetry { max-width: none; }
+    .process-strip {
+      width: auto;
+      max-width: none;
+    }
+    .telemetry { justify-self: stretch; }
+  }
+
+  .process-strip {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface);
+    margin-top: var(--section-gap);
+    margin-bottom: var(--section-gap);
+    overflow: hidden;
+    width: 50%;
+    max-width: 100%;
+    min-width: 0;
+  }
+  .process-head {
+    margin: 0;
+    padding: 8px 12px 0;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+  .process-steps {
+    list-style: none;
+    margin: 0;
+    padding: 4px 0 8px;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    min-width: 0;
+  }
+  .process-step {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    column-gap: 10px;
+    row-gap: 2px;
+    align-items: start;
+    padding: 8px 10px;
+    min-width: 0;
+    border-right: 1px solid var(--border);
+  }
+  .process-step:last-child { border-right: none; }
+  .ps-icon {
+    grid-row: 1 / span 2;
+    align-self: center;
+    width: 24px;
+    height: 24px;
+    padding: 5px;
+    border-radius: var(--radius-md);
+    background: var(--surface-2);
+    color: var(--text-dim);
+    box-sizing: border-box;
+    transition: color var(--duration-slow) ease;
+  }
+  .process-step.lit .ps-icon { color: var(--step-color, var(--text-dim)); }
+  .ps-idx {
+    grid-column: 2;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--text-faint);
+  }
+  .ps-text {
+    grid-column: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+  .ps-name {
+    font-size: 12px;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+  }
+  .ps-desc { font-size: 12px; color: var(--text-dim); line-height: 1.35; overflow-wrap: anywhere; }
+  .process-mission {
+    margin: 0;
+    padding: 8px 12px;
+    border-top: 1px solid var(--border);
+    background: var(--surface-2);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    line-height: 1.45;
+  }
+  .process-mission span {
+    display: block;
+    margin-bottom: 4px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .process-step .ps-icon { color: var(--step-color, var(--text-dim)); }
+  }
+  @media (max-width: 1080px) {
+    .ps-name { font-size: 12px; }
+  }
+  .field-sidebar .process-strip {
+    width: 100%;
+    margin-top: 14px;
+    margin-bottom: 0;
+  }
+  .field-sidebar .process-steps {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .field-sidebar .process-step {
+    border-bottom: 1px solid var(--border);
+  }
+  .field-sidebar .process-step:nth-child(2n) { border-right: none; }
+  .field-sidebar .process-step:nth-child(n+3) { border-bottom: none; }
+  @media (max-width: 340px) {
+    .process-steps { grid-template-columns: minmax(0, 1fr); }
+    .process-step { border-right: none; border-bottom: 1px solid var(--border); }
+    .process-step:last-child { border-bottom: none; }
+  }
+
+  /* ---- controls ---- */
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: var(--section-gap);
+  }
+
+  .search {
+    flex: 1 1 260px;
+    position: relative;
+  }
+
+  .search input {
+    width: 100%;
+    height: var(--control-h);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0 12px 0 32px;
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 13.5px;
+    outline: none;
+  }
+
+  /* Strengthened 2026-08-23 (audit finding): was border-color only, a
+     1px hue swap with no outline/glow -- measurably weaker than every
+     other interactive element's own :focus-visible treatment on this
+     page (.plugin-card, .similar-card, etc. all get a real 2px outline). */
+  .search input:focus { border-color: var(--accent); outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .search::before {
+    content: "";
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 13px;
+    height: 13px;
+    border: 1.6px solid var(--text-faint);
+    border-radius: 50%;
+  }
+
+  .search::after {
+    content: "";
+    position: absolute;
+    left: 20px;
+    top: 62%;
+    width: 6px;
+    height: 1.6px;
+    background: var(--text-faint);
+    transform: rotate(45deg);
+  }
+
+
+  select#pricingFilter, select#categoryFilter {
+    height: var(--control-h);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0 10px;
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 13.5px;
+    transition: border-color var(--duration-base) ease;
+  }
+  select#pricingFilter:hover, select#categoryFilter:hover { border-color: var(--accent); }
+  select#pricingFilter:focus-visible, select#categoryFilter:focus-visible {
+    border-color: var(--accent);
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+  }
+
+  /* Below ~640px, .search's own flex-shrink was letting it and
+     .view-toggle share a line where the toggle had no room left and
+     visibly clipped at the viewport edge -- category/pricing already
+     wrapped to their own line fine, only this specific pairing broke.
+     Forcing search to a full row of its own removes the ambiguity:
+     everything after it always gets a guaranteed-clean line, no
+     shrink math to get wrong. */
+  @media (max-width: 640px) {
+    .search { flex: 1 1 100%; }
+    select#categoryFilter, select#pricingFilter { flex: 1 1 calc(50% - 5px); min-width: 0; }
+    .view-toggle { width: 100%; }
+    .topbar-inner { padding: 0 var(--page-pad-sm); }
+    .tw-name { font-size: 13px; letter-spacing: 0.06em; }
+  }
+
+  @media (max-width: 400px) {
+    .topbar-status { display: none; }
+  }
+
+  /* ---- FIELD layout ---- */
+  /* Sidebar widened 20% (300px -> 360px, 2026-08-15 request) specifically
+     to give the Hunting Field diagram more room -- bigger orbit radius,
+     bigger node labels, without cramping the "Filter by category" list
+     that used to live below it (that list moved into the controls row
+     as a <select>, see #categoryFilter, so all the extra width now goes
+     straight to the diagram). */
+  .field-layout {
+    display: grid;
+    grid-template-columns: 360px minmax(0, 1fr);
+    gap: var(--section-gap);
+    align-items: start;
+  }
+  .field-main { min-width: 0; }
+
+  @media (max-width: 900px) {
+    .field-layout { grid-template-columns: 1fr; }
+  }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+    box-shadow: var(--shadow);
+  }
+
+  .panel + .panel { margin-top: 14px; }
+
+  .panel-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text);
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .info-dot {
+    width: 14px; height: 14px;
+    border-radius: 50%;
+    border: 1px solid var(--text-faint);
+    color: var(--text-faint);
+    font-size: 9px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
+    font-family: var(--sans);
+  }
+
+  .panel-hint {
+    font-size: 11.5px;
+    color: var(--text-faint);
+    margin-top: 2px;
+  }
+
+  /* Redesigned 2026-08-21: this was a plain .panel (flat surface, no
+     texture, identical box to every other sidebar card) -- user flagged
+     it as generic, same complaint pattern as the thesis-divider/
+     process-strip earlier. New treatment gives it its own "radar
+     housing" identity instead of just being a box that happens to
+     contain a diagram: a faint dot-grid texture (same technique the
+     page's own background texture above uses, so it reads as this
+     site's own vocabulary rather than a random new pattern -- the
+     original .hero-dotgrid this comment referenced was removed
+     2026-08-28, user report), a real corner-frame
+     (this panel DOES have a visible surface/border for the mark to
+     belong to, unlike .hero-brand's now-removed one), and a radial
+     vignette centered on the hub so the diagram itself gets subtle
+     depth instead of sitting flat on a uniform background. */
+  .hunting-panel {
+    user-select: none;
+    -webkit-user-select: none;
+    position: relative;
+    overflow: hidden;
+    background-image:
+      radial-gradient(ellipse 70% 60% at 50% 55%, color-mix(in srgb, var(--accent) 7%, transparent), transparent 70%),
+      radial-gradient(var(--border) 1px, transparent 1.4px);
+    background-size: auto, 16px 16px;
+    background-position: 0 0, 0 0;
+  }
+  .hunting-panel .panel-title,
+  .hunting-panel .panel-hint { position: relative; z-index: 1; }
+
+  /* Small "live instrument" pulse next to the title -- reuses
+     statusBlink, the same animation .rail-status's own dot already
+     uses for "system online," so this reads as the site's own
+     established "this is a live thing" vocabulary rather than a new
+     decoration invented just for this panel. */
+  .hf-live-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: none;
+    animation: statusBlink 1.8s ease-in-out infinite;
+    flex: none;
+  }
+
+  /* Category board — replaces the radial Hunting Field diagram.
+     Cell colors are site tokens (not a second hex palette). */
+  .cat-board {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .cat-cell {
+    --cat: var(--text-faint);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    margin: 0;
+    padding: 8px 10px 8px 12px;
+    text-align: left;
+    color: var(--text);
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    position: relative;
+    cursor: pointer;
+    font: inherit;
+    transition: border-color var(--duration-base) ease, box-shadow var(--duration-base) ease;
+  }
+  /* No tenía hover -- mismo patrón que el resto del sitio (borde se
+     tiñe del color propio de la categoría, no del accent genérico,
+     ya que cada categoría trae su --cat). */
+  .cat-cell:hover { border-color: color-mix(in srgb, var(--cat) 55%, var(--border)); box-shadow: var(--shadow, none); }
+  .cat-cell::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 3px;
+    background: var(--cat);
+  }
+  .cat-cell[data-cat="api"] { --cat: var(--accent); }
+  .cat-cell[data-cat="devops"] { --cat: var(--good); }
+  .cat-cell[data-cat="security"] { --cat: var(--bad); }
+  .cat-cell[data-cat="data"] { --cat: var(--purple); }
+  .cat-cell[data-cat="quality"] { --cat: var(--amber); }
+  .cat-cell[data-cat="codegen"] { --cat: var(--cyan); }
+  .cat-cell[data-cat="testing"] { --cat: var(--teal); }
+  .cat-cell[data-cat="editor"] { --cat: var(--pending); }
+  .cat-cell[data-cat="other"] { --cat: var(--text-faint); }
+  .cat-cell[hidden] { display: none; }
+  .cat-cell-all { grid-column: 1 / -1; --cat: var(--text-dim); }
+  .cat-cell.is-active {
+    border-color: color-mix(in srgb, var(--cat) 65%, var(--border));
+    background: color-mix(in srgb, var(--cat) 12%, var(--surface-2));
+  }
+  .cat-cell-icon {
+    flex: none;
+    width: 32px;
+    height: 32px;
+    display: grid;
+    place-items: center;
+    color: var(--cat);
+    background: color-mix(in srgb, var(--cat) 14%, var(--surface-3));
+    border: 1px solid color-mix(in srgb, var(--cat) 40%, var(--border));
+    border-radius: var(--radius-md);
+  }
+  .cat-cell-icon svg {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.5;
+  }
+  .cat-cell-label {
+    display: block;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .cat-cell-count {
+    display: block;
+    margin-top: 2px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--text-faint);
+    letter-spacing: 0.04em;
+    font-variant-numeric: tabular-nums;
+  }
+  .cat-cell:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .brand-blurb p {
+    font-size: 12.5px;
+    color: var(--text-dim);
+    margin: 8px 0 0;
+    line-height: 1.6;
+  }
+
+  /* ---- plugin grid (Field mode, no selection) ---- */
+  .plugin-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(168px, 100%), 1fr));
+    gap: 8px;
+  }
+  @media (max-width: 640px) {
+    .plugin-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .cat-cell { padding: 6px 8px; gap: 8px; min-height: 40px; }
+    .cat-cell-icon { width: 28px; height: 28px; }
+    .cat-cell-icon svg { width: 16px; height: 16px; }
+  }
+
+  .plugin-card {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    min-height: 96px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px 34px 9px 11px;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: border-color var(--duration-fast) ease, transform var(--duration-fast) ease;
+  }
+
+  .plugin-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+  /* Added 2026-08-21 alongside making these cards keyboard-focusable
+     (role="button" tabindex="0") -- without an explicit style, a
+     focused div falls back to the browser's default outline, which
+     works but looks disconnected from the rest of this page's own
+     focus/hover language. Mirrors .plugin-card:hover's own accent
+     border instead of inventing a separate visual vocabulary just for
+     keyboard focus. :focus-visible (not :focus) so mouse clicks don't
+     also show the ring -- only real keyboard navigation does. */
+  .plugin-card:focus-visible { border-color: var(--accent); outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .plugin-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity var(--duration-base) ease;
+    background:
+      linear-gradient(to right, var(--accent) 2px, transparent 2px) top left / 10px 2px no-repeat,
+      linear-gradient(to bottom, var(--accent) 2px, transparent 2px) top left / 2px 10px no-repeat,
+      linear-gradient(to left, var(--accent) 2px, transparent 2px) top right / 10px 2px no-repeat,
+      linear-gradient(to bottom, var(--accent) 2px, transparent 2px) top right / 2px 10px no-repeat,
+      linear-gradient(to right, var(--accent) 2px, transparent 2px) bottom left / 10px 2px no-repeat,
+      linear-gradient(to top, var(--accent) 2px, transparent 2px) bottom left / 2px 10px no-repeat,
+      linear-gradient(to left, var(--accent) 2px, transparent 2px) bottom right / 10px 2px no-repeat,
+      linear-gradient(to top, var(--accent) 2px, transparent 2px) bottom right / 2px 10px no-repeat;
+  }
+
+  .plugin-card:hover::before { opacity: 1; }
+
+  .plugin-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(105deg, transparent 40%, color-mix(in srgb, var(--accent) 15%, transparent) 50%, transparent 60%);
+    transition: left 0.6s ease;
+    pointer-events: none;
+  }
+
+  .plugin-card:hover::after { left: 130%; }
+
+  .plugin-card .card-top { min-width: 0; }
+
+  /* 2-line clamp with an ellipsis instead of a silent hard clip — see
+     the matching rule in catalog.html for the full reasoning. */
+  .plugin-card .card-name {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    font-weight: 700;
+    font-size: 12.5px;
+    line-height: 1.25;
+    overflow-wrap: anywhere;
+    min-width: 0;
+  }
+  .plugin-card .card-niche { font-size: 10px; color: var(--text-faint); margin-top: 1px; overflow-wrap: anywhere; }
+  .card-cat {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    z-index: 1;
+    width: 22px;
+    height: 22px;
+    display: grid;
+    place-items: center;
+    color: var(--cat, var(--text-faint));
+    background: color-mix(in srgb, var(--cat, var(--text-faint)) 14%, var(--surface-3));
+    border: 1px solid color-mix(in srgb, var(--cat, var(--text-faint)) 40%, var(--border));
+    border-radius: var(--radius-sm);
+    pointer-events: none;
+  }
+  .card-cat svg {
+    width: 13px;
+    height: 13px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.5;
+  }
+
+  .plugin-card .card-metrics {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px;
+    margin-top: auto;
+    padding-top: 8px;
+    font-family: var(--mono);
+  }
+
+  .plugin-card .card-dl-wrap { display: inline-flex; align-items: center; gap: 4px; }
+  .plugin-card .dl-icon { flex: none; width: 11px; height: 11px; color: var(--text-faint); }
+  .plugin-card .card-dl { font-size: 13px; font-weight: 700; font-variant-numeric: tabular-nums; }
+
+  /* Plain pricing label, not a pill -- the card face shows tier
+     (Free/Freemium/Paid), growth% moved to the dossier's own stat row
+     where there's room for the "since <date>" context on hover. */
+  .plugin-card .card-pricing { font-size: 9.5px; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 600; color: var(--text-faint); }
+  .plugin-card .card-pricing.pending { color: var(--pending); }
+
+  /* ---- chips ---- */
+  .chip {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    font-weight: 600;
+    padding: 3px 8px;
+    border-radius: 100px;
+    white-space: nowrap;
+  }
+
+  .chip.free { background: var(--surface-2); color: var(--text-dim); }
+  .chip.freemium { background: color-mix(in srgb, var(--accent) 18%, transparent); color: var(--accent); }
+  /* 2026-08-23 (audit finding): Paid used to share the exact same
+     --accent text color as Freemium, distinguished only by background
+     opacity (18% vs 30%) -- harder to tell apart at a glance than
+     .free/.pending, which each get their own distinct hue. --cyan is
+     already part of the brand palette (the logo's second blue), unused
+     by any other chip/badge, so this doesn't introduce a new color. */
+  .chip.paid { background: color-mix(in srgb, var(--cyan) 22%, transparent); color: var(--cyan); }
+
+  .chip.pending { background: var(--pending-bg); color: var(--pending); animation: pendingPulse 2.4s ease-in-out infinite; }
+  @keyframes pendingPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.75; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .chip.pending { animation: none; }
+  }
+
+  .growth { font-size: 12px; margin-left: 6px; }
+  .growth.up { color: var(--good); }
+  .growth.down { color: var(--bad); }
+  .growth.flat { color: var(--text-faint); }
+
+  /* ---- Plugin Dossier ---- */
+  .dossier-back {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-faint);
+    cursor: pointer;
+    margin: 0 0 14px;
+    padding: 0;
+    border: 0;
+    background: none;
+    display: inline-block;
+    text-align: left;
+    line-height: 1.3;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+
+  .dossier-back:hover { color: var(--accent); }
+  .dossier-back:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+
+  .dossier-enter { animation: dossierIn var(--duration-slow) ease; }
+  @keyframes dossierIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .dossier-enter { animation: none; }
+  }
+
+  .dossier-sheet { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+
+  /* One header card: back control + two columns that share a bottom
+     edge (stats strip vs Install/GitHub). Gap/Fix/Facts stay siblings
+     below, not inside this box. */
+  .dossier-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 16px 18px;
+    min-width: 0;
+  }
+
+  .dossier-top {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(260px, 0.95fr);
+    gap: 16px 18px;
+    align-items: stretch;
+  }
+  .dossier-intro {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+  }
+
+  .dossier-title-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .dossier-title-row h2 { font-family: var(--mono); font-size: 24px; margin: 0; overflow-wrap: anywhere; }
+  .dossier-niche { color: var(--text-dim); font-size: 13.5px; margin-top: 4px; }
+  .dossier-pitch { color: var(--text); font-size: 14.5px; margin-top: 11px; margin-bottom: 12px; line-height: 1.6; }
+  .dossier-pitch code { background: var(--surface-2); padding: 1px 5px; border-radius: var(--radius-sm); font-size: 0.92em; }
+
+  .dossier-side {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    min-width: 0;
+    min-height: 0;
+  }
+  /* flex-basis 0 so the remote GIF's intrinsic height cannot blow out
+     the right column. Leftover height fills the image; CTAs stay on
+     the shared bottom edge with the stats strip. */
+  .dossier-gif {
+    width: 100%;
+    flex: 1 1 0;
+    height: 0;
+    min-height: 140px;
+    object-fit: cover;
+    object-position: top left;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    display: block;
+    background: var(--surface-2);
+  }
+  .dossier-links { display: flex; flex-direction: column; gap: 8px; margin-top: auto; }
+  .dossier-gif + .dossier-links { margin-top: 0; }
+  .dossier-links .btn { flex: none; text-align: center; justify-content: center; }
+
+  .btn {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    font-weight: 600;
+    padding: 10px 16px;
+    border-radius: var(--radius-md);
+    text-decoration: none;
+    white-space: nowrap;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: border-color var(--duration-base) ease, opacity var(--duration-base) ease, transform var(--duration-fast) ease;
+  }
+
+  .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .btn:hover { border-color: var(--accent); }
+  .btn.primary:hover { opacity: 0.9; }
+
+  .btn:active { transform: scale(0.97); }
+  @media (prefers-reduced-motion: reduce) {
+    .btn { transition: border-color var(--duration-base) ease, opacity var(--duration-base) ease; }
+    .btn:active { transform: none; }
+  }
+
+  .btn.primary .btn-icon { width: 20.8px; height: 20.8px; }
+
+  /* Added 2026-08-21: real GitHub/JetBrains marks on the Install/View
+     buttons -- inline SVG, not the JetBrains-provided mp-widget.js
+     script (that widget needs script-src/connect-src opened to
+     plugins.jetbrains.com, which would undo the CSP hardening from
+     2026-08-20; a static icon on the existing working link gets the
+     same visual result with zero new attack surface). Sized to sit
+     inline with the button's own 12.5px text -- 16px reads as "icon
+     next to a label," not "icon competing with the label." currentColor
+     on the GitHub mark so it inverts correctly in both .btn and
+     .btn.primary (dark-on-accent vs. light-on-surface); JetBrains' mark
+     keeps its own real brand colors (the 4-square logo) since that's
+     how their own guidelines present it, same treatment .btn.primary
+     already gives real brand colors elsewhere on this page. */
+  .btn-icon { width: 16px; height: 16px; flex: none; }
+
+  .dossier-stats {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0;
+    margin-top: auto;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    min-width: 0;
+    align-self: stretch;
+  }
+  .dossier-stats .stat {
+    background: transparent;
+    border: 0;
+    border-radius: 0;
+    box-shadow: none;
+    border-right: 1px solid var(--border);
+    padding: 4px 8px;
+    min-width: 0;
+  }
+  .dossier-stats .stat:last-child { border-right: 0; }
+  .dossier-stats .stat .num { font-size: 12px; line-height: 1.1; min-height: 0; }
+  .dossier-stats .stat .label { margin-top: 1px; line-height: 1.15; }
+  .dossier-stats .growth { font-size: 8px; margin-left: 4px; }
+  @media (max-width: 640px) {
+    .dossier-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .dossier-stats .stat {
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .dossier-stats .stat:nth-child(2n) { border-right: 0; }
+    .dossier-stats .stat:last-child {
+      grid-column: 1 / -1;
+      border-right: 0;
+      border-bottom: 0;
+    }
+  }
+
+  .dossier-body {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+    align-items: stretch;
+  }
+  .dossier-body .info-block { min-width: 0; height: 100%; }
+
+  /* Fixed 2026-08-23, explicit user request + screenshot: Install/View
+     wrapped to 2 separate rows on phone -- .dossier-links is already
+     flex+wrap, but each .btn's full-length label ("Install on
+     JetBrains ↗" / "View on GitHub ↗") at the desktop font-size/padding
+     was simply wider than half the phone viewport, forcing the wrap.
+     Smaller font/padding/icon + allowing the label to wrap ITS OWN text
+     (not the whole button) keeps both buttons on one row instead. */
+  @media (max-width: 480px) {
+    .dossier-links .btn {
+      font-size: 11px;
+      padding: 9px 8px;
+      gap: 5px;
+      white-space: normal;
+      text-align: center;
+      line-height: 1.25;
+    }
+    .dossier-links .btn-icon { width: 13px; height: 13px; }
+
+    .dossier-links .btn.primary .btn-icon { width: 17px; height: 17px; }
+  }
+
+
+  .info-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+  }
+
+  .info-block .ib-head { display: flex; align-items: center; gap: 10px; margin-bottom: 11px; }
+
+  .ib-icon {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 12.5px; font-weight: 700;
+    flex: none;
+    line-height: 1;
+  }
+
+  .ib-icon.gap { background: var(--bad-bg); color: var(--bad); }
+  .ib-icon.fix { background: var(--good-bg); color: var(--good); }
+  .ib-icon.facts { background: var(--surface-3); color: var(--text-dim); font-size: 12px; }
+
+  .ib-title { font-family: var(--mono); font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase; font-weight: 700; }
+  .info-block .ib-body { font-size: 13.5px; color: var(--text-dim); line-height: 1.7; }
+  .info-block .ib-body code { background: var(--surface-2); padding: 1px 5px; border-radius: var(--radius-sm); font-size: 0.92em; color: var(--text); }
+
+  .facts-block { min-width: 0; }
+  .facts-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 13.5px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 20px;
+  }
+  .facts-list li {
+    display: flex; justify-content: space-between; align-items: baseline;
+    gap: 12px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+    min-width: 0;
+  }
+  @media (max-width: 900px) {
+    .facts-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 640px) {
+    .facts-list { grid-template-columns: 1fr; }
+  }
+  .facts-list li:last-child {
+    border-bottom: none;
+    grid-column: 1 / -1;
+  }
+  .facts-list .fk { color: var(--text-faint); font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; flex: none; }
+  .facts-list .fv { color: var(--text); text-align: right; overflow-wrap: anywhere; }
+  .facts-list .fv code { background: var(--surface-2); padding: 1px 6px; border-radius: var(--radius-sm); font-size: 0.9em; }
+
+  .copy-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: middle;
+    width: 22px;
+    height: 22px;
+    margin-left: 4px;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: var(--text-faint);
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: color var(--duration-base) ease, background var(--duration-base) ease, transform var(--duration-fast) ease;
+  }
+  .copy-btn svg { width: 13px; height: 13px; }
+  .copy-btn:hover { color: var(--text); background: var(--surface-2); }
+  .copy-btn:active { transform: scale(0.9); }
+  .copy-btn.copied { color: var(--good); }
+  .copy-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  @media (prefers-reduced-motion: reduce) {
+    .copy-btn:active { transform: none; }
+  }
+
+  .similar-section { margin-top: 0; }
+  .similar-title { font-family: var(--mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 10px; }
+  .similar-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
+  .similar-card {
+    position: relative;
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 12px 32px 12px 14px; cursor: pointer; font-size: 12.5px;
+  }
+  .similar-card:hover { border-color: var(--accent); }
+  /* Keyboard focus state added 2026-08-23 (audit finding) -- these
+     cards had role="button"/tabindex="0" with no visible focus state
+     at all, same reasoning as .plugin-card:focus-visible above. */
+  .similar-card:focus-visible { border-color: var(--accent); outline: 2px solid var(--accent); outline-offset: 2px; }
+  .similar-card .sc-name { font-weight: 600; color: var(--text); margin-bottom: 2px; }
+  .similar-card .sc-niche { color: var(--text-faint); font-size: 11px; }
+  .similar-card .sc-dl { margin-top: 8px; font-family: var(--mono); font-size: 12px; color: var(--text-dim); }
+
+  .catalog-pager {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px 12px;
+    margin-top: var(--section-gap);
+  }
+  .catalog-pager-btn {
+    min-height: var(--control-h);
+    min-width: var(--control-h);
+    padding: 10px 16px;
+  }
+  .catalog-pager-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .catalog-pager-status {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text-dim);
+    min-width: 8em;
+    text-align: center;
+  }
+
+  /* ---- TABLE mode (unchanged behavior, restyled to match) ---- */
+
+  .table-scroll {
+    overflow-x: auto;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background:
+      linear-gradient(to right, var(--surface) 30%, rgba(0,0,0,0)),
+      linear-gradient(to right, rgba(0,0,0,0), var(--surface) 70%) 100% 0,
+      linear-gradient(to right, color-mix(in srgb, var(--accent) 35%, transparent), rgba(0,0,0,0) 12px),
+      linear-gradient(to left, color-mix(in srgb, var(--accent) 35%, transparent), rgba(0,0,0,0) 12px) 100% 0;
+    background-repeat: no-repeat;
+    background-size: 40px 100%, 40px 100%, 12px 100%, 12px 100%;
+    background-attachment: local, local, scroll, scroll;
+    box-shadow: var(--shadow);
+  }
+
+  table { width: 100%; border-collapse: collapse; min-width: 880px; }
+
+  thead th {
+    position: sticky; top: 0;
+    background: var(--surface-2);
+    text-align: left;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    padding: 11px 14px;
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    white-space: nowrap;
+    user-select: none;
+  }
+
+
+  thead th { transition: color var(--duration-base) ease, background var(--duration-base) ease; }
+  thead th:hover { color: var(--text); background: var(--surface-2); }
+  thead th.sorted { color: var(--accent); }
+
+  thead th .arrow { font-size: 9px; margin-left: 3px; opacity: 0.7; display: inline-block; animation: arrowIn var(--duration-base) ease; }
+  @keyframes arrowIn {
+    from { opacity: 0; transform: scale(0.5); }
+    to   { opacity: 0.7; transform: scale(1); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    thead th .arrow { animation: none; }
+  }
+
+  thead th:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+
+
+  tbody tr.row { cursor: pointer; border-bottom: 1px solid var(--border); transition: background var(--duration-base) ease; }
+  tbody tr.row:hover { background: var(--surface-2); }
+  tbody tr.row:last-child { border-bottom: none; }
+  /* Added 2026-08-21 alongside making rows keyboard-focusable -- same
+     reasoning as .plugin-card:focus-visible above: an unstyled default
+     outline works but doesn't match this page's own focus/hover
+     vocabulary. Inset (not outline-offset) since a row spans the full
+     table width and an offset ring would visually collide with its
+     neighbors above/below. */
+  tbody tr.row:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; background: var(--surface-2); }
+  tbody td { padding: 11px 14px; vertical-align: middle; }
+  td.name-cell { max-width: 240px; }
+  .plugin-name { font-weight: 600; font-size: 14px; }
+  .niche { font-size: 12px; color: var(--text-dim); margin-top: 1px; }
+  td.num-cell { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; font-size: 13.5px; }
+  /* 2026-08-23 (audit finding): the 4 numeric-column <th> elements each
+     had the identical inline style="text-align:right" repeated by hand.
+     One shared class instead. */
+  th.num-head { text-align: right; }
+
+  .expand-row td { padding: 0; border-bottom: 1px solid var(--border); }
+
+  /* Table row expand — compact type scale (list context, not the
+     Field full-page dossier). Same real fields only; no GIF. Layout
+     matches Field: header, one stats bar, Gap | Fix side by side,
+     Details as a full-width grid, similar plugins spanning the row. */
+  .tbl-dossier {
+    font-size: 13px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .tbl-head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 16px 20px;
+    padding-right: 34px; /* clears the close button */
+  }
+
+  .tbl-intro { min-width: 0; }
+  .tbl-title-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  .tbl-title-row h3 { font-family: var(--mono); font-size: 16px; margin: 0; font-weight: 700; overflow-wrap: anywhere; }
+  .tbl-niche { color: var(--text-dim); font-size: 12px; margin-top: 3px; }
+  .tbl-pitch { color: var(--text-dim); font-size: 12.5px; margin-top: 8px; line-height: 1.6; }
+  .tbl-pitch code { background: var(--surface-2); padding: 1px 5px; border-radius: var(--radius-sm); font-size: 0.92em; color: var(--text); }
+
+  .tbl-links { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .tbl-links .btn { padding: 8px 13px; font-size: 11.5px; justify-content: center; }
+
+  .tbl-stats {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 0;
+    margin: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    min-width: 0;
+  }
+
+  .tbl-stat {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: 0;
+    border-right: 1px solid var(--border);
+    border-radius: 0;
+    padding: 5px 8px;
+    min-width: 0;
+  }
+  .tbl-stat:last-child { border-right: 0; }
+
+  .tbl-stat .ts-icon {
+    flex: none;
+    width: 20px; height: 20px;
+    border-radius: var(--radius-sm);
+    background: var(--surface-3);
+    color: var(--text-dim);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 10px;
+  }
+
+  .tbl-stat .ts-num {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1.2;
+    overflow-wrap: anywhere;
+  }
+
+  .tbl-stat .ts-label { font-size: 8px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-faint); margin-top: 1px; }
+
+  .tbl-body {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    align-items: stretch;
+  }
+  .tbl-body .tbl-block { min-width: 0; height: 100%; }
+
+  @media (max-width: 760px) {
+    .tbl-head { grid-template-columns: minmax(0, 1fr); }
+    .tbl-links { flex-direction: row; flex-wrap: wrap; }
+    .tbl-body { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .tbl-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .tbl-stat {
+      border-right: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .tbl-stat:nth-child(2n) { border-right: 0; }
+    .tbl-stat:last-child {
+      grid-column: 1 / -1;
+      border-right: 0;
+      border-bottom: 0;
+    }
+  }
+
+  /* Same info-block/ib-icon language as the Field dossier (kept
+     identical on purpose -- Gap=red, Fix=green is already a learned
+     color meaning elsewhere on this page) but tighter padding/type. */
+  .tbl-block {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 12px 14px;
+  }
+  .tbl-block .ib-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .tbl-block .ib-icon { width: 20px; height: 20px; font-size: 11px; }
+  .tbl-block .ib-title { font-size: 10px; }
+  .tbl-block .ib-body { font-size: 12.5px; line-height: 1.65; color: var(--text-dim); }
+  .tbl-block .ib-body code { background: var(--surface-2); padding: 1px 5px; border-radius: var(--radius-sm); font-size: 0.9em; color: var(--text); }
+
+  .tbl-details { min-width: 0; }
+  .tbl-details-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    column-gap: 16px;
+  }
+  .tbl-details-list li {
+    display: flex; justify-content: space-between; align-items: baseline;
+    gap: 10px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+    min-width: 0;
+  }
+  @media (max-width: 900px) {
+    .tbl-details-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  @media (max-width: 640px) {
+    .tbl-details-list { grid-template-columns: 1fr; }
+  }
+  .tbl-details-list li:last-child {
+    border-bottom: none;
+    grid-column: 1 / -1;
+  }
+  .tbl-details-list .fk { color: var(--text-faint); font-family: var(--mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; flex: none; }
+  .tbl-details-list .fv { color: var(--text); text-align: right; overflow-wrap: anywhere; }
+  .tbl-details-list .fv code { background: var(--surface-2); padding: 1px 6px; border-radius: var(--radius-sm); font-size: 0.88em; }
+
+  .tbl-similar { margin-top: 0; }
+  .tbl-similar-title { font-family: var(--mono); font-size: 10px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-faint); margin-bottom: 8px; }
+  .tbl-similar-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+  @media (max-width: 760px) {
+    .tbl-similar-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  }
+  .tbl-similar-card {
+    position: relative;
+    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md);
+    padding: 9px 28px 9px 11px; cursor: pointer; font-size: 11.5px;
+  }
+  .tbl-similar-card .card-cat { top: 5px; right: 5px; width: 20px; height: 20px; }
+  .tbl-similar-card .card-cat svg { width: 12px; height: 12px; }
+  .tbl-similar-card:hover { border-color: var(--accent); }
+  .tbl-similar-card:focus-visible { border-color: var(--accent); outline: 2px solid var(--accent); outline-offset: 2px; }
+  .tbl-similar-card .sc-name { font-weight: 600; color: var(--text); margin-bottom: 1px; font-size: 12px; }
+  .tbl-similar-card .sc-niche { color: var(--text-faint); font-size: 10.5px; }
+  .tbl-similar-card .sc-dl { margin-top: 6px; font-family: var(--mono); font-size: 11px; color: var(--text-dim); }
+  /* Full row width, no centered max-width -- the row above (td padding:
+     11px 14px) sets the real left/right edges of this table, and a
+     960px-centered block used to float with dead space on both sides,
+     throwing off every internal alignment against it. Left padding
+     kept slightly larger than the row's own 14px (offset by the 3px
+     accent border) so text still lines up close to the row's own text
+     start, not flush against the border. */
+  .expand-inner {
+    display: none;
+    position: relative;
+    padding: 20px 24px 24px 21px;
+    background: var(--surface-2);
+    border-left: 3px solid var(--accent);
+  }
+  .expand-inner.open { display: block; }
+  /* 30px -> 36px, 2026-08-21: still below the 44px WCAG/platform touch-
+     target guideline, but 30px was uncomfortably small on a real mobile
+     device for a button used specifically to dismiss a dossier -- the
+     one action every visitor who opens a dossier eventually needs.
+     Kept below the full 44px since this sits inside a tightly-packed
+     dossier header rather than a spacious toolbar; 36px is a real,
+     measurable improvement without disrupting that layout. */
+  .dossier-close {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text-dim);
+    font-size: 14px;
+    cursor: pointer;
+    z-index: 1;
+    transition: border-color var(--duration-base) ease, color var(--duration-base) ease, transform var(--duration-base) ease;
+  }
+
+  .dossier-close:hover { border-color: var(--accent); color: var(--text); transform: scale(1.08); }
+  @media (prefers-reduced-motion: reduce) {
+    .dossier-close { transition: border-color var(--duration-base) ease, color var(--duration-base) ease; }
+    .dossier-close:hover { transform: none; }
+  }
+
+  /* Reserved presentation for a future public `verified` catalog field.
+     It remains inactive while the external catalog data omits that field. */
+  .verified-mark { color: var(--accent); font-size: 11px; margin-left: 4px; }
+
+
+  .no-results {
+    padding: 40px;
+    text-align: center;
+    color: var(--text-faint);
+    font-family: var(--mono);
+    font-size: 13px;
+    animation: noResultsIn var(--duration-slow) ease;
+  }
+  @keyframes noResultsIn {
+    from { opacity: 0; transform: translateY(4px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .no-results { animation: none; }
+  }
+
+  /* Element changed 2026-08-21: was <footer class="notes">, but this
+     holds the real Methodology/Gap-Fix explainer content -- part of the
+     page's own substance, not closing boilerplate (the actual page
+     footer, .site-footer, is separate and comes right after this). A
+     <footer> landmark here was misleading for screen-reader users
+     navigating by landmark; <section> matches what it actually is. */
+  section.notes {
+    margin-top: var(--section-gap);
+    padding-top: var(--section-gap);
+    border-top: 1px solid var(--border);
+    font-size: 12.5px;
+    color: var(--text-faint);
+    line-height: 1.7;
+  }
+
+  section.notes b { color: var(--text-dim); }
+
+  /* ==================== METHODOLOGY LOG ====================
+     The 3 methodology paragraphs re-cast as terminal "log entries"
+     instead of running prose -- same content, same facts, word for
+     word, just structured so the header line (was <b>Title:</b>) reads
+     as a log line and the body reads as its payload. Reveal is
+     scroll-triggered (IntersectionObserver, same primitive the topbar
+     scroll-spy already uses) and plays ONCE per entry -- a hacking
+     aesthetic should feel like a system printing real output as you
+     reach it, not a looping gimmick that replays every re-scroll. */
+  .log-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 4px;
+  }
+
+  .log-entry {
+    position: relative;
+    padding: 14px 16px 14px 42px;
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--surface);
+    opacity: 0;
+    transform: translateX(-8px);
+    transition: opacity var(--duration-slow) ease, transform var(--duration-slow) ease, border-left-color var(--duration-slow) ease, box-shadow var(--duration-slow) ease;
+  }
+
+  .log-entry.in-view {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .log-entry:hover {
+    border-left-color: var(--accent);
+    box-shadow: -2px 0 0 0 var(--accent);
+  }
+
+  /* Line-number gutter, terminal-style -- static content, real index,
+     not decorative filler (a screen reader / view-source reads 01/02/03
+     as what they are). */
+  .log-entry::before {
+    content: attr(data-idx);
+    position: absolute;
+    left: 14px;
+    top: 15px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-faint);
+    opacity: 0.55;
+  }
+
+  .log-entry.in-view::before { animation: logIdxBlip 0.5s ease; }
+
+  @keyframes logIdxBlip {
+    0%   { color: var(--good); opacity: 1; text-shadow: none; }
+    100% { color: var(--text-faint); opacity: 0.55; text-shadow: none; }
+  }
+
+  .log-head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text);
+    margin-bottom: 6px;
+  }
+
+  /* Blinking cursor caret after the title -- CSS-only, no JS timer --
+     reads as "still listening" without being an actual distraction
+     (slow blink, low-contrast off-state). */
+  .log-head::after {
+    content: "";
+    display: inline-block;
+    width: 6px;
+    height: 12px;
+    background: var(--accent);
+    animation: caretBlink 1.1s steps(1) infinite;
+  }
+
+  @keyframes caretBlink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+
+  /* Sub-points inside a log entry -- each one its own terminal-log
+     line rather than a plain <li>, so a dense paragraph reads as
+     several distinct facts at a glance instead of one run-on sentence.
+     Text is unchanged from the original paragraphs, only segmented.
+     The line marker is a CSS-only bracket glyph (::before), not a
+     literal "$" character in the markup -- keeps the terminal read
+     without implying "this is a runnable command". */
+  .log-points {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .log-points li {
+    font-size: 12.5px;
+    color: var(--text-faint);
+    line-height: 1.7;
+  }
+
+  .log-points li::before {
+    content: "›";
+    display: inline;
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--good);
+    opacity: 0.8;
+    margin-right: 8px;
+  }
+
+  .log-points li b { color: var(--text-dim); font-weight: 600; }
+  .log-points li code { color: var(--accent); }
+
+  .method-facts {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .method-fact {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: max-content;
+    max-width: 100%;
+    padding: 6px 10px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface-2);
+    text-align: center;
+  }
+  .method-fact-num {
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+    font-size: 15px;
+    font-weight: 650;
+    line-height: 1.15;
+    color: var(--text);
+  }
+  .method-fact-label {
+    margin-top: 2px;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    white-space: nowrap;
+  }
+  @media (max-width: 480px) {
+    .method-facts {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  }
+
+  /* ==================== SITE FOOTER ====================
+     Quiet close for the page: brand, in-page nav, and real external
+     channels. No HUD ornaments, indexed 01/02 labels, or closing
+     wordmark. The footer count is kept aligned with the external
+     catalog JSON for accurate first paint. */
+  .site-footer {
+    margin-top: var(--section-gap);
+    border-top: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  .footer-inner {
+    max-width: var(--page-max);
+    margin: 0 auto;
+    padding: 36px var(--page-pad) 28px;
+  }
+
+  .footer-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.75fr) minmax(0, 0.9fr);
+    gap: 40px 48px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .footer-brand { max-width: 400px; }
+
+  .footer-brand-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .footer-brand-row .brand-mark { width: 32px; height: 32px; border-radius: var(--radius-md); }
+  .footer-brand-row .brand-mark svg { width: 19px; height: 19px; }
+
+  .footer-brand-name {
+    font-family: var(--sans);
+    font-weight: 650;
+    font-size: 15px;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+
+  .footer-brand-tagline {
+    font-family: var(--sans);
+    font-size: 12px;
+    letter-spacing: 0.04em;
+    color: var(--text-faint);
+    margin-top: 2px;
+  }
+
+  .footer-brand p {
+    margin: 14px 0 0;
+    font-size: 13.5px;
+    color: var(--text-dim);
+    line-height: 1.65;
+  }
+
+  .footer-status {
+    margin-top: 14px;
+    font-family: var(--sans);
+    font-size: 13px;
+    color: var(--text-faint);
+  }
+
+  .footer-col-title {
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+    margin-bottom: 12px;
+  }
+
+  .footer-nav { display: flex; flex-direction: column; gap: 2px; }
+  .footer-nav a,
+  .footer-nav button {
+    display: block;
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--text-dim);
+    text-decoration: none;
+    text-align: left;
+    padding: 6px 0;
+    border: none;
+    background: none;
+    cursor: pointer;
+    border-radius: var(--radius-sm);
+    transition: color var(--duration-base) ease;
+  }
+  .footer-nav a:hover,
+  .footer-nav button:hover { color: var(--text); }
+  .footer-nav a:focus-visible,
+  .footer-nav button:focus-visible {
+    color: var(--text);
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .footer-elsewhere { display: flex; flex-direction: column; gap: 2px; }
+  .fe-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: var(--sans);
+    font-size: 14px;
+    color: var(--text-dim);
+    text-decoration: none;
+    padding: 6px 0;
+    border-radius: var(--radius-sm);
+    transition: color var(--duration-base) ease;
+  }
+  .fe-link svg { width: 15px; height: 15px; flex: none; opacity: 0.85; }
+  .fe-link:hover { color: var(--text); }
+  .fe-link:hover svg { opacity: 1; }
+  .fe-link:focus-visible {
+    color: var(--text);
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .footer-bottom {
+    margin-top: 18px;
+    font-family: var(--sans);
+    font-size: 12.5px;
+    color: var(--text-faint);
+    line-height: 1.5;
+  }
+  .footer-bottom a {
+    color: var(--text-dim);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    transition: color var(--duration-base) ease;
+  }
+  .footer-bottom a:hover { color: var(--text); }
+  .footer-bottom a:focus-visible {
+    color: var(--text);
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: var(--radius-sm);
+  }
+
+  @media (max-width: 760px) {
+    .footer-grid {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-areas: "brand brand" "nav elsewhere";
+      gap: 28px 24px;
+    }
+    .footer-brand { grid-area: brand; max-width: none; }
+    .footer-nav { grid-area: nav; }
+    .footer-elsewhere { grid-area: elsewhere; }
+  }
+  @media (max-width: 640px) {
+    .footer-grid {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-areas: "brand" "nav" "elsewhere";
+    }
+  }
+
+  @media (max-width: 760px) {
+    .dossier-card { padding: 14px 14px; }
+    .dossier-top {
+      grid-template-columns: minmax(0, 1fr);
+    }
+    .dossier-body { grid-template-columns: 1fr; }
+    .dossier-gif { flex: none; height: auto; min-height: 0; aspect-ratio: 16 / 9; }
+    .dossier-links { flex-direction: column; margin-top: 0; }
+    .dossier-links .btn { width: 100%; }
+  }
+  @media (max-width: 640px) {
+    .wrap { padding: 16px var(--page-pad-sm) 24px; }
+    .footer-inner { padding: 24px var(--page-pad-sm) 20px; }
+  }
+
+  .content-stage { min-width: 0; }
+
+  /* First-load laboratory splash. Covers the page until the catalog
+     has painted, then fades. Independent of Field/Table switching. */
+  html.boot { overflow: hidden; }
+
+  .site-loader {
+    position: fixed; inset: 0; z-index: 9999; display: grid; place-items: center;
+    color: var(--text); background-color: var(--bg);
+    background-image: radial-gradient(circle at 50% 42%, color-mix(in srgb, var(--accent) 20%, transparent), transparent 42%);
+    opacity: 1; visibility: visible; transition: opacity var(--duration-slow) ease, visibility var(--duration-slow) ease;
+  }
+  .site-loader.is-done { opacity: 0; visibility: hidden; pointer-events: none; }
+  .sl-grid { position:absolute; inset:0; opacity:.22; background-image:radial-gradient(circle, var(--border) 1px, transparent 1px); background-size:22px 22px; }
+  .sl-center { position:relative; z-index:1; display:grid; justify-items:center; gap:8px; text-align:center; }
+  .sl-hud { width:min(58vw,240px); height:auto; overflow:visible; }
+  .sl-ring,.sl-ticks path { fill:none; stroke:var(--border); stroke-width:1.5; }
+  .sl-ring-inner { stroke:color-mix(in srgb, var(--accent) 55%, var(--border)); stroke-dasharray:5 8; }
+  .sl-ticks { transform-origin:120px 120px; animation:slRotate 12s linear infinite; }
+  .sl-ticks text { fill:var(--text-faint); font:7px var(--mono); text-anchor:middle; letter-spacing:2px; }
+  .sl-brand-mark path,.sl-brand-mark polygon { stroke-width:12; stroke-linejoin:miter; stroke-dasharray:2400; stroke-dashoffset:2400; animation:slDraw 0.9s ease-out forwards; }
+  .sl-brand-mark path:nth-child(1) { fill:#0151FC; stroke:#0151FC; }
+  .sl-brand-mark path:nth-child(2) { fill:#01B3FD; stroke:#01B3FD; animation-delay:var(--duration-fast); }
+  .sl-brand-mark polygon { fill:#02F172; stroke:#02F172; animation-delay:0.24s; }
+  .sl-name { font:700 20px var(--sans); letter-spacing:.08em; text-transform:uppercase; }
+  .sl-tag,.sl-status { font:600 11px var(--mono); letter-spacing:.12em; text-transform:uppercase; color:var(--text-dim); }
+  .sl-status { margin-top:6px; color:var(--accent); }
+  .site-loader.is-error .sl-status { color:var(--bad); }
+  .sl-corner { position:absolute; width:34px; height:34px; border-color:var(--accent); opacity:.65; }
+  .sl-tl { top:24px;left:24px;border-top:1px solid;border-left:1px solid}.sl-tr{top:24px;right:24px;border-top:1px solid;border-right:1px solid}
+  .sl-bl { bottom:24px;left:24px;border-bottom:1px solid;border-left:1px solid}.sl-br{bottom:24px;right:24px;border-bottom:1px solid;border-right:1px solid}
+  @keyframes slDraw { to { stroke-dashoffset:0; } }
+  @keyframes slRotate { to { transform:rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) {
+    .site-loader { transition:none; }
+    .sl-ticks { animation:none; }
+    .sl-brand-mark path,.sl-brand-mark polygon { animation:none; stroke-dashoffset:0; }
+  }
+
+  :root { --card-pad:16px; --card-pad-sm:10px; }
+  /* Sin padding horizontal propio -- .wrap ya pone 24px de cada lado
+     (ver .wrap más arriba); estas secciones sumaban OTRO padding
+     encima, doble inset a la izquierda que no se notaba en el layout
+     viejo centrado (simétrico) pero se ve como desalineado real ahora
+     que hay un sidebar al lado (.controls/.content-stage nunca tuvieron
+     este padding extra, por eso quedaban en otra posición horizontal
+     que el resto -- feedback real 2026-09-10). */
+  .category-preview,.identity-section,.catalog-heading,.insights-section { max-width:var(--page-max); margin:var(--section-gap) auto 0; }
+  .section-head { display:flex; align-items:end; justify-content:space-between; gap:var(--card-pad); margin-bottom:var(--section-gap); }
+  .section-head h2,.identity-section h2,.catalog-heading h1 { margin:4px 0 0; }
+  .eyebrow { margin:0; color:var(--accent); font:700 11px var(--mono); letter-spacing:.12em; text-transform:uppercase; }
+  .category-links { grid-template-columns:repeat(4,minmax(0,1fr)); align-items:stretch; }
+  /* Horizontal (ícono izquierda, texto derecha) en vez de vertical
+     apilado -- la versión en columna con min-height:120px dejaba más
+     de la mitad del ancho vacío a la derecha del texto, mucho más
+     notorio en mobile donde las cards se apilan a 1 columna (feedback
+     real 2026-09-10). Esto usa el ancho real de la card y baja la
+     altura en los dos breakpoints, no solo mobile. */
+  .category-links .cat-cell {
+    padding: 14px var(--card-pad); text-decoration:none;
+    display:flex; flex-direction:row; align-items:center; gap: 12px;
+    background: var(--surface); box-shadow: var(--shadow); border-radius: var(--radius-lg);
+  }
+  .category-links .cat-cell-icon { width: 38px; height: 38px; border-radius: var(--radius-lg); }
+  .category-links .cat-cell-icon svg { width: 19px; height: 19px; }
+  .category-links .cat-cell-copy { display:grid; gap:2px; flex: 1; min-width: 0; }
+  /* El markup real usa <strong> sin clase propia (hereda el default
+     del body) -- estilo dedicado para que el título tenga la misma
+     jerarquía tipográfica que el resto de las cards nuevas del sitio. */
+  .category-links .cat-cell-copy strong { font-size: 15px; font-weight: 650; letter-spacing: -0.01em; color: var(--text); }
+  .category-links .cat-cell-count { font-size: 11.5px; }
+  /* Flecha + movimiento (a pedido explícito 2026-09-10) -- mismo
+     lenguaje que la flecha de "Explore the full catalog →" arriba a
+     la derecha, pero animada: se corre hacia la derecha y se tiñe del
+     color real de la categoría al hacer hover, en vez de quedar
+     estática. .cat-cell-copy ya tiene flex:1 (crece para llenar el
+     espacio libre de la fila) -- por eso esta flecha, como próximo
+     ítem flex sin flex:1 propio, cae sola en el borde derecho de la
+     card sin necesitar margin-left:auto. */
+  .category-links .cat-cell-arrow {
+    flex: none; font-family: var(--mono); font-size: 15px; color: var(--text-faint); opacity: 0.55;
+    transition: transform var(--duration-base) ease, opacity var(--duration-base) ease, color var(--duration-base) ease;
+  }
+  .category-links .cat-cell:hover .cat-cell-arrow { transform: translateX(4px); opacity: 1; color: var(--cat); }
+  @media (prefers-reduced-motion: reduce) {
+    .category-links .cat-cell-arrow { transition: opacity var(--duration-base) ease, color var(--duration-base) ease; }
+    .category-links .cat-cell:hover .cat-cell-arrow { transform: none; }
+  }
+  .identity-section { display:grid; gap:var(--section-gap); }
+  .identity-lead { max-width:780px; }
+  .identity-lead>p:last-child,.catalog-heading>p:last-child { color:var(--text-dim); line-height:1.7; }
+  /* Roadmap en diagonal 2x2 intercalada, integrada a un campo de líneas
+     de flujo (a pedido explícito 2026-09-10, iteración 2) -- 4 puntos
+     alternan de altura (alto/bajo/alto/bajo, la "diagonal intercalada")
+     posicionados en absoluto para que el trazo SVG principal pase
+     EXACTO por el centro de cada punto en vez de ser decoración suelta
+     encima. 3 curvas superpuestas (1 principal + 2 más finas y tenues,
+     desfasadas) en vez de una sola línea -- referencia visual a un
+     campo de streamlines (solución de Navier-Stokes, versión
+     minimalista: sin vórtices ni densidad real, solo la idea de varias
+     líneas de flujo paralelas fluyendo juntas). Sin números, sin color
+     por texto -- el color vive solo en el punto/la línea. */
+  /* Overflow real reportado 2026-09-10: las curvas (overflow:visible +
+     las 2 copias offset) y el texto de la fila "baja" (top:78px +
+     título + hasta 2 líneas de descripción) se salían del height:150px
+     declarado -- como los .identity-step son position:absolute, no
+     empujan el alto real del contenedor, así que la sección de abajo
+     (.identity-grid) arrancaba pegada mientras el contenido visible
+     seguía más abajo, superponiéndose. Alto real con margen + overflow
+     hidden como red de seguridad dura (clip de cualquier resto que se
+     pase, en vez de seguir ajustando a mano cada offset). */
+  .identity-process { position:relative; height:185px; overflow:hidden; }
+  .identity-process .roadmap-svg { position:absolute; inset:0; width:100%; height:100%; overflow:visible; pointer-events:none; }
+  .identity-process .roadmap-svg-v { display:none; }
+  .identity-process .flow-line { fill:none; stroke-linecap:round; }
+  .identity-process .flow-line-1 { stroke:url(#roadmapGrad); stroke-width:1.6; opacity:0.85; }
+  .identity-process .flow-line-2 { stroke:var(--cyan); stroke-width:1; opacity:0.2; }
+  .identity-process .flow-line-3 { stroke:var(--purple); stroke-width:1; opacity:0.16; }
+  @media (prefers-reduced-motion: no-preference) {
+    /* Glitch real reportado 2026-09-10: el dashoffset de destino
+       (-220) no era múltiplo exacto del patrón dasharray "5 7" de
+       flow-line-1 (unidad 12; 220/12 = 18.33) -- al reiniciar el loop
+       el patrón no calzaba con su propio arranque y se veía un salto
+       una vez por ciclo. Unidad de dasharray uniforme (6+6=12) en las
+       3 líneas + offset -216 (múltiplo exacto de 12) para que el loop
+       cierre sin salto en las tres. */
+    .identity-process .flow-line-1 { stroke-dasharray:6 6; animation:roadmapFlow 15s linear infinite; }
+    .identity-process .flow-line-2 { stroke-dasharray:6 6; animation:roadmapFlow 19s linear infinite; }
+    .identity-process .flow-line-3 { stroke-dasharray:6 6; animation:roadmapFlow 23s linear infinite reverse; }
+    @keyframes roadmapFlow { to { stroke-dashoffset:-216; } }
+  }
+  /* Freeze real reportado en teléfonos (2026-09-10) -- 3 líneas
+     superpuestas animando stroke-dasharray/dashoffset a la vez es caro
+     de repintar en bastante hardware mobile. Bloqueado por ANCHO de
+     pantalla, no por prefers-reduced-motion -- esto es un problema de
+     rendimiento real, no una preferencia de accesibilidad, así que
+     tiene que apagarse aunque el usuario no haya pedido reduced
+     motion. Gana por orden de cascada sobre el bloque de arriba (misma
+     especificidad, declarado después). El trazo se queda quieto pero
+     visible -- no se oculta la línea, solo el movimiento. */
+  @media (max-width:600px) {
+    .identity-process .flow-line-1,
+    .identity-process .flow-line-2,
+    .identity-process .flow-line-3 { animation:none; }
+  }
+  .identity-step {
+    position:absolute; left:var(--sx); top:var(--sy); width:105px;
+    display:grid; align-content:start; gap:3px; justify-items:start;
+  }
+  /* nth-child corregido a 3/4/5/6 (a pedido explícito 2026-09-10) --
+     eran 2/3/4/5, correctos cuando .roadmap-svg era el único hermano
+     antes de los 4 pasos; al agregar .roadmap-svg-v (la versión mobile)
+     como segundo SVG, cada paso quedó corrido una posición y el mapeo
+     de color se desincronizó (Observe salía verde, Detect morado, etc,
+     bug real reportado con captura). */
+  .identity-step:nth-child(3) { --dot:var(--accent); --sx:0%;  --sy:8px; }
+  .identity-step:nth-child(4) { --dot:var(--good);   --sx:25%; --sy:78px; }
+  .identity-step:nth-child(5) { --dot:var(--purple); --sx:50%; --sy:8px; }
+  .identity-step:nth-child(6) { --dot:var(--amber);  --sx:74%; --sy:78px; }
+  .rm-dot { width:7px; height:7px; border-radius:50%; background:var(--dot,var(--accent)); box-shadow:0 0 0 3px color-mix(in srgb, var(--dot,var(--accent)) 16%, transparent); }
+  .identity-step h3,.identity-step p,.identity-card h3 { margin:0; }
+  .identity-step h3 { color:var(--text); font-size:14px; }
+  .identity-step p { font-size:11.5px; color:var(--text-dim); }
+  /* 900px (no 700px) -- mismo umbral que .category-links ya usa más
+     abajo; el sidebar (248px) angosta la columna real bastante antes
+     de que el viewport "se sienta" chico.
+
+     Tercera vuelta sobre esto mismo día (2026-09-10): el gutter angosto
+     con la línea recta se veía cortada (height:auto + top/bottom
+     absoluto en un contenedor sin alto propio nunca resuelve un alto
+     real -- el SVG terminaba con el alto intrínseco por defecto, no el
+     del stack) y además pidió explícitamente que los 4 pasos también
+     fueran en diagonal/entrelazados en mobile, no una columna recta.
+     Mismo mecanismo que el escritorio -- posicionamiento absoluto con
+     --mx/--my por paso + un SVG con viewBox en PÍXELES REALES
+     (0 0 100 360, igual truco que --sx/--sy arriba) en vez de
+     depender de que el contenedor "adivine" su alto -- alterna
+     izquierda/derecha bajando, para que la curva entrelace los 4
+     hasta el último de verdad. */
+  /* Bug real encontrado con captura headless propia (2026-09-10,
+     4ta vuelta): position:absolute en los 4 .identity-step sacaba TODO
+     el contenido del flujo normal -- .identity-process quedaba sin
+     ningún hijo en flujo del que derivar su height:auto, así que el
+     box entero se veía vacío (no solo la línea corta, esta vez
+     desaparecía todo: puntos y texto). Vuelta a flujo normal (flex
+     column) para los pasos -- el zigzag se logra con align-self, no
+     con coordenadas a mano -- y con eso .identity-process SÍ tiene un
+     height real del que la línea (position:absolute; inset:0) puede
+     derivar su propio 100%. */
+  @media (max-width:900px) {
+    /* width:100% agregado (bug real medido a nivel de píxel, 5ta vuelta
+       2026-09-10): .identity-process es un grid item de .identity-section
+       (display:grid); un margin:0 auto en un grid item hace que Grid
+       IGNORE justify-items:stretch y encoja el item a shrink-to-fit en
+       vez de estirarlo a max-width -- como sus hijos flex tenían
+       width:165px fijo, el contenedor se achicaba a ~165px también
+       (confirmado midiendo el outline: contenedor 170px, item 164px, 0
+       espacio libre), por eso margin-left:auto/align-self:flex-end en
+       los pasos "pares" no tenían dónde empujar. width:100% fuerza el
+       ancho explícito, max-width sigue funcionando como techo. */
+    .identity-process {
+      position:relative; height:auto; overflow:visible; padding-top:0;
+      width:100%; max-width:360px; margin:0 auto;
+      display:flex; flex-direction:column; gap:30px;
+    }
+    .identity-process .roadmap-svg { display:none; }
+    .identity-process .roadmap-svg-v {
+      display:block; position:absolute; inset:0; width:100%; height:100%; overflow:visible; pointer-events:none;
+    }
+    .identity-step {
+      position:static; width:165px; gap:5px;
+    }
+    /* margin-left:auto en vez de align-self:flex-end -- técnica de
+       margen automático de flexbox, más a prueba de balas para "empujar
+       al extremo opuesto" que align-self (que no se notaba en la
+       primera prueba real, causa no confirmada). */
+    .identity-step:nth-child(4), .identity-step:nth-child(6) { margin-left:auto; }
+    .identity-step h3 { font-size:15px; }
+    .identity-step p { font-size:12.5px; line-height:1.5; }
+    .rm-dot { position:relative; z-index:1; }
+  }
+  .identity-card { padding:var(--card-pad); border:1px solid var(--border); border-radius:var(--radius); background:var(--surface); box-shadow:var(--shadow); transition:border-color var(--duration-base) ease; }
+  .identity-card:hover { border-color:var(--accent); }
+  .identity-grid { display:grid; grid-template-columns:1fr 1fr; gap:var(--section-gap); align-items:stretch; }
+  .identity-card .ic-head { display:flex; align-items:center; gap:10px; }
+  .identity-card .ic-head .eyebrow { margin:0; }
+  .identity-card .ic-icon { flex:none; width:34px; height:34px; border-radius:50%; background:color-mix(in srgb, currentColor 14%, var(--surface-2)); display:flex; align-items:center; justify-content:center; }
+  .identity-card .ic-icon svg { width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:1.5; }
+  .ic-stat { font-family:var(--mono); font-size:11.5px; color:var(--text-faint); margin:0; }
+  .ic-checklist { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:8px; }
+  .ic-checklist li { display:flex; align-items:center; gap:8px; color:var(--text-dim); font-size:13.5px; line-height:1.4; }
+  .ic-checklist svg { flex:none; width:14px; height:14px; color:var(--good); }
+  .identity-card { display:flex; flex-direction:column; align-items:flex-start; gap:12px; }
+  .identity-card p,.identity-card li { color:var(--text-dim); line-height:1.65; }
+  .identity-links { display:grid; gap:8px; margin-top:auto; justify-items:start; }
+  .identity-links .btn { white-space:normal; text-align:left; }
+  .method-fact,.tele-row,.plugin-card { padding:var(--card-pad-sm); }
+
+  /* .identity-case ocupa el ancho completo del grid (2 cols) y usa un
+     layout propio de 2 columnas adentro (cuerpo + metadata real:
+     Source/Category/Impact) -- todos los valores son reales (categoría
+     derivada del niche real del plugin, no copiados de una referencia
+     visual), "Impact: High" es juicio editorial respaldado por un
+     hecho citable (JetBrains mismo publicó el patrón), no un número
+     inventado. */
+  .identity-case { grid-column: 1 / -1; flex-direction: row; align-items: stretch; gap: var(--section-gap); flex-wrap: wrap; }
+  .case-body { flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
+  .case-meta { flex: 0 0 220px; margin: 0; padding-left: var(--section-gap); border-left: 1px solid var(--border); display: flex; flex-direction: column; gap: 14px; }
+  .case-meta-row dt { display: flex; align-items: center; gap: 7px; margin: 0 0 3px; font-family: var(--mono); font-size: 10.5px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-faint); }
+  .case-meta-row dt svg { width: 14px; height: 14px; flex: none; color: var(--accent); }
+  .case-meta-row dd { margin: 0; font-size: 13px; font-weight: 600; color: var(--text); }
+  .case-meta-note { display: block; margin-top: 2px; font-size: 11px; font-weight: 500; color: var(--text-faint); }
+  @media (max-width: 760px) { .case-meta { flex-basis: 100%; border-left: 0; padding-left: 0; border-top: 1px solid var(--border); padding-top: var(--section-gap); flex-direction: row; flex-wrap: wrap; } .case-meta-row { flex: 1 1 140px; } }
+
+  /* .identity-process sacado de estas 2 reglas (a pedido explícito
+     2026-09-10) -- ya no es un grid en mobile, es la timeline vertical
+     de abajo; dejarlo acá pisaba ese layout sin avisar. */
+  @media (max-width: 900px) { .category-links { grid-template-columns:repeat(2,1fr); } }
+  @media (max-width: 620px) { .category-links,.identity-grid { grid-template-columns:1fr; } .section-head{align-items:flex-start;flex-direction:column;} }
+
+/* ===================================================================
+   2026-09-27 -- Rediseno enterprise (tema claro con bandas oscuras) y
+   secciones del embudo: selector de camino, plugins de pago, hubs,
+   fundador (#work-with-joel) y "stay in the loop".
+   =================================================================== */
+body { background: var(--bg); color: var(--text); }
+h1, h2, h3 { font-family: var(--sans); letter-spacing: -0.01em; }
+.section-head h2, .path-section h2, .paid-section h2, .founder-section h2, .loop-section h2, .identity-lead h2 {
+  font-family: var(--sans); font-weight: 700; font-size: clamp(22px, 2.4vw, 30px); line-height: 1.2; margin: 6px 0 0; color: var(--text);
+}
+.eyebrow { font-family: var(--sans); letter-spacing: .08em; font-size: 12px; }
+.btn { font-family: var(--sans); font-size: 14px; border-radius: 8px; padding: 10px 18px; border-color: var(--border-strong); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.primary:hover { background: var(--accent-hover); border-color: var(--accent-hover); opacity: 1; }
+.btn:focus-visible, .path-card:focus-visible, a:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+
+/* Hero como panel azul marino */
+.hero.band-dark { border-radius: 16px; padding: clamp(20px, 3vw, 40px); margin-top: 16px; box-shadow: var(--shadow-lg); }
+.hero-title { font-family: var(--sans); font-weight: 700; font-size: clamp(28px, 3.6vw, 46px); line-height: 1.12; letter-spacing: -0.02em; }
+.hero-title .accent { color: var(--accent); }
+.hero-kicker { font-family: var(--sans); font-weight: 600; letter-spacing: .06em; }
+.hero-subtitle { color: var(--text-dim); font-size: 16px; line-height: 1.6; }
+
+.market-strip { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 8px 12px; margin: 20px 0 8px; color: var(--text-faint); font-size: 14px; }
+.market-strip a { color: var(--text); font-weight: 600; text-decoration: none; }
+.market-strip a:hover { color: var(--accent); }
+
+.path-section, .paid-section, .founder-section, .loop-section { margin: 48px 0; }
+.section-lead { color: var(--text-dim); max-width: 760px; margin: -8px 0 20px; line-height: 1.6; }
+.path-grid, .paid-grid, .offer-grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+.path-card, .paid-card, .offer-card {
+  display: flex; flex-direction: column; gap: 8px; padding: 22px; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); color: var(--text); text-decoration: none;
+}
+.path-card { transition: border-color var(--duration-base) ease, box-shadow var(--duration-base) ease, transform var(--duration-base) ease; }
+.path-card:hover { border-color: var(--accent); box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+.path-card strong { font-size: 18px; }
+.path-card span { color: var(--text-dim); line-height: 1.55; }
+.path-card .path-kicker { color: var(--accent); font-weight: 700; font-size: 12px; letter-spacing: .08em; text-transform: uppercase; }
+.path-card .path-go { margin-top: auto; padding-top: 8px; color: var(--accent); font-weight: 600; }
+.path-card-strong { border-color: var(--accent); background: linear-gradient(180deg, var(--accent-soft), var(--surface) 70%); }
+
+.paid-card h3 { margin: 4px 0 0; font-size: 18px; }
+.paid-card h3 a { color: var(--text); text-decoration: none; }
+.paid-card h3 a:hover { color: var(--accent); }
+.paid-card p { margin: 0; color: var(--text-dim); line-height: 1.55; }
+.paid-card-head { display: flex; align-items: center; gap: 10px; }
+.paid-niche { color: var(--text-faint); font-size: 13px; }
+.paid-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 10px; }
+.price-badge { display: inline-block; padding: 3px 9px; border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: .02em; }
+.price-free { background: var(--good-bg); color: var(--good); }
+.price-freemium { background: var(--accent-soft); color: var(--accent); }
+.price-paid { background: var(--pending-bg); color: var(--brand-navy, var(--text)); }
+
+.founder-section { display: grid; gap: 24px; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); align-items: start;
+  padding: clamp(20px, 3vw, 40px); background: var(--surface); border: 1px solid var(--border); border-radius: 16px; box-shadow: var(--shadow); }
+.founder-bio { font-size: 16px; line-height: 1.65; color: var(--text); }
+.founder-meta { color: var(--text-dim); line-height: 1.6; }
+.offer-grid { grid-template-columns: 1fr; }
+.offer-card { box-shadow: none; background: var(--surface-2); }
+.offer-card h3 { margin: 0; font-size: 17px; }
+.offer-card p { margin: 0; color: var(--text-dim); line-height: 1.55; }
+
+.loop-section { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px;
+  padding: 24px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); }
+.loop-links { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.identity-card, .cat-cell { box-shadow: var(--shadow); }
+
+@media (max-width: 900px) {
+  .founder-section { grid-template-columns: 1fr; }
+  .hero-title { font-size: clamp(24px, 6vw, 32px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .path-card, .path-card:hover { transition: none; transform: none; }
+  .flow-line { animation: none !important; }
+}
+
+/* 2026-09-27 (ajuste tras revision del usuario): el titulo del hero
+   hereda uppercase + nowrap del diseno anterior y se metia debajo del
+   slider; ahora envuelve normal dentro de su columna. */
+.hero .hero-title { text-transform: none; white-space: normal; overflow-wrap: break-word;
+  font-size: clamp(26px, 3vw, 40px); line-height: 1.15; letter-spacing: -0.015em; }
+.hero .hero-kicker { font-family: var(--sans); color: var(--accent); letter-spacing: .08em; font-size: 12.5px; margin-top: 12px; }
+.hero .hero-subtitle { font-size: 15px; }
+
+/* "How we work": la onda animada con pasos en posicion absoluta no
+   encajaba con el layout de tarjetas; ahora son 4 pasos numerados. */
+.identity-section { padding: 0; border: 0; background: none; margin: 48px 0; }
+.identity-lead h2 { margin-top: 6px; }
+.identity-lead p { color: var(--text-dim); line-height: 1.6; }
+.identity-process { height: auto; overflow: visible; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px; counter-reset: gh-step; }
+.identity-process .roadmap-svg, .identity-process .roadmap-svg-v, .identity-process .rm-dot { display: none !important; }
+.identity-process .identity-step { position: relative; left: auto; top: auto; width: auto; margin: 0; align-self: stretch;
+  display: flex; flex-direction: column; gap: 6px; padding: 20px; background: var(--surface);
+  border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); counter-increment: gh-step; }
+.identity-process .identity-step::before { content: counter(gh-step, decimal-leading-zero); color: var(--accent);
+  font: 700 13px var(--sans); letter-spacing: .08em; }
+.identity-process .identity-step:not(:last-of-type)::after { content: ""; position: absolute; top: 50%; right: -13px;
+  width: 10px; height: 2px; background: var(--border-strong); }
+.identity-process .identity-step h3 { font-size: 17px; color: var(--text); }
+.identity-process .identity-step p { font-size: 14px; line-height: 1.5; color: var(--text-dim); }
+@media (max-width: 900px) {
+  .identity-process { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .identity-process .identity-step::after { display: none; }
+}
+@media (max-width: 520px) { .identity-process { grid-template-columns: 1fr; } }
+
+.paid-actions .btn { white-space: normal; text-align: center; }
+
+/* 2026-09-27 -- Hero de la home con el patron de encabezado de marca:
+   eyebrow con mini marca arriba, titulo, bajada, cifras (.hdr-stats) y
+   acciones; slider con la misma tipografia sans y controles del sistema. */
+.hero.gh-page-header { align-items: center; gap: 40px; }
+.hero.gh-page-header .hero-brand { gap: 0; }
+.hero.gh-page-header .hero-title { margin: 14px 0 0; color: var(--text); font: 700 clamp(30px, 3.4vw, 44px) / 1.12 var(--sans);
+  letter-spacing: -0.02em; text-transform: none; white-space: normal; }
+.hero.gh-page-header .hero-title .accent { color: var(--accent); }
+.hero.gh-page-header .hero-subtitle { max-width: 56ch; margin: 16px 0 0; color: var(--text-dim); font-size: 17px; line-height: 1.65; }
+.hero.gh-page-header .hdr-stats { width: 100%; margin-top: 24px; }
+.hero.gh-page-header .hero-actions { margin-top: 24px; gap: 10px; }
+
+.hero .hero-slider { border: 1px solid var(--border); border-radius: 12px; background: var(--surface); overflow: hidden; box-shadow: none; }
+.hero .hs-copy { font-family: var(--sans); }
+.hero .hs-kicker { display: inline-flex; align-items: center; gap: 10px; color: var(--text-dim); font: 600 12px var(--sans);
+  letter-spacing: .04em; text-transform: none; }
+.hero .hs-name { color: var(--text); font: 600 18px / 1.3 var(--sans); letter-spacing: 0; }
+.hero .hs-niche { color: var(--text-faint); font: 500 14px var(--sans); }
+.hero .hs-bar { border-top: 1px solid var(--border); }
+.hero .hs-nav { width: 40px; height: 40px; border: 1px solid var(--border); border-radius: 8px; background: var(--surface-2); color: var(--text); }
+.hero .hs-nav:hover { border-color: var(--accent); color: var(--accent); }
+.hero .hs-dot { width: 8px; height: 8px; border-radius: 999px; background: var(--border-strong); border: 0; }
+.hero .hs-dot.is-active { width: 22px; background: var(--accent); }
+@media (max-width: 900px) { .hero.gh-page-header { gap: 24px; } }
+
+/* 2026-09-27: el demo de cada plugin entra completo en su caja (antes
+   object-fit:cover + anclaje arriba lo recortaba). Caja 16:9 = proporcion
+   de 4 de los 5 destacados; el resto queda con franjas finas, sin recorte. */
+.hero .hs-viewport { flex: none; min-height: 0; }
+.hero .hs-media { flex: none; aspect-ratio: 16 / 9; min-height: 0; background: var(--bg); }
+.hero .hs-slide img, .hero .hs-slide video { object-fit: contain; object-position: 50% 50%; }
+
+/* 2026-09-27: parte baja del hero mas compacta -- el slider toma su alto
+   natural (antes height:100% lo estiraba al alto de la columna de texto y
+   dejaba un hueco bajo los controles) y las cifras van en una fila de 4. */
+.hero .hero-slider { height: auto; align-self: center; }
+.hero.gh-page-header .hdr-stats { grid-template-columns: repeat(4, minmax(0, 1fr)); margin-top: 20px; }
+.hero .hdr-stat { padding: 12px 14px; }
+.hero .hdr-stat-num { font-size: 22px; }
+.hero .hdr-stat-label { font-size: 12.5px; line-height: 1.35; }
+.hero.gh-page-header .hero-actions { margin-top: 20px; }
+@media (max-width: 560px) { .hero.gh-page-header .hdr-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
+/* 2026-09-27 -- Barra de plataformas bajo el hero ("disponible en"; no es
+   patrocinio). Logos monocromos que toman color al pasar el mouse. */
+.plat-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 28px; margin: 24px 0 8px; padding: 16px 20px;
+  background: var(--surface); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); }
+.plat-label { flex: none; margin: 0; color: var(--text-faint); font: 700 12px var(--sans); letter-spacing: .1em; text-transform: uppercase; }
+.plat-logos { flex: 1 1 520px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.plat-item { display: flex; align-items: center; gap: 12px; min-width: 0; padding: 8px 16px; color: var(--text-dim); text-decoration: none;
+  border-radius: 10px; transition: background-color .15s ease, color .15s ease; }
+.plat-item + .plat-item { box-shadow: inset 1px 0 0 var(--border); border-radius: 0 10px 10px 0; }
+.plat-item:hover { background: var(--surface-2); color: var(--accent); }
+.plat-mark { display: inline-flex; align-items: center; justify-content: center; flex: none; width: 40px; height: 40px;
+  border-radius: 10px; background: var(--surface-2); color: var(--text); }
+.plat-item:hover .plat-mark { color: var(--accent); }
+.plat-mark svg { width: 22px; height: 22px; }
+.plat-text { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.plat-text strong { color: var(--text); font: 600 15px var(--sans); }
+.plat-text span { color: var(--text-faint); font-size: 13px; }
+@media (max-width: 900px) {
+  .plat-logos { grid-template-columns: 1fr; }
+  .plat-item + .plat-item { box-shadow: inset 0 1px 0 var(--border); border-radius: 0 0 10px 10px; }
+}
+@media (prefers-reduced-motion: reduce) { .plat-item { transition: none; } }

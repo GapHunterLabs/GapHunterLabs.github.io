@@ -34,7 +34,12 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from build_plugin_pages import Sources, PluginRenderer, esc, thousands, die  # noqa: E402
+from build_plugin_pages import Sources, PluginRenderer, esc, thousands, die, plain_text  # noqa: E402
+import json  # noqa: E402
+
+PRICE_LABEL = {"FREE": "Free", "FREEMIUM": "Freemium", "PAID": "Paid"}
+VS_ICON = ('<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z"/></svg>')
+
 
 ROOT = Path(__file__).resolve().parents[1]
 CATALOG_PAGE = ROOT / "catalog" / "index.html"
@@ -59,7 +64,7 @@ def plugin_count_text(n: int) -> str:
 def card_html(p, renderer: PluginRenderer, src: Sources) -> str:
     is_pending = p.get("downloads") is None
     cat = src.cat_by_key.get(p["categoryKey"], src.cat_by_key["other"])
-    color = src.cat_color[cat["key"]]
+    color = src.cat_var[cat["key"]]
     pr_cls, pr_text = renderer.pricing_label(p.get("pricing"), is_pending)
     search = (p["name"] + " " + (p.get("niche") or "") + " " + p["repo"]).lower()
 
@@ -83,22 +88,22 @@ def card_html(p, renderer: PluginRenderer, src: Sources) -> str:
     if p.get("firstPublished"):
         attrs.append('data-firstpublished="%s"' % esc(p["firstPublished"]))
 
-    metrics = (
-        '<span class="chip pending">Pending</span>' if is_pending else
-        '<span class="card-dl-wrap"><span class="dl-icon">%s</span>'
-        '<span class="card-dl">%s</span></span>'
-        '<span class="card-pricing %s">%s</span>' % (
-            src.icons["downloads"], thousands(p["downloads"]), pr_cls, esc(pr_text))
-    )
+    price_badge = ('<span class="price-badge price-pending">Pending</span>' if is_pending else
+                   '<span class="price-badge price-%s">%s</span>'
+                   % ((p.get("pricing") or "FREE").lower(), PRICE_LABEL.get(p.get("pricing"), esc(pr_text))))
+    downloads = ("Pending moderation" if is_pending else
+                 '<span class="dl-icon">%s</span><span class="card-dl">%s</span> downloads'
+                 % (src.icons["downloads"], thousands(p["downloads"])))
     return (
         '<a class="plugin-card" href="/catalog/%s/" aria-label="%s details" %s>'
         '<div class="card-header">'
-        '<span class="card-cat" style="--cat:%s" title="%s" aria-hidden="true">%s</span>'
-        '<div class="card-top"><div class="card-name">%s</div>'
-        '<div class="card-niche">%s</div></div></div>'
-        '<div class="card-metrics">%s</div></a>'
+        '<span class="card-cat" style="--cat:%s" title="%s" aria-hidden="true">%s</span>%s</div>'
+        '<div class="card-top"><div class="card-name">%s</div><div class="card-niche">%s</div></div>'
+        '<p class="card-pitch">%s</p>'
+        '<div class="card-metrics"><span class="card-dl-wrap">%s</span><span class="card-go">Details &rarr;</span></div></a>'
     ) % (esc(p["repo"]), esc(p["name"]), " ".join(attrs), color, esc(cat["label"]),
-         renderer.cat_icon_html(p["categoryKey"]), esc(p["name"]), esc(p.get("niche")), metrics)
+         renderer.cat_icon_html(p["categoryKey"]), price_badge, esc(p["name"]), esc(p.get("niche")),
+         esc(plain_text(p.get("pitch")) or ""), downloads)
 
 
 def table_row_html(p, renderer: PluginRenderer, src: Sources) -> str:
@@ -195,17 +200,14 @@ def build(dry_run: bool = False) -> None:
 
     total_downloads = src.data.get("totalDownloads", sum(p.get("downloads") or 0 for p in src.plugins))
     cat_count = len([c for c in src.categories if c["key"] != "other"])
-    stats_html = (
-        '<div class="cs-item"><span class="cs-icon" style="color:var(--accent)">%s</span>'
-        '<div><div class="cs-num">%d</div><div class="cs-label">Active plugins</div></div></div>'
-        '<div class="cs-item"><span class="cs-icon" style="color:var(--good)">%s</span>'
-        '<div><div class="cs-num">%s</div><div class="cs-label">Total downloads</div></div></div>'
-        '<div class="cs-item"><span class="cs-icon" style="color:var(--purple)">'
-        '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true">'
-        '<rect x="3" y="3" width="6" height="6" rx="1"/><rect x="11" y="3" width="6" height="6" rx="1"/>'
-        '<rect x="3" y="11" width="6" height="6" rx="1"/><rect x="11" y="11" width="6" height="6" rx="1"/>'
-        '</svg></span><div><div class="cs-num">%d</div><div class="cs-label">Categories</div></div></div>'
-    ) % (src.icons["plugins"], len(src.plugins), src.icons["downloads"], thousands(total_downloads), cat_count)
+    vsx_path = ROOT / "data" / "vscode-catalog-data.json"
+    vsx = json.loads(vsx_path.read_text(encoding="utf-8")).get("extensions", []) if vsx_path.exists() else []
+    n_paid = sum(1 for p in src.plugins if p.get("pricing") in ("FREEMIUM", "PAID"))
+    stats_html = "".join(
+        '<div class="hdr-stat"><span class="hdr-stat-num">%s</span><span class="hdr-stat-label">%s</span></div>' % (num, label)
+        for num, label in ((len(src.plugins), "JetBrains plugins"), (len(vsx), "VS Code extensions"),
+                           (thousands(total_downloads), "JetBrains downloads"), (n_paid, "Paid &amp; Pro plugins")))
+    _ = cat_count
 
     counts = {c["key"]: 0 for c in src.categories}
     for p in src.plugins:
@@ -223,8 +225,52 @@ def build(dry_run: bool = False) -> None:
     html = inject(html, "<!-- PRERENDER:CATOPTIONS:START -->", "<!-- PRERENDER:CATOPTIONS:END -->",
                   options_html, "CATOPTIONS")
     html = inject(html, "<!-- PRERENDER:GRID:START -->", "<!-- PRERENDER:GRID:END -->", grid_html, "GRID")
-    html = inject(html, "<!-- PRERENDER:TABLE:START -->", "<!-- PRERENDER:TABLE:END -->", table_html, "TABLE")
+    # 2026-09-27: la tabla ya no se pre-renderiza (duplicaba la grilla); la
+    # arma js/catalog.js desde las tarjetas. El marcador queda vacio.
+    _ = table_html
+    html = inject(html, "<!-- PRERENDER:TABLE:START -->", "<!-- PRERENDER:TABLE:END -->", "", "TABLE")
     html = update_category_board(html, src)
+
+    # ---- VS Code: tarjetas pre-renderizadas (mismo markup que js/catalog-vsx.js) --
+    def vsx_card(e):
+        # 2026-09-27: enlaza a la ficha propia (/catalog/vscode/<name>/); mismo
+        # markup que cardHtml() de js/catalog-vsx.js.
+        n = e.get("installs") or 0
+        return (
+            '<a class="vsx-card" href="/catalog/vscode/%s/" aria-label="%s details">'
+            '<div class="card-header"><span class="card-cat vsx-mark" aria-hidden="true">%s</span>'
+            '<span class="price-badge price-free">Free</span></div>'
+            '<div class="card-top"><div class="card-name">%s</div><div class="card-niche">%s</div></div>'
+            '<p class="card-pitch">%s</p>'
+            '<div class="card-metrics"><span class="card-dl-wrap">%s %s</span>'
+            '<span class="card-go">Details &rarr;</span></div></a>'
+            % (esc(e.get("name")), esc(e.get("displayName")), VS_ICON, esc(e.get("displayName")), esc(e.get("niche")),
+               esc(e.get("pitch")), thousands(n), "install" if n == 1 else "installs"))
+
+    html = inject(html, "<!-- PRERENDER:VSXSUB:START -->", "<!-- PRERENDER:VSXSUB:END -->",
+                  "%d extensions, built with the same evidence-driven approach and free on the VS Code Marketplace." % len(vsx),
+                  "VSXSUB")
+    html = inject(html, "<!-- PRERENDER:VSXGRID:START -->", "<!-- PRERENDER:VSXGRID:END -->",
+                  "".join(vsx_card(e) for e in vsx), "VSXGRID")
+    html = inject(html, "<!-- PRERENDER:TABJB:START -->", "<!-- PRERENDER:TABJB:END -->", str(len(src.plugins)), "TABJB")
+    html = inject(html, "<!-- PRERENDER:TABVSX:START -->", "<!-- PRERENDER:TABVSX:END -->", str(len(vsx)), "TABVSX")
+
+    # ---- hubs: data/hubs.json (la seccion no existe hasta el primer hub) ----
+    hubs_path = ROOT / "data" / "hubs.json"
+    hubs = json.loads(hubs_path.read_text(encoding="utf-8")) if hubs_path.exists() else []
+    hubs_html = ""
+    if hubs:
+        hubs_html = (
+            '<section class="catalog-hubs" id="hubs" aria-labelledby="hubsTitle"><div class="cv-head"><div>'
+            '<p class="cv-eyebrow">Plugin hubs</p><h2 id="hubsTitle">One install for a whole tool family</h2></div></div>'
+            '<div class="svc-grid">%s</div></section>' % "".join(
+                '<article class="svc-card"><p class="svc-kicker">%d plugins &middot; %s</p><h3>%s</h3><p>%s</p>'
+                '<div class="svc-actions"><a class="btn primary" href="%s" target="_blank" rel="noopener" '
+                'data-goatcounter-click="out-hub-%s">Get the hub &#8599;</a></div></article>'
+                % (len(h.get("plugins", [])), PRICE_LABEL.get(h.get("pricing", "PAID"), "Paid"), esc(h["name"]),
+                   esc(h.get("pitch")), esc(h["marketplaceUrl"]), esc(h["slug"]))
+                for h in hubs))
+    html = inject(html, "<!-- PRERENDER:CATHUBS:START -->", "<!-- PRERENDER:CATHUBS:END -->", hubs_html, "CATHUBS")
 
     if dry_run:
         print("[dry-run] %d tarjetas, %d filas, %d opciones de categoria -- nada escrito"
@@ -232,8 +278,7 @@ def build(dry_run: bool = False) -> None:
         return
 
     CATALOG_PAGE.write_text(html, encoding="utf-8")
-    print("[build_catalog_grid] catalog/index.html: %d tarjetas + %d filas pre-renderizadas"
-          % (len(rows), len(rows)))
+    print("[build_catalog_grid] catalog/index.html: %d tarjetas pre-renderizadas (la tabla la arma catalog.js)" % len(rows))
 
 
 def main():

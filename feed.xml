@@ -1,0 +1,331 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+<channel>
+<title>Gap Hunter Labs — new plugins</title>
+<link>https://gaphunterlabs.github.io/</link>
+<atom:link href="https://gaphunterlabs.github.io/feed.xml" rel="self" type="application/rss+xml"/>
+<description>New JetBrains plugins and VS Code extensions from Gap Hunter Labs, each built for a documented gap in developer tooling.</description>
+<language>en</language>
+<lastBuildDate>Fri, 11 Sep 2026 00:00:00 +0000</lastBuildDate>
+<item>
+<title>Postman OpenAPI Drift Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/vscode/postman-openapi-drift-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/vscode/postman-openapi-drift-companion/</guid>
+<pubDate>Fri, 11 Sep 2026 00:00:00 +0000</pubDate>
+<category>VS Code extension · OpenAPI/Swagger Tooling</category>
+<description>Warns when a Postman collection endpoint's method+path no longer exists in the project's OpenAPI/Swagger spec.</description>
+</item>
+<item>
+<title>PHP Composer Script Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/vscode/php-composer-script-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/vscode/php-composer-script-companion/</guid>
+<pubDate>Fri, 11 Sep 2026 00:00:00 +0000</pubDate>
+<category>VS Code extension · PHP Tooling</category>
+<description>Flags an orphan composer.json script -- never called from itself, CI configs, or README.md.</description>
+</item>
+<item>
+<title>Log Format String Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/vscode/log-format-string-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/vscode/log-format-string-companion/</guid>
+<pubDate>Fri, 11 Sep 2026 00:00:00 +0000</pubDate>
+<category>VS Code extension · Code Quality / Logging</category>
+<description>Flags a log call whose placeholder count doesn't match its argument count -- SLF4J {} and Python %-style format strings.</description>
+</item>
+<item>
+<title>Semver Bump Mismatch Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/vscode/semver-bump-mismatch-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/vscode/semver-bump-mismatch-companion/</guid>
+<pubDate>Thu, 10 Sep 2026 00:00:00 +0000</pubDate>
+<category>VS Code extension · VCS / Git Workflow</category>
+<description>Flags a CHANGELOG.md release that reads as a breaking change but didn't bump MAJOR.</description>
+</item>
+<item>
+<title>SQL Concatenation Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/vscode/sql-concatenation-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/vscode/sql-concatenation-companion/</guid>
+<pubDate>Thu, 10 Sep 2026 00:00:00 +0000</pubDate>
+<category>VS Code extension · SQL Injection Detection</category>
+<description>Finds SQL built by unparameterized string concatenation or interpolation, then executed, across Java/Kotlin/Python.</description>
+</item>
+<item>
+<title>Ruby Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/vscode/ruby-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/vscode/ruby-companion/</guid>
+<pubDate>Thu, 10 Sep 2026 00:00:00 +0000</pubDate>
+<category>VS Code extension · Ruby Tooling</category>
+<description>3 turnkey Ruby checks in one extension: shell injection, Net::HTTP reuse in a loop, and ungrouped dev/test gems in Gemfile.</description>
+</item>
+<item>
+<title>PHP Security Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/vscode/php-security-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/vscode/php-security-companion/</guid>
+<pubDate>Thu, 10 Sep 2026 00:00:00 +0000</pubDate>
+<category>VS Code extension · PHP Security</category>
+<description>5 turnkey PHP injection-sink checks in one extension: SQL, shell, file inclusion, function injection, and open redirect.</description>
+</item>
+<item>
+<title>Merge Conflict Leftover Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/vscode/merge-conflict-leftover-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/vscode/merge-conflict-leftover-companion/</guid>
+<pubDate>Thu, 10 Sep 2026 00:00:00 +0000</pubDate>
+<category>VS Code extension · VCS / Git Workflow</category>
+<description>Finds leftover Git conflict markers (&lt;&lt;&lt;&lt;&lt;&lt;&lt;, =======, &gt;&gt;&gt;&gt;&gt;&gt;&gt;) accidentally committed in any file.</description>
+</item>
+<item>
+<title>Circular Dependency Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/vscode/circular-dependency-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/vscode/circular-dependency-companion/</guid>
+<pubDate>Thu, 10 Sep 2026 00:00:00 +0000</pubDate>
+<category>VS Code extension · Build Tooling / Architecture</category>
+<description>Flags real circular dependencies between modules of a multi-module Gradle project -- 100% static text parsing, no Gradle daemon.</description>
+</item>
+<item>
+<title>Cert Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/vscode/cert-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/vscode/cert-companion/</guid>
+<pubDate>Thu, 10 Sep 2026 00:00:00 +0000</pubDate>
+<category>VS Code extension · Certificates / X.509</category>
+<description>Decodes X.509 certificates (PEM/CRT/CER/DER) inline -- subject, issuer, validity, fingerprint, right in the editor.</description>
+</item>
+<item>
+<title>Wrangler Config Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/vscode/wrangler-config-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/vscode/wrangler-config-companion/</guid>
+<pubDate>Wed, 09 Sep 2026 00:00:00 +0000</pubDate>
+<category>VS Code extension · Cloudflare / DevOps</category>
+<description>Validates wrangler.toml -- required fields (name/main/compatibility_date), and missing bindings.</description>
+</item>
+<item>
+<title>Unleash Flag Usage Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/vscode/unleash-flag-usage-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/vscode/unleash-flag-usage-companion/</guid>
+<pubDate>Wed, 09 Sep 2026 00:00:00 +0000</pubDate>
+<category>VS Code extension · Feature Flag Tooling</category>
+<description>Inventories Unleash feature flag usage across your codebase -- naming check, find-all-usages, stale-flag detection.</description>
+</item>
+<item>
+<title>Turborepo Graph Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/vscode/turborepo-graph-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/vscode/turborepo-graph-companion/</guid>
+<pubDate>Wed, 09 Sep 2026 00:00:00 +0000</pubDate>
+<category>VS Code extension · Build Tooling / Architecture</category>
+<description>Shows your Turborepo workspace dependency graph as a sidebar tree -- parses turbo.json + package.json workspaces.</description>
+</item>
+<item>
+<title>MLflow Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/vscode/mlflow-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/vscode/mlflow-companion/</guid>
+<pubDate>Wed, 09 Sep 2026 00:00:00 +0000</pubDate>
+<category>VS Code extension · ML / Data Tooling</category>
+<description>Browses local MLflow tracking-store runs (params, metrics, tags) in a sidebar tree, reading the store directly.</description>
+</item>
+<item>
+<title>Flaky Test History Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/vscode/flaky-test-history-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/vscode/flaky-test-history-companion/</guid>
+<pubDate>Wed, 09 Sep 2026 00:00:00 +0000</pubDate>
+<category>VS Code extension · Testing Tooling</category>
+<description>Tracks pass/fail history per test across JUnit XML report runs and flags tests with mixed outcomes.</description>
+</item>
+<item>
+<title>Embedded Stack Usage Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/vscode/embedded-stack-usage-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/vscode/embedded-stack-usage-companion/</guid>
+<pubDate>Wed, 09 Sep 2026 00:00:00 +0000</pubDate>
+<category>VS Code extension · Embedded / C Tooling</category>
+<description>Parses GCC .su stack-usage files (-fstack-usage) and flags any function over a configurable stack budget.</description>
+</item>
+<item>
+<title>Config Secrets File Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/vscode/config-secrets-file-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/vscode/config-secrets-file-companion/</guid>
+<pubDate>Wed, 09 Sep 2026 00:00:00 +0000</pubDate>
+<category>VS Code extension · Secrets Detection</category>
+<description>Flags a hardcoded secret (AWS key, GitHub/Slack token, JWT, PEM key, or high-entropy value) in config and env files.</description>
+</item>
+<item>
+<title>Typosquat Dependency Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/vscode/typosquat-dependency-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/vscode/typosquat-dependency-companion/</guid>
+<pubDate>Tue, 08 Sep 2026 00:00:00 +0000</pubDate>
+<category>VS Code extension · Supply Chain Security</category>
+<description>Flags a package.json dependency whose name is a near-miss (edit distance 1-2) of a much more popular package.</description>
+</item>
+<item>
+<title>Prometheus Alert Rule Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/vscode/prometheus-alert-rule-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/vscode/prometheus-alert-rule-companion/</guid>
+<pubDate>Tue, 08 Sep 2026 00:00:00 +0000</pubDate>
+<category>VS Code extension · Observability Tooling</category>
+<description>Lints Prometheus alert rule YAML -- duplicate alert names, missing 'for', missing annotations.</description>
+</item>
+<item>
+<title>OAuth2/OIDC Flow Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/vscode/oauth2-oidc-flow-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/vscode/oauth2-oidc-flow-companion/</guid>
+<pubDate>Tue, 08 Sep 2026 00:00:00 +0000</pubDate>
+<category>VS Code extension · JWT / Auth Tooling</category>
+<description>Builds and decodes OAuth2 authorization-code+PKCE URLs -- generates code_verifier/challenge pairs and decodes callback params.</description>
+</item>
+<item>
+<title>Node Version Drift Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/vscode/node-version-drift-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/vscode/node-version-drift-companion/</guid>
+<pubDate>Tue, 08 Sep 2026 00:00:00 +0000</pubDate>
+<category>VS Code extension · Node.js / npm Tooling</category>
+<description>Flags when .nvmrc/.node-version/package.json engines.node/Dockerfile/CI disagree on the Node.js version.</description>
+</item>
+<item>
+<title>N+1 Query Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/vscode/n-plus-one-query-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/vscode/n-plus-one-query-companion/</guid>
+<pubDate>Tue, 08 Sep 2026 00:00:00 +0000</pubDate>
+<category>VS Code extension · ORM / Query Tooling</category>
+<description>Flags a TypeORM/Sequelize/Drizzle find/query call inside a loop -- the classic N+1 query pattern.</description>
+</item>
+<item>
+<title>Dependency License Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/vscode/dependency-license-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/vscode/dependency-license-companion/</guid>
+<pubDate>Tue, 08 Sep 2026 00:00:00 +0000</pubDate>
+<category>VS Code extension · License Compliance</category>
+<description>Reads each node_modules dependency's SPDX license locally and flags copyleft or missing licenses.</description>
+</item>
+<item>
+<title>CODEOWNERS Validator Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/vscode/codeowners-validator-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/vscode/codeowners-validator-companion/</guid>
+<pubDate>Tue, 08 Sep 2026 00:00:00 +0000</pubDate>
+<category>VS Code extension · VCS / Git Workflow</category>
+<description>Validates a CODEOWNERS file -- duplicated patterns, unmatched patterns, invalid owners, syntax errors.</description>
+</item>
+<item>
+<title>Webhook Signature Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/vscode/webhook-signature-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/vscode/webhook-signature-companion/</guid>
+<pubDate>Mon, 07 Sep 2026 00:00:00 +0000</pubDate>
+<category>VS Code extension · API Security</category>
+<description>Computes and verifies HMAC webhook signatures (GitHub/generic sha1/sha256/sha512) against a payload and secret.</description>
+</item>
+<item>
+<title>Unreal UHT Macro Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/vscode/unreal-uht-macro-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/vscode/unreal-uht-macro-companion/</guid>
+<pubDate>Mon, 07 Sep 2026 00:00:00 +0000</pubDate>
+<category>VS Code extension · Game Dev / Unreal</category>
+<description>Flags common UnrealHeaderTool macro mistakes in C++ headers: missing .generated.h include and related UPROPERTY/UFUNCTION issues.</description>
+</item>
+<item>
+<title>Pact Contract Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/vscode/pact-contract-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/vscode/pact-contract-companion/</guid>
+<pubDate>Mon, 07 Sep 2026 00:00:00 +0000</pubDate>
+<category>VS Code extension · API Contract Testing</category>
+<description>Lists consumer-provider Pact contract files in your workspace and flags interactions with no matching provider state.</description>
+</item>
+<item>
+<title>JWT Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/vscode/jwt-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/vscode/jwt-companion/</guid>
+<pubDate>Mon, 07 Sep 2026 00:00:00 +0000</pubDate>
+<category>VS Code extension · JWT / Auth Tooling</category>
+<description>Decode and inspect JSON Web Tokens on hover or via command -- no data leaves your editor.</description>
+</item>
+<item>
+<title>Info.plist Usage Description Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/vscode/infoplist-usage-description-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/vscode/infoplist-usage-description-companion/</guid>
+<pubDate>Mon, 07 Sep 2026 00:00:00 +0000</pubDate>
+<category>VS Code extension · iOS / Mobile</category>
+<description>Cross-checks Swift/Objective-C imports (CoreLocation, Contacts, Photos, etc.) against required Info.plist usage-description keys.</description>
+</item>
+<item>
+<title>Cargo Audit Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/vscode/cargo-audit-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/vscode/cargo-audit-companion/</guid>
+<pubDate>Mon, 07 Sep 2026 00:00:00 +0000</pubDate>
+<category>VS Code extension · Rust Tooling</category>
+<description>Wraps cargo audit --json as inline VS Code diagnostics on Cargo.toml -- RustSec advisories at the exact dependency line.</description>
+</item>
+<item>
+<title>Android Unused Permission Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/vscode/android-unused-permission-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/vscode/android-unused-permission-companion/</guid>
+<pubDate>Mon, 07 Sep 2026 00:00:00 +0000</pubDate>
+<category>VS Code extension · Android / Mobile</category>
+<description>Flags a permission declared in AndroidManifest.xml that no Kotlin/Java source actually uses.</description>
+</item>
+<item>
+<title>gRPC Missing Deadline Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/grpc-missing-deadline-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/grpc-missing-deadline-companion/</guid>
+<pubDate>Wed, 02 Sep 2026 00:00:00 +0000</pubDate>
+<category>JetBrains plugin · API</category>
+<description>Warning on an RPC call made through a generated gRPC blocking stub (XxxGrpc.newBlockingStub(channel)....call(request)) whose stub-construction chain never passes through .withDeadline(...)/.withDeadlineAfter(...).</description>
+</item>
+<item>
+<title>Unsafe Deserialization Sink Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/unsafe-deserialization-sink-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/unsafe-deserialization-sink-companion/</guid>
+<pubDate>Wed, 02 Sep 2026 00:00:00 +0000</pubDate>
+<category>JetBrains plugin · Security</category>
+<description>Warning on a new ObjectInputStream(...).readObject() call inside a Spring MVC/JAX-RS endpoint method whose constructor argument traces back (within the same method, one direct hop) to an untrusted parameter -- CWE-502, Deserialization of Untrusted Data.</description>
+</item>
+<item>
+<title>Terraform IAM Wildcard Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/terraform-iam-wildcard-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/terraform-iam-wildcard-companion/</guid>
+<pubDate>Wed, 02 Sep 2026 00:00:00 +0000</pubDate>
+<category>JetBrains plugin · Security</category>
+<description>Warning on an IAM policy statement (inside a Terraform aws_iam_policy/aws_iam_role_policy resource's jsonencode({...}) block) whose Action or Resource is "*" with no Condition scoping it down.</description>
+</item>
+<item>
+<title>SSRF via Unsanitized URL Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/ssrf-unsanitized-url-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/ssrf-unsanitized-url-companion/</guid>
+<pubDate>Wed, 02 Sep 2026 00:00:00 +0000</pubDate>
+<category>JetBrains plugin · Security</category>
+<description>Warning on an HTTP call (HttpRequest.newBuilder(...)/Spring RestTemplate/OkHttp's Request.Builder) whose URL/host argument traces back (within the same method, one direct hop) to an untrusted Spring MVC/JAX-RS controller parameter, with no allowlist validation found in the same method -- CWE-918, Server-Side Request Forgery.</description>
+</item>
+<item>
+<title>Retry Without Backoff+Jitter Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/retry-backoff-jitter-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/retry-backoff-jitter-companion/</guid>
+<pubDate>Wed, 02 Sep 2026 00:00:00 +0000</pubDate>
+<category>JetBrains plugin · DevOps</category>
+<description>Warning on a retry mechanism with a FIXED interval between attempts instead of exponential backoff + jitter: a manual for/while retry loop that Thread.sleep(constant)s in its catch, Spring @Retryable with no real exponential @Backoff, or Resilience4j's RetryConfig built with a fixed .waitDuration(...) and no .intervalFunction(...).</description>
+</item>
+<item>
+<title>Redis/Redisson Distributed Lock Missing TTL Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/redis-lock-missing-ttl-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/redis-lock-missing-ttl-companion/</guid>
+<pubDate>Wed, 02 Sep 2026 00:00:00 +0000</pubDate>
+<category>JetBrains plugin · Code Quality</category>
+<description>Warning on a SET ... NX call (Jedis's SetParams.nx()/Lettuce's SetArgs.Builder.nx() manual distributed-lock pattern) with no EX/PX expiry chained onto the same builder.</description>
+</item>
+<item>
+<title>ReDoS Catastrophic-Backtracking Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/redos-catastrophic-backtracking-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/redos-catastrophic-backtracking-companion/</guid>
+<pubDate>Wed, 02 Sep 2026 00:00:00 +0000</pubDate>
+<category>JetBrains plugin · Security</category>
+<description>Warning on a Pattern.compile("...")/"...".matches("...") call in Java whose literal regex argument has a structural catastrophic-backtracking pattern: a nested unbounded quantifier ((a+)+), or an unbounded-quantified alternation with overlapping branches ((a|a)*). A single crafted input against either pattern can hang a server thread indefinitely.</description>
+</item>
+<item>
+<title>PII via toString() Leak Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/pii-tostring-leak-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/pii-tostring-leak-companion/</guid>
+<pubDate>Wed, 02 Sep 2026 00:00:00 +0000</pubDate>
+<category>JetBrains plugin · Security</category>
+<description>Warning on a logging/print call passed an instance of a class whose toString() exposes a PII field (email, SSN, phone, date of birth, credit card...) -- toString() on a user object often serializes the whole model, unlike log.info(user.getEmail()) which explicitly picks only what should be logged.</description>
+</item>
+<item>
+<title>Module Boundary Leak Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/module-boundary-leak-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/module-boundary-leak-companion/</guid>
+<pubDate>Wed, 02 Sep 2026 00:00:00 +0000</pubDate>
+<category>JetBrains plugin · DevOps</category>
+<description>Warning on an import of an internal package (project convention: a .internal. segment in the package path) from a DIFFERENT Gradle/Maven module than the one that declares it -- hidden architecture coupling that, in large monorepos/microservices, precedes cascading-deployment incidents.</description>
+</item>
+</channel>
+</rss>

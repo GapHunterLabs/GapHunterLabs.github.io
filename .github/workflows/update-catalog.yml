@@ -99,6 +99,21 @@ jobs:
       - name: Build per-plugin pages
         run: python pipeline/build_plugin_pages.py --sitemap --inject
 
+      # 2026-09-27: feed RSS de lanzamientos y version en espanol (/es/), que
+      # se genera desde las paginas inglesas ya construidas (asi las cifras
+      # nuevas llegan solas). Sin --strict: si falta una traduccion, esa
+      # frase queda en ingles y el paso avisa, sin frenar la actualizacion.
+      - name: Build RSS feed
+        run: python pipeline/build_feed.py
+
+      - name: Build Spanish pages
+        run: python pipeline/build_i18n.py
+
+      # 2026-09-27: ?v=<hash de contenido> en cada /css y /js -- GitHub Pages
+      # cachea 10 min (max-age=600); asi HTML nuevo nunca usa CSS viejo.
+      - name: Version CSS/JS references (cache busting)
+        run: python pipeline/version_assets.py
+
       - name: Verify SEO guardrails (per-plugin pages, sitemap, hash shim)
         run: python _review/verify_seo.py
 
@@ -160,7 +175,7 @@ jobs:
           TRACKED="data/catalog-data.json catalog/index.html catalog/*/index.html \
             css/plugin.css js/slug-shim.js index.html catalog.html sitemap.xml \
             _review/plugin_lastmod.json pipeline/catalog_daily_history.json \
-            pipeline/catalog_latest_data.json"
+            pipeline/catalog_latest_data.json catalog/vscode/*/index.html es feed.xml"
           if git diff --quiet -- $TRACKED; then
             echo "sin cambios reales en los datos, no se commitea nada"
             exit 0

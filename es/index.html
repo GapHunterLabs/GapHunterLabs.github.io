@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="/js/theme-init.js?v=d220b9f1"></script>
+<script src="/js/site-chrome.js?v=d59cb458" defer></script>
+<script src="/js/slug-shim.js?v=1e1358ac" defer></script>
+<!-- Trimmed 2026-08-23 (indexing audit): was 218 chars, well past
+     Google's ~155-160 char truncation point -- everything past
+     roughly "...ships focused IntelliJ-family..." was invisible in
+     search results either way, wasted on copy that never showed. New
+     version (152 chars) front-loads the actual target-query keywords
+     (JetBrains/IntelliJ plugin) instead of leading with the brand
+     name, since this domain has ~zero existing search equity to trade
+     on a brand-first opener. -->
+<meta name="description" content="Plugins enfocados para JetBrains y VS Code, creados para brechas documentadas en herramientas de desarrollo, y reglas de análisis estático e integración en CI/CD a medida del fundador Joel Diaz.">
+<!-- Locked down deliberately, not a boilerplate copy-paste: this page is
+     100% inline HTML/CSS/JS (no build step, no external script/style
+     host; fonts are self-hosted under fonts/, SIL OFL) plus one live
+     catalog JSON file built from JetBrains Marketplace + GitHub API
+     responses. That data is the actual untrusted-input surface on
+     this page (see esc()/safeUrl() below for the render-time half of this
+     defense) -- since 2026-09-24 script-src is 'self' + GoatCounter only:
+     every page script lives in /js/*.js, no 'unsafe-inline' (the
+     'inline-speculation-rules' keyword is what lets the speculation-rules
+     JSON block keep working). style-src still
+     needs 'unsafe-inline' for the style="" attributes (~300 on the catalog
+     page), which can't be allow-listed by hash without 'unsafe-hashes';
+     never relaxed for a CDN;
+     object-src/base-uri/form-action are locked to 'none' since this page
+     never embeds plugins or submits forms; img-src allows only this origin and
+     data: (the inline SVG favicon/icons) -- Fase 3 (2026-09-23) dropped
+     raw.githubusercontent.com (the demo GIFs it served now live as
+     video/webp under /media/ in this same repo, see DEMO_MEDIA in
+     js/catalog-shared.js), so img-src no longer needs an external host
+     at all. media-src 'self' added the same day for the <video>
+     elements those demos became -- without it, video falls back to
+     default-src '''none''' and is blocked outright. manifest-src 'self'
+     added 2026-08-21 alongside manifest.json -- without an explicit
+     manifest-src, that fetch falls back to default-src 'none' and the
+     manifest link silently fails to load.
+
+     script-src https://gc.zgo.at + connect-src
+     https://gaphunterlabs.goatcounter.com added 2026-08-21, the first
+     ever relaxation of this CSP for a real third-party service --
+     GoatCounter, powering the "Visitors today" stat (a static-site
+     visit counter is impossible without SOME external service to
+     persist a cross-visitor number; the mp-widget.js install-button
+     option from JetBrains was explicitly turned down for the exact
+     same class of trade-off, this is the one case the user actually
+     approved it for). Scoped as tight as GoatCounter allows: only its
+     script CDN + this account's own subdomain, never a wildcard. -->
+
+<!-- Two known no-ops, kept anyway and documented rather than silently
+     wrong, found in a 2026-08-23 audit:
+     1) `frame-ancestors` inside a meta-delivered CSP is explicitly
+        excluded by the CSP3 spec -- it is only honored as a real HTTP
+        response header, which GitHub Pages doesn't let this site send.
+        It provides ZERO clickjacking protection here despite sitting
+        in an otherwise fully-functional CSP.
+     2) X-Content-Type-Options is not one of the handful of pragmas
+        browsers support via <meta http-equiv> (only content-type,
+        default-style, refresh, x-ua-compatible, and CSP itself are).
+        This tag is silently ignored by every browser; it provides no
+        real MIME-sniffing protection.
+     Both are left in place (harmless, and correct if this site is ever
+     served from something other than GitHub Pages' static hosting with
+     real response headers) but should not be read as active defenses
+     today. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://gc.zgo.at 'inline-speculation-rules'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; media-src 'self'; manifest-src 'self'; connect-src 'self' https://gaphunterlabs.goatcounter.com; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="X-Content-Type-Options" content="nosniff">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://gaphunterlabs.github.io/es/">
+<!-- HREFLANG:START -->
+<link rel="alternate" hreflang="en" href="https://gaphunterlabs.github.io/">
+<link rel="alternate" hreflang="es" href="https://gaphunterlabs.github.io/es/">
+<link rel="alternate" hreflang="x-default" href="https://gaphunterlabs.github.io/">
+<link rel="alternate" type="application/rss+xml" title="Gap Hunter Labs — nuevos plugins" href="/feed.xml">
+<!-- HREFLANG:END -->
+<!-- Added 2026-08-21: apple-touch-icon.png (180x180, same brand mark,
+     PNG since Apple's homescreen-icon spec doesn't accept SVG) -- without
+     this, adding the page to an iOS/Android homescreen fell back to a
+     generic screenshot thumbnail instead of the real mark. theme-color
+     tints the mobile browser's own address bar/status bar to match the
+     page instead of leaving it at the browser's default color.
+     Background note (2026-08-23, audit finding): unlike the favicon SVG
+     just below (explicitly white, so the mark stays legible in light
+     theme / on the Marketplace card), this asset uses the site's own
+     dark --bg. That's intentional here, not an oversight: iOS applies
+     its own rounded-corner mask and sits the icon among a user's other
+     (mostly colorful/opaque) home-screen icons, where a dark tile
+     matching this brand's actual dark theme reads as more "this app's
+     real look" than a white square would -- the favicon's white
+     background solves a different problem (legibility in a tiny
+     browser tab that can be either theme) that doesn't apply here. -->
+<!-- icon-192.png / icon-512.png (added 2026-08-23) are the same mark
+     resized from this file for Chrome/Android's install-prompt icon
+     size preferences (manifest.json). -->
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<meta name="theme-color" content="#0B1B34">
+<link rel="manifest" href="/manifest.json">
+<link rel="preload" href="/fonts/IBMPlexSans-Latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/JetBrainsMono-Latin.woff2" as="font" type="font/woff2" crossorigin>
+<!-- Same reasoning, added alongside the GoatCounter visitor counter --
+     count.js loads async on every real page load (not lazily like the
+     GitHub images above), so this connection happens immediately. -->
+<link rel="preconnect" href="https://gc.zgo.at">
+<link rel="preconnect" href="https://gaphunterlabs.goatcounter.com">
+<!-- Widened 2026-08-23 (indexing audit): was 100% brand, 0% descriptive
+     keyword -- on a domain with essentially no existing search equity,
+     a brand-only title makes it harder to surface for the actual
+     non-branded queries this catalog serves ("jetbrains plugin",
+     "intellij plugin catalog", etc). Still well under the ~60-char
+     display budget. document.title still overrides this dynamically
+     per-dossier (see updateDocumentTitle() in the script) -- this is
+     only the base/fallback value a crawler or a fresh tab sees. -->
+<title>Gap Hunter Labs — Plugins para JetBrains y VS Code y herramientas a medida</title>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+
+<!-- Open Graph + Twitter Card, added 2026-08-21: this page had zero
+     social-preview metadata before -- sharing the link in Slack/
+     Discord/LinkedIn/X rendered as a bare URL with no title, blurb, or
+     image. og-image.png is a deliberately timeless static asset (no
+     live catalog numbers baked in) so it never needs regenerating by
+     the twice-daily refresh workflow; the description text below
+     mirrors the existing <meta name="description"> above so there's
+     one source of truth for "what is this page" copy, not two that
+     can drift apart. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Gap Hunter Labs">
+<meta property="og:url" content="https://gaphunterlabs.github.io/es/">
+<meta property="og:title" content="Gap Hunter Labs — Plugins para JetBrains y VS Code y herramientas a medida">
+<meta property="og:description" content="Plugins enfocados para JetBrains y VS Code, creados para brechas documentadas en herramientas de desarrollo, y reglas de análisis estático e integración en CI/CD a medida del fundador Joel Diaz.">
+<meta property="og:image" content="https://gaphunterlabs.github.io/og-image.png">
+<!-- og:image:secure_url + og:image:type added 2026-08-23: some
+     crawlers (WhatsApp's included, per their own scraper docs) prefer
+     an explicit secure_url alongside og:image even when they're
+     identical (this page is HTTPS-only already), and without an
+     explicit image:type some clients have to sniff the MIME type
+     themselves before rendering a preview -- a needless extra step
+     that can silently fail on a stricter client. og:locale declares
+     the page's real language explicitly rather than leaving it
+     unstated. -->
+<meta property="og:image:secure_url" content="https://gaphunterlabs.github.io/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Gap Hunter Labs — Informe del catálogo Plugin Intelligence">
+<meta property="og:locale" content="es_ES">
+<meta property="og:locale:alternate" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@GapHunterLabs">
+<meta name="twitter:title" content="Gap Hunter Labs — Plugins para JetBrains y VS Code y herramientas a medida">
+<meta name="twitter:description" content="Plugins enfocados para JetBrains y VS Code, creados para brechas documentadas en herramientas de desarrollo, y reglas de análisis estático e integración en CI/CD a medida del fundador Joel Diaz.">
+<meta name="twitter:image" content="https://gaphunterlabs.github.io/og-image.png">
+<!-- twitter:image:alt added 2026-08-23 -- Twitter/X reads its own
+     separate alt for the card image rather than falling back to
+     og:image:alt, which had no Twitter-specific equivalent before this. -->
+<meta name="twitter:image:alt" content="Gap Hunter Labs — Informe del catálogo Plugin Intelligence">
+
+<!-- Home-page organization and website metadata. The full generated
+     plugin listing and its structured data live on catalog.html. -->
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","@id":"https://gaphunterlabs.github.io/#website","url":"https://gaphunterlabs.github.io/","name":"Gap Hunter Labs","alternateName":"Gap Hunter Labs Plugin Catalog","inLanguage":"en","publisher":{"@id":"https://gaphunterlabs.github.io/#org"}}</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://gaphunterlabs.github.io/#org",
+      "name": "Gap Hunter Labs",
+      "url": "https://gaphunterlabs.github.io/",
+      "email": "gaphunterlabs@gmail.com",
+      "description": "Gap Hunter Labs builds focused JetBrains and VS Code plugins for documented gaps in developer tooling, and offers custom static-analysis rules, CI/CD integration and private plugin distribution.",
+      "logo": "https://gaphunterlabs.github.io/icon-512.png",
+      "founder": {
+        "@id": "https://gaphunterlabs.github.io/#joel"
+      },
+      "sameAs": [
+        "https://github.com/GapHunterLabs",
+        "https://plugins.jetbrains.com/vendor/gap-hunter-labs",
+        "https://marketplace.visualstudio.com/publishers/GapHunterLabs",
+        "https://x.com/GapHunterLabs"
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Custom developer tooling services",
+        "itemListElement": [
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Custom static-analysis rules"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "CI/CD integration of code checks"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Private plugin distribution"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://gaphunterlabs.github.io/#joel",
+      "name": "Joel Diaz",
+      "jobTitle": "Founder",
+      "worksFor": {
+        "@id": "https://gaphunterlabs.github.io/#org"
+      },
+      "url": "https://gaphunterlabs.github.io/#work-with-joel",
+      "sameAs": [
+        "https://www.linkedin.com/in/joel-diaz-82687b428/?locale=en"
+      ]
+    }
+  ]
+}
+</script>
+<link rel="stylesheet" href="/css/theme.css?v=9272a196">
+<link rel="stylesheet" href="/css/home.css?v=f2f08e4f">
+<link rel="stylesheet" href="/css/shell.css?v=7e5b2d2a">
+</head>
+<body>
+<!-- Fase 2 (2026-09-22): sin loader -- hero, stats, categorias y
+     slider de abajo llegan ya pre-renderizados en este HTML. -->
+<div class="app-shell">
+<!-- CHROME:HEADER:START -->
+<header class="gh-header" id="topbar">
+  <div class="gh-header-inner">
+    <a class="gh-brand" href="/es/" aria-label="Inicio de Gap Hunter Labs"><svg class="gh-logo" viewBox="0 0 1024 1024" aria-hidden="true"><path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#0151FC"/><path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z" fill="#01B3FD"/><polygon points="569,413 695,413 695,539 569,539" fill="#02F172"/></svg><span class="gh-brand-name">Gap Hunter Labs</span></a>
+    <nav class="gh-nav" id="siteNav" aria-label="Principal"><a class="gh-nav-link" href="/es/catalogo/">Catálogo</a><div class="gh-menu gh-nav-group"><button type="button" class="gh-nav-link gh-nav-toggle" data-menu-toggle aria-expanded="false">Ingeniería y evidencia<svg class="gh-chevron" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 8l4 4 4-4"/></svg></button><div class="gh-pop gh-pop-wide" data-menu hidden><a class="gh-pop-link" href="/es/ingenieria-y-evidencia/"><strong>Resumen</strong><span>Qué cubre esta sección</span></a><a class="gh-pop-link" href="/es/ingenieria-y-evidencia/casos-de-estudio/"><strong>Casos de estudio</strong><span>Los plugins con la evidencia más sólida</span></a><a class="gh-pop-link" href="/es/ingenieria-y-evidencia/tickets-jetbrains-platform/"><strong>Tickets de JetBrains Platform</strong><span>Reportes de causa raíz en el tracker de IntelliJ Platform</span></a></div></div><a class="gh-nav-link" href="/es/metodologia/">Metodología</a><a class="gh-nav-link" href="/es/contacto/">Contacto</a><a class="btn primary gh-nav-cta" href="/es/#work-with-joel" data-goatcounter-click="cta-nav-hire-mobile">Trabaja con Joel</a></nav>
+    <div class="gh-tools">
+      <!-- LANG:START --><div class="gh-menu gh-lang"><button type="button" class="gh-icon-btn gh-lang-btn" data-menu-toggle aria-expanded="false" aria-label="Idioma"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5"/><path d="M2.5 10h15M10 2.5c2.2 2.3 3.2 4.8 3.2 7.5s-1 5.2-3.2 7.5c-2.2-2.3-3.2-4.8-3.2-7.5s1-5.2 3.2-7.5z"/></svg><span class="gh-lang-code">ES</span></button><div class="gh-pop" data-menu hidden role="group" aria-label="Idioma"><a class="gh-pop-item" href="/" hreflang="en" lang="en">English</a><a class="gh-pop-item" href="/es/" hreflang="es" lang="es" aria-current="true">Espa&ntilde;ol</a></div></div><!-- LANG:END -->
+      <div class="gh-menu">
+        <button type="button" class="gh-icon-btn" data-menu-toggle aria-expanded="false" aria-label="Tema de color"><span class="gh-ico gh-ico-system"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2.5" y="3.5" width="15" height="10" rx="1.5"/><path d="M7 17h6M10 13.5V17"/></svg></span><span class="gh-ico gh-ico-light"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.5"/><path d="M10 1.8v2M10 16.2v2M1.8 10h2M16.2 10h2M4.2 4.2l1.4 1.4M14.4 14.4l1.4 1.4M4.2 15.8l1.4-1.4M14.4 5.6l1.4-1.4"/></svg></span><span class="gh-ico gh-ico-dark"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16.5 12.3A7 7 0 0 1 7.7 3.5a7 7 0 1 0 8.8 8.8z"/></svg></span></button>
+        <div class="gh-pop" data-menu hidden role="group" aria-label="Tema de color"><button type="button" class="gh-pop-item" data-theme-choice="system" aria-pressed="false"><span class="gh-ico"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2.5" y="3.5" width="15" height="10" rx="1.5"/><path d="M7 17h6M10 13.5V17"/></svg></span>Sistema</button><button type="button" class="gh-pop-item" data-theme-choice="light" aria-pressed="false"><span class="gh-ico"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.5"/><path d="M10 1.8v2M10 16.2v2M1.8 10h2M16.2 10h2M4.2 4.2l1.4 1.4M14.4 14.4l1.4 1.4M4.2 15.8l1.4-1.4M14.4 5.6l1.4-1.4"/></svg></span>Claro</button><button type="button" class="gh-pop-item" data-theme-choice="dark" aria-pressed="false"><span class="gh-ico"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16.5 12.3A7 7 0 0 1 7.7 3.5a7 7 0 1 0 8.8 8.8z"/></svg></span>Oscuro</button></div>
+      </div>
+      <a class="btn primary gh-cta" href="/es/#work-with-joel" data-goatcounter-click="cta-nav-hire">Trabaja con Joel</a>
+      <button type="button" class="gh-burger" id="topbarBurger" aria-label="Abrir o cerrar la navegación" aria-expanded="false" aria-controls="siteNav"><span></span></button>
+    </div>
+  </div>
+</header>
+<!-- CHROME:HEADER:END -->
+
+<div class="app-main">
+<!-- Added 2026-08-21: this was a plain <div> wrapping the page's ENTIRE
+     real content (hero, process strip, controls, catalog views,
+     methodology) -- no <main> landmark anywhere on the page, so screen
+     reader users had no way to jump straight past the nav to the real
+     content. #fieldMain just below was renamed from <main> to <div> at
+     the same time -- one <main> landmark per page is the correct
+     pattern, a <main> nested inside another <main> is valid HTML5 but
+     semantically confusing for the same landmark-navigation use case
+     this fix is for. -->
+<main class="wrap">
+  <div class="hero page-hero band-dark gh-page-header" id="top">
+    <div class="hero-brand">
+      <p class="contact-kicker">Gap Hunter Labs &middot; Plugin Intelligence</p>
+      <h1 class="hero-title">Plugins enfocados para JetBrains y VS Code que resuelven <span class="accent">brechas reales de los desarrolladores</span></h1>
+      <p class="hero-subtitle" id="heroSubtitle">Cada plugin se construye para una brecha documentada en las herramientas para desarrolladores y tiene un precio claro: gratis, freemium o de pago. Las cifras vienen directamente de JetBrains Marketplace y GitHub; nada aquí es una estimación.</p>
+      <div class="hdr-stats" id="stats" aria-label="Cifras del catálogo"><!-- PRERENDER:STATS:START --><div class="hdr-stat"><span class="hdr-stat-num">146</span><span class="hdr-stat-label">Plugins para JetBrains</span></div><div class="hdr-stat"><span class="hdr-stat-num">31</span><span class="hdr-stat-label">Extensiones de VS Code</span></div><div class="hdr-stat"><span class="hdr-stat-num">7,409</span><span class="hdr-stat-label">Descargas en JetBrains</span></div><div class="hdr-stat"><span class="hdr-stat-num">5</span><span class="hdr-stat-label">Plugins de pago y Pro</span></div><!-- PRERENDER:STATS:END --></div>
+      <div class="hero-actions">
+        <a class="btn primary" href="#work-with-joel" data-goatcounter-click="cta-hero-hire">Trabaja con Joel</a>
+        <a class="btn" href="/es/catalogo/" data-goatcounter-click="cta-hero-catalog">Explorar el catálogo</a>
+      </div>
+    </div>
+
+    <div class="hero-slider" id="heroSlider" aria-roledescription="carousel" aria-label="Plugins destacados">
+      <div class="hs-viewport">
+        <div class="hs-track" id="heroSliderTrack"><!-- PRERENDER:SLIDES:START --><a class="hs-slide" href="/catalog/mermaid-companion/"><span class="hs-media"><video class="" poster="/media/mermaid-companion/poster.webp?v=ff03b541" muted loop playsinline autoplay preload="metadata"><source src="/media/mermaid-companion/demo.webm?v=11ff45da" type="video/webm"><source src="/media/mermaid-companion/demo.mp4?v=85d68eff" type="video/mp4"></video></span><span class="hs-copy"><span class="hs-kicker"><span class="price-badge price-free">Gratis</span>Plugin destacado</span><span class="hs-name">Mermaid Companion</span><span class="hs-niche">Diagrams</span></span></a><a class="hs-slide" href="/catalog/react-native-companion/" tabindex="-1"><span class="hs-media"><img class="" src="/media/react-native-companion/poster.webp?v=2d1b2a3d" alt="" loading="lazy" decoding="async"></span><span class="hs-copy"><span class="hs-kicker"><span class="price-badge price-free">Gratis</span>Plugin destacado</span><span class="hs-name">React Native Companion</span><span class="hs-niche">React Native Tooling</span></span></a><a class="hs-slide" href="/catalog/ansible-companion/" tabindex="-1"><span class="hs-media"><video class="" poster="/media/ansible-companion/poster.webp?v=3f6f5e37" muted loop playsinline autoplay preload="metadata"><source src="/media/ansible-companion/demo.webm?v=52173356" type="video/webm"><source src="/media/ansible-companion/demo.mp4?v=191590cf" type="video/mp4"></video></span><span class="hs-copy"><span class="hs-kicker"><span class="price-badge price-freemium">Freemium</span>Plugin destacado</span><span class="hs-name">Ansible Companion</span><span class="hs-niche">Ansible / DevOps</span></span></a><a class="hs-slide" href="/catalog/gitlab-ci-companion/" tabindex="-1"><span class="hs-media"><video class="" poster="/media/gitlab-ci-companion/poster.webp?v=6b093b84" muted loop playsinline autoplay preload="metadata"><source src="/media/gitlab-ci-companion/demo.webm?v=3495f4e2" type="video/webm"><source src="/media/gitlab-ci-companion/demo.mp4?v=24dbb994" type="video/mp4"></video></span><span class="hs-copy"><span class="hs-kicker"><span class="price-badge price-free">Gratis</span>Plugin destacado</span><span class="hs-name">GitLab CI Companion</span><span class="hs-niche">GitLab CI/CD</span></span></a><a class="hs-slide" href="/catalog/api-security-companion/" tabindex="-1"><span class="hs-media"><video class="" poster="/media/api-security-companion/poster.webp?v=6b38bfe4" muted loop playsinline autoplay preload="metadata"><source src="/media/api-security-companion/demo.webm?v=01dab497" type="video/webm"><source src="/media/api-security-companion/demo.mp4?v=a3756997" type="video/mp4"></video></span><span class="hs-copy"><span class="hs-kicker"><span class="price-badge price-freemium">Freemium</span>Plugin destacado</span><span class="hs-name">API Security Companion</span><span class="hs-niche">API Security</span></span></a><!-- PRERENDER:SLIDES:END --></div>
+      </div>
+      <div class="hs-bar">
+        <button type="button" class="hs-nav" id="heroSliderPrev" aria-label="Plugin destacado anterior">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M10 3 5 8l5 5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="hs-dots" id="heroSliderDots" role="tablist" aria-label="Diapositivas de plugins destacados"><!-- PRERENDER:DOTS:START --><button type="button" class="hs-dot is-active" aria-label="Mostrar "></button><button type="button" class="hs-dot" aria-label="Mostrar "></button><button type="button" class="hs-dot" aria-label="Mostrar "></button><button type="button" class="hs-dot" aria-label="Mostrar "></button><button type="button" class="hs-dot" aria-label="Mostrar "></button><!-- PRERENDER:DOTS:END --></div>
+        <button type="button" class="hs-nav" id="heroSliderNext" aria-label="Siguiente plugin destacado">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <section class="plat-bar" aria-label="Dónde conseguir los plugins de Gap Hunter Labs"><!-- PRERENDER:PLATFORMS:START --><p class="plat-label">Disponible en</p><div class="plat-logos"><a class="plat-item" href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" target="_blank" rel="noopener" data-goatcounter-click="out-vendor-jetbrains"><span class="plat-mark"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2.345 23.997A2.347 2.347 0 0 1 0 21.652V10.988C0 9.665.535 8.37 1.473 7.433l5.965-5.961A5.01 5.01 0 0 1 10.989 0h10.666A2.347 2.347 0 0 1 24 2.345v10.664a5.056 5.056 0 0 1-1.473 3.554l-5.965 5.965A5.017 5.017 0 0 1 13.007 24v-.003H2.345Zm8.969-6.854H5.486v1.371h5.828v-1.371ZM3.963 6.514h13.523v13.519l4.257-4.257a3.936 3.936 0 0 0 1.146-2.767V2.345c0-.678-.552-1.234-1.234-1.234H10.989a3.897 3.897 0 0 0-2.767 1.145L3.963 6.514Zm-.192.192L2.256 8.22a3.944 3.944 0 0 0-1.145 2.768v10.664c0 .678.552 1.234 1.234 1.234h10.666a3.9 3.9 0 0 0 2.767-1.146l1.512-1.511H3.771V6.706Z"/></svg></span><span class="plat-text"><strong>JetBrains Marketplace</strong><span>146 plugins</span></span></a><a class="plat-item" href="https://marketplace.visualstudio.com/publishers/GapHunterLabs" target="_blank" rel="noopener" data-goatcounter-click="out-vendor-vscode"><span class="plat-mark"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z"/></svg></span><span class="plat-text"><strong>VS Code Marketplace</strong><span>31 extensiones</span></span></a><a class="plat-item" href="https://github.com/GapHunterLabs" target="_blank" rel="noopener" data-goatcounter-click="out-vendor-github"><span class="plat-mark"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></span><span class="plat-text"><strong>GitHub</strong><span>Código abierto, Apache-2.0</span></span></a></div><!-- PRERENDER:PLATFORMS:END --></section>
+
+  <section class="path-section" aria-labelledby="pathTitle">
+    <div class="section-head"><div><p class="eyebrow">Empieza aquí</p><h2 id="pathTitle">¿Qué estás buscando?</h2></div></div>
+    <div class="path-grid">
+      <a class="path-card" href="/es/catalogo/" data-goatcounter-click="cta-path-developers">
+        <span class="path-kicker">Desarrolladores</span>
+        <strong>Encuentra el plugin para tu stack</strong>
+        <span>Herramientas enfocadas en 8 categorías, cada una con un precio claro: gratis, freemium o de pago.</span>
+        <span class="path-go">Explorar el catálogo &rarr;</span>
+      </a>
+      <a class="path-card" href="#paid" data-goatcounter-click="cta-path-teams">
+        <span class="path-kicker">Equipos</span>
+        <strong>Planes de pago y licencias de equipo</strong>
+        <span>Los plugins Pro incluyen una prueba gratuita, y las organizaciones compran licencias de equipo directamente en JetBrains Marketplace.</span>
+        <span class="path-go">Ver plugins de pago &rarr;</span>
+      </a>
+      <a class="path-card path-card-strong" href="#work-with-joel" data-goatcounter-click="cta-path-companies">
+        <span class="path-kicker">Empresas</span>
+        <strong>Herramientas a medida para tu equipo</strong>
+        <span>Reglas de análisis estático a medida, integración en CI/CD y distribución privada de plugins, con alcance definido y entregadas por Joel.</span>
+        <span class="path-go">Trabaja con Joel &rarr;</span>
+      </a>
+    </div>
+  </section>
+
+  <section class="category-preview" aria-labelledby="categoryPreviewTitle">
+    <div class="section-head"><div><p class="eyebrow">Campo de caza</p><h2 id="categoryPreviewTitle">Explorar por categoría</h2></div><a class="btn" href="/es/catalogo/">Explorar todo el catálogo →</a></div>
+    <div class="cat-board category-links" id="categoryPreview"><!-- PRERENDER:CATPREVIEW:START --><a class="cat-cell" href="/es/catalogo/?category=api" style="--cat:var(--accent)"><span class="cat-cell-icon"><svg viewBox="-8 -8 16 16" aria-hidden="true"><path d="M-4.5-6.5v3M-1.5-6.5v3M-6-3.5h7a2 2 0 0 1 2 2v1a2 2 0 0 0 2 2h1M6 6.5v-3M1.5 6.5v-3M6 3.5H-1a2 2 0 0 1-2-2v-1a2 2 0 0 0-2-2h-1" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="cat-cell-copy"><strong>API</strong><span class="cat-cell-count">12 plugins</span></span><span class="cat-cell-arrow" aria-hidden="true">→</span></a><a class="cat-cell" href="/es/catalogo/?category=devops" style="--cat:var(--good)"><span class="cat-cell-icon"><svg viewBox="-8 -8 16 16" aria-hidden="true"><path d="M-6 0a3 3 0 1 0 6 0 3 3 0 1 1 6 0 3 3 0 1 1-6 0 3 3 0 1 0-6 0Z" stroke-linejoin="round"/></svg></span><span class="cat-cell-copy"><strong>DevOps</strong><span class="cat-cell-count">48 plugins</span></span><span class="cat-cell-arrow" aria-hidden="true">→</span></a><a class="cat-cell" href="/es/catalogo/?category=security" style="--cat:var(--bad)"><span class="cat-cell-icon"><svg viewBox="-8 -8 16 16" aria-hidden="true"><path d="M0-6.5 5.5-4v4.2C5.5 3.8 2.8 6 0 6.5-2.8 6-5.5 3.8-5.5.2V-4Z" stroke-linejoin="round"/></svg></span><span class="cat-cell-copy"><strong>Seguridad</strong><span class="cat-cell-count">37 plugins</span></span><span class="cat-cell-arrow" aria-hidden="true">→</span></a><a class="cat-cell" href="/es/catalogo/?category=data" style="--cat:var(--purple)"><span class="cat-cell-icon"><svg viewBox="-8 -8 16 16" aria-hidden="true"><path d="M-5-3c0-1.4 2.2-2.5 5-2.5s5 1.1 5 2.5v6c0 1.4-2.2 2.5-5 2.5s-5-1.1-5-2.5Z"/><path d="M-5-3c0 1.4 2.2 2.5 5 2.5s5-1.1 5-2.5"/></svg></span><span class="cat-cell-copy"><strong>Datos</strong><span class="cat-cell-count">4 plugins</span></span><span class="cat-cell-arrow" aria-hidden="true">→</span></a><a class="cat-cell" href="/es/catalogo/?category=quality" style="--cat:var(--amber)"><span class="cat-cell-icon"><svg viewBox="-8 -8 16 16" aria-hidden="true"><path d="M0-6.5v13M-5.5-3.5h11M-5.5-3.5 -6.5 0M-5.5-3.5-4.5 0M5.5-3.5 4.5 0M5.5-3.5 6.5 0M-6.5 0a1.5 1.5 0 0 0 3 0M3.5 0a1.5 1.5 0 0 0 3 0M-2.5 6.5h5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="cat-cell-copy"><strong>Calidad de código</strong><span class="cat-cell-count">31 plugins</span></span><span class="cat-cell-arrow" aria-hidden="true">→</span></a><a class="cat-cell" href="/es/catalogo/?category=codegen" style="--cat:var(--cyan)"><span class="cat-cell-icon"><svg viewBox="-8 -8 16 16" aria-hidden="true"><path d="M-6-2.5-3 0-6 2.5M6-2.5 3 0 6 2.5M.8-6 -1.3-.5h2.6L-.8 6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="cat-cell-copy"><strong>Generación de código</strong><span class="cat-cell-count">3 plugins</span></span><span class="cat-cell-arrow" aria-hidden="true">→</span></a><a class="cat-cell" href="/es/catalogo/?category=testing" style="--cat:var(--teal)"><span class="cat-cell-icon"><svg viewBox="-8 -8 16 16" aria-hidden="true"><path d="M-2-6.5v4.2l-3.3 6.6a1.6 1.6 0 0 0 1.4 2.2h7.8a1.6 1.6 0 0 0 1.4-2.2L1-2.3v-4.2M-3.3-6.5h6.6M-3-1.5h6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="cat-cell-copy"><strong>Pruebas</strong><span class="cat-cell-count">3 plugins</span></span><span class="cat-cell-arrow" aria-hidden="true">→</span></a><a class="cat-cell" href="/es/catalogo/?category=editor" style="--cat:var(--pending)"><span class="cat-cell-icon"><svg viewBox="-8 -8 16 16" aria-hidden="true"><rect x="-6" y="-5" width="12" height="10" rx="1.5"/><path d="M-3.5-2h4M-3.5 0.5h2.5M2-2v2.5" stroke-linecap="round"/></svg></span><span class="cat-cell-copy"><strong>Editor</strong><span class="cat-cell-count">8 plugins</span></span><span class="cat-cell-arrow" aria-hidden="true">→</span></a><!-- PRERENDER:CATPREVIEW:END --></div>
+  </section>
+
+  <section class="paid-section" id="paid" aria-labelledby="paidTitle">
+    <div class="section-head"><div><p class="eyebrow">De pago y Pro</p><h2 id="paidTitle">Plugins con plan de pago</h2></div><a class="btn" href="/es/catalogo/?pricing=paid">Todos los plugins de pago &rarr;</a></div>
+    <p class="section-lead">Cada uno tiene una prueba gratuita en JetBrains Marketplace. JetBrains gestiona el pago, las facturas y las claves de licencia, y las organizaciones pueden comprar licencias de equipo allí.</p>
+    <div class="paid-grid" id="paidGrid"><!-- PRERENDER:PAIDPLUGINS:START --><article class="paid-card"><div class="paid-card-head"><span class="price-badge price-freemium">Freemium</span><span class="paid-niche">Ansible / DevOps</span></div><h3><a href="/catalog/ansible-companion/">Ansible Companion</a></h3><p>IntelliJ/PyCharm plugin. **Encrypt and decrypt Ansible Vault (1.1/AES256 format) directly in the editor**, without depending on  being installed.</p><div class="paid-actions"><a class="btn primary" href="https://plugins.jetbrains.com/plugin/33082-ansible-companion" target="_blank" rel="noopener" data-goatcounter-click="out-trial-ansible-companion">Probar gratis &#8599;</a><a class="btn" href="/catalog/ansible-companion/">Detalles</a></div></article><article class="paid-card"><div class="paid-card-head"><span class="price-badge price-freemium">Freemium</span><span class="paid-niche">API Security</span></div><h3><a href="/catalog/api-security-companion/">API Security Companion</a></h3><p>IntelliJ/Android Studio plugin. Lightweight, 100% local API-security checks for Java and Kotlin — hardcoded secrets, plaintext HTTP, TLS misconfiguration, and OWASP API Security Top 10 patterns.</p><div class="paid-actions"><a class="btn primary" href="https://plugins.jetbrains.com/plugin/33195-api-security-companion" target="_blank" rel="noopener" data-goatcounter-click="out-trial-api-security-companion">Probar gratis &#8599;</a><a class="btn" href="/catalog/api-security-companion/">Detalles</a></div></article><article class="paid-card"><div class="paid-card-head"><span class="price-badge price-paid">De pago</span><span class="paid-niche">OpenAPI/Swagger Tooling</span></div><h3><a href="/catalog/openapi-companion/">OpenAPI Companion</a></h3><p>IntelliJ-family plugin. Reliable go-to-definition (Ctrl+Click / Ctrl+B) for  values in OpenAPI/Swagger specs written in JSON or YAML, resolved entirely against local files, plus a warning on any  that doesn't actually resolve.</p><div class="paid-actions"><a class="btn primary" href="https://plugins.jetbrains.com/plugin/33349-openapi-companion" target="_blank" rel="noopener" data-goatcounter-click="out-trial-openapi-companion">Probar gratis &#8599;</a><a class="btn" href="/catalog/openapi-companion/">Detalles</a></div></article><article class="paid-card"><div class="paid-card-head"><span class="price-badge price-freemium">Freemium</span><span class="paid-niche">Firestore / Database</span></div><h3><a href="/catalog/firestore-companion/">Firestore Companion</a></h3><p>Browse and edit Firestore collections, documents, and subcollections in a tool window, authenticating with a GCP service account key via simple REST calls.</p><div class="paid-actions"><a class="btn primary" href="https://plugins.jetbrains.com/plugin/33330-firestore-companion" target="_blank" rel="noopener" data-goatcounter-click="out-trial-firestore-companion">Probar gratis &#8599;</a><a class="btn" href="/catalog/firestore-companion/">Detalles</a></div></article><article class="paid-card"><div class="paid-card-head"><span class="price-badge price-freemium">Freemium</span><span class="paid-niche">Refactoring Tools</span></div><h3><a href="/catalog/refactor-simulator/">Refactor Simulator</a></h3><p>IntelliJ IDEA (Community + Ultimate) plugin. **Preview every refactoring before committing it.** Simulates a rename in an isolated, in-memory sandbox — using IntelliJ's own PSI, Find Usages, and refactoring processors, never a custom engine — and shows a full impact report, deterministic validation, and a native side-by-side diff before anything touches a real file.</p><div class="paid-actions"><a class="btn primary" href="https://plugins.jetbrains.com/plugin/33204-refactor-simulator" target="_blank" rel="noopener" data-goatcounter-click="out-trial-refactor-simulator">Probar gratis &#8599;</a><a class="btn" href="/catalog/refactor-simulator/">Detalles</a></div></article><!-- PRERENDER:PAIDPLUGINS:END --></div>
+  </section>
+
+  <!-- PRERENDER:HUBS:START --><!-- PRERENDER:HUBS:END -->
+
+  <section class="identity-section" id="identity" aria-labelledby="identityTitle">
+    <div class="identity-lead">
+      <p class="eyebrow">Cómo trabajamos</p>
+      <h2 id="identityTitle">Cada plugin empieza con evidencia</h2>
+      <p>Cada producto existe por una brecha documentada en las herramientas para desarrolladores: una queja, un ticket o una capacidad que falta, nunca una suposición.</p>
+    </div>
+    <div class="identity-process" aria-label="Cómo trabajamos">
+      <svg class="roadmap-svg" viewBox="0 0 100 185" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <path id="flowPath" d="M2,11.5 C14,11.5 18,81.5 27,81.5 S39,11.5 52,11.5 S64,81.5 76,81.5"/>
+          <linearGradient id="roadmapGrad" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="var(--accent)"/>
+            <stop offset="35%" stop-color="var(--good)"/>
+            <stop offset="65%" stop-color="var(--purple)"/>
+            <stop offset="100%" stop-color="var(--amber)"/>
+          </linearGradient>
+        </defs>
+        <use class="flow-line flow-line-3" href="#flowPath" transform="translate(2,12)"/>
+        <use class="flow-line flow-line-2" href="#flowPath" transform="translate(-2,-10)"/>
+        <use class="flow-line flow-line-1" href="#flowPath"/>
+      </svg>
+      <!-- Versión mobile del mismo campo de streamlines, solo visible
+           debajo de 900px (ver CSS .roadmap-svg-v) -- mismo mecanismo
+           (1 curva base + 2 copias <use>/translate + dash-flow
+           animado) que el de escritorio. viewBox abstracto 0-100 (los
+           pasos vuelven a flujo normal, su alto real ya no se puede
+           calcular a mano) -- preserveAspectRatio="none" lo estira al
+           alto real que el flex column termine ocupando, ondulando
+           aproximado cerca de donde cae cada punto (izquierda/derecha
+           alternado vía align-self) sin necesitar coincidir exacto.
+           Gradiente propio (roadmapGradV) en vertical para que los 4
+           colores se lean de arriba a abajo. -->
+      <svg class="roadmap-svg-v" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+        <defs>
+          <path id="flowPathV" d="M15,5 C35,5 35,32 55,32 S35,60 15,60 S35,92 55,92"/>
+          <linearGradient id="roadmapGradV" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="var(--accent)"/>
+            <stop offset="35%" stop-color="var(--good)"/>
+            <stop offset="65%" stop-color="var(--purple)"/>
+            <stop offset="100%" stop-color="var(--amber)"/>
+          </linearGradient>
+        </defs>
+        <use class="flow-line flow-line-3" href="#flowPathV" transform="translate(2,12)"/>
+        <use class="flow-line flow-line-2" href="#flowPathV" transform="translate(-2,-10)"/>
+        <use class="flow-line flow-line-1" href="#flowPathV" style="stroke:url(#roadmapGradV)"/>
+      </svg>
+      <article class="identity-step"><span class="rm-dot" aria-hidden="true"></span><h3>Observar</h3><p>Identificar fricciones</p></article>
+      <article class="identity-step"><span class="rm-dot" aria-hidden="true"></span><h3>Detectar</h3><p>Encontrar brechas reales</p></article>
+      <article class="identity-step"><span class="rm-dot" aria-hidden="true"></span><h3>Validar</h3><p>Evidencia e impacto</p></article>
+      <article class="identity-step"><span class="rm-dot" aria-hidden="true"></span><h3>Construir</h3><p>Lanzar la herramienta que falta</p></article>
+    </div>
+    <div class="identity-grid">
+      <article class="identity-card">
+        <div class="ic-head">
+          <span class="ic-icon" style="color:var(--cyan)"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8 2.5h4M8.5 2.5v4.3l-3.7 7a1.8 1.8 0 0 0 1.6 2.6h7.2a1.8 1.8 0 0 0 1.6-2.6l-3.7-7V2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          <p class="eyebrow">Casos de estudio</p>
+        </div>
+        <h3>Pruebas que puedes verificar</h3>
+        <p>Los plugins con la evidencia más sólida, incluido un patrón de congelamiento que la propia JetBrains nombró en su Platform Blog.</p>
+        <p class="ic-stat">2 casos de estudio de plugins &middot; 5 tickets de JetBrains Platform</p>
+        <a class="btn" href="/es/ingenieria-y-evidencia/casos-de-estudio/" data-goatcounter-click="cta-proof-cases">Leer los casos de estudio &rarr;</a>
+      </article>
+      <article class="identity-card">
+        <div class="ic-head">
+          <span class="ic-icon" style="color:var(--good)"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7"/><circle cx="10" cy="10" r="3.7"/><circle cx="10" cy="10" r="0.7" fill="currentColor" stroke="none"/></svg></span>
+          <p class="eyebrow">Estándares</p>
+        </div>
+        <h3>Lo que sigue cada plugin</h3>
+        <ul class="ic-checklist"><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.2 12 13 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Basado en evidencia, no en suposiciones</li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.2 12 13 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Herramientas enfocadas, no suites infladas</li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.2 12 13 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Metodología transparente</li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.2 12 13 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Precio claro por plugin: gratis, freemium o de pago</li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.2 12 13 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Sin telemetría: los plugins corren en tu IDE y las únicas llamadas de red van a servicios que tú configuras</li></ul>
+        <div class="identity-links">
+          <a class="btn" href="/es/metodologia/" data-goatcounter-click="cta-proof-method">Leer la metodología &rarr;</a>
+        </div>
+      </article>
+    </div>
+    <div class="method-facts" id="methodFacts"><!-- PRERENDER:METHODFACTS:START --><!-- PRERENDER:METHODFACTS:END --></div>
+  </section>
+
+  <section class="founder-section" id="work-with-joel" aria-labelledby="founderTitle">
+    <div class="founder-lead">
+      <p class="eyebrow">Trabaja con Joel</p>
+      <h2 id="founderTitle">Herramientas a medida para desarrolladores, construidas como este catálogo</h2>
+      <p class="founder-bio"><strong>Joel Diaz, fundador.</strong> Cursó estudios de Ingeniería de Sistemas y luego hizo carrera en producción industrial y logística. Hoy dirige un pipeline de construcción asistido por IA con controles de calidad de línea de producción: cada herramienta se observa, se detecta, se valida y se construye contra evidencia real.</p>
+      <p class="founder-meta">Alcance cerrado &middot; entregables por escrito &middot; asíncrono por defecto &middot; UTC&minus;5<br>Abierto a proyectos de consultoría y a oportunidades seleccionadas.</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="/es/contacto/?intent=hire" data-goatcounter-click="cta-founder-hire">Iniciar una conversación</a>
+        <a class="btn" href="https://www.linkedin.com/in/joel-diaz-82687b428/?locale=en" target="_blank" rel="noopener" data-goatcounter-click="out-founder-linkedin">Conectar en LinkedIn</a>
+      </div>
+    </div>
+    <div class="offer-grid">
+      <article class="offer-card">
+        <h3>Reglas de análisis estático a medida</h3>
+        <p>Inspecciones adaptadas a tu código, como API internas, formatos de secretos y patrones de seguridad, entregadas como un plugin que tu equipo instala.</p>
+      </article>
+      <article class="offer-card">
+        <h3>Integración en CI/CD</h3>
+        <p>Las mismas comprobaciones ejecutándose en GitHub Actions o GitLab CI, para que los problemas aparezcan antes de la revisión de código.</p>
+      </article>
+      <article class="offer-card">
+        <h3>Distribución privada de plugins</h3>
+        <p>Herramientas internas empaquetadas y servidas a tus desarrolladores desde un repositorio privado de plugins.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="loop-section" aria-labelledby="loopTitle">
+    <div><p class="eyebrow">Mantente al día</p><h2 id="loopTitle">Sigue los nuevos lanzamientos</h2></div>
+    <div class="loop-links">
+      <a class="btn" href="https://x.com/GapHunterLabs" target="_blank" rel="noopener" data-goatcounter-click="out-loop-x">X</a>
+      <a class="btn" href="https://github.com/GapHunterLabs" target="_blank" rel="noopener" data-goatcounter-click="out-loop-github">GitHub</a>
+      <a class="btn" href="https://www.linkedin.com/in/joel-diaz-82687b428/?locale=en" target="_blank" rel="noopener" data-goatcounter-click="out-loop-linkedin">LinkedIn</a>
+      <a class="btn" href="/feed.xml" data-goatcounter-click="out-loop-rss">RSS</a>
+    </div>
+  </section>
+</main>
+</div>
+</div>
+<!-- CHROME:FOOTER:START -->
+<footer class="site-footer gh-footer band-dark">
+  <div class="gh-footer-inner">
+    <div class="gh-footer-top">
+      <div class="gh-footer-brand">
+        <a class="gh-brand" href="/es/"><svg class="gh-logo" viewBox="0 0 1024 1024" aria-hidden="true"><path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#0151FC"/><path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z" fill="#01B3FD"/><polygon points="569,413 695,413 695,539 569,539" fill="#02F172"/></svg><span class="gh-brand-name">Gap Hunter Labs</span></a>
+        <p>Plugins enfocados para JetBrains y VS Code que resuelven brechas documentadas en las herramientas para desarrolladores, y herramientas a medida para equipos.</p>
+        <a class="btn primary" href="/es/#work-with-joel" data-goatcounter-click="cta-footer-hire">Trabaja con Joel</a>
+      </div>
+      <nav class="gh-footer-cols" aria-label="Pie de página"><div class="gh-footer-col"><p class="gh-footer-title">Producto</p><a href="/es/catalogo/">Catálogo de plugins</a><a href="/es/catalogo/?pricing=paid">Plugins de pago y Pro</a><a href="/es/catalogo/?platform=vscode">Extensiones de VS Code</a></div><div class="gh-footer-col"><p class="gh-footer-title">Ingeniería y evidencia</p><a href="/es/ingenieria-y-evidencia/">Resumen</a><a href="/es/ingenieria-y-evidencia/casos-de-estudio/">Casos de estudio</a><a href="/es/ingenieria-y-evidencia/tickets-jetbrains-platform/">Tickets de JetBrains Platform</a></div><div class="gh-footer-col"><p class="gh-footer-title">Empresa</p><a href="/es/#work-with-joel">Trabaja con Joel</a><a href="/es/metodologia/">Metodología</a><a href="/es/contacto/">Contacto</a></div><div class="gh-footer-col"><p class="gh-footer-title">Tiendas</p><a href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" target="_blank" rel="noopener">JetBrains Marketplace</a><a href="https://marketplace.visualstudio.com/publishers/GapHunterLabs" target="_blank" rel="noopener">VS Code Marketplace</a><a href="https://github.com/GapHunterLabs" target="_blank" rel="noopener">GitHub</a></div><div class="gh-footer-col"><p class="gh-footer-title">Legal</p><a href="/es/seguridad/">Seguridad</a><a href="/es/privacidad/">Privacidad</a><a href="/es/terminos/">Términos</a></div></nav>
+    </div>
+    <div class="gh-footer-bottom">
+      <p class="gh-footer-legal">&copy; 2026 Gap Hunter Labs. Los datos de descargas vienen de las API de JetBrains Marketplace y GitHub, se actualizan dos veces al día y nada aquí es una estimación.</p>
+      <div class="gh-footer-social"><a class="gh-social" href="https://github.com/GapHunterLabs" target="_blank" rel="noopener" aria-label="Gap Hunter Labs en GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" stroke="none" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a><a class="gh-social" href="https://www.linkedin.com/in/joel-diaz-82687b428/?locale=en" target="_blank" rel="noopener" aria-label="Joel Diaz en LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" stroke="none" d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a><a class="gh-social" href="https://x.com/GapHunterLabs" target="_blank" rel="noopener" aria-label="Gap Hunter Labs en X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" stroke="none" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a></div>
+      <div class="gh-seg" role="group" aria-label="Tema de color"><button type="button" class="gh-seg-btn" data-theme-choice="system" aria-pressed="false" aria-label="Tema del sistema" title="Sistema"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2.5" y="3.5" width="15" height="10" rx="1.5"/><path d="M7 17h6M10 13.5V17"/></svg></button><button type="button" class="gh-seg-btn" data-theme-choice="light" aria-pressed="false" aria-label="Tema claro" title="Claro"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.5"/><path d="M10 1.8v2M10 16.2v2M1.8 10h2M16.2 10h2M4.2 4.2l1.4 1.4M14.4 14.4l1.4 1.4M4.2 15.8l1.4-1.4M14.4 5.6l1.4-1.4"/></svg></button><button type="button" class="gh-seg-btn" data-theme-choice="dark" aria-pressed="false" aria-label="Tema oscuro" title="Oscuro"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16.5 12.3A7 7 0 0 1 7.7 3.5a7 7 0 1 0 8.8 8.8z"/></svg></button></div>
+    </div>
+  </div>
+</footer>
+<!-- CHROME:FOOTER:END -->
+<script src="/js/home.js?v=58036a2d" defer></script>
+<!-- Fase 3 del SuperPlan de SEO (2026-09-23): prefetch (no prerender) de
+     los enlaces a /catalog/ -- moderate en vez de eager para no
+     descargar los 146 al mismo tiempo, solo los que el visitante
+     probablemente vaya a visitar (hover/viewport, criterio del propio
+     navegador). prefetch nunca ejecuta JS de la pagina prefetcheada,
+     asi que no infla las visitas de GoatCounter con paginas que nadie
+     llego a ver de verdad -- prerender si lo haria. Los navegadores sin
+     soporte ignoran el bloque entero y navegan normal. -->
+<script type="speculationrules">
+{"prefetch": [{"where": {"href_matches": "/catalog/*"}, "eagerness": "moderate"}]}
+</script>
+<!-- GoatCounter's own tracking snippet -- la unica marca visible de
+     esto en la pagina es este tag; su dashboard/widget/logo nunca se
+     muestra en ningun lado. async para no bloquear el primer pintado;
+     data-goatcounter apunta a la cuenta real del usuario
+     (gaphunterlabs.goatcounter.com). -->
+<script data-goatcounter="https://gaphunterlabs.goatcounter.com/count"
+        async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

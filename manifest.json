@@ -4,8 +4,8 @@
   "description": "Real, evidence-based gaps in developer tooling — every plugin exists because of a documented gap, not a guess.",
   "start_url": "/",
   "display": "browser",
-  "background_color": "#090D16",
-  "theme_color": "#090D16",
+  "background_color": "#F7F9FC",
+  "theme_color": "#0B1B34",
   "icons": [
     {
       "src": "/apple-touch-icon.png",
