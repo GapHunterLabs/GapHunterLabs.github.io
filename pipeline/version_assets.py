@@ -38,6 +38,21 @@ def html_files():
         yield path
 
 
+# 2026-09-29: el hash de un asset de TEXTO se calcula con saltos de linea LF.
+# Con core.autocrlf=true la copia de Windows tiene CRLF y el runner (y lo que
+# sirve GitHub Pages) tiene LF: el sitio v2 se publico con hashes calculados en
+# Windows y las paginas fuera de la lista del commit del cron quedaron con
+# hashes que el runner reescribia en cada corrida sin commitear -- arbol sucio,
+# y el rebase del reintento fallaba ante cualquier carrera. Normalizando, local
+# y runner dan el mismo hash. Los binarios (imagenes, video) no se tocan.
+TEXT_SUFFIXES = {".css", ".js", ".svg"}
+
+
+def content_for_hash(path: Path) -> bytes:
+    data = path.read_bytes()
+    return data.replace(b"\r\n", b"\n") if path.suffix.lower() in TEXT_SUFFIXES else data
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--check", action="store_true", help="solo reporta, no escribe; sale con 1 si hay desfasados")
@@ -47,7 +62,7 @@ def main() -> int:
     def digest(rel: str) -> str | None:
         if rel not in cache:
             f = ROOT / rel
-            cache[rel] = hashlib.sha256(f.read_bytes()).hexdigest()[:8] if f.is_file() else None
+            cache[rel] = hashlib.sha256(content_for_hash(f)).hexdigest()[:8] if f.is_file() else None
         return cache[rel]
 
     changed, missing = 0, set()
