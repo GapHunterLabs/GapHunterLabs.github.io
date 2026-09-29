@@ -173,19 +173,35 @@ jobs:
           # las que si cambiaron. css/plugin.css es el CSS compartido que
           # ese mismo script escribe; _review/plugin_lastmod.json es su
           # huella persistida entre corridas.
-          TRACKED="data/catalog-data.json catalog/index.html catalog/*/index.html \
-            css/plugin.css js/slug-shim.js index.html catalog.html sitemap.xml \
-            _review/plugin_lastmod.json pipeline/catalog_daily_history.json \
-            pipeline/catalog_latest_data.json catalog/vscode/*/index.html es feed.xml"
-          if git diff --quiet -- $TRACKED; then
+          # 2026-09-29: TODAS las paginas HTML, no una lista a mano.
+          # version_assets.py reescribe el ?v= de cada pagina que use un
+          # /css o /js que cambio; con la lista a mano, 9 paginas (security,
+          # privacy, terms...) quedaban modificadas sin commitear en cada
+          # corrida, y ese arbol sucio hacia fallar el rebase del reintento
+          # ("cannot rebase: You have unstaged changes", run 36507499020).
+          TRACKED=(data/catalog-data.json css/plugin.css js/slug-shim.js sitemap.xml
+            _review/plugin_lastmod.json pipeline/catalog_daily_history.json
+            pipeline/catalog_latest_data.json es feed.xml ':(glob)**/*.html')
+          git add -A -- "${TRACKED[@]}"
+          if git diff --cached --quiet; then
             echo "sin cambios reales en los datos, no se commitea nada"
             exit 0
           fi
-          git add -- $TRACKED
           git commit -m "Auto-update catalog data ($(date -u +%Y-%m-%d))"
+          # Guarda: un archivo que el pipeline modifica y TRACKED no cubre ya
+          # no se pierde en silencio. Se lista como error, se aparta para que
+          # el rebase pueda correr, se publica lo demas y el job termina en
+          # rojo para que alguien agregue ese archivo a TRACKED.
+          LEFTOVER=0
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "::error::el pipeline dejo archivos modificados fuera de TRACKED (agregarlos a la lista):"
+            git status --porcelain
+            git stash push --include-untracked -m "fuera de TRACKED" >/dev/null
+            LEFTOVER=1
+          fi
           for i in 1 2 3 4 5; do
             if git push; then
-              exit 0
+              exit $LEFTOVER
             fi
             echo "push rechazado (probable carrera con update-vscode-catalog.yml, intento $i/5) -- fetch+rebase y reintentar"
             sleep $(( (RANDOM % 10) + 5 ))
