@@ -325,7 +325,7 @@
     'nginx-companion': { poster: "/media/nginx-companion/poster.webp", mp4: "/media/nginx-companion/demo.mp4", webm: "/media/nginx-companion/demo.webm" },
     'openapi-companion': { poster: "/media/openapi-companion/poster.webp", mp4: "/media/openapi-companion/demo.mp4", webm: "/media/openapi-companion/demo.webm" },
     'php-composer-script-companion': { poster: "/media/php-composer-script-companion/poster.webp", mp4: "/media/php-composer-script-companion/demo.mp4", webm: "/media/php-composer-script-companion/demo.webm" },
-    'react-native-companion': { poster: "/media/react-native-companion/poster.webp" },
+    'react-native-companion': { poster: "/media/react-native-companion/poster.webp", mp4: "/media/react-native-companion/demo.mp4", webm: "/media/react-native-companion/demo.webm" },
     'refactor-simulator': { poster: "/media/refactor-simulator/poster.webp", mp4: "/media/refactor-simulator/demo.mp4", webm: "/media/refactor-simulator/demo.webm" },
     'regex-preview-companion': { poster: "/media/regex-preview-companion/poster.webp", mp4: "/media/regex-preview-companion/demo.mp4", webm: "/media/regex-preview-companion/demo.webm" },
     'spreadsheet-companion': { poster: "/media/spreadsheet-companion/poster.webp", mp4: "/media/spreadsheet-companion/demo.mp4", webm: "/media/spreadsheet-companion/demo.webm" },
