@@ -328,6 +328,7 @@
     'react-native-companion': { poster: "/media/react-native-companion/poster.webp", mp4: "/media/react-native-companion/demo.mp4", webm: "/media/react-native-companion/demo.webm" },
     'refactor-simulator': { poster: "/media/refactor-simulator/poster.webp", mp4: "/media/refactor-simulator/demo.mp4", webm: "/media/refactor-simulator/demo.webm" },
     'regex-preview-companion': { poster: "/media/regex-preview-companion/poster.webp", mp4: "/media/regex-preview-companion/demo.mp4", webm: "/media/regex-preview-companion/demo.webm" },
+    'semver-bump-mismatch-companion': { poster: "/media/semver-bump-mismatch-companion/poster.webp", mp4: "/media/semver-bump-mismatch-companion/demo.mp4", webm: "/media/semver-bump-mismatch-companion/demo.webm" },
     'spreadsheet-companion': { poster: "/media/spreadsheet-companion/poster.webp", mp4: "/media/spreadsheet-companion/demo.mp4", webm: "/media/spreadsheet-companion/demo.webm" },
     'sql-concatenation-companion': { poster: "/media/sql-concatenation-companion/poster.webp", mp4: "/media/sql-concatenation-companion/demo.mp4", webm: "/media/sql-concatenation-companion/demo.webm" },
     'test-scaffold-companion': { poster: "/media/test-scaffold-companion/poster.webp", mp4: "/media/test-scaffold-companion/demo.mp4", webm: "/media/test-scaffold-companion/demo.webm" },
