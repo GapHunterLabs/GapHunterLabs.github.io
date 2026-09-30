@@ -334,6 +334,7 @@
     'test-scaffold-companion': { poster: "/media/test-scaffold-companion/poster.webp", mp4: "/media/test-scaffold-companion/demo.mp4", webm: "/media/test-scaffold-companion/demo.webm" },
     'theme-companion': { poster: "/media/theme-companion/poster.webp", mp4: "/media/theme-companion/demo.mp4", webm: "/media/theme-companion/demo.webm" },
     'turbo-log-companion': { poster: "/media/turbo-log-companion/poster.webp", mp4: "/media/turbo-log-companion/demo.mp4", webm: "/media/turbo-log-companion/demo.webm" },
+    'webhook-signature-companion': { poster: "/media/webhook-signature-companion/poster.webp", mp4: "/media/webhook-signature-companion/demo.mp4", webm: "/media/webhook-signature-companion/demo.webm" },
     'xsd-companion': { poster: "/media/xsd-companion/poster.webp", mp4: "/media/xsd-companion/demo.mp4", webm: "/media/xsd-companion/demo.webm" }
   };
 
