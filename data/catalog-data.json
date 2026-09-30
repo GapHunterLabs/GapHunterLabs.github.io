@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-09-29 23:19:08 UTC",
+  "generatedAt": "2026-09-30 00:55:20 UTC",
   "totalPlugins": 146,
   "totalDownloads": 8425,
   "pending": 0,
@@ -7,10 +7,6 @@
   "totalReviews": 0,
   "avgRating": null,
   "trend7d": [
-    {
-      "date": "2026-09-23",
-      "totalDownloads": 5384
-    },
     {
       "date": "2026-09-24",
       "totalDownloads": 5689
@@ -34,45 +30,13 @@
     {
       "date": "2026-09-29",
       "totalDownloads": 8425
+    },
+    {
+      "date": "2026-09-30",
+      "totalDownloads": 8425
     }
   ],
-  "recentChanges": [
-    {
-      "date": "2026-09-29",
-      "type": "growth",
-      "name": "Dependency Vulnerability Companion",
-      "niche": "Dependency / SCA Security",
-      "delta": 36
-    },
-    {
-      "date": "2026-09-29",
-      "type": "growth",
-      "name": "OpenAPI Companion",
-      "niche": "OpenAPI/Swagger Tooling",
-      "delta": 34
-    },
-    {
-      "date": "2026-09-29",
-      "type": "growth",
-      "name": "Mermaid Companion",
-      "niche": "Diagrams",
-      "delta": 31
-    },
-    {
-      "date": "2026-09-29",
-      "type": "growth",
-      "name": "Ansible Companion",
-      "niche": "Ansible / DevOps",
-      "delta": 30
-    },
-    {
-      "date": "2026-09-29",
-      "type": "growth",
-      "name": "React Native Companion",
-      "niche": "React Native Tooling",
-      "delta": 23
-    }
-  ],
+  "recentChanges": [],
   "plugins": [
     {
       "xmlId": "dev.gaphunter.mermaidcompanion",
