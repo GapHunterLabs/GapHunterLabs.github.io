@@ -320,6 +320,7 @@
     'json-to-code-companion': { poster: "/media/json-to-code-companion/poster.webp", mp4: "/media/json-to-code-companion/demo.mp4", webm: "/media/json-to-code-companion/demo.webm" },
     'jwt-companion': { poster: "/media/jwt-companion/poster.webp", mp4: "/media/jwt-companion/demo.mp4", webm: "/media/jwt-companion/demo.webm" },
     'k6-companion': { poster: "/media/k6-companion/poster.webp", mp4: "/media/k6-companion/demo.mp4", webm: "/media/k6-companion/demo.webm" },
+    'log-format-string-companion': { poster: "/media/log-format-string-companion/poster.webp", mp4: "/media/log-format-string-companion/demo.mp4", webm: "/media/log-format-string-companion/demo.webm" },
     'material-companion': { poster: "/media/material-companion/poster.webp", mp4: "/media/material-companion/demo.mp4", webm: "/media/material-companion/demo.webm" },
     'mermaid-companion': { poster: "/media/mermaid-companion/poster.webp", mp4: "/media/mermaid-companion/demo.mp4", webm: "/media/mermaid-companion/demo.webm" },
     'nginx-companion': { poster: "/media/nginx-companion/poster.webp", mp4: "/media/nginx-companion/demo.mp4", webm: "/media/nginx-companion/demo.webm" },
