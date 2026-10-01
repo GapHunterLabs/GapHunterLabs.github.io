@@ -262,6 +262,7 @@
     'material-companion': 'The leading Material-style theme plugin has 18.6M downloads and is still actively developed — yet 80% of its recent reviews sit at 3 stars or fewer:',
     'change-case-companion': 'VS Code has multiple "change case" extensions with millions of combined installs — JetBrains Marketplace had no real equivalent (confirmed by search before building this). Not a competitor-complaint build; a deliberate bet on a pattern already proven popular elsewhere.',
     'env-diff-companion': 'Env-diff/env-sync tooling already exists across other editors and CLI tools — JetBrains Marketplace had no real equivalent (confirmed by search before building this). A deliberate bet on an already-proven pattern, not a competitor-complaint build.',
+    'env-var-missing-companion': { poster: "/media/env-var-missing-companion/poster.webp", mp4: "/media/env-var-missing-companion/demo.mp4", webm: "/media/env-var-missing-companion/demo.webm" },
     'error-lens-companion': 'VS Code\'s Error Lens extension has 10M+ installs and is one of that ecosystem\'s most-used tools — confirmed before building this that JetBrains Marketplace had no equivalent yet.',
     'import-cost-companion': 'The closest existing plugin in this space (135K downloads) has 75% of its reviews at 3 stars or fewer — a documented, years-long pattern of severe CPU spikes and IDE freezes:',
     'json-to-code-companion': '"Paste JSON as Code"-style tools are widely used across other editors — JetBrains Marketplace had no real equivalent (confirmed by search before building this).',
