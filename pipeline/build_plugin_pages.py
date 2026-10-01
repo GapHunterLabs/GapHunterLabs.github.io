@@ -368,6 +368,15 @@ class Sources:
         self.cat_icon_inner = js_literal(self.shared_js, "CAT_ICON_INNER", label)
         if "calendar" not in self.icons:
             die("falta ICONS.calendar en js/catalog-shared.js (usado por el stat 'Published')")
+        # Una entrada de demo pegada en el bloque equivocado (GAP_OVERRIDES en vez de DEMO_MEDIA, 2026-10-01) rompia
+        # el render con un AttributeError en md_block y tres corridas del cron fallaron: se valida la forma al cargar.
+        wrong_gap = sorted(k for k, v in self.gap_overrides.items() if not isinstance(v, str))
+        if wrong_gap:
+            die("GAP_OVERRIDES debe tener solo texto; no lo es en: %s (una entrada de DEMO_MEDIA en el bloque "
+                "equivocado?)" % ", ".join(wrong_gap))
+        wrong_demo = sorted(k for k, v in self.demo_media.items() if not isinstance(v, dict))
+        if wrong_demo:
+            die("DEMO_MEDIA debe tener solo objetos {poster, mp4, webm}; no lo es en: %s" % ", ".join(wrong_demo))
 
         # Cross-reference real a VS Code, por el mismo slug de repo.
         self.vsx_by_repo = {}
