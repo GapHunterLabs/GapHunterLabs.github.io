@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-01 13:59:41 UTC",
+  "generatedAt": "2026-10-02 01:14:13 UTC",
   "totalPlugins": 146,
   "totalDownloads": 8657,
   "pending": 0,
@@ -7,10 +7,6 @@
   "totalReviews": 0,
   "avgRating": null,
   "trend7d": [
-    {
-      "date": "2026-09-25",
-      "totalDownloads": 6019
-    },
     {
       "date": "2026-09-26",
       "totalDownloads": 6764
@@ -34,45 +30,13 @@
     {
       "date": "2026-10-01",
       "totalDownloads": 8657
+    },
+    {
+      "date": "2026-10-02",
+      "totalDownloads": 8657
     }
   ],
-  "recentChanges": [
-    {
-      "date": "2026-10-01",
-      "type": "growth",
-      "name": "OpenAPI Companion",
-      "niche": "OpenAPI/Swagger Tooling",
-      "delta": 24
-    },
-    {
-      "date": "2026-10-01",
-      "type": "growth",
-      "name": "Mermaid Companion",
-      "niche": "Diagrams",
-      "delta": 13
-    },
-    {
-      "date": "2026-10-01",
-      "type": "growth",
-      "name": "Refactor Simulator",
-      "niche": "Refactoring Tools",
-      "delta": 12
-    },
-    {
-      "date": "2026-10-01",
-      "type": "growth",
-      "name": "Dependency Vulnerability Companion",
-      "niche": "Dependency / SCA Security",
-      "delta": 9
-    },
-    {
-      "date": "2026-10-01",
-      "type": "growth",
-      "name": "Semver Bump Mismatch Companion",
-      "niche": "VCS / Git Workflow",
-      "delta": 6
-    }
-  ],
+  "recentChanges": [],
   "plugins": [
     {
       "xmlId": "dev.gaphunter.mermaidcompanion",
