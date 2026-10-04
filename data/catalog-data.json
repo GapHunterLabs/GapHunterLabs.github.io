@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-03 10:13:31 UTC",
+  "generatedAt": "2026-10-04 00:15:34 UTC",
   "totalPlugins": 146,
   "totalDownloads": 8941,
   "pending": 0,
@@ -7,10 +7,6 @@
   "totalReviews": 0,
   "avgRating": null,
   "trend7d": [
-    {
-      "date": "2026-09-27",
-      "totalDownloads": 7409
-    },
     {
       "date": "2026-09-28",
       "totalDownloads": 7409
@@ -34,45 +30,13 @@
     {
       "date": "2026-10-03",
       "totalDownloads": 8941
+    },
+    {
+      "date": "2026-10-04",
+      "totalDownloads": 8941
     }
   ],
-  "recentChanges": [
-    {
-      "date": "2026-10-03",
-      "type": "growth",
-      "name": "Mermaid Companion",
-      "niche": "Diagrams",
-      "delta": 11
-    },
-    {
-      "date": "2026-10-03",
-      "type": "growth",
-      "name": "GraphQL Companion",
-      "niche": "GraphQL Tooling",
-      "delta": 8
-    },
-    {
-      "date": "2026-10-03",
-      "type": "growth",
-      "name": "Error Lens Companion",
-      "niche": "Inline Diagnostics",
-      "delta": 8
-    },
-    {
-      "date": "2026-10-03",
-      "type": "growth",
-      "name": "Unused npm Script Companion",
-      "niche": "Node.js / npm Tooling",
-      "delta": 5
-    },
-    {
-      "date": "2026-10-03",
-      "type": "growth",
-      "name": "Test Scaffold Companion",
-      "niche": "Testing / Codegen",
-      "delta": 5
-    }
-  ],
+  "recentChanges": [],
   "plugins": [
     {
       "xmlId": "dev.gaphunter.mermaidcompanion",
