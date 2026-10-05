@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="/js/theme-init.js?v=c436d752"></script>
 <script src="/js/site-chrome.js?v=e206c50a" defer></script>
-<meta name="description" content="Análisis de causa raíz que Gap Hunter Labs publicó sobre cinco errores reales en el tracker YouTrack de IntelliJ Platform (IJPL) de JetBrains.">
+<meta name="description" content="Un error reportado a JetBrains tras hallarlo un plugin del catálogo en el código de IntelliJ, más análisis de causa raíz en tickets de IntelliJ Platform.">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://gc.zgo.at; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; media-src 'self'; manifest-src 'self'; connect-src https://gaphunterlabs.goatcounter.com; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="theme-color" content="#0B1B34">
@@ -31,7 +31,7 @@
 <meta property="og:site_name" content="Gap Hunter Labs">
 <meta property="og:url" content="https://gaphunterlabs.github.io/es/ingenieria-y-evidencia/tickets-jetbrains-platform/">
 <meta property="og:title" content="Tickets de JetBrains Platform — Gap Hunter Labs">
-<meta property="og:description" content="Análisis de causa raíz que Gap Hunter Labs publicó sobre cinco errores reales en el tracker YouTrack de IntelliJ Platform (IJPL) de JetBrains.">
+<meta property="og:description" content="Un error reportado a JetBrains tras hallarlo un plugin del catálogo en el código de IntelliJ, más análisis de causa raíz en tickets de IntelliJ Platform.">
 <meta property="og:image" content="https://gaphunterlabs.github.io/og-image.png">
 <meta property="og:image:secure_url" content="https://gaphunterlabs.github.io/og-image.png">
 <meta property="og:image:type" content="image/png">
@@ -43,7 +43,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@GapHunterLabs">
 <meta name="twitter:title" content="Tickets de JetBrains Platform — Gap Hunter Labs">
-<meta name="twitter:description" content="Análisis de causa raíz que Gap Hunter Labs publicó sobre cinco errores reales en el tracker YouTrack de IntelliJ Platform (IJPL) de JetBrains.">
+<meta name="twitter:description" content="Un error reportado a JetBrains tras hallarlo un plugin del catálogo en el código de IntelliJ, más análisis de causa raíz en tickets de IntelliJ Platform.">
 <meta name="twitter:image" content="https://gaphunterlabs.github.io/og-image.png">
 <meta name="twitter:image:alt" content="Gap Hunter Labs — Informe del catálogo Plugin Intelligence">
 <link rel="stylesheet" href="/css/theme.css?v=73412941">
@@ -222,9 +222,28 @@
   <div class="page-hero method-intro band-dark gh-page-header">
     <p class="contact-kicker">Ingeniería y evidencia</p>
     <h1>Tickets de JetBrains Platform</h1>
-    <p class="contact-lead" style="margin-bottom:0">Análisis de causa raíz que Gap Hunter Labs publicó sobre errores reales en el propio tracker de IntelliJ Platform (IJPL) de JetBrains, independiente de cualquier plugin de este catálogo.</p>
+    <p class="contact-lead" style="margin-bottom:0">Errores en el propio código de JetBrains, documentados públicamente en su tracker YouTrack: uno presentado directamente después de que un plugin de este catálogo lo encontrara en el código de IntelliJ, más análisis de causa raíz publicado en tickets existentes de IntelliJ Platform (IJPL).</p>
   </div>
 
+  <div class="lab-section-head">
+    <h2>Presentado directamente</h2>
+    <p>Un error encontrado en el propio código de IntelliJ por un plugin de este catálogo y luego reportado a JetBrains.</p>
+  </div>
+  <div class="lab-tickets">
+    <article class="ticket-card">
+      <div class="ticket-head">
+        <a class="ticket-id" href="https://youtrack.jetbrains.com/issue/IDEA-393501" target="_blank" rel="noopener">IDEA-393501 &#8599;</a>
+        <h3>SearchForTestsTask: non-cancellable ReadAction.run() in a background task</h3>
+        <span class="ticket-status is-open">Abierto</span>
+      </div>
+      <p>Encontrado por <a href="/catalog/background-readaction-freeze-companion/">Background ReadAction Freeze Companion</a>. <code>SearchForTestsTask</code> es un <code>Task.Backgroundable</code> cuyo <code>run()</code> envuelve <code>search()</code> en el cancelable <code>ReadAction.nonBlocking()</code> y, unas líneas después, llama al <code>onFound()</code> hermano con el bloqueante <code>ReadAction.run()</code>, sin ningún <code>checkCanceled()</code> en toda la clase &mdash; el patrón que el Platform Blog de JetBrains señala como causa recurrente de congelamientos de la interfaz. Se presentó como IJPL-254654; JetBrains lo movió al proyecto IDEA (Java &rsaquo; Tests) y lo asignó a un desarrollador. La llamada sigue en <code>master</code> a octubre de 2026.</p>
+    </article>
+  </div>
+
+  <div class="lab-section-head">
+    <h2>Análisis sobre tickets existentes</h2>
+    <p>Comentarios de causa raíz publicados en tickets abiertos de IntelliJ Platform, cada uno a partir de la lectura del código actual en <code>master</code>, no de una reproducción en vivo.</p>
+  </div>
   <div class="lab-tickets">
     <article class="ticket-card">
       <div class="ticket-head">
@@ -232,7 +251,7 @@
         <h3>CME in workspace model</h3>
         <span class="ticket-status is-fixed">Corregido</span>
       </div>
-      <p>La falta de <code>ProgressManager.checkCanceled()</code> en <code>WorkspaceFileIndexDataImpl.fillPackageFilesAndDirectories()</code> permitía que una escritura pendiente del workspace model modificara un <code>LinkedHashMap</code> no sincronizado a mitad del recorrido &mdash; lo que producía una <code>ConcurrentModificationException</code> en lugar de una cancelación limpia. Solución: añadir la llamada que falta, siguiendo el patrón que ya usa quien la invoca.</p>
+      <p><code>WorkspaceFileIndexDataImpl.fillPackageFilesAndDirectories()</code> recorre un <code>LinkedHashMap</code> sin sincronización que puede cambiar en plena iteración, lo que produce una <code>ConcurrentModificationException</code>. El análisis publicado aquí ubicó esa iteración y propuso una llamada a <code>ProgressManager.checkCanceled()</code>. JetBrains corrigió el ticket el 2026-09-09 con un cambio distinto: las consultas por nombre de paquete ahora llaman a <code>ensureIsUpToDate()</code> antes de leer, de modo que el índice se actualiza primero (<a href="https://github.com/JetBrains/intellij-community/commit/e1d600df32849eb28169d7d497e012b239b02ec1" target="_blank" rel="noopener">commit e1d600df</a>).</p>
     </article>
     <article class="ticket-card">
       <div class="ticket-head">
@@ -240,7 +259,7 @@
         <h3>CME in InspectionToolRegistrar.createTools on loading/unloading plugins</h3>
         <span class="ticket-status is-submitted">Enviado</span>
       </div>
-      <p><code>toolFactories</code> se recorre como una vista viva y no sincronizada de un mapa mutable dentro de <code>createTools()</code>, en hilos de fondo y sin read-action lock &mdash; una descarga concurrente de un plugin puede modificar el mapa a mitad del recorrido. Confirmado: sigue siendo reproducible hoy, años después del reporte original.</p>
+      <p><code>toolFactories</code> se recorre como una vista viva y sin sincronización de un mapa mutable dentro de <code>createTools()</code>, en hilos de fondo y sin read-action lock &mdash; una descarga de plugin concurrente puede modificar el mapa en plena iteración. La misma vista viva sigue en <code>master</code> (ahora en Kotlin), así que la falla de 2020 parece reproducible en las mismas condiciones.</p>
     </article>
     <article class="ticket-card">
       <div class="ticket-head">
@@ -248,7 +267,7 @@
         <h3>Cannot create light service git4ide.repo.GitRepositoryManager because container is already disposed</h3>
         <span class="ticket-status is-submitted">Enviado</span>
       </div>
-      <p>El mismo patrón de <code>checkCanceled()</code> faltante que en IJPL-200871: la llamada original se movió tras una reestructuración del widget, pero ninguna de las nuevas funciones auxiliares de la cadena de búsqueda la invoca, así que el cierre de un proyecto todavía puede terminar en una <code>AlreadyDisposedException</code>. Se señaló como una sola limpieza sistémica junto con IJPL-200871, no como dos errores independientes.</p>
+      <p>La llamada original se movió tras una reestructuración del widget, pero la búsqueda del repositorio sigue corriendo bajo el obsoleto <code>runInReadActionWithWriteActionPriority</code>, y ninguna de las funciones auxiliares de la nueva cadena (<code>GitBranchUtil</code>, <code>DvcsUtil</code>, <code>GitUtil</code>) llama a <code>checkCanceled()</code> &mdash; así que el cierre de un proyecto todavía puede terminar en una <code>AlreadyDisposedException</code>, con una ventana más estrecha que cuando se reportó.</p>
     </article>
     <article class="ticket-card">
       <div class="ticket-head">
@@ -256,7 +275,7 @@
         <h3>Git Log is empty due to a StackOverflow exception in IntToIntBtree.processLeafPages</h3>
         <span class="ticket-status is-open">Abierto</span>
       </div>
-      <p><code>processLeafPages</code> es recursivo sin límite de profundidad de pila, así que un índice lo bastante grande desborda la pila y vacía Git Log en silencio. Solución propuesta: reescribir el recorrido de forma iterativa.</p>
+      <p><code>processLeafPages</code> se llama recursivamente sin ningún límite de profundidad de pila, así que un índice lo bastante grande desborda la pila y deja el Git Log vacío sin avisar. El mismo método falla en IJPL-250279, reportado de forma independiente cerca de un año después para la caché de compilación de JPS; los dos tickets no estaban vinculados. Corrección propuesta: reescribir el recorrido de forma iterativa.</p>
     </article>
     <article class="ticket-card">
       <div class="ticket-head">
@@ -264,7 +283,7 @@
         <h3>Memory leak via ProjectRootManagerImpl::rootsChanged</h3>
         <span class="ticket-status is-open">Abierto</span>
       </div>
-      <p>La lista <code>changes</code> de <code>BatchSession</code> solo se vacía cuando su contador <code>pendingRootsChanged</code> llega exactamente a 0 &mdash; pero el contador se incrementa sin un manejo de excepciones equivalente, así que una sola excepción o una llamada reentrante asimétrica lo deja atascado por encima de 0 para siempre, y <code>changes</code> sigue creciendo con cada evento roots-changed posterior.</p>
+      <p>La lista <code>changes</code> de <code>BatchSession</code> solo se vacía cuando su contador <code>pendingRootsChanged</code> llega exactamente a 0 &mdash; pero el contador se incrementa sin el manejo de excepciones correspondiente, así que una excepción o una llamada reentrante asimétrica puede dejarlo trabado por encima de 0 para siempre, y desde ahí <code>changes</code> sigue creciendo con cada evento de cambio de raíces. La falta de esa red de seguridad se ve en el código; el primer desbalance exacto no se rastreó.</p>
     </article>
   </div>
 

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="/js/theme-init.js?v=c436d752"></script>
 <script src="/js/site-chrome.js?v=e206c50a" defer></script>
-<meta name="description" content="Los plugins de Gap Hunter Labs con la evidencia más sólida: un patrón de congelamiento que nombró la propia JetBrains y una brecha de cumplimiento que ningún competidor en la nube puede cubrir.">
+<meta name="description" content="Plugins con la evidencia más sólida: un congelamiento que nombró JetBrains, una brecha de cumplimiento que la nube no cubre y sinks de inyección con CVE reales.">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://gc.zgo.at; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; media-src 'self'; manifest-src 'self'; connect-src https://gaphunterlabs.goatcounter.com; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="theme-color" content="#0B1B34">
@@ -31,7 +31,7 @@
 <meta property="og:site_name" content="Gap Hunter Labs">
 <meta property="og:url" content="https://gaphunterlabs.github.io/es/ingenieria-y-evidencia/casos-de-estudio/">
 <meta property="og:title" content="Casos de estudio — Ingeniería y evidencia | Gap Hunter Labs">
-<meta property="og:description" content="Los plugins de Gap Hunter Labs con la evidencia más sólida: un patrón de congelamiento que nombró la propia JetBrains y una brecha de cumplimiento que ningún competidor en la nube puede cubrir.">
+<meta property="og:description" content="Plugins con la evidencia más sólida: un congelamiento que nombró JetBrains, una brecha de cumplimiento que la nube no cubre y sinks de inyección con CVE reales.">
 <meta property="og:image" content="https://gaphunterlabs.github.io/og-image.png">
 <meta property="og:image:secure_url" content="https://gaphunterlabs.github.io/og-image.png">
 <meta property="og:image:type" content="image/png">
@@ -43,7 +43,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@GapHunterLabs">
 <meta name="twitter:title" content="Casos de estudio — Ingeniería y evidencia | Gap Hunter Labs">
-<meta name="twitter:description" content="Los plugins de Gap Hunter Labs con la evidencia más sólida: un patrón de congelamiento que nombró la propia JetBrains y una brecha de cumplimiento que ningún competidor en la nube puede cubrir.">
+<meta name="twitter:description" content="Plugins con la evidencia más sólida: un congelamiento que nombró JetBrains, una brecha de cumplimiento que la nube no cubre y sinks de inyección con CVE reales.">
 <meta name="twitter:image" content="https://gaphunterlabs.github.io/og-image.png">
 <meta name="twitter:image:alt" content="Gap Hunter Labs — Informe del catálogo Plugin Intelligence">
 <link rel="stylesheet" href="/css/theme.css?v=73412941">
@@ -155,6 +155,7 @@
   .identity-card:hover { border-color: var(--accent); }
   .identity-card p, .identity-card li { color: var(--text-dim); line-height: 1.65; overflow-wrap: anywhere; }
   .identity-card h3 { margin: 0; }
+  .identity-card code { background: var(--surface-2); padding: 1px 5px; border-radius: var(--radius-sm); font-size: 0.92em; overflow-wrap: anywhere; }
   .identity-case { flex-direction: row; align-items: stretch; gap: var(--section-gap); flex-wrap: wrap; }
   .case-body { flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
   .case-meta { flex: 0 0 220px; margin: 0; padding-left: var(--section-gap); border-left: 1px solid var(--border); display: flex; flex-direction: column; gap: 14px; }
@@ -231,6 +232,7 @@
         <p class="eyebrow">Caso de estudio</p>
         <h3>Background ReadAction Freeze Companion</h3>
         <p>No es la historia habitual de &ldquo;los usuarios de un competidor de pago se quejan&rdquo; sobre la que se construye este catálogo &mdash; esta nace directamente del Platform Blog de JetBrains: un punto de entrada en un hilo de fondo que llega a una llamada de read-lock bloqueante y no cancelable, un patrón que su propio equipo de Platform señaló públicamente como una causa real y recurrente de congelamientos del IDE.</p>
+        <p>Aplicado al propio código de IntelliJ, encontró el patrón en <code>SearchForTestsTask</code>, que ejecuta un paso con el cancelable <code>ReadAction.nonBlocking()</code> y el paso hermano con el bloqueante <code>ReadAction.run()</code>. Eso se convirtió en <a href="https://youtrack.jetbrains.com/issue/IDEA-393501" target="_blank" rel="noopener">IDEA-393501</a>, presentado a JetBrains y ya clasificado y asignado. Sobre ese mismo código real, descartó una read action cuyo único llamador corre en el EDT: un falso positivo evitado en código real, no en un ejemplo sintético.</p>
         <a class="btn" href="https://github.com/GapHunterLabs/background-readaction-freeze-companion#readme" target="_blank" rel="noopener">Ver la evidencia &rarr;</a>
       </div>
       <dl class="case-meta">
@@ -244,7 +246,7 @@
         </div>
         <div class="case-meta-row">
           <dt><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M8 1v14M2 8h12" stroke-linecap="round"/><circle cx="8" cy="8" r="6"/></svg>Impacto</dt>
-          <dd>Alta <span class="case-meta-note">&mdash; nombrado por la propia JetBrains, no por una queja sobre un competidor</span></dd>
+          <dd>Alta <span class="case-meta-note">&mdash; nombrado por la propia JetBrains y luego encontrado en el propio código de IntelliJ (IDEA-393501)</span></dd>
         </div>
       </dl>
     </article>
@@ -253,7 +255,7 @@
       <div class="case-body">
         <p class="eyebrow">Caso de estudio</p>
         <h3>Dependency Vulnerability Companion</h3>
-        <p>Todas las alternativas principales &mdash; Aikido, Xygeni, los propios plugins de JFrog en Marketplace, Snyk &mdash; exigen una cuenta en la nube o un token de acceso personal antes de hacer nada; el núcleo OSS de Semgrep cambió de licencia en diciembre de 2024, y justo por eso diez proveedores de DevSecOps competidores lo bifurcaron en Opengrep semanas después. Este plugin revisa la misma clase de dependencias vulnerables sin cuenta, sin token y sin ninguna llamada de red &mdash; la única forma de atender a contratistas de defensa regulados por CMMC 2.0, un segmento real de compradores que estructuralmente no puede usar ninguna de las alternativas en la nube mencionadas.</p>
+        <p>Todas las alternativas principales &mdash; Aikido, Xygeni, los propios plugins de JFrog en Marketplace, Snyk &mdash; exigen una cuenta en la nube o un token de acceso personal antes de hacer nada; en diciembre de 2024, Semgrep pasó sus reglas mantenidas a una nueva licencia restrictiva, y un consorcio de proveedores AppSec competidores (Aikido, Endor Labs, Orca Security y otros) respondió bifurcando el motor como Opengrep. Este plugin revisa la misma clase de dependencias vulnerables sin cuenta, sin token y sin ninguna llamada de red &mdash; la única forma de atender a contratistas de defensa regulados por CMMC 2.0, un segmento real de compradores que estructuralmente no puede usar ninguna de las alternativas en la nube mencionadas.</p>
         <a class="btn" href="https://github.com/GapHunterLabs/dependency-vulnerability-companion#readme" target="_blank" rel="noopener">Ver la evidencia &rarr;</a>
       </div>
       <dl class="case-meta">
@@ -272,7 +274,76 @@
       </dl>
     </article>
 
-    <p class="lab-pending">Aquí irán llegando más casos de estudio a medida que se seleccionen &mdash; cada uno exige leer toda la evidencia del plugin en su propio README y confirmar cada afirmación contra una fuente pública real, el mismo estándar que los dos de arriba. Cada plugin del <a href="/es/catalogo/">catálogo</a> ya incluye evidencia real en su propia ficha; esta página reúne los pocos con las historias más inusuales o mejor documentadas.</p>
+    <article class="identity-card identity-case">
+      <div class="case-body">
+        <p class="eyebrow">Caso de estudio</p>
+        <h3>SpEL Injection Sink Companion</h3>
+        <p>La inyección de Spring Expression Language no es una clase de error teórica: en <a href="https://nvd.nist.gov/vuln/detail/CVE-2022-22963" target="_blank" rel="noopener">CVE-2022-22963</a>, una expresión de enrutamiento enviada por quien hace la llamada se convertía en código SpEL que Spring Cloud Function analizaba y evaluaba, con ejecución remota de código como resultado. CISA la incluyó en su catálogo de vulnerabilidades explotadas conocidas (KEV) en agosto de 2022. Este plugin marca el mismo mecanismo en el código de la aplicación, directamente en el editor: una llamada a <code>ExpressionParser.parseExpression(...)</code> de Spring cuyo argumento se construye a partir de un parámetro de un endpoint HTTP. El análisis de taint para la categoría general existe en IntelliJ IDEA Ultimate y en el nivel Ultimate Plus de Qodana; este plugin es gratuito, no requiere cuenta y funciona en Community Edition.</p>
+        <a class="btn" href="https://github.com/GapHunterLabs/spel-injection-sink-companion#readme" target="_blank" rel="noopener">Ver la evidencia &rarr;</a>
+      </div>
+      <dl class="case-meta">
+        <div class="case-meta-row">
+          <dt><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h8" stroke-linecap="round"/></svg>Fuente</dt>
+          <dd>NVD + CISA KEV (CVE-2022-22963)</dd>
+        </div>
+        <div class="case-meta-row">
+          <dt><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>Categoría</dt>
+          <dd>Seguridad</dd>
+        </div>
+        <div class="case-meta-row">
+          <dt><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M8 1v14M2 8h12" stroke-linecap="round"/><circle cx="8" cy="8" r="6"/></svg>Impacto</dt>
+          <dd>Crítica <span class="case-meta-note">&mdash; CVSS 9.8, incluida por CISA entre las vulnerabilidades explotadas activamente</span></dd>
+        </div>
+      </dl>
+    </article>
+
+    <article class="identity-card identity-case">
+      <div class="case-body">
+        <p class="eyebrow">Caso de estudio</p>
+        <h3>SSRF Allow-List Bypass Companion</h3>
+        <p>Validar una URL saliente comprobando si un host permitido es prefijo o subcadena del texto crudo es un enfoque estructuralmente débil, y el propio Spring Framework lo demostró: en <a href="https://spring.io/security/cve-2024-22243" target="_blank" rel="noopener">CVE-2024-22243</a>, una URL analizada con <code>UriComponentsBuilder</code> podía pasar una validación de host mientras la petición iba a otro destino, lo que permitía SSRF o una redirección abierta. La <a href="https://github.com/spring-projects/spring-framework/commit/120ea0a51c63171e624ca55dbd7cae627d53a042" target="_blank" rel="noopener">corrección</a> cambió cómo se analiza la parte de userinfo de la URL. Este plugin marca una llamada HTTP saliente (<code>new URL(...)</code> o <code>RestTemplate</code> de Spring) que usa un parámetro de endpoint validado solo con <code>.startsWith</code>/<code>.contains</code> sobre el texto crudo de la URL.</p>
+        <a class="btn" href="https://github.com/GapHunterLabs/ssrf-allowlist-bypass-companion#readme" target="_blank" rel="noopener">Ver la evidencia &rarr;</a>
+      </div>
+      <dl class="case-meta">
+        <div class="case-meta-row">
+          <dt><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h8" stroke-linecap="round"/></svg>Fuente</dt>
+          <dd>Aviso de seguridad de Spring + NVD (CVE-2024-22243)</dd>
+        </div>
+        <div class="case-meta-row">
+          <dt><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>Categoría</dt>
+          <dd>Seguridad</dd>
+        </div>
+        <div class="case-meta-row">
+          <dt><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M8 1v14M2 8h12" stroke-linecap="round"/><circle cx="8" cy="8" r="6"/></svg>Impacto</dt>
+          <dd>Alta <span class="case-meta-note">&mdash; CVSS 8.1, en el propio Spring Framework, cuyo <code>RestTemplate</code> es uno de los sinks que se revisan aquí</span></dd>
+        </div>
+      </dl>
+    </article>
+
+    <article class="identity-card identity-case">
+      <div class="case-body">
+        <p class="eyebrow">Caso de estudio</p>
+        <h3>Lucene Query Injection Companion</h3>
+        <p>Cuando la entrada cruda del usuario se convierte en sintaxis de consulta de Lucene, puede saltarse los filtros que la búsqueda debía aplicar, y una sintaxis profundamente anidada puede tumbar el clúster: <a href="https://nvd.nist.gov/vuln/detail/CVE-2023-31419" target="_blank" rel="noopener">CVE-2023-31419</a> es un desbordamiento de pila y una denegación de servicio provocados por una query string manipulada contra la propia API <code>_search</code> de Elasticsearch. La inyección SQL la cubren todas las herramientas SAST importantes; este sink no lo cubre ninguna query del repositorio público de CodeQL. Este plugin marca una llamada a <code>QueryBuilders.queryStringQuery(...)</code> o <code>.simpleQueryStringQuery(...)</code> cuya entrada se construye a partir de un parámetro de un endpoint HTTP.</p>
+        <a class="btn" href="https://github.com/GapHunterLabs/lucene-query-injection-companion#readme" target="_blank" rel="noopener">Ver la evidencia &rarr;</a>
+      </div>
+      <dl class="case-meta">
+        <div class="case-meta-row">
+          <dt><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h8" stroke-linecap="round"/></svg>Fuente</dt>
+          <dd>NVD (CVE-2023-31419)</dd>
+        </div>
+        <div class="case-meta-row">
+          <dt><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>Categoría</dt>
+          <dd>Seguridad</dd>
+        </div>
+        <div class="case-meta-row">
+          <dt><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M8 1v14M2 8h12" stroke-linecap="round"/><circle cx="8" cy="8" r="6"/></svg>Impacto</dt>
+          <dd>Media <span class="case-meta-note">&mdash; CVSS 6.5, denegación de servicio más evasión de filtros; ninguna query pública de CodeQL cubre este sink</span></dd>
+        </div>
+      </dl>
+    </article>
+
+    <p class="lab-pending">Aquí irán llegando más casos de estudio a medida que se seleccionen &mdash; cada uno exige leer toda la evidencia del plugin en su propio README y confirmar cada afirmación contra una fuente pública real, el mismo estándar que los de arriba. Cada plugin del <a href="/es/catalogo/">catálogo</a> ya incluye evidencia real en su propia ficha; esta página reúne los pocos con las historias más inusuales o mejor documentadas.</p>
   </div>
 
   <p class="ee-next">Siguiente: <a href="/es/ingenieria-y-evidencia/tickets-jetbrains-platform/">Tickets de JetBrains Platform &rarr;</a></p>

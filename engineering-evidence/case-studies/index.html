@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="/js/theme-init.js?v=c436d752"></script>
 <script src="/js/site-chrome.js?v=e206c50a" defer></script>
-<meta name="description" content="The Gap Hunter Labs plugins with the strongest evidence: a freeze pattern JetBrains named itself and a compliance gap no cloud competitor can clear.">
+<meta name="description" content="Plugins with the strongest evidence: a freeze pattern JetBrains named itself, a compliance gap cloud tools cannot clear, and injection sinks behind real CVEs.">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://gc.zgo.at; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; media-src 'self'; manifest-src 'self'; connect-src https://gaphunterlabs.goatcounter.com; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="theme-color" content="#0B1B34">
@@ -31,7 +31,7 @@
 <meta property="og:site_name" content="Gap Hunter Labs">
 <meta property="og:url" content="https://gaphunterlabs.github.io/engineering-evidence/case-studies/">
 <meta property="og:title" content="Case Studies — Engineering &amp; Evidence | Gap Hunter Labs">
-<meta property="og:description" content="The Gap Hunter Labs plugins with the strongest evidence: a freeze pattern JetBrains named itself and a compliance gap no cloud competitor can clear.">
+<meta property="og:description" content="Plugins with the strongest evidence: a freeze pattern JetBrains named itself, a compliance gap cloud tools cannot clear, and injection sinks behind real CVEs.">
 <meta property="og:image" content="https://gaphunterlabs.github.io/og-image.png">
 <meta property="og:image:secure_url" content="https://gaphunterlabs.github.io/og-image.png">
 <meta property="og:image:type" content="image/png">
@@ -42,7 +42,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@GapHunterLabs">
 <meta name="twitter:title" content="Case Studies — Engineering &amp; Evidence | Gap Hunter Labs">
-<meta name="twitter:description" content="The Gap Hunter Labs plugins with the strongest evidence: a freeze pattern JetBrains named itself and a compliance gap no cloud competitor can clear.">
+<meta name="twitter:description" content="Plugins with the strongest evidence: a freeze pattern JetBrains named itself, a compliance gap cloud tools cannot clear, and injection sinks behind real CVEs.">
 <meta name="twitter:image" content="https://gaphunterlabs.github.io/og-image.png">
 <meta name="twitter:image:alt" content="Gap Hunter Labs — Plugin Intelligence Catalog Report">
 <link rel="stylesheet" href="/css/theme.css?v=73412941">
@@ -154,6 +154,7 @@
   .identity-card:hover { border-color: var(--accent); }
   .identity-card p, .identity-card li { color: var(--text-dim); line-height: 1.65; overflow-wrap: anywhere; }
   .identity-card h3 { margin: 0; }
+  .identity-card code { background: var(--surface-2); padding: 1px 5px; border-radius: var(--radius-sm); font-size: 0.92em; overflow-wrap: anywhere; }
   .identity-case { flex-direction: row; align-items: stretch; gap: var(--section-gap); flex-wrap: wrap; }
   .case-body { flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
   .case-meta { flex: 0 0 220px; margin: 0; padding-left: var(--section-gap); border-left: 1px solid var(--border); display: flex; flex-direction: column; gap: 14px; }
@@ -230,6 +231,7 @@
         <p class="eyebrow">Case study</p>
         <h3>Background ReadAction Freeze Companion</h3>
         <p>Not the usual &ldquo;a paid competitor's users are complaining&rdquo; story this catalog is built around &mdash; this one is motivated directly by JetBrains' own Platform Blog: a background-thread entry point reaching a blocking, non-cancellable read-lock call, a pattern their own Platform team publicly named as a real, recurring cause of IDE freezes.</p>
+        <p>Pointed at IntelliJ&rsquo;s own source, it found the pattern in <code>SearchForTestsTask</code>, which runs one step through the cancellable <code>ReadAction.nonBlocking()</code> and its sibling through the blocking <code>ReadAction.run()</code>. That became <a href="https://youtrack.jetbrains.com/issue/IDEA-393501" target="_blank" rel="noopener">IDEA-393501</a>, filed with JetBrains and since triaged and assigned. On the same real code it skipped a read action whose only caller runs on the EDT, a false positive avoided rather than a synthetic one.</p>
         <a class="btn" href="https://github.com/GapHunterLabs/background-readaction-freeze-companion#readme" target="_blank" rel="noopener">View evidence &rarr;</a>
       </div>
       <dl class="case-meta">
@@ -243,7 +245,7 @@
         </div>
         <div class="case-meta-row">
           <dt><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M8 1v14M2 8h12" stroke-linecap="round"/><circle cx="8" cy="8" r="6"/></svg>Impact</dt>
-          <dd>High <span class="case-meta-note">&mdash; named by JetBrains itself, not a competitor complaint</span></dd>
+          <dd>High <span class="case-meta-note">&mdash; named by JetBrains itself, then found in IntelliJ&rsquo;s own code (IDEA-393501)</span></dd>
         </div>
       </dl>
     </article>
@@ -252,7 +254,7 @@
       <div class="case-body">
         <p class="eyebrow">Case study</p>
         <h3>Dependency Vulnerability Companion</h3>
-        <p>Every leading alternative &mdash; Aikido, Xygeni, JFrog's own Marketplace plugins, Snyk &mdash; requires a cloud account or personal access token before it does anything; Semgrep's OSS core was relicensed in December 2024, which is exactly why ten competing DevSecOps vendors forked it into Opengrep weeks later. This plugin checks the same class of vulnerable dependencies with zero account, zero token, and zero network calls, ever &mdash; the only way to serve CMMC 2.0&ndash;regulated defense contractors, a real buyer segment that structurally cannot use any cloud-based alternative above.</p>
+        <p>Every leading alternative &mdash; Aikido, Xygeni, JFrog's own Marketplace plugins, Snyk &mdash; requires a cloud account or personal access token before it does anything; in December 2024 Semgrep moved its maintained rules to a new restrictive license, and a consortium of competing AppSec vendors (Aikido, Endor Labs, Orca Security and others) answered by forking the engine as Opengrep. This plugin checks the same class of vulnerable dependencies with zero account, zero token, and zero network calls, ever &mdash; the only way to serve CMMC 2.0&ndash;regulated defense contractors, a real buyer segment that structurally cannot use any cloud-based alternative above.</p>
         <a class="btn" href="https://github.com/GapHunterLabs/dependency-vulnerability-companion#readme" target="_blank" rel="noopener">View evidence &rarr;</a>
       </div>
       <dl class="case-meta">
@@ -271,7 +273,76 @@
       </dl>
     </article>
 
-    <p class="lab-pending">More case studies land here as they're curated &mdash; each one requires reading the plugin's full evidence in its own README and confirming every claim against a real, public source, the same bar as the two above. Every plugin in the <a href="/catalog/">catalog</a> already ships with real evidence in its own listing; this page holds the handful with the most unusual or well-documented stories behind them.</p>
+    <article class="identity-card identity-case">
+      <div class="case-body">
+        <p class="eyebrow">Case study</p>
+        <h3>SpEL Injection Sink Companion</h3>
+        <p>Spring Expression Language injection is not a theoretical bug class: in <a href="https://nvd.nist.gov/vuln/detail/CVE-2022-22963" target="_blank" rel="noopener">CVE-2022-22963</a>, a routing expression supplied by the caller became SpEL source text that Spring Cloud Function parsed and evaluated, leading to remote code execution. CISA added it to its Known Exploited Vulnerabilities catalog in August 2022. This plugin flags the same mechanism in application code, inline in the editor: a Spring <code>ExpressionParser.parseExpression(...)</code> call whose argument is built from an HTTP endpoint parameter. Taint analysis for the broader category exists in IntelliJ IDEA Ultimate and Qodana&rsquo;s Ultimate Plus tier; this plugin is free, needs no account, and runs in Community Edition.</p>
+        <a class="btn" href="https://github.com/GapHunterLabs/spel-injection-sink-companion#readme" target="_blank" rel="noopener">View evidence &rarr;</a>
+      </div>
+      <dl class="case-meta">
+        <div class="case-meta-row">
+          <dt><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h8" stroke-linecap="round"/></svg>Source</dt>
+          <dd>NVD + CISA KEV (CVE-2022-22963)</dd>
+        </div>
+        <div class="case-meta-row">
+          <dt><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>Category</dt>
+          <dd>Security</dd>
+        </div>
+        <div class="case-meta-row">
+          <dt><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M8 1v14M2 8h12" stroke-linecap="round"/><circle cx="8" cy="8" r="6"/></svg>Impact</dt>
+          <dd>Critical <span class="case-meta-note">&mdash; CVSS 9.8, listed by CISA as exploited in the wild</span></dd>
+        </div>
+      </dl>
+    </article>
+
+    <article class="identity-card identity-case">
+      <div class="case-body">
+        <p class="eyebrow">Case study</p>
+        <h3>SSRF Allow-List Bypass Companion</h3>
+        <p>Validating an outbound URL by checking whether an allowed host is a prefix or substring of the raw string is structurally unsound, and Spring Framework showed why: in <a href="https://spring.io/security/cve-2024-22243" target="_blank" rel="noopener">CVE-2024-22243</a>, a URL parsed by <code>UriComponentsBuilder</code> could pass a host validation check while the request went somewhere else, enabling SSRF or an open redirect. The <a href="https://github.com/spring-projects/spring-framework/commit/120ea0a51c63171e624ca55dbd7cae627d53a042" target="_blank" rel="noopener">fix</a> changed how the userinfo part of a URL is parsed. This plugin flags an outbound HTTP call (<code>new URL(...)</code> or Spring&rsquo;s <code>RestTemplate</code>) that uses an endpoint parameter validated only with <code>.startsWith</code>/<code>.contains</code> against the raw URL string.</p>
+        <a class="btn" href="https://github.com/GapHunterLabs/ssrf-allowlist-bypass-companion#readme" target="_blank" rel="noopener">View evidence &rarr;</a>
+      </div>
+      <dl class="case-meta">
+        <div class="case-meta-row">
+          <dt><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h8" stroke-linecap="round"/></svg>Source</dt>
+          <dd>Spring Security Advisory + NVD (CVE-2024-22243)</dd>
+        </div>
+        <div class="case-meta-row">
+          <dt><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>Category</dt>
+          <dd>Security</dd>
+        </div>
+        <div class="case-meta-row">
+          <dt><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M8 1v14M2 8h12" stroke-linecap="round"/><circle cx="8" cy="8" r="6"/></svg>Impact</dt>
+          <dd>High <span class="case-meta-note">&mdash; CVSS 8.1, in Spring Framework itself, whose <code>RestTemplate</code> is one of the sinks checked here</span></dd>
+        </div>
+      </dl>
+    </article>
+
+    <article class="identity-card identity-case">
+      <div class="case-body">
+        <p class="eyebrow">Case study</p>
+        <h3>Lucene Query Injection Companion</h3>
+        <p>When raw user input becomes Lucene query syntax, it can bypass the filters a search was meant to enforce, and deeply nested syntax can take the cluster down: <a href="https://nvd.nist.gov/vuln/detail/CVE-2023-31419" target="_blank" rel="noopener">CVE-2023-31419</a> is a stack overflow and denial of service triggered by a crafted query string on Elasticsearch&rsquo;s own <code>_search</code> API. SQL injection is covered by every major SAST tool; this sink is not covered by any query in the public CodeQL repository. This plugin flags a <code>QueryBuilders.queryStringQuery(...)</code> or <code>.simpleQueryStringQuery(...)</code> call whose argument is built from an HTTP endpoint parameter.</p>
+        <a class="btn" href="https://github.com/GapHunterLabs/lucene-query-injection-companion#readme" target="_blank" rel="noopener">View evidence &rarr;</a>
+      </div>
+      <dl class="case-meta">
+        <div class="case-meta-row">
+          <dt><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M2 4h12M2 8h12M2 12h8" stroke-linecap="round"/></svg>Source</dt>
+          <dd>NVD (CVE-2023-31419)</dd>
+        </div>
+        <div class="case-meta-row">
+          <dt><svg viewBox="0 0 16 16" aria-hidden="true"><rect x="2" y="2" width="5" height="5" rx="1"/><rect x="9" y="2" width="5" height="5" rx="1"/><rect x="2" y="9" width="5" height="5" rx="1"/><rect x="9" y="9" width="5" height="5" rx="1"/></svg>Category</dt>
+          <dd>Security</dd>
+        </div>
+        <div class="case-meta-row">
+          <dt><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M8 1v14M2 8h12" stroke-linecap="round"/><circle cx="8" cy="8" r="6"/></svg>Impact</dt>
+          <dd>Medium <span class="case-meta-note">&mdash; CVSS 6.5 denial of service, plus filter bypass; no public CodeQL query covers this sink</span></dd>
+        </div>
+      </dl>
+    </article>
+
+    <p class="lab-pending">More case studies land here as they're curated &mdash; each one requires reading the plugin's full evidence in its own README and confirming every claim against a real, public source, the same bar as the ones above. Every plugin in the <a href="/catalog/">catalog</a> already ships with real evidence in its own listing; this page holds the handful with the most unusual or well-documented stories behind them.</p>
   </div>
 
   <p class="ee-next">Next: <a href="/engineering-evidence/jetbrains-platform-tickets/">JetBrains Platform tickets &rarr;</a></p>
