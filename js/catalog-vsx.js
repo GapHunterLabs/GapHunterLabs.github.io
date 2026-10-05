@@ -79,13 +79,20 @@
           render(true);
         });
       });
-      if (scroll) section.scrollIntoView({ block: 'start', behavior: reducedMotion ? 'auto' : 'smooth' });
+      // 2026-10-05: mismo flujo que la grilla JetBrains (js/catalog-scroll.js)
+      if (scroll) {
+        if (window.GHLCatalogScroll) window.GHLCatalogScroll.toResults(grid);
+        else section.scrollIntoView({ block: 'start', behavior: reducedMotion ? 'auto' : 'smooth' });
+      }
     }
     if (search) {
       var timer;
       search.addEventListener('input', function () {
         clearTimeout(timer);
-        timer = setTimeout(function () { query = search.value.trim().toLowerCase(); page = 1; render(false); }, 120);
+        timer = setTimeout(function () {
+          query = search.value.trim().toLowerCase(); page = 1; render(false);
+          if (window.GHLCatalogScroll) window.GHLCatalogScroll.reveal(grid, search);
+        }, 120);
       });
     }
     render(false);

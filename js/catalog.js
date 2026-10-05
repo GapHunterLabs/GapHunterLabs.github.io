@@ -207,10 +207,20 @@
     else renderTable();
   }
 
+  // 2026-10-05: el flujo de scroll vive en js/catalog-scroll.js (mismo
+  // criterio para paginar, buscar y filtrar; margen segun el alto real del
+  // topbar). Sin ese script, se vuelve al scrollIntoView de antes.
+  function resultsEl() {
+    return mode === 'table' ? document.getElementById('tableView') : document.getElementById('fieldMain');
+  }
   function scrollCatalogIntoView() {
-    var target = mode === 'table' ? document.getElementById('tableView') : document.getElementById('fieldMain');
+    var target = resultsEl();
     if (!target) return;
+    if (window.GHLCatalogScroll) { window.GHLCatalogScroll.toResults(target); return; }
     target.scrollIntoView({ behavior: PREFERS_REDUCED_MOTION ? 'auto' : 'smooth', block: 'start' });
+  }
+  function revealResults(keep) {
+    if (window.GHLCatalogScroll) window.GHLCatalogScroll.reveal(resultsEl(), keep || null);
   }
 
   function switchMode(newMode, btn) {
@@ -223,6 +233,7 @@
     mode = newMode;
     catalogPage = 1;
     renderAll();
+    revealResults();
   }
 
   document.getElementById('modeToggle').addEventListener('click', function (e) {
@@ -315,6 +326,7 @@
       filterText = val.trim().toLowerCase();
       catalogPage = 1;
       renderAll();
+      revealResults(document.getElementById('searchInput'));
     }, 120);
   });
   var pricingSelect = document.getElementById('pricingFilter');
@@ -329,6 +341,7 @@
     } catch (err) { /* sin History API: el filtro igual funciona */ }
     catalogPage = 1;
     renderAll();
+    revealResults(document.getElementById('controls'));
   });
   var categoryFilterSelect = document.getElementById('categoryFilter');
   if (categoryFilterSelect) {
@@ -336,6 +349,7 @@
       filterCategory = e.target.value;
       catalogPage = 1;
       renderAll();
+      revealResults(document.getElementById('controls'));
     });
   }
   if (board) {
@@ -346,8 +360,10 @@
       filterCategory = (!cat || filterCategory === cat) ? '' : cat;
       catalogPage = 1;
       renderAll();
-      // Este tablero vive pegado arriba de la grilla -- sin
-      // scrollCatalogIntoView() a proposito, mismo criterio que antes.
+      // 2026-10-05: el tablero queda fijo (sticky) en escritorio; si se elige
+      // una categoria estando abajo en la lista, los resultados quedaban por
+      // encima de la pantalla. Solo se desplaza cuando hace falta.
+      revealResults();
     });
   }
 
