@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="/js/theme-init.js?v=c436d752"></script>
-<script src="/js/site-chrome.js?v=e206c50a" defer></script>
+<script src="/js/site-chrome.js?v=9d3c8187" defer></script>
 <meta name="description" content="Plugins with the strongest evidence: a freeze pattern JetBrains named itself, a compliance gap cloud tools cannot clear, and injection sinks behind real CVEs.">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://gc.zgo.at; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; media-src 'self'; manifest-src 'self'; connect-src https://gaphunterlabs.goatcounter.com; object-src 'none'; base-uri 'none'; form-action 'none'">
@@ -46,7 +46,7 @@
 <meta name="twitter:image" content="https://gaphunterlabs.github.io/og-image.png">
 <meta name="twitter:image:alt" content="Gap Hunter Labs — Plugin Intelligence Catalog Report">
 <link rel="stylesheet" href="/css/theme.css?v=73412941">
-<link rel="stylesheet" href="/css/base.css?v=ee574a30">
+<link rel="stylesheet" href="/css/base.css?v=78889c9e">
 <style>
   @font-face {
     font-family: "IBM Plex Sans";
@@ -154,6 +154,9 @@
   .identity-card:hover { border-color: var(--accent); }
   .identity-card p, .identity-card li { color: var(--text-dim); line-height: 1.65; overflow-wrap: anywhere; }
   .identity-card h3 { margin: 0; }
+  /* 2026-10-05: el titulo de cada caso es h2 (axe: heading-order, h1 -> h3);
+     mismo aspecto que el h3 anterior. */
+  .lab-cases .identity-case h2 { margin: 0; font: 700 1.17em/1.5 var(--sans); letter-spacing: normal; color: var(--text); }
   .identity-card code { background: var(--surface-2); padding: 1px 5px; border-radius: var(--radius-sm); font-size: 0.92em; overflow-wrap: anywhere; }
   .identity-case { flex-direction: row; align-items: stretch; gap: var(--section-gap); flex-wrap: wrap; }
   .case-body { flex: 1 1 320px; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 12px; }
@@ -193,7 +196,7 @@
     .case-meta-row { flex: 1 1 140px; }
   }
 </style>
-<link rel="stylesheet" href="/css/shell.css?v=cde4db2b">
+<link rel="stylesheet" href="/css/shell.css?v=81c5425b">
 </head>
 <body>
 <div class="app-shell">
@@ -203,6 +206,7 @@
     <a class="gh-brand" href="/" aria-label="Gap Hunter Labs home"><svg class="gh-logo" viewBox="0 0 1024 1024" aria-hidden="true"><path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#0151FC"/><path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z" fill="#01B3FD"/><polygon points="569,413 695,413 695,539 569,539" fill="#02F172"/></svg><span class="gh-brand-name">Gap Hunter Labs</span></a>
     <nav class="gh-nav" id="siteNav" aria-label="Primary"><a class="gh-nav-link" href="/catalog/">Catalog</a><div class="gh-menu gh-nav-group"><button type="button" class="gh-nav-link gh-nav-toggle is-active" data-menu-toggle aria-expanded="false">Engineering &amp; Evidence<svg class="gh-chevron" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 8l4 4 4-4"/></svg></button><div class="gh-pop gh-pop-wide" data-menu hidden><a class="gh-pop-link" href="/engineering-evidence/"><strong>Overview</strong><span>What this section covers</span></a><a class="gh-pop-link" href="/engineering-evidence/case-studies/" aria-current="page"><strong>Case studies</strong><span>Plugins with the strongest evidence</span></a><a class="gh-pop-link" href="/engineering-evidence/jetbrains-platform-tickets/"><strong>JetBrains Platform tickets</strong><span>Root-cause reports in the IntelliJ Platform tracker</span></a></div></div><a class="gh-nav-link" href="/methodology/">Methodology</a><a class="gh-nav-link" href="/contact/">Contact</a><a class="btn primary gh-nav-cta" href="/#work-with-joel" data-goatcounter-click="cta-nav-hire-mobile">Work with Joel</a></nav>
     <div class="gh-tools">
+      <button type="button" class="gh-search-btn" data-search-open aria-haspopup="dialog" aria-expanded="false" aria-label="Search plugins and pages"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M12.6 12.6 17 17"/></svg><span class="gh-search-label">Search</span><kbd class="gh-search-kbd">Ctrl K</kbd></button>
       <!-- LANG:START --><div class="gh-menu gh-lang"><button type="button" class="gh-icon-btn gh-lang-btn" data-menu-toggle aria-expanded="false" aria-label="Language"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5"/><path d="M2.5 10h15M10 2.5c2.2 2.3 3.2 4.8 3.2 7.5s-1 5.2-3.2 7.5c-2.2-2.3-3.2-4.8-3.2-7.5s1-5.2 3.2-7.5z"/></svg><span class="gh-lang-code">EN</span></button><div class="gh-pop" data-menu hidden role="group" aria-label="Language"><a class="gh-pop-item" href="/engineering-evidence/case-studies/" hreflang="en" lang="en" aria-current="true">English</a><a class="gh-pop-item" href="/es/ingenieria-y-evidencia/casos-de-estudio/" hreflang="es" lang="es">Espa&ntilde;ol</a></div></div><!-- LANG:END -->
       <div class="gh-menu">
         <button type="button" class="gh-icon-btn" data-menu-toggle aria-expanded="false" aria-label="Color theme"><span class="gh-ico gh-ico-system"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2.5" y="3.5" width="15" height="10" rx="1.5"/><path d="M7 17h6M10 13.5V17"/></svg></span><span class="gh-ico gh-ico-light"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.5"/><path d="M10 1.8v2M10 16.2v2M1.8 10h2M16.2 10h2M4.2 4.2l1.4 1.4M14.4 14.4l1.4 1.4M4.2 15.8l1.4-1.4M14.4 5.6l1.4-1.4"/></svg></span><span class="gh-ico gh-ico-dark"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16.5 12.3A7 7 0 0 1 7.7 3.5a7 7 0 1 0 8.8 8.8z"/></svg></span></button>
@@ -229,7 +233,7 @@
     <article class="identity-card identity-case">
       <div class="case-body">
         <p class="eyebrow">Case study</p>
-        <h3>Background ReadAction Freeze Companion</h3>
+        <h2>Background ReadAction Freeze Companion</h2>
         <p>Not the usual &ldquo;a paid competitor's users are complaining&rdquo; story this catalog is built around &mdash; this one is motivated directly by JetBrains' own Platform Blog: a background-thread entry point reaching a blocking, non-cancellable read-lock call, a pattern their own Platform team publicly named as a real, recurring cause of IDE freezes.</p>
         <p>Pointed at IntelliJ&rsquo;s own source, it found the pattern in <code>SearchForTestsTask</code>, which runs one step through the cancellable <code>ReadAction.nonBlocking()</code> and its sibling through the blocking <code>ReadAction.run()</code>. That became <a href="https://youtrack.jetbrains.com/issue/IDEA-393501" target="_blank" rel="noopener">IDEA-393501</a>, filed with JetBrains and since triaged and assigned. On the same real code it skipped a read action whose only caller runs on the EDT, a false positive avoided rather than a synthetic one.</p>
         <a class="btn" href="https://github.com/GapHunterLabs/background-readaction-freeze-companion#readme" target="_blank" rel="noopener">View evidence &rarr;</a>
@@ -253,7 +257,7 @@
     <article class="identity-card identity-case">
       <div class="case-body">
         <p class="eyebrow">Case study</p>
-        <h3>Dependency Vulnerability Companion</h3>
+        <h2>Dependency Vulnerability Companion</h2>
         <p>Every leading alternative &mdash; Aikido, Xygeni, JFrog's own Marketplace plugins, Snyk &mdash; requires a cloud account or personal access token before it does anything; in December 2024 Semgrep moved its maintained rules to a new restrictive license, and a consortium of competing AppSec vendors (Aikido, Endor Labs, Orca Security and others) answered by forking the engine as Opengrep. This plugin checks the same class of vulnerable dependencies with zero account, zero token, and zero network calls, ever &mdash; the only way to serve CMMC 2.0&ndash;regulated defense contractors, a real buyer segment that structurally cannot use any cloud-based alternative above.</p>
         <a class="btn" href="https://github.com/GapHunterLabs/dependency-vulnerability-companion#readme" target="_blank" rel="noopener">View evidence &rarr;</a>
       </div>
@@ -276,7 +280,7 @@
     <article class="identity-card identity-case">
       <div class="case-body">
         <p class="eyebrow">Case study</p>
-        <h3>SpEL Injection Sink Companion</h3>
+        <h2>SpEL Injection Sink Companion</h2>
         <p>Spring Expression Language injection is not a theoretical bug class: in <a href="https://nvd.nist.gov/vuln/detail/CVE-2022-22963" target="_blank" rel="noopener">CVE-2022-22963</a>, a routing expression supplied by the caller became SpEL source text that Spring Cloud Function parsed and evaluated, leading to remote code execution. CISA added it to its Known Exploited Vulnerabilities catalog in August 2022. This plugin flags the same mechanism in application code, inline in the editor: a Spring <code>ExpressionParser.parseExpression(...)</code> call whose argument is built from an HTTP endpoint parameter. Taint analysis for the broader category exists in IntelliJ IDEA Ultimate and Qodana&rsquo;s Ultimate Plus tier; this plugin is free, needs no account, and runs in Community Edition.</p>
         <a class="btn" href="https://github.com/GapHunterLabs/spel-injection-sink-companion#readme" target="_blank" rel="noopener">View evidence &rarr;</a>
       </div>
@@ -299,7 +303,7 @@
     <article class="identity-card identity-case">
       <div class="case-body">
         <p class="eyebrow">Case study</p>
-        <h3>SSRF Allow-List Bypass Companion</h3>
+        <h2>SSRF Allow-List Bypass Companion</h2>
         <p>Validating an outbound URL by checking whether an allowed host is a prefix or substring of the raw string is structurally unsound, and Spring Framework showed why: in <a href="https://spring.io/security/cve-2024-22243" target="_blank" rel="noopener">CVE-2024-22243</a>, a URL parsed by <code>UriComponentsBuilder</code> could pass a host validation check while the request went somewhere else, enabling SSRF or an open redirect. The <a href="https://github.com/spring-projects/spring-framework/commit/120ea0a51c63171e624ca55dbd7cae627d53a042" target="_blank" rel="noopener">fix</a> changed how the userinfo part of a URL is parsed. This plugin flags an outbound HTTP call (<code>new URL(...)</code> or Spring&rsquo;s <code>RestTemplate</code>) that uses an endpoint parameter validated only with <code>.startsWith</code>/<code>.contains</code> against the raw URL string.</p>
         <a class="btn" href="https://github.com/GapHunterLabs/ssrf-allowlist-bypass-companion#readme" target="_blank" rel="noopener">View evidence &rarr;</a>
       </div>
@@ -322,7 +326,7 @@
     <article class="identity-card identity-case">
       <div class="case-body">
         <p class="eyebrow">Case study</p>
-        <h3>Lucene Query Injection Companion</h3>
+        <h2>Lucene Query Injection Companion</h2>
         <p>When raw user input becomes Lucene query syntax, it can bypass the filters a search was meant to enforce, and deeply nested syntax can take the cluster down: <a href="https://nvd.nist.gov/vuln/detail/CVE-2023-31419" target="_blank" rel="noopener">CVE-2023-31419</a> is a stack overflow and denial of service triggered by a crafted query string on Elasticsearch&rsquo;s own <code>_search</code> API. SQL injection is covered by every major SAST tool; this sink is not covered by any query in the public CodeQL repository. This plugin flags a <code>QueryBuilders.queryStringQuery(...)</code> or <code>.simpleQueryStringQuery(...)</code> call whose argument is built from an HTTP endpoint parameter.</p>
         <a class="btn" href="https://github.com/GapHunterLabs/lucene-query-injection-companion#readme" target="_blank" rel="noopener">View evidence &rarr;</a>
       </div>
@@ -349,8 +353,8 @@
 </main>
 <aside class="page-insights" aria-label="About Gap Hunter Labs">
   <div class="pi-card">
-    <p class="pi-eyebrow">What we do</p>
-    <p class="pi-note">Gap Hunter Labs finds real, evidence-based gaps in developer tooling and ships focused IntelliJ-family plugins to fix them. Every product in the catalog exists because of a documented complaint, not a guess.</p>
+    <p class="pi-eyebrow">About the catalog</p>
+    <p class="pi-note">Focused IntelliJ-family plugins, each built for a real, evidence-based gap in developer tooling. Every product in the catalog exists because of a documented complaint, not a guess.</p>
   </div>
   <div class="pi-card">
     <p class="pi-eyebrow">Why this section</p>
@@ -372,7 +376,7 @@
       <nav class="gh-footer-cols" aria-label="Footer"><div class="gh-footer-col"><p class="gh-footer-title">Product</p><a href="/catalog/">Plugin catalog</a><a href="/catalog/?pricing=paid">Paid &amp; Pro plugins</a><a href="/catalog/?platform=vscode">VS Code extensions</a></div><div class="gh-footer-col"><p class="gh-footer-title">Engineering &amp; Evidence</p><a href="/engineering-evidence/">Overview</a><a href="/engineering-evidence/case-studies/">Case studies</a><a href="/engineering-evidence/jetbrains-platform-tickets/">JetBrains Platform tickets</a></div><div class="gh-footer-col"><p class="gh-footer-title">Company</p><a href="/#work-with-joel">Work with Joel</a><a href="/methodology/">Methodology</a><a href="/contact/">Contact</a></div><div class="gh-footer-col"><p class="gh-footer-title">Marketplaces</p><a href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" target="_blank" rel="noopener">JetBrains Marketplace</a><a href="https://marketplace.visualstudio.com/publishers/GapHunterLabs" target="_blank" rel="noopener">VS Code Marketplace</a><a href="https://github.com/GapHunterLabs" target="_blank" rel="noopener">GitHub</a></div><div class="gh-footer-col"><p class="gh-footer-title">Legal</p><a href="/security/">Security</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a></div></nav>
     </div>
     <div class="gh-footer-bottom">
-      <p class="gh-footer-legal">&copy; 2026 Gap Hunter Labs. Download data comes from the JetBrains Marketplace and GitHub APIs, refreshed twice daily; nothing here is estimated.</p>
+      <p class="gh-footer-legal">&copy; 2026 Gap Hunter Labs. Download data is synced twice daily from the public JetBrains Marketplace and GitHub APIs.</p>
       <div class="gh-footer-social"><a class="gh-social" href="https://github.com/GapHunterLabs" target="_blank" rel="noopener" aria-label="Gap Hunter Labs on GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" stroke="none" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a><a class="gh-social" href="https://www.linkedin.com/in/joel-diaz-82687b428/?locale=en" target="_blank" rel="noopener" aria-label="Joel Diaz on LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" stroke="none" d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a><a class="gh-social" href="https://x.com/GapHunterLabs" target="_blank" rel="noopener" aria-label="Gap Hunter Labs on X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" stroke="none" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a></div>
       <div class="gh-seg" role="group" aria-label="Color theme"><button type="button" class="gh-seg-btn" data-theme-choice="system" aria-pressed="false" aria-label="System theme" title="System"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2.5" y="3.5" width="15" height="10" rx="1.5"/><path d="M7 17h6M10 13.5V17"/></svg></button><button type="button" class="gh-seg-btn" data-theme-choice="light" aria-pressed="false" aria-label="Light theme" title="Light"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.5"/><path d="M10 1.8v2M10 16.2v2M1.8 10h2M16.2 10h2M4.2 4.2l1.4 1.4M14.4 14.4l1.4 1.4M4.2 15.8l1.4-1.4M14.4 5.6l1.4-1.4"/></svg></button><button type="button" class="gh-seg-btn" data-theme-choice="dark" aria-pressed="false" aria-label="Dark theme" title="Dark"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16.5 12.3A7 7 0 0 1 7.7 3.5a7 7 0 1 0 8.8 8.8z"/></svg></button></div>
     </div>

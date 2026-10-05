@@ -36,7 +36,7 @@ from html.parser import HTMLParser
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from build_chrome import ES_PATHS, SITE, LANG_START, LANG_END, lang_switch_html  # noqa: E402
+from build_chrome import ES_PATHS, SITE, LANG_START, LANG_END, lang_switch_html, es_path_for  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 DICT_PATH = ROOT / "pipeline" / "i18n" / "es.json"
@@ -49,9 +49,11 @@ BLOCK = {"address", "article", "aside", "blockquote", "details", "dialog", "dd",
          "picture", "select", "textarea", "iframe", "canvas", "noscript", "script", "style", "template", "option", "title"}
 OPAQUE = {"script", "style", "svg", "pre", "textarea", "template", "noscript"}
 SKIP_CLASSES = {"card-pitch", "card-name", "card-niche", "hs-name", "hs-niche", "paid-niche", "sc-name", "sc-niche",
-                "ticket-id", "code-window", "gh-brand-name", "gh-lang"}
+                "ticket-id", "code-window", "gh-brand-name", "gh-lang",
+                # fichas de plugin (2026-10-05): datos del plugin y de los relacionados
+                "ph-niche", "ph-lead", "pb-text", "rel-name", "rel-niche", "rel-pitch", "fact-data"}
 SKIP_IDS = {"tbody"}
-SKIP_IN = {"paid-card": {"h3", "p"}}   # ancestro con clase -> etiquetas de datos adentro
+SKIP_IN = {"paid-card": {"h3", "p"}, "fact": {"code"}}   # ancestro con clase -> etiquetas de datos adentro
 ATTRS = ("aria-label", "title", "placeholder", "alt")
 META = ('name="description"', 'property="og:title"', 'property="og:description"', 'name="twitter:title"',
         'name="twitter:description"', 'property="og:image:alt"', 'name="twitter:image:alt"')
@@ -155,9 +157,16 @@ def restore(template, vals):
 
 # Patrones para textos que llevan un nombre propio adentro (evita 146 entradas).
 PATTERNS = (
-    (re.compile(r"^(.+) details$"), r"Detalles de "),
-    (re.compile(r"^Show (.+)$"), r"Mostrar "),
-    (re.compile(r"^Share (.+) on (X|LinkedIn)$"), r"Compartir  en "),
+    (re.compile(r"^(.+) details$"), r"Detalles de \1"),
+    (re.compile(r"^Show (.+)$"), r"Mostrar \1"),
+    (re.compile(r"^Share (.+) on (X|LinkedIn)$"), r"Compartir \1 en \2"),
+    # titulos de las fichas (2026-10-05; nombre y nicho son datos)
+    (re.compile(r"^(.+) — (.+) for IntelliJ \| Gap Hunter Labs$"), r"\1 — \2 para IntelliJ | Gap Hunter Labs"),
+    (re.compile(r"^(.+) for VS Code \| Gap Hunter Labs$"), r"\1 para VS Code | Gap Hunter Labs"),
+    (re.compile(r"^(.+) — Gap Hunter Labs$"), r"\1 — Gap Hunter Labs"),
+    (re.compile(r"^(.+) — (.+) for IntelliJ$"), r"\1 — \2 para IntelliJ"),
+    (re.compile(r"^(.+) for IntelliJ$"), r"\1 para IntelliJ"),
+    (re.compile(r"^(.+) in action$"), r"\1 en acción"),
 )
 
 
@@ -173,6 +182,8 @@ def plugin_names():
 
 
 NAMES = plugin_names()
+# los nombres con cifras ("AWS S3", "K8s", "N+1") llegan normalizados ({n})
+NAMES_NORM = {NUM_RE.sub("{n}", n) for n in NAMES}
 
 
 def lookup(key, table):
@@ -182,7 +193,7 @@ def lookup(key, table):
     for rx, repl in PATTERNS:
         if rx.match(key):
             return rx.sub(repl, key)
-    if key in NAMES:
+    if key in NAMES or key in NAMES_NORM:
         return key
     return None
 
@@ -283,10 +294,28 @@ def translate(text, table, missing, page):
             tr = lookup(key, table)
             if tr is not None:
                 return m.group(1) + restore(tr, vals) + m.group(3)
-            missing.setdefault(key, set()).add(page)
+            # en las fichas, description/og:description son la descripcion del
+            # plugin (dato, no interfaz): queda en ingles y no cuenta como faltante
+            if page not in PLUGIN_PAGES or "description" not in sel:
+                missing.setdefault(key, set()).add(page)
             return m.group(0)
         text = re.sub(r'(<meta %s content=")([^"]*)(")' % re.escape(sel), meta_sub, text, count=1)
     return text
+
+
+# ---- fichas de plugin (2026-10-05) -------------------------------------------
+def plugin_pages():
+    """Fichas inglesas que existen en disco -> [(ruta_en, ruta_es)]."""
+    out = []
+    for f in sorted((ROOT / "catalog").glob("*/index.html")) + sorted((ROOT / "catalog" / "vscode").glob("*/index.html")):
+        en_path = "/" + f.parent.relative_to(ROOT).as_posix() + "/"
+        es_path = es_path_for(en_path)
+        if es_path and en_path not in ES_PATHS:
+            out.append((en_path, es_path))
+    return out
+
+
+PLUGIN_PAGES = dict(plugin_pages())
 
 
 # ---- ajustes estructurales ---------------------------------------------------
@@ -296,6 +325,8 @@ def localize_links(text):
         path, sep, rest = re.match(r"([^?#]*)([?#]?)(.*)", url).groups()
         if path in ES_PATHS:
             return 'href="%s%s%s"' % (ES_PATHS[path], sep, rest)
+        if path in PLUGIN_PAGES:
+            return 'href="%s%s%s"' % (PLUGIN_PAGES[path], sep, rest)
         return m.group(0)
     # el selector de idioma se regenera aparte; los <link> del <head> no se tocan
     head, body = text.split("</head>", 1)
@@ -323,18 +354,26 @@ def ensure_sitemap(today):
     text = sitemap.read_text(encoding="utf-8")
     entries = re.findall(r"<loc>([^<]+)</loc>\s*<lastmod>([^<]+)</lastmod>", text)
     have = {loc for loc, _ in entries}
+    # fichas en espanol: mismo lastmod que su ficha inglesa (se sincroniza en
+    # cada corrida, porque build_plugin_pages solo mueve el lastmod ingles)
+    en_lastmod = dict(entries)
+    plugin_es = {SITE + es: en_lastmod.get(SITE + en, today) for en, es in PLUGIN_PAGES.items()}
+    synced = [(loc, plugin_es.get(loc, lm)) for loc, lm in entries]
     missing = [SITE + p for p in ES_PATHS.values() if SITE + p not in have]
-    if not missing:
+    missing_plugins = [loc for loc in plugin_es if loc not in have]
+    if not missing and not missing_plugins and synced == entries:
         return 0
+    entries = synced
     static = [e for e in entries if "/catalog/" not in e[0] or e[0].endswith("/catalog/")]
     rest = [e for e in entries if e not in static]
-    ordered = static + [(loc, today) for loc in missing] + rest
+    ordered = (static + [(loc, today) for loc in missing] + rest
+               + [(loc, plugin_es[loc]) for loc in missing_plugins])
     lines = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
     for loc, lastmod in ordered:
         lines += ["  <url>", "    <loc>%s</loc>" % loc, "    <lastmod>%s</lastmod>" % lastmod, "  </url>"]
     lines.append("</urlset>")
     sitemap.write_text("\n".join(lines) + "\n", encoding="utf-8")
-    return len(missing)
+    return len(missing) + len(missing_plugins)
 
 
 def file_for(path):
@@ -348,7 +387,7 @@ def main() -> int:
     args = ap.parse_args()
     table = json.loads(DICT_PATH.read_text(encoding="utf-8")) if DICT_PATH.exists() else {}
     missing: dict[str, set] = {}
-    for en_path, es_path in ES_PATHS.items():
+    for en_path, es_path in list(ES_PATHS.items()) + list(PLUGIN_PAGES.items()):
         src = file_for(en_path).read_text(encoding="utf-8")
         out = structural(translate(src, table, missing, en_path), en_path, es_path)
         if not args.extract:
@@ -363,7 +402,7 @@ def main() -> int:
     from datetime import date
     added = ensure_sitemap(date.today().isoformat())
     print("[build_i18n] %d paginas en espanol generadas; %d textos sin traducir; %d URLs nuevas en el sitemap"
-          % (len(ES_PATHS), len(missing), added))
+          % (len(ES_PATHS) + len(PLUGIN_PAGES), len(missing), added))
     if missing:
         for k in sorted(missing)[:15]:
             print("   sin traducir:", k[:110])

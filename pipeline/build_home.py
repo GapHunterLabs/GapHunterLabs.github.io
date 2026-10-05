@@ -60,10 +60,13 @@ def build(dry_run: bool = False) -> None:
     vscode_total = 0
     if VSCODE_DATA.exists():
         vscode_total = json.loads(VSCODE_DATA.read_text(encoding="utf-8")).get("totalExtensions") or 0
+    # 2026-10-05: sin "nothing here is estimated" (una auditoria externa la marco
+    # como afirmacion fragil); en su lugar, la fecha real del snapshot.
+    snapshot = (data.get("generatedAt") or "")[:10]
     subtitle = (
         "Every plugin is built for a documented gap in developer tooling and has a clear "
-        "price: free, freemium or paid. The numbers come straight from JetBrains "
-        "Marketplace and GitHub; nothing here is estimated."
+        "price: free, freemium or paid. Figures are synced twice a day from public JetBrains "
+        "Marketplace and GitHub data (last snapshot: %s)." % snapshot
     )
 
     # ---- stats: 2 tele-rows (plugins, downloads+growth) --------------------
@@ -140,7 +143,7 @@ def build(dry_run: bool = False) -> None:
 
     # ---- plugins de pago (FREEMIUM/PAID) desde el campo pricing ----------
     def clean(text):
-        return re.sub(r"`([^`]*)`", r"", text or "")
+        return re.sub(r"`([^`]*)`", r"\1", text or "")
 
     paid = sorted((p for p in plugins if p.get("pricing") in ("FREEMIUM", "PAID")),
                   key=lambda p: p.get("downloads") or 0, reverse=True)

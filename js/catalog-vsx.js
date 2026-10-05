@@ -37,7 +37,7 @@
     // (la instalacion sigue en VS Code Marketplace, desde esa ficha).
     function cardHtml(e) {
       var n = e.installs || 0;
-      return '<a class="vsx-card" href="/catalog/vscode/' + esc(e.name) + '/" aria-label="' + esc(e.displayName) + (ES ? ' — detalles' : ' details') + '">' +
+      return '<a class="vsx-card" href="' + (ES ? '/es/catalogo/vscode/' : '/catalog/vscode/') + esc(e.name) + '/" aria-label="' + esc(e.displayName) + (ES ? ' — detalles' : ' details') + '">' +
         '<div class="card-header"><span class="card-cat vsx-mark" aria-hidden="true">' + VS_ICON + '</span>' +
         '<span class="price-badge price-free">' + (ES ? 'Gratis' : 'Free') + '</span></div>' +
         '<div class="card-top"><div class="card-name">' + esc(e.displayName) + '</div><div class="card-niche">' + esc(e.niche) + '</div></div>' +

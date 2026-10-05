@@ -362,7 +362,7 @@
       var row = e.target.closest('tr.row');
       if (!row) return;
       var repo = row.getAttribute('data-repo');
-      if (repo) location.href = '/catalog/' + repo + '/';
+      if (repo) location.href = (ES ? '/es/catalogo/' : '/catalog/') + repo + '/';
     });
   }
 

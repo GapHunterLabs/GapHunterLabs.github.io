@@ -499,6 +499,13 @@ PLUGIN_PAGE_CSS = """
 .ph-actions .btn-icon { display: inline-flex; }
 .ph-actions .btn-icon svg { width: 16px; height: 16px; }
 .ph-stats { margin-top: 24px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+/* 2026-10-05: cuadro de cifras ~55% mas chico en area (ancho y alto a ~2/3).
+   Los selectores llevan .ph-stats para ganarle a .hdr-stat de shell.css, que
+   carga despues, sin tocar las cifras de la home. */
+.ph-stats { max-width: 390px; }
+.ph-stats .hdr-stat { gap: 2px; padding: 10px 13px; }
+.ph-stats .hdr-stat-num { font-size: 17px; }
+.ph-stats .hdr-stat-label { font-size: 11.5px; }
 .ph-media { overflow: hidden; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); box-shadow: var(--shadow-lg); }
 .ph-media img, .ph-media video { display: block; width: 100%; height: auto; }
 .plugin-body { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); align-items: start; gap: 16px; margin-top: 24px; }
@@ -526,6 +533,9 @@ h2.similar-title { margin: 0 0 16px; color: var(--text); font: 700 22px var(--sa
 .sc-niche { color: var(--text-faint); font: 500 13px var(--sans); text-transform: none; letter-spacing: 0; }
 .sc-dl { margin-top: auto; color: var(--text-dim); font: 500 13px var(--sans); }
 .plugin-asof { margin: 20px 0 0; color: var(--text-faint); font-size: 13px; }
+/* 2026-10-05: menos aire entre los relacionados y el footer (shell.css le da
+   72px de margen al footer en todo el sitio; aca solo en las fichas). */
+body .site-footer.gh-footer { margin-top: 24px; }
 @media (max-width: 900px) {
   .plugin-hero.gh-page-header, .plugin-body { grid-template-columns: 1fr; }
   .ph-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -766,7 +776,7 @@ class PluginRenderer:
                  '<dl class="facts-grid">%s</dl></section>' % (self.share_html(p), "".join((
                      fact("Category", esc(cat["label"])),
                      fact("Pricing", esc(pr_text)),
-                     fact("Platform", esc(self.platform_of(p))),
+                     fact("Platform", '<span class="fact-data">%s</span>' % esc(self.platform_of(p))),
                      fact("First published", esc(p.get("firstPublished") or "—")),
                      fact("Marketplace ID", ("#" + esc(mp_id)) if mp_id else ("Pending" if is_pending else "—")),
                      fact("Repository", '<code>%s</code><button type="button" class="copy-btn" data-copy="%s" '
@@ -1071,13 +1081,24 @@ class Shell:
             html, n = re.subn(pattern, replacement, html, count=1, flags=re.S)
             if n != 1:
                 die("no se pudo reemplazar %s en el <head> del shell" % label)
-        # 2026-09-27: las fichas no tienen version en espanol -- fuera los
-        # hreflang heredados del catalogo; en el selector de idioma,
-        # "English" apunta a la propia ficha (Espanol lleva al catalogo en ES).
+        # 2026-10-05: las fichas tienen version en espanol (/es/catalogo/<slug>/,
+        # la genera build_i18n.py). Los hreflang heredados del catalogo se
+        # cambian por los de la propia ficha, y el selector de idioma apunta a
+        # la ficha en cada idioma (antes "Espanol" llevaba al catalogo y el
+        # sitio volvia al ingles al seguir navegando).
         html = re.sub(r'<link rel="alternate" hreflang="[^"]*" href="[^"]*">\s*', "", html)
+        alt = ('<link rel="alternate" hreflang="en" href="%s@@PATH@@">\n'
+               '<link rel="alternate" hreflang="es" href="%s@@ESPATH@@">\n'
+               '<link rel="alternate" hreflang="x-default" href="%s@@PATH@@">\n') % (SITE, SITE, SITE)
+        html, n = re.subn(r"(<link rel=\"canonical\" [^>]*>\n?)", lambda m: m.group(1) + alt, html, count=1)
+        if n != 1:
+            die("no se encontro el canonical del shell para colgar los hreflang")
         html, n = re.subn(r'href="/catalog/" hreflang="en"', 'href="@@PATH@@" hreflang="en"', html, count=1)
         if n != 1:
             die("no se encontro el enlace English del selector de idioma en el shell")
+        html, n = re.subn(r'href="/es/catalogo/" hreflang="es"', 'href="@@ESPATH@@" hreflang="es"', html, count=1)
+        if n != 1:
+            die("no se encontro el enlace Espanol del selector de idioma en el shell")
         return html
 
     def render(self, *, title, og_title, desc, url, jsonld, body, og_image, og_image_alt):
@@ -1086,7 +1107,11 @@ class Shell:
         out = out.replace("@@OGTITLE@@", esc(og_title))
         out = out.replace("@@DESC@@", esc(desc))
         out = out.replace("@@URL@@", esc(url))
-        out = out.replace("@@PATH@@", esc(url[len(SITE):] if url.startswith(SITE) else url))
+        path = url[len(SITE):] if url.startswith(SITE) else url
+        out = out.replace("@@PATH@@", esc(path))
+        # misma regla que build_chrome.es_path_for: /catalog/X/ -> /es/catalogo/X/
+        out = out.replace("@@ESPATH@@", esc("/es/catalogo/" + path[len("/catalog/"):]
+                                            if path.startswith("/catalog/") else "/es/catalogo/"))
         out = out.replace("@@OGIMAGE@@", esc(og_image))
         out = out.replace("@@OGIMAGEALT@@", esc(og_image_alt))
         out = out.replace("@@JSONLD@@",

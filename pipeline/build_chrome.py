@@ -66,8 +66,10 @@ ICON = {
 THEMES = (("system", "System"), ("light", "Light"), ("dark", "Dark"))
 
 # ---- idiomas (2026-09-27): version nativa en espanol de las 10 paginas
-# principales, generada por pipeline/build_i18n.py. Las fichas de plugin
-# siguen solo en ingles (su "Espanol" lleva al catalogo en espanol).
+# principales, generada por pipeline/build_i18n.py. Desde 2026-10-05 las
+# fichas de plugin tambien tienen version en espanol (/es/catalogo/<slug>/):
+# antes llevaban al catalogo en espanol y, al navegar desde ahi, el sitio
+# volvia al ingles. Ver es_path_for().
 import sys as _sys
 from pathlib import Path as _Path
 _sys.path.insert(0, str(_Path(__file__).resolve().parent))
@@ -85,6 +87,18 @@ ES_PATHS = {
     "/privacy/": "/es/privacidad/",
     "/terms/": "/es/terminos/",
 }
+PLUGIN_PATH_RE = re.compile(r"^/catalog/((?:vscode/)?[a-z0-9][a-z0-9-]*)/$")
+
+
+def es_path_for(en_path):
+    """Ruta en espanol de una ruta inglesa, o None si no tiene version en
+    espanol: las 10 principales (ES_PATHS) y las fichas de plugin."""
+    if en_path in ES_PATHS:
+        return ES_PATHS[en_path]
+    m = PLUGIN_PATH_RE.match(en_path)
+    return "/es/catalogo/%s/" % m.group(1) if m else None
+
+
 LANG_START, LANG_END = "<!-- LANG:START -->", "<!-- LANG:END -->"
 ALT_START, ALT_END = "<!-- HREFLANG:START -->", "<!-- HREFLANG:END -->"
 GLOBE = ('<svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5"/>'
@@ -149,6 +163,11 @@ def header_html(active, en_path="/"):
         '    <nav class="gh-nav" id="siteNav" aria-label="Primary">%s'
         '<a class="btn primary gh-nav-cta" href="/#work-with-joel" data-goatcounter-click="cta-nav-hire-mobile">Work with Joel</a></nav>\n'
         '    <div class="gh-tools">\n'
+        # 2026-10-05: buscador del sitio (js/site-search.js, se carga al abrirlo)
+        '      <button type="button" class="gh-search-btn" data-search-open aria-haspopup="dialog" aria-expanded="false"'
+        ' aria-label="Search plugins and pages"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/>'
+        '<path d="M12.6 12.6 17 17"/></svg><span class="gh-search-label">Search</span>'
+        '<kbd class="gh-search-kbd">Ctrl K</kbd></button>\n'
         '      %s\n'
         '      <div class="gh-menu">\n'
         '        <button type="button" class="gh-icon-btn" data-menu-toggle aria-expanded="false" aria-label="Color theme">'
@@ -205,7 +224,7 @@ def footer_html(active):
         '      <nav class="gh-footer-cols" aria-label="Footer">%s</nav>\n'
         '    </div>\n'
         '    <div class="gh-footer-bottom">\n'
-        '      <p class="gh-footer-legal">&copy; 2026 Gap Hunter Labs. Download data comes from the JetBrains Marketplace and GitHub APIs, refreshed twice daily; nothing here is estimated.</p>\n'
+        '      <p class="gh-footer-legal">&copy; 2026 Gap Hunter Labs. Download data is synced twice daily from the public JetBrains Marketplace and GitHub APIs.</p>\n'
         '      <div class="gh-footer-social">%s</div>\n'
         '      <div class="gh-seg" role="group" aria-label="Color theme">%s</div>\n'
         '    </div>\n'

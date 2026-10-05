@@ -3107,6 +3107,13 @@
 .ph-actions .btn-icon { display: inline-flex; }
 .ph-actions .btn-icon svg { width: 16px; height: 16px; }
 .ph-stats { margin-top: 24px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
+/* 2026-10-05: cuadro de cifras ~55% mas chico en area (ancho y alto a ~2/3).
+   Los selectores llevan .ph-stats para ganarle a .hdr-stat de shell.css, que
+   carga despues, sin tocar las cifras de la home. */
+.ph-stats { max-width: 390px; }
+.ph-stats .hdr-stat { gap: 2px; padding: 10px 13px; }
+.ph-stats .hdr-stat-num { font-size: 17px; }
+.ph-stats .hdr-stat-label { font-size: 11.5px; }
 .ph-media { overflow: hidden; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); box-shadow: var(--shadow-lg); }
 .ph-media img, .ph-media video { display: block; width: 100%; height: auto; }
 .plugin-body { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); align-items: start; gap: 16px; margin-top: 24px; }
@@ -3134,6 +3141,9 @@ h2.similar-title { margin: 0 0 16px; color: var(--text); font: 700 22px var(--sa
 .sc-niche { color: var(--text-faint); font: 500 13px var(--sans); text-transform: none; letter-spacing: 0; }
 .sc-dl { margin-top: auto; color: var(--text-dim); font: 500 13px var(--sans); }
 .plugin-asof { margin: 20px 0 0; color: var(--text-faint); font-size: 13px; }
+/* 2026-10-05: menos aire entre los relacionados y el footer (shell.css le da
+   72px de margen al footer en todo el sitio; aca solo en las fichas). */
+body .site-footer.gh-footer { margin-top: 24px; }
 @media (max-width: 900px) {
   .plugin-hero.gh-page-header, .plugin-body { grid-template-columns: 1fr; }
   .ph-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }

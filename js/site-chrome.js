@@ -92,4 +92,33 @@
       if (burger) burger.setAttribute('aria-expanded', 'false');
     });
   });
+
+  // ---- buscador del topbar (2026-10-05) --------------------------------
+  // site-search.js y el indice se cargan recien al abrir el buscador (clic,
+  // Ctrl/Cmd+K o "/"). build_search_index.py escribe la URL con su hash.
+  var SEARCH_SRC = /*SEARCH_SRC*/'/js/site-search.js?v=3aca3671'/*ENDSEARCH_SRC*/;
+  var searchLoading = false;
+  function openSearch(trigger) {
+    if (window.GHLSearch) { window.GHLSearch.open(trigger); return; }
+    if (searchLoading) return;
+    searchLoading = true;
+    var s = document.createElement('script');
+    s.src = SEARCH_SRC;
+    s.async = true;
+    s.onload = function () { searchLoading = false; if (window.GHLSearch) window.GHLSearch.open(trigger); };
+    s.onerror = function () { searchLoading = false; };
+    document.head.appendChild(s);
+  }
+  var searchButtons = document.querySelectorAll('[data-search-open]');
+  searchButtons.forEach(function (btn) {
+    btn.addEventListener('click', function (e) { e.preventDefault(); openSearch(btn); });
+  });
+  document.addEventListener('keydown', function (e) {
+    if (!searchButtons.length || e.altKey) return;
+    var t = e.target;
+    var typing = t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName));
+    var cmdK = (e.key === 'k' || e.key === 'K') && (e.ctrlKey || e.metaKey);
+    var slash = e.key === '/' && !typing && !e.ctrlKey && !e.metaKey;
+    if (cmdK || slash) { e.preventDefault(); openSearch(searchButtons[0]); }
+  });
 })();
