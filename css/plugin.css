@@ -3045,6 +3045,10 @@
   .catalog-v2 .plugin-card:hover, .catalog-v2 .vsx-card:hover { transform: none; }
 }
 
+/* 2026-10-05: al paginar, el foco pasa a los resultados por codigo
+   (js/catalog-scroll.js); sin contorno en ese contenedor. */
+#fieldMain:focus, #tableView:focus, #vsxGrid:focus { outline: none; }
+
 /* 2026-09-27 (v2 de la parte baja): brecha a todo el ancho con citas,
    datos en grilla y relacionados con la tarjeta del catalogo. */
 .pb-gap { margin-top: 24px; }
