@@ -1,0 +1,6 @@
+Contact: mailto:gaphunterlabs@gmail.com
+Contact: https://gaphunterlabs.github.io/security/
+Expires: 2027-10-05T00:00:00.000Z
+Preferred-Languages: en, es
+Policy: https://gaphunterlabs.github.io/security/
+Canonical: https://gaphunterlabs.github.io/.well-known/security.txt
