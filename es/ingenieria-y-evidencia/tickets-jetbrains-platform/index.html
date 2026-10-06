@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="/js/theme-init.js?v=c436d752"></script>
 <script src="/js/site-chrome.js?v=2dee565b" defer></script>
-<meta name="description" content="Un error reportado a JetBrains tras hallarlo un plugin del catálogo en el código de IntelliJ, más análisis de causa raíz en tickets de IntelliJ Platform.">
+<meta name="description" content="Errores reportados en el YouTrack de JetBrains tras hallarlos un control del catálogo en el código de IntelliJ, más análisis de causa raíz en tickets de IntelliJ Platform.">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://gc.zgo.at; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; media-src 'self'; manifest-src 'self'; connect-src https://gaphunterlabs.goatcounter.com; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="theme-color" content="#0B1B34">
@@ -31,7 +31,7 @@
 <meta property="og:site_name" content="Gap Hunter Labs">
 <meta property="og:url" content="https://gaphunterlabs.github.io/es/ingenieria-y-evidencia/tickets-jetbrains-platform/">
 <meta property="og:title" content="Tickets de JetBrains Platform — Gap Hunter Labs">
-<meta property="og:description" content="Un error reportado a JetBrains tras hallarlo un plugin del catálogo en el código de IntelliJ, más análisis de causa raíz en tickets de IntelliJ Platform.">
+<meta property="og:description" content="Errores reportados en el YouTrack de JetBrains tras hallarlos un control del catálogo en el código de IntelliJ, más análisis de causa raíz en tickets de IntelliJ Platform.">
 <meta property="og:image" content="https://gaphunterlabs.github.io/og-image.png">
 <meta property="og:image:secure_url" content="https://gaphunterlabs.github.io/og-image.png">
 <meta property="og:image:type" content="image/png">
@@ -43,7 +43,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@GapHunterLabs">
 <meta name="twitter:title" content="Tickets de JetBrains Platform — Gap Hunter Labs">
-<meta name="twitter:description" content="Un error reportado a JetBrains tras hallarlo un plugin del catálogo en el código de IntelliJ, más análisis de causa raíz en tickets de IntelliJ Platform.">
+<meta name="twitter:description" content="Errores reportados en el YouTrack de JetBrains tras hallarlos un control del catálogo en el código de IntelliJ, más análisis de causa raíz en tickets de IntelliJ Platform.">
 <meta name="twitter:image" content="https://gaphunterlabs.github.io/og-image.png">
 <meta name="twitter:image:alt" content="Gap Hunter Labs — Informe del catálogo Plugin Intelligence">
 <link rel="stylesheet" href="/css/theme.css?v=73412941">
@@ -187,6 +187,7 @@
   .ticket-status.is-submitted { color: var(--accent); background: color-mix(in srgb, var(--accent) 16%, transparent); }
   .ticket-status.is-open { color: var(--text-faint); background: var(--surface-2); }
   .ticket-card p { margin: 0; color: var(--text-dim); font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }
+  .ticket-card p + p { margin-top: 8px; }
   .ticket-card code { background: var(--surface-2); padding: 1px 5px; border-radius: var(--radius-sm); font-size: 0.92em; overflow-wrap: anywhere; }
   @media (max-width: 760px) {
     .case-meta { flex-basis: 100%; border-left: 0; padding-left: 0; border-top: 1px solid var(--border); padding-top: var(--section-gap); flex-direction: row; flex-wrap: wrap; }
@@ -223,12 +224,12 @@
   <div class="page-hero method-intro band-dark gh-page-header">
     <p class="contact-kicker">Ingeniería y evidencia</p>
     <h1>Tickets de JetBrains Platform</h1>
-    <p class="contact-lead" style="margin-bottom:0">Errores en el propio código de JetBrains, documentados públicamente en su tracker YouTrack: uno presentado directamente después de que un plugin de este catálogo lo encontrara en el código de IntelliJ, más análisis de causa raíz publicado en tickets existentes de IntelliJ Platform (IJPL).</p>
+    <p class="contact-lead" style="margin-bottom:0">Errores en el propio código de JetBrains, documentados públicamente en su tracker YouTrack: dos presentados directamente después de que un control de este catálogo los encontrara en el código de IntelliJ, más análisis de causa raíz publicado en tickets existentes de IntelliJ Platform (IJPL).</p>
   </div>
 
   <div class="lab-section-head">
     <h2>Presentado directamente</h2>
-    <p>Un error encontrado en el propio código de IntelliJ por un plugin de este catálogo y luego reportado a JetBrains.</p>
+    <p>Errores encontrados en el propio código de IntelliJ por un control de este catálogo y luego reportados a JetBrains.</p>
   </div>
   <div class="lab-tickets">
     <article class="ticket-card">
@@ -237,7 +238,16 @@
         <h3>SearchForTestsTask: non-cancellable ReadAction.run() in a background task</h3>
         <span class="ticket-status is-open">Abierto</span>
       </div>
-      <p>Encontrado por <a href="/es/catalogo/background-readaction-freeze-companion/">Background ReadAction Freeze Companion</a>. <code>SearchForTestsTask</code> es un <code>Task.Backgroundable</code> cuyo <code>run()</code> envuelve <code>search()</code> en el cancelable <code>ReadAction.nonBlocking()</code> y, unas líneas después, llama al <code>onFound()</code> hermano con el bloqueante <code>ReadAction.run()</code>, sin ningún <code>checkCanceled()</code> en toda la clase &mdash; el patrón que el Platform Blog de JetBrains señala como causa recurrente de congelamientos de la interfaz. Se presentó como IJPL-254654; JetBrains lo movió al proyecto IDEA (Java &rsaquo; Tests) y lo asignó a un desarrollador. La llamada sigue en <code>master</code> a octubre de 2026.</p>
+      <p>Encontrado por <a href="/es/catalogo/background-readaction-freeze-companion/">Background ReadAction Freeze Companion</a>. <code>SearchForTestsTask</code> es un <code>Task.Backgroundable</code> cuyo <code>run()</code> envuelve <code>search()</code> en el cancelable <code>ReadAction.nonBlocking()</code> y, unas líneas después, llama al <code>onFound()</code> hermano con el bloqueante <code>ReadAction.run()</code>, sin ningún <code>checkCanceled()</code> en toda la clase &mdash; el patrón que el Platform Blog de JetBrains señala como causa recurrente de congelamientos de la interfaz. Se presentó como IJPL-254654; JetBrains lo movió al proyecto IDEA (Java &rsaquo; Tests) y lo asignó a un desarrollador.</p>
+      <p>Un <a href="https://youtrack.jetbrains.com/issue/IDEA-393501#focus=Comments-27-14497295.0-0" target="_blank" rel="noopener">comentario de seguimiento</a> (octubre de 2026) agregó dos puntos. La rama de modo smart, la predeterminada, también bloquea: llama al <code>DumbService.runReadActionInSmartMode()</code>, que está deprecado y usa <code>ReadAction.computeBlocking()</code> por dentro. Y cambiar sin más a <code>ReadAction.nonBlocking()</code> no es seguro, porque <code>onFound()</code> escribe archivos y una acción de lectura reiniciada los volvería a escribir. Las dos llamadas siguen en <code>master</code> a octubre de 2026.</p>
+    </article>
+    <article class="ticket-card">
+      <div class="ticket-head">
+        <a class="ticket-id" href="https://youtrack.jetbrains.com/issue/IJPL-257836" target="_blank" rel="noopener">IJPL-257836 &#8599;</a>
+        <h3>DependenciesUsagesPanel.findUsages runs the whole dependency usage search in one non-cancellable read action</h3>
+        <span class="ticket-status is-submitted">Esperando respuesta</span>
+      </div>
+      <p>Encontrado por el mismo control que <a href="/es/catalogo/background-readaction-freeze-companion/">Background ReadAction Freeze Companion</a>, aplicado como escaneo sobre el propio <code>master</code> de IntelliJ. Al seleccionar un nodo en el Dependency Viewer (Code &rsaquo; Analyze Code &rsaquo; Dependencies), <code>DependenciesUsagesPanel.findUsages()</code> analiza todos los archivos del alcance seleccionado dentro de un único <code>ReadAction.runBlocking()</code> de nivel superior, en un hilo del pool. Una acción de escritura pendiente, como escribir en un editor, espera a que termine toda la búsqueda. El ticket propone la forma de arreglo que JetBrains usó en IJPL-236316 (<code>FindUsagesHelper</code>): una acción de lectura no bloqueante que deje de tragarse <code>ProcessCanceledException</code>, con la actualización de la interfaz fuera de la acción de lectura. Leído en el código; el soporte de JetBrains pidió pasos para reproducirlo.</p>
     </article>
   </div>
 

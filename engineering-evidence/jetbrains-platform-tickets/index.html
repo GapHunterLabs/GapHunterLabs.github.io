@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="/js/theme-init.js?v=c436d752"></script>
 <script src="/js/site-chrome.js?v=2dee565b" defer></script>
-<meta name="description" content="A bug filed in JetBrains&#x27; YouTrack after a catalog plugin found it in IntelliJ&#x27;s own source, plus root-cause analysis on existing IntelliJ Platform tickets.">
+<meta name="description" content="Bugs filed in JetBrains&#x27; YouTrack after a catalog check found them in IntelliJ&#x27;s source, plus root-cause analysis on existing IntelliJ Platform tickets.">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://gc.zgo.at; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; media-src 'self'; manifest-src 'self'; connect-src https://gaphunterlabs.goatcounter.com; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="theme-color" content="#0B1B34">
@@ -31,7 +31,7 @@
 <meta property="og:site_name" content="Gap Hunter Labs">
 <meta property="og:url" content="https://gaphunterlabs.github.io/engineering-evidence/jetbrains-platform-tickets/">
 <meta property="og:title" content="JetBrains Platform Tickets — Gap Hunter Labs">
-<meta property="og:description" content="A bug filed in JetBrains&#x27; YouTrack after a catalog plugin found it in IntelliJ&#x27;s own source, plus root-cause analysis on existing IntelliJ Platform tickets.">
+<meta property="og:description" content="Bugs filed in JetBrains&#x27; YouTrack after a catalog check found them in IntelliJ&#x27;s source, plus root-cause analysis on existing IntelliJ Platform tickets.">
 <meta property="og:image" content="https://gaphunterlabs.github.io/og-image.png">
 <meta property="og:image:secure_url" content="https://gaphunterlabs.github.io/og-image.png">
 <meta property="og:image:type" content="image/png">
@@ -42,7 +42,7 @@
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@GapHunterLabs">
 <meta name="twitter:title" content="JetBrains Platform Tickets — Gap Hunter Labs">
-<meta name="twitter:description" content="A bug filed in JetBrains&#x27; YouTrack after a catalog plugin found it in IntelliJ&#x27;s own source, plus root-cause analysis on existing IntelliJ Platform tickets.">
+<meta name="twitter:description" content="Bugs filed in JetBrains&#x27; YouTrack after a catalog check found them in IntelliJ&#x27;s source, plus root-cause analysis on existing IntelliJ Platform tickets.">
 <meta name="twitter:image" content="https://gaphunterlabs.github.io/og-image.png">
 <meta name="twitter:image:alt" content="Gap Hunter Labs — Plugin Intelligence Catalog Report">
 <link rel="stylesheet" href="/css/theme.css?v=73412941">
@@ -186,6 +186,7 @@
   .ticket-status.is-submitted { color: var(--accent); background: color-mix(in srgb, var(--accent) 16%, transparent); }
   .ticket-status.is-open { color: var(--text-faint); background: var(--surface-2); }
   .ticket-card p { margin: 0; color: var(--text-dim); font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }
+  .ticket-card p + p { margin-top: 8px; }
   .ticket-card code { background: var(--surface-2); padding: 1px 5px; border-radius: var(--radius-sm); font-size: 0.92em; overflow-wrap: anywhere; }
   @media (max-width: 760px) {
     .case-meta { flex-basis: 100%; border-left: 0; padding-left: 0; border-top: 1px solid var(--border); padding-top: var(--section-gap); flex-direction: row; flex-wrap: wrap; }
@@ -222,12 +223,12 @@
   <div class="page-hero method-intro band-dark gh-page-header">
     <p class="contact-kicker">Engineering &amp; Evidence</p>
     <h1>JetBrains Platform tickets</h1>
-    <p class="contact-lead" style="margin-bottom:0">Bugs in JetBrains&rsquo; own code, documented publicly in JetBrains&rsquo; YouTrack tracker: one filed directly after a plugin in this catalog found it in IntelliJ&rsquo;s source, plus root-cause analysis posted on existing IntelliJ Platform (IJPL) tickets.</p>
+    <p class="contact-lead" style="margin-bottom:0">Bugs in JetBrains&rsquo; own code, documented publicly in JetBrains&rsquo; YouTrack tracker: two filed directly after a check from this catalog found them in IntelliJ&rsquo;s source, plus root-cause analysis posted on existing IntelliJ Platform (IJPL) tickets.</p>
   </div>
 
   <div class="lab-section-head">
     <h2>Filed directly</h2>
-    <p>A bug found in IntelliJ&rsquo;s own source by a plugin in this catalog, then reported to JetBrains.</p>
+    <p>Bugs found in IntelliJ&rsquo;s own source by a check from this catalog, then reported to JetBrains.</p>
   </div>
   <div class="lab-tickets">
     <article class="ticket-card">
@@ -236,7 +237,16 @@
         <h3>SearchForTestsTask: non-cancellable ReadAction.run() in a background task</h3>
         <span class="ticket-status is-open">Open</span>
       </div>
-      <p>Found by <a href="/catalog/background-readaction-freeze-companion/">Background ReadAction Freeze Companion</a>. <code>SearchForTestsTask</code> is a <code>Task.Backgroundable</code> whose <code>run()</code> wraps <code>search()</code> in the cancellable <code>ReadAction.nonBlocking()</code>, then calls the sibling <code>onFound()</code> through the blocking <code>ReadAction.run()</code> a few lines later, with no <code>checkCanceled()</code> anywhere in the class &mdash; the pattern JetBrains&rsquo; Platform Blog names as a recurring cause of UI freezes. Filed as IJPL-254654; JetBrains moved it to the IDEA project (Java &rsaquo; Tests) and assigned it to a developer. The call is still on <code>master</code> as of October 2026.</p>
+      <p>Found by <a href="/catalog/background-readaction-freeze-companion/">Background ReadAction Freeze Companion</a>. <code>SearchForTestsTask</code> is a <code>Task.Backgroundable</code> whose <code>run()</code> wraps <code>search()</code> in the cancellable <code>ReadAction.nonBlocking()</code>, then calls the sibling <code>onFound()</code> through the blocking <code>ReadAction.run()</code> a few lines later, with no <code>checkCanceled()</code> anywhere in the class &mdash; the pattern JetBrains&rsquo; Platform Blog names as a recurring cause of UI freezes. Filed as IJPL-254654; JetBrains moved it to the IDEA project (Java &rsaquo; Tests) and assigned it to a developer.</p>
+      <p>A <a href="https://youtrack.jetbrains.com/issue/IDEA-393501#focus=Comments-27-14497295.0-0" target="_blank" rel="noopener">follow-up comment</a> (October 2026) added two points. The default smart-mode branch also blocks: it calls the deprecated <code>DumbService.runReadActionInSmartMode()</code>, which uses <code>ReadAction.computeBlocking()</code> internally. And a plain switch to <code>ReadAction.nonBlocking()</code> is not safe, because <code>onFound()</code> writes files and a restarted read action would write them again. Both calls are still on <code>master</code> as of October 2026.</p>
+    </article>
+    <article class="ticket-card">
+      <div class="ticket-head">
+        <a class="ticket-id" href="https://youtrack.jetbrains.com/issue/IJPL-257836" target="_blank" rel="noopener">IJPL-257836 &#8599;</a>
+        <h3>DependenciesUsagesPanel.findUsages runs the whole dependency usage search in one non-cancellable read action</h3>
+        <span class="ticket-status is-submitted">Wait for reply</span>
+      </div>
+      <p>Found by the same check as <a href="/catalog/background-readaction-freeze-companion/">Background ReadAction Freeze Companion</a>, run as a scan over IntelliJ&rsquo;s own <code>master</code>. When a node is selected in the Dependency Viewer (Code &rsaquo; Analyze Code &rsaquo; Dependencies), <code>DependenciesUsagesPanel.findUsages()</code> analyzes every file of the selected scope inside one top-level <code>ReadAction.runBlocking()</code> on a pooled thread. A pending write action, such as typing in an editor, waits until the whole search ends. The ticket proposes the fix shape JetBrains used for IJPL-236316 (<code>FindUsagesHelper</code>): a non-blocking read action that no longer swallows <code>ProcessCanceledException</code>, with the UI update moved out of the read action. Read in the source; JetBrains support asked for reproduction steps.</p>
     </article>
   </div>
 
