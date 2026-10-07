@@ -224,12 +224,12 @@
   <div class="page-hero method-intro band-dark gh-page-header">
     <p class="contact-kicker">Ingeniería y evidencia</p>
     <h1>Tickets de JetBrains Platform</h1>
-    <p class="contact-lead" style="margin-bottom:0">Errores en el propio código de JetBrains, documentados públicamente en su tracker YouTrack: tres presentados directamente después de que un control de este catálogo los encontrara en el código de IntelliJ, más análisis de causa raíz publicado en tickets existentes de IntelliJ Platform (IJPL), y dos arreglos enviados como pull requests.</p>
+    <p class="contact-lead" style="margin-bottom:0">Errores en el propio código de JetBrains, documentados públicamente en su tracker YouTrack: cinco presentados directamente, tres después de que un control de este catálogo los encontrara en el código de IntelliJ y dos después de medir las páginas de Settings en el hilo de interfaz, más análisis de causa raíz publicados en tickets existentes de IntelliJ Platform (IJPL) y dos arreglos enviados como pull requests.</p>
   </div>
 
   <div class="lab-section-head">
     <h2>Presentado directamente</h2>
-    <p>Errores encontrados en el propio código de IntelliJ por un control de este catálogo y luego reportados a JetBrains.</p>
+    <p>Errores encontrados en el propio código de IntelliJ por un control de este catálogo o midiendo el hilo de interfaz del IDE, y luego reportados a JetBrains.</p>
   </div>
   <div class="lab-tickets">
     <article class="ticket-card">
@@ -256,6 +256,22 @@
         <span class="ticket-status is-submitted">Enviado</span>
       </div>
       <p>Encontrado con el mismo control, durante una auditoría de componentes que trabajan en segundo plano después de cada edición. Con auto-test activado, <code>DelayedDocumentWatcher</code> espera una pausa de tipeo y luego revisa si cada archivo cambiado tiene errores de sintaxis (<code>PsiErrorElementUtil.hasErrors()</code>) en una sola acción de lectura bloqueante, en un hilo del pool. La tecla que retoma la escritura espera toda la revisión. Medido con el framework de tests de la plataforma sobre IntelliJ IDEA 2025.2: en un archivo de 50,000 líneas, esa tecla tardó 436 ms con el código actual, 48 ms sin auto-test y 73 ms con la revisión en una acción de lectura no bloqueante. El test de medición está adjunto al ticket, y el arreglo se propone en el <a href="https://github.com/JetBrains/intellij-community/pull/3685" target="_blank" rel="noopener">pull request #3685</a>.</p>
+    </article>
+    <article class="ticket-card">
+      <div class="ticket-head">
+        <a class="ticket-id" href="https://youtrack.jetbrains.com/issue/IJPL-257908" target="_blank" rel="noopener">IJPL-257908 &#8599;</a>
+        <h3>Live Templates settings: isModified() checks every template against every context type on the EDT after each click or key press</h3>
+        <span class="ticket-status is-submitted">Enviado</span>
+      </div>
+      <p>Encontrado al medir cada página de Settings en el hilo de interfaz de IntelliJ IDEA 2026.2.3 con el framework de tests de la plataforma. El diálogo de Settings llama a <code>isModified()</code> de la página abierta alrededor de un segundo después de cada clic o tecla. En la página Live Templates, esa llamada compara las 1,295 plantillas con los 336 tipos de contexto (<code>TemplateContext.getDifference()</code>), y el hilo de interfaz se detiene unos 165 ms cada vez. El ticket propone una verificación de una línea: dos plantillas con la misma configuración propia de contextos no pueden diferir en ningún tipo de contexto. En el mismo test, esa verificación lleva la comparación de 157 ms a 0 ms con el mismo resultado. El test de medición está adjunto al ticket.</p>
+    </article>
+    <article class="ticket-card">
+      <div class="ticket-head">
+        <a class="ticket-id" href="https://youtrack.jetbrains.com/issue/IJPL-257909" target="_blank" rel="noopener">IJPL-257909 &#8599;</a>
+        <h3>Settings | Plugins: isRequiredForEssentialPlugin rebuilds the plugin maps and walks all essential dependencies once per plugin on the EDT</h3>
+        <span class="ticket-status is-submitted">Enviado</span>
+      </div>
+      <p>Encontrado en la misma medición de las páginas de Settings. Abrir Settings &rsaquo; Plugins arma la lista de plugins instalados en el hilo de interfaz y pregunta, para cada plugin, si lo requiere un plugin esencial. Cada respuesta vuelve a armar los mapas de plugins y de módulos y recorre las dependencias de todos los plugins esenciales; el propio código ya tiene un <code>FIXME</code> al respecto. Con 158 plugins cargados, la página tardó 689&ndash;931 ms en abrir. Un solo recorrido seguido de una búsqueda por plugin tardó 8&ndash;22 ms y dio la misma respuesta para cada plugin. El costo crece con el cuadrado de la cantidad de plugins instalados. El test de medición está adjunto al ticket.</p>
     </article>
   </div>
 
