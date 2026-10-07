@@ -223,7 +223,7 @@
   <div class="page-hero method-intro band-dark gh-page-header">
     <p class="contact-kicker">Engineering &amp; Evidence</p>
     <h1>JetBrains Platform tickets</h1>
-    <p class="contact-lead" style="margin-bottom:0">Bugs in JetBrains&rsquo; own code, documented publicly in JetBrains&rsquo; YouTrack tracker: two filed directly after a check from this catalog found them in IntelliJ&rsquo;s source, plus root-cause analysis posted on existing IntelliJ Platform (IJPL) tickets.</p>
+    <p class="contact-lead" style="margin-bottom:0">Bugs in JetBrains&rsquo; own code, documented publicly in JetBrains&rsquo; YouTrack tracker: two filed directly after a check from this catalog found them in IntelliJ&rsquo;s source, plus root-cause analysis posted on existing IntelliJ Platform (IJPL) tickets, and one fix sent as a pull request.</p>
   </div>
 
   <div class="lab-section-head">
@@ -244,9 +244,24 @@
       <div class="ticket-head">
         <a class="ticket-id" href="https://youtrack.jetbrains.com/issue/IJPL-257836" target="_blank" rel="noopener">IJPL-257836 &#8599;</a>
         <h3>DependenciesUsagesPanel.findUsages runs the whole dependency usage search in one non-cancellable read action</h3>
-        <span class="ticket-status is-submitted">Wait for reply</span>
+        <span class="ticket-status is-submitted">Submitted</span>
       </div>
-      <p>Found by the same check as <a href="/catalog/background-readaction-freeze-companion/">Background ReadAction Freeze Companion</a>, run as a scan over IntelliJ&rsquo;s own <code>master</code>. When a node is selected in the Dependency Viewer (Code &rsaquo; Analyze Code &rsaquo; Dependencies), <code>DependenciesUsagesPanel.findUsages()</code> analyzes every file of the selected scope inside one top-level <code>ReadAction.runBlocking()</code> on a pooled thread. A pending write action, such as typing in an editor, waits until the whole search ends. The ticket proposes the fix shape JetBrains used for IJPL-236316 (<code>FindUsagesHelper</code>): a non-blocking read action that no longer swallows <code>ProcessCanceledException</code>, with the UI update moved out of the read action. Read in the source; JetBrains support asked for reproduction steps.</p>
+      <p>Found by the same check as <a href="/catalog/background-readaction-freeze-companion/">Background ReadAction Freeze Companion</a>, run as a scan over IntelliJ&rsquo;s own <code>master</code>. When a node is selected in the Dependency Viewer (Code &rsaquo; Analyze Code &rsaquo; Dependencies), <code>DependenciesUsagesPanel.findUsages()</code> analyzes every file of the selected scope inside one top-level <code>ReadAction.runBlocking()</code> on a pooled thread. A pending write action, such as typing in an editor, waits until the whole search ends. The ticket proposes the fix shape JetBrains used for IJPL-236316 (<code>FindUsagesHelper</code>): a non-blocking read action that no longer swallows <code>ProcessCanceledException</code>, with the UI update moved out of the read action. JetBrains support asked for reproduction steps. A headless test on a synthetic project reproduced it: with 2,000 files, a write action waited 4.8 s for the search, and 1 ms with a non-blocking read action. The test is attached to the ticket, and a fix is proposed in <a href="https://github.com/JetBrains/intellij-community/pull/3684" target="_blank" rel="noopener">pull request #3684</a>.</p>
+    </article>
+  </div>
+
+  <div class="lab-section-head">
+    <h2>Fixes contributed</h2>
+    <p>Pull requests sent to JetBrains&rsquo; <code>intellij-community</code> repository for a bug reported above.</p>
+  </div>
+  <div class="lab-tickets">
+    <article class="ticket-card">
+      <div class="ticket-head">
+        <a class="ticket-id" href="https://github.com/JetBrains/intellij-community/pull/3684" target="_blank" rel="noopener">PR #3684 &#8599;</a>
+        <h3>IJPL-257836 Dependency Viewer: run the usage search in a non-blocking read action</h3>
+        <span class="ticket-status is-open">Open</span>
+      </div>
+      <p>Fix for IJPL-257836. The usage search runs in <code>ReadAction.nonBlocking(...)</code>, which restarts when a write action is pending, the same fix shape JetBrains used for IJPL-236316. The search has no side effects, so a restart is safe, and the usage view is built after the read action. A new test holds the search inside its read action and checks that a write action does not wait for it. Against the IntelliJ IDEA 2025.2 jars, the write action waited 10,021 ms with the current code and 3 ms with the fix. The test was not run inside the full <code>intellij-community</code> build.</p>
     </article>
   </div>
 
