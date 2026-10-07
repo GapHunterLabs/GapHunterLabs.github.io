@@ -223,7 +223,7 @@
   <div class="page-hero method-intro band-dark gh-page-header">
     <p class="contact-kicker">Engineering &amp; Evidence</p>
     <h1>JetBrains Platform tickets</h1>
-    <p class="contact-lead" style="margin-bottom:0">Bugs in JetBrains&rsquo; own code, documented publicly in JetBrains&rsquo; YouTrack tracker: two filed directly after a check from this catalog found them in IntelliJ&rsquo;s source, plus root-cause analysis posted on existing IntelliJ Platform (IJPL) tickets, and one fix sent as a pull request.</p>
+    <p class="contact-lead" style="margin-bottom:0">Bugs in JetBrains&rsquo; own code, documented publicly in JetBrains&rsquo; YouTrack tracker: three filed directly after a check from this catalog found them in IntelliJ&rsquo;s source, plus root-cause analysis posted on existing IntelliJ Platform (IJPL) tickets, and two fixes sent as pull requests.</p>
   </div>
 
   <div class="lab-section-head">
@@ -248,11 +248,19 @@
       </div>
       <p>Found by the same check as <a href="/catalog/background-readaction-freeze-companion/">Background ReadAction Freeze Companion</a>, run as a scan over IntelliJ&rsquo;s own <code>master</code>. When a node is selected in the Dependency Viewer (Code &rsaquo; Analyze Code &rsaquo; Dependencies), <code>DependenciesUsagesPanel.findUsages()</code> analyzes every file of the selected scope inside one top-level <code>ReadAction.runBlocking()</code> on a pooled thread. A pending write action, such as typing in an editor, waits until the whole search ends. The ticket proposes the fix shape JetBrains used for IJPL-236316 (<code>FindUsagesHelper</code>): a non-blocking read action that no longer swallows <code>ProcessCanceledException</code>, with the UI update moved out of the read action. JetBrains support asked for reproduction steps. A headless test on a synthetic project reproduced it: with 2,000 files, a write action waited 4.8 s for the search, and 1 ms with a non-blocking read action. The test is attached to the ticket, and a fix is proposed in <a href="https://github.com/JetBrains/intellij-community/pull/3684" target="_blank" rel="noopener">pull request #3684</a>.</p>
     </article>
+    <article class="ticket-card">
+      <div class="ticket-head">
+        <a class="ticket-id" href="https://youtrack.jetbrains.com/issue/IJPL-257854" target="_blank" rel="noopener">IJPL-257854 &#8599;</a>
+        <h3>Auto-test: the error check of DelayedDocumentWatcher blocks typing until the whole check ends</h3>
+        <span class="ticket-status is-submitted">Submitted</span>
+      </div>
+      <p>Found with the same check, during an audit of components that do background work after each edit. With auto-test enabled, <code>DelayedDocumentWatcher</code> waits for a typing pause and then checks every changed file for syntax errors (<code>PsiErrorElementUtil.hasErrors()</code>) in one blocking read action on a pooled thread. The keystroke that resumes typing waits for the whole check. Measured with the platform test framework on IntelliJ IDEA 2025.2: on a 50,000-line file, that keystroke took 436 ms with the current code, 48 ms without auto-test, and 73 ms with the check in a non-blocking read action. The measurement test is attached to the ticket, and a fix is proposed in <a href="https://github.com/JetBrains/intellij-community/pull/3685" target="_blank" rel="noopener">pull request #3685</a>.</p>
+    </article>
   </div>
 
   <div class="lab-section-head">
     <h2>Fixes contributed</h2>
-    <p>Pull requests sent to JetBrains&rsquo; <code>intellij-community</code> repository for a bug reported above.</p>
+    <p>Pull requests sent to JetBrains&rsquo; <code>intellij-community</code> repository for bugs reported above.</p>
   </div>
   <div class="lab-tickets">
     <article class="ticket-card">
@@ -262,6 +270,14 @@
         <span class="ticket-status is-open">Open</span>
       </div>
       <p>Fix for IJPL-257836. The usage search runs in <code>ReadAction.nonBlocking(...)</code>, which restarts when a write action is pending, the same fix shape JetBrains used for IJPL-236316. The search has no side effects, so a restart is safe, and the usage view is built after the read action. A new test holds the search inside its read action and checks that a write action does not wait for it. Against the IntelliJ IDEA 2025.2 jars, the write action waited 10,021 ms with the current code and 3 ms with the fix. The test was not run inside the full <code>intellij-community</code> build.</p>
+    </article>
+    <article class="ticket-card">
+      <div class="ticket-head">
+        <a class="ticket-id" href="https://github.com/JetBrains/intellij-community/pull/3685" target="_blank" rel="noopener">PR #3685 &#8599;</a>
+        <h3>IJPL-257854 Auto-test: check changed files for errors in a non-blocking read action</h3>
+        <span class="ticket-status is-open">Open</span>
+      </div>
+      <p>Fix for IJPL-257854. The error check runs in <code>ReadAction.nonBlocking(...)</code>, which restarts when a write action is pending; <code>hasErrors()</code> has no side effects, so a restart is safe. The changed files are copied before the check, because the set is used on the EDT. Measured against the IntelliJ IDEA 2025.2 jars with a copy of the patched class: the keystroke that resumes typing on a 10,000-line file took 134 ms with the current code and 25 ms with the fix. The change was not built inside the full <code>intellij-community</code> build.</p>
     </article>
   </div>
 
