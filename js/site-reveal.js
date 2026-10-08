@@ -137,7 +137,9 @@
       el.style.setProperty("--rv-y", xy[1] + "px");
       el.style.setProperty("--rv-dur", s.duration + "ms");
       el.style.setProperty("--rv-ease", s.easing);
-      el.setAttribute("data-rv", "");
+      // A class, not a data-* attribute: catalog.js copies the cards' data-* attributes
+      // to the table rows, and a copied marker would hide rows nobody observes.
+      el.classList.add("rv-target");
       observer.observe(el);
     });
   }

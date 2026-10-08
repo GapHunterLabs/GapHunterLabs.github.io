@@ -785,24 +785,28 @@ body { background-image: none; }
 
 /* =====================================================================
    Aparicion al hacer scroll (js/site-reveal.js). Solo actua sobre los
-   elementos que el script marca con [data-rv] y solo si <html> tiene
+   elementos que el script marca con la clase .rv-target y solo si <html>
+   tiene .rv-on. Es una clase y no un data-*: catalog.js copia los data-*
+   de las tarjetas a las filas de la tabla, y un data-rv copiado dejaba
+   filas ocultas que nadie observaba. Sin JavaScript, con "reducir
+   movimiento" o al imprimir, todo
    .rv-on; sin JavaScript, con "reducir movimiento" o al imprimir, todo
    se ve desde el principio. Temporalidad y posicion salen de variables
    que el script fija por elemento desde su CONFIG y los data-reveal-*.
    ===================================================================== */
-.rv-on [data-rv] {
+.rv-on .rv-target {
   opacity: 0;
   transform: translate3d(var(--rv-x, 0px), var(--rv-y, 0px), 0);
   transition:
     opacity var(--rv-dur, 450ms) var(--rv-ease, ease-out) var(--rv-delay, 0ms),
     transform var(--rv-dur, 450ms) var(--rv-ease, ease-out) var(--rv-delay, 0ms);
 }
-.rv-on [data-rv].rv-in { opacity: 1; transform: none; }
+.rv-on .rv-target.rv-in { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) {
-  .rv-on [data-rv] { opacity: 1; transform: none; transition: none; }
+  .rv-on .rv-target { opacity: 1; transform: none; transition: none; }
 }
 @media print {
-  .rv-on [data-rv] { opacity: 1 !important; transform: none !important; }
+  .rv-on .rv-target { opacity: 1 !important; transform: none !important; }
 }
 
 /* 2026-10-08, segunda pasada de naturalizacion: rotulos pequenos en caja normal, titulares sin palabras de otro color
@@ -814,3 +818,7 @@ h1 .accent, h2 .accent, .hero-title .accent { color: inherit; }
 .pi-step-num { width: auto; height: auto; border-radius: 0; background: none; color: var(--text-dim); font-weight: 600; }
 /* Estado de los tickets en texto normal. */
 .ticket-status { font-family: var(--sans); font-size: 12px; font-weight: 600; letter-spacing: 0; text-transform: none; }
+/* Tabla del catalogo: cabecera y cifras en la tipografia del sitio, sin mayusculas forzadas ni monoespaciada. */
+thead th { font-family: var(--sans); font-size: 12.5px; font-weight: 600; letter-spacing: 0; text-transform: none; }
+td.num-cell { font-family: var(--sans); font-variant-numeric: tabular-nums; }
+tr.row td[data-label]::before { font-family: var(--sans); font-size: 11px; letter-spacing: 0; text-transform: none; }
