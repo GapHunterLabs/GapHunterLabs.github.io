@@ -238,7 +238,7 @@
         <h2>Background ReadAction Freeze Companion</h2>
         <p>La mayoría de los plugins de este catálogo nacen de usuarios que se quejan de un competidor de pago. Este nació del Platform Blog de JetBrains, que describe un punto de entrada en un hilo de fondo que llega a una llamada de read-lock bloqueante y no cancelable como una causa recurrente de congelamientos del IDE.</p>
         <p>Aplicado al propio código de IntelliJ, encontró el patrón en <code>SearchForTestsTask</code>, que ejecuta un paso con el cancelable <code>ReadAction.nonBlocking()</code> y el paso hermano con el bloqueante <code>ReadAction.run()</code>. Eso se convirtió en <a href="https://youtrack.jetbrains.com/issue/IDEA-393501" target="_blank" rel="noopener">IDEA-393501</a>, presentado a JetBrains y ya clasificado y asignado. Sobre ese mismo código también descartó una read action cuyo único llamador corre en el EDT: un falso positivo evitado en código de producción, no en un ejemplo sintético.</p>
-        <a class="btn" href="https://github.com/GapHunterLabs/background-readaction-freeze-companion#readme" target="_blank" rel="noopener">Ver la evidencia &rarr;</a>
+        <a class="btn" href="https://github.com/GapHunterLabs/background-readaction-freeze-companion#readme" target="_blank" rel="noopener">Ver la evidencia</a>
       </div>
       <dl class="case-meta">
         <div class="case-meta-row">
@@ -261,7 +261,7 @@
         <p class="eyebrow">Caso de estudio</p>
         <h2>Dependency Vulnerability Companion</h2>
         <p>Todas las alternativas principales (Aikido, Xygeni, los propios plugins de JFrog en Marketplace, Snyk) exigen una cuenta en la nube o un token de acceso personal antes de hacer nada. En diciembre de 2024, Semgrep pasó sus reglas mantenidas a una nueva licencia restrictiva, y un consorcio de proveedores de AppSec competidores (Aikido, Endor Labs, Orca Security y otros) respondió bifurcando el motor como Opengrep. Este plugin revisa la misma clase de dependencias vulnerables sin cuenta, sin token y sin llamadas de red. Es la única forma de servir a los contratistas de defensa regulados por CMMC 2.0, un segmento de compradores que no puede usar ninguna de las alternativas en la nube anteriores.</p>
-        <a class="btn" href="https://github.com/GapHunterLabs/dependency-vulnerability-companion#readme" target="_blank" rel="noopener">Ver la evidencia &rarr;</a>
+        <a class="btn" href="https://github.com/GapHunterLabs/dependency-vulnerability-companion#readme" target="_blank" rel="noopener">Ver la evidencia</a>
       </div>
       <dl class="case-meta">
         <div class="case-meta-row">
@@ -284,7 +284,7 @@
         <p class="eyebrow">Caso de estudio</p>
         <h2>SpEL Injection Sink Companion</h2>
         <p>La inyección de Spring Expression Language no es una clase de error teórica: en <a href="https://nvd.nist.gov/vuln/detail/CVE-2022-22963" target="_blank" rel="noopener">CVE-2022-22963</a>, una expresión de enrutamiento enviada por quien hace la llamada se convertía en código SpEL que Spring Cloud Function analizaba y evaluaba, con ejecución remota de código como resultado. CISA la incluyó en su catálogo de vulnerabilidades explotadas conocidas (KEV) en agosto de 2022. Este plugin marca el mismo mecanismo en el código de la aplicación, directamente en el editor: una llamada a <code>ExpressionParser.parseExpression(...)</code> de Spring cuyo argumento se construye a partir de un parámetro de un endpoint HTTP. El análisis de taint para la categoría general existe en IntelliJ IDEA Ultimate y en el nivel Ultimate Plus de Qodana; este plugin es gratuito, no requiere cuenta y funciona en Community Edition.</p>
-        <a class="btn" href="https://github.com/GapHunterLabs/spel-injection-sink-companion#readme" target="_blank" rel="noopener">Ver la evidencia &rarr;</a>
+        <a class="btn" href="https://github.com/GapHunterLabs/spel-injection-sink-companion#readme" target="_blank" rel="noopener">Ver la evidencia</a>
       </div>
       <dl class="case-meta">
         <div class="case-meta-row">
@@ -307,7 +307,7 @@
         <p class="eyebrow">Caso de estudio</p>
         <h2>SSRF Allow-List Bypass Companion</h2>
         <p>Validar una URL saliente comprobando si un host permitido es prefijo o subcadena del texto crudo es un enfoque estructuralmente débil, y el propio Spring Framework lo demostró: en <a href="https://spring.io/security/cve-2024-22243" target="_blank" rel="noopener">CVE-2024-22243</a>, una URL analizada con <code>UriComponentsBuilder</code> podía pasar una validación de host mientras la petición iba a otro destino, lo que permitía SSRF o una redirección abierta. La <a href="https://github.com/spring-projects/spring-framework/commit/120ea0a51c63171e624ca55dbd7cae627d53a042" target="_blank" rel="noopener">corrección</a> cambió cómo se analiza la parte de userinfo de la URL. Este plugin marca una llamada HTTP saliente (<code>new URL(...)</code> o <code>RestTemplate</code> de Spring) que usa un parámetro de endpoint validado solo con <code>.startsWith</code>/<code>.contains</code> sobre el texto crudo de la URL.</p>
-        <a class="btn" href="https://github.com/GapHunterLabs/ssrf-allowlist-bypass-companion#readme" target="_blank" rel="noopener">Ver la evidencia &rarr;</a>
+        <a class="btn" href="https://github.com/GapHunterLabs/ssrf-allowlist-bypass-companion#readme" target="_blank" rel="noopener">Ver la evidencia</a>
       </div>
       <dl class="case-meta">
         <div class="case-meta-row">
@@ -330,7 +330,7 @@
         <p class="eyebrow">Caso de estudio</p>
         <h2>Lucene Query Injection Companion</h2>
         <p>Cuando la entrada cruda del usuario se convierte en sintaxis de consulta de Lucene, puede saltarse los filtros que la búsqueda debía aplicar, y una sintaxis profundamente anidada puede tumbar el clúster: <a href="https://nvd.nist.gov/vuln/detail/CVE-2023-31419" target="_blank" rel="noopener">CVE-2023-31419</a> es un desbordamiento de pila y una denegación de servicio provocados por una query string manipulada contra la propia API <code>_search</code> de Elasticsearch. La inyección SQL la cubren todas las herramientas SAST importantes; este sink no lo cubre ninguna query del repositorio público de CodeQL. Este plugin marca una llamada a <code>QueryBuilders.queryStringQuery(...)</code> o <code>.simpleQueryStringQuery(...)</code> cuya entrada se construye a partir de un parámetro de un endpoint HTTP.</p>
-        <a class="btn" href="https://github.com/GapHunterLabs/lucene-query-injection-companion#readme" target="_blank" rel="noopener">Ver la evidencia &rarr;</a>
+        <a class="btn" href="https://github.com/GapHunterLabs/lucene-query-injection-companion#readme" target="_blank" rel="noopener">Ver la evidencia</a>
       </div>
       <dl class="case-meta">
         <div class="case-meta-row">

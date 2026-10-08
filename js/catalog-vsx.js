@@ -44,7 +44,7 @@
         '<p class="card-pitch">' + esc(e.pitch) + '</p>' +
         '<div class="card-metrics"><span class="card-dl-wrap">' + thousands(n) +
         (ES ? (n === 1 ? ' instalación' : ' instalaciones') : (n === 1 ? ' install' : ' installs')) + '</span>' +
-        '<span class="card-go">' + (ES ? 'Detalles &rarr;' : 'Details &rarr;') + '</span></div></a>';
+        '<span class="card-go">' + (ES ? 'Detalles' : 'Details') + '</span></div></a>';
     }
     function pagerHtml(pages) {
       if (pages <= 1) return '';

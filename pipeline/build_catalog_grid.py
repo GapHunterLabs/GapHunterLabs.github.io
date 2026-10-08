@@ -100,7 +100,7 @@ def card_html(p, renderer: PluginRenderer, src: Sources) -> str:
         '<span class="card-cat" style="--cat:%s" title="%s" aria-hidden="true">%s</span>%s</div>'
         '<div class="card-top"><div class="card-name">%s</div><div class="card-niche">%s</div></div>'
         '<p class="card-pitch">%s</p>'
-        '<div class="card-metrics"><span class="card-dl-wrap">%s</span><span class="card-go">Details &rarr;</span></div></a>'
+        '<div class="card-metrics"><span class="card-dl-wrap">%s</span><span class="card-go">Details</span></div></a>'
     ) % (esc(p["repo"]), esc(p["name"]), " ".join(attrs), color, esc(cat["label"]),
          renderer.cat_icon_html(p["categoryKey"]), price_badge, esc(p["name"]), esc(p.get("niche")),
          esc(pitch_text(p.get("pitch")) or ""), downloads)
@@ -243,7 +243,7 @@ def build(dry_run: bool = False) -> None:
             '<div class="card-top"><div class="card-name">%s</div><div class="card-niche">%s</div></div>'
             '<p class="card-pitch">%s</p>'
             '<div class="card-metrics"><span class="card-dl-wrap">%s %s</span>'
-            '<span class="card-go">Details &rarr;</span></div></a>'
+            '<span class="card-go">Details</span></div></a>'
             % (esc(e.get("name")), esc(e.get("displayName")), VS_ICON, esc(e.get("displayName")), esc(e.get("niche")),
                esc(pitch_text(e.get("pitch"))), thousands(n), "install" if n == 1 else "installs"))
 

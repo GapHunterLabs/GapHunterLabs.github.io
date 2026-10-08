@@ -701,7 +701,7 @@ class PluginRenderer:
             '<span class="price-badge price-%s">%s</span></div>'
             '<div class="rel-name">%s</div><div class="rel-niche">%s</div>'
             '<p class="rel-pitch">%s</p>'
-            '<div class="rel-foot"><span>%s</span><span class="rel-go">Details &rarr;</span></div></a>'
+            '<div class="rel-foot"><span>%s</span><span class="rel-go">Details</span></div></a>'
         ) % (esc(s["repo"]), esc(s["name"]), color, esc(cat["label"]), self.cat_icon_html(s["categoryKey"]),
              price_key, price, esc(s["name"]), esc(s.get("niche")), esc(pitch_text(s.get("pitch")) or ""), dl)
 
@@ -813,7 +813,7 @@ class PluginRenderer:
 
         if similar:
             h.append('<section class="similar-section"><div class="similar-head"><h2 class="similar-title">Related plugins</h2>'
-                     '<a class="similar-all" href="/catalog/?category=%s">All %s plugins &rarr;</a></div><div class="similar-grid">'
+                     '<a class="similar-all" href="/catalog/?category=%s">All %s plugins</a></div><div class="similar-grid">'
                      % (esc(cat["key"]), esc(cat["label"])))
             h.extend(self.similar_card_html(s) for s in similar)
             h.append('</div></section>')
@@ -875,7 +875,7 @@ class PluginRenderer:
             '<div class="rel-head"><span class="card-cat" style="--cat:var(--accent)" aria-hidden="true">%s</span>'
             '<span class="price-badge price-free">Free</span></div>'
             '<div class="rel-name">%s</div><div class="rel-niche">%s</div><p class="rel-pitch">%s</p>'
-            '<div class="rel-foot"><span>%s %s</span><span class="rel-go">Details &rarr;</span></div></a>'
+            '<div class="rel-foot"><span>%s %s</span><span class="rel-go">Details</span></div></a>'
         ) % (esc(o["name"]), esc(o["displayName"]), self.src.icons["vscode"], esc(o["displayName"]),
              esc(o.get("niche")), esc(pitch_text(o.get("pitch")) or ""), thousands(n), "install" if n == 1 else "installs")
 
@@ -930,7 +930,7 @@ class PluginRenderer:
                  ))))
         if others:
             h.append('<section class="similar-section"><div class="similar-head"><h2 class="similar-title">Related extensions</h2>'
-                     '<a class="similar-all" href="/catalog/?platform=vscode">All VS Code extensions &rarr;</a></div><div class="similar-grid">')
+                     '<a class="similar-all" href="/catalog/?platform=vscode">All VS Code extensions</a></div><div class="similar-grid">')
             h.extend(self.vsx_card_html(o) for o in others)
             h.append('</div></section>')
         h.append('<div class="hire-band"><div><strong>Need a tool like this built for your codebase?</strong>'

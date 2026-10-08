@@ -237,7 +237,7 @@
         <h2>Background ReadAction Freeze Companion</h2>
         <p>Most plugins in this catalog start from users complaining about a paid competitor. This one started from JetBrains' own Platform Blog, which describes a background-thread entry point reaching a blocking, non-cancellable read-lock call as a recurring cause of IDE freezes.</p>
         <p>Pointed at IntelliJ&rsquo;s own source, it found the pattern in <code>SearchForTestsTask</code>, which runs one step through the cancellable <code>ReadAction.nonBlocking()</code> and its sibling through the blocking <code>ReadAction.run()</code>. That became <a href="https://youtrack.jetbrains.com/issue/IDEA-393501" target="_blank" rel="noopener">IDEA-393501</a>, filed with JetBrains and since triaged and assigned. On the same code it also skipped a read action whose only caller runs on the EDT: a false positive avoided in production code, not in a synthetic test.</p>
-        <a class="btn" href="https://github.com/GapHunterLabs/background-readaction-freeze-companion#readme" target="_blank" rel="noopener">View evidence &rarr;</a>
+        <a class="btn" href="https://github.com/GapHunterLabs/background-readaction-freeze-companion#readme" target="_blank" rel="noopener">View evidence</a>
       </div>
       <dl class="case-meta">
         <div class="case-meta-row">
@@ -260,7 +260,7 @@
         <p class="eyebrow">Case study</p>
         <h2>Dependency Vulnerability Companion</h2>
         <p>Every leading alternative (Aikido, Xygeni, JFrog's own Marketplace plugins, Snyk) requires a cloud account or personal access token before it does anything. In December 2024 Semgrep moved its maintained rules to a new restrictive license, and a consortium of competing AppSec vendors (Aikido, Endor Labs, Orca Security and others) answered by forking the engine as Opengrep. This plugin checks the same class of vulnerable dependencies with no account, no token, and no network calls. That is the only way to serve defense contractors regulated by CMMC 2.0, a buyer segment that cannot use any of the cloud-based alternatives above.</p>
-        <a class="btn" href="https://github.com/GapHunterLabs/dependency-vulnerability-companion#readme" target="_blank" rel="noopener">View evidence &rarr;</a>
+        <a class="btn" href="https://github.com/GapHunterLabs/dependency-vulnerability-companion#readme" target="_blank" rel="noopener">View evidence</a>
       </div>
       <dl class="case-meta">
         <div class="case-meta-row">
@@ -283,7 +283,7 @@
         <p class="eyebrow">Case study</p>
         <h2>SpEL Injection Sink Companion</h2>
         <p>Spring Expression Language injection is not a theoretical bug class: in <a href="https://nvd.nist.gov/vuln/detail/CVE-2022-22963" target="_blank" rel="noopener">CVE-2022-22963</a>, a routing expression supplied by the caller became SpEL source text that Spring Cloud Function parsed and evaluated, leading to remote code execution. CISA added it to its Known Exploited Vulnerabilities catalog in August 2022. This plugin flags the same mechanism in application code, inline in the editor: a Spring <code>ExpressionParser.parseExpression(...)</code> call whose argument is built from an HTTP endpoint parameter. Taint analysis for the broader category exists in IntelliJ IDEA Ultimate and Qodana&rsquo;s Ultimate Plus tier; this plugin is free, needs no account, and runs in Community Edition.</p>
-        <a class="btn" href="https://github.com/GapHunterLabs/spel-injection-sink-companion#readme" target="_blank" rel="noopener">View evidence &rarr;</a>
+        <a class="btn" href="https://github.com/GapHunterLabs/spel-injection-sink-companion#readme" target="_blank" rel="noopener">View evidence</a>
       </div>
       <dl class="case-meta">
         <div class="case-meta-row">
@@ -306,7 +306,7 @@
         <p class="eyebrow">Case study</p>
         <h2>SSRF Allow-List Bypass Companion</h2>
         <p>Validating an outbound URL by checking whether an allowed host is a prefix or substring of the raw string is structurally unsound, and Spring Framework showed why: in <a href="https://spring.io/security/cve-2024-22243" target="_blank" rel="noopener">CVE-2024-22243</a>, a URL parsed by <code>UriComponentsBuilder</code> could pass a host validation check while the request went somewhere else, enabling SSRF or an open redirect. The <a href="https://github.com/spring-projects/spring-framework/commit/120ea0a51c63171e624ca55dbd7cae627d53a042" target="_blank" rel="noopener">fix</a> changed how the userinfo part of a URL is parsed. This plugin flags an outbound HTTP call (<code>new URL(...)</code> or Spring&rsquo;s <code>RestTemplate</code>) that uses an endpoint parameter validated only with <code>.startsWith</code>/<code>.contains</code> against the raw URL string.</p>
-        <a class="btn" href="https://github.com/GapHunterLabs/ssrf-allowlist-bypass-companion#readme" target="_blank" rel="noopener">View evidence &rarr;</a>
+        <a class="btn" href="https://github.com/GapHunterLabs/ssrf-allowlist-bypass-companion#readme" target="_blank" rel="noopener">View evidence</a>
       </div>
       <dl class="case-meta">
         <div class="case-meta-row">
@@ -329,7 +329,7 @@
         <p class="eyebrow">Case study</p>
         <h2>Lucene Query Injection Companion</h2>
         <p>When raw user input becomes Lucene query syntax, it can bypass the filters a search was meant to enforce, and deeply nested syntax can take the cluster down: <a href="https://nvd.nist.gov/vuln/detail/CVE-2023-31419" target="_blank" rel="noopener">CVE-2023-31419</a> is a stack overflow and denial of service triggered by a crafted query string on Elasticsearch&rsquo;s own <code>_search</code> API. SQL injection is covered by every major SAST tool; this sink is not covered by any query in the public CodeQL repository. This plugin flags a <code>QueryBuilders.queryStringQuery(...)</code> or <code>.simpleQueryStringQuery(...)</code> call whose argument is built from an HTTP endpoint parameter.</p>
-        <a class="btn" href="https://github.com/GapHunterLabs/lucene-query-injection-companion#readme" target="_blank" rel="noopener">View evidence &rarr;</a>
+        <a class="btn" href="https://github.com/GapHunterLabs/lucene-query-injection-companion#readme" target="_blank" rel="noopener">View evidence</a>
       </div>
       <dl class="case-meta">
         <div class="case-meta-row">
