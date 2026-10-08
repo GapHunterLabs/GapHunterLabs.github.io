@@ -592,7 +592,7 @@
   background: #0F2346;
   box-shadow: none;
 }
-.page-hero.gh-page-header:not(.hero):not(.contact-hero)::after {
+.page-hero.gh-page-header:not(.hero)::after {
   content: "";
   position: absolute;
   z-index: -1;
@@ -636,7 +636,7 @@
 
 @media (max-width: 640px) {
   .page-hero.gh-page-header { border-radius: 10px; }
-  .page-hero.gh-page-header:not(.hero):not(.contact-hero)::after { width: 190px; height: 190px; right: -40px; bottom: -50px; }
+  .page-hero.gh-page-header:not(.hero)::after { width: 190px; height: 190px; right: -40px; bottom: -50px; }
   .gh-page-header .contact-lead, .gh-page-header .ch-copy > p:not(.eyebrow) { font-size: 16px; }
 }
 
@@ -812,7 +812,5 @@ body { background-image: none; }
 }
 h1 .accent, h2 .accent, .hero-title .accent { color: inherit; }
 .pi-step-num { width: auto; height: auto; border-radius: 0; background: none; color: var(--text-dim); font-weight: 600; }
-/* Cifras del encabezado como una fila de datos, sin cajas; estado de los tickets en texto normal. */
-.hdr-stats { gap: 12px 24px; overflow: visible; border: 0; border-radius: 0; background: none; }
-.hdr-stat, .hero .hdr-stat { padding: 0; background: none; }
+/* Estado de los tickets en texto normal. */
 .ticket-status { font-family: var(--sans); font-size: 12px; font-weight: 600; letter-spacing: 0; text-transform: none; }
