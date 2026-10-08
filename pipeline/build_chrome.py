@@ -36,6 +36,7 @@ PAGES = (
     ("engineering-evidence/index.html", "/engineering-evidence/", None),
     ("engineering-evidence/case-studies/index.html", "/engineering-evidence/case-studies/", None),
     ("engineering-evidence/jetbrains-platform-tickets/index.html", "/engineering-evidence/jetbrains-platform-tickets/", None),
+    ("engineering-evidence/open-source-security-reports/index.html", "/engineering-evidence/open-source-security-reports/", None),
     ("contact/index.html", "/contact/", None),
     ("security/index.html", None, "/security/"),
     ("privacy/index.html", None, "/privacy/"),
@@ -48,7 +49,8 @@ PAGES = (
 EE = "/engineering-evidence/"
 EE_ITEMS = ((EE, "Overview", "What this section covers"),
             (EE + "case-studies/", "Case studies", "Plugins with the strongest evidence"),
-            (EE + "jetbrains-platform-tickets/", "JetBrains Platform tickets", "Root-cause reports in the IntelliJ Platform tracker"))
+            (EE + "jetbrains-platform-tickets/", "JetBrains Platform tickets", "Root-cause reports in the IntelliJ Platform tracker"),
+            (EE + "open-source-security-reports/", "Open-source security reports", "Vulnerable dependencies reported to maintainers"))
 NAV = (("/catalog/", "Catalog"), ("Engineering &amp; Evidence", EE_ITEMS),
        ("/methodology/", "Methodology"), ("/contact/", "Contact"))
 
@@ -84,6 +86,7 @@ ES_PATHS = {
     "/engineering-evidence/": "/es/ingenieria-y-evidencia/",
     "/engineering-evidence/case-studies/": "/es/ingenieria-y-evidencia/casos-de-estudio/",
     "/engineering-evidence/jetbrains-platform-tickets/": "/es/ingenieria-y-evidencia/tickets-jetbrains-platform/",
+    "/engineering-evidence/open-source-security-reports/": "/es/ingenieria-y-evidencia/reportes-de-seguridad/",
     "/contact/": "/es/contacto/",
     "/security/": "/es/seguridad/",
     "/privacy/": "/es/privacidad/",
@@ -197,7 +200,8 @@ def footer_html(active):
         ("Product", [link("/catalog/", "Plugin catalog"), link("/catalog/?pricing=paid", "Paid &amp; Pro plugins"),
                      link("/catalog/?platform=vscode", "VS Code extensions")]),
         ("Engineering &amp; Evidence", [link(EE, "Overview"), link(EE + "case-studies/", "Case studies"),
-                                        link(EE + "jetbrains-platform-tickets/", "JetBrains Platform tickets")]),
+                                        link(EE + "jetbrains-platform-tickets/", "JetBrains Platform tickets"),
+                                        link(EE + "open-source-security-reports/", "Open-source security reports")]),
         ("Company", [link("/#work-with-joel", "Work with Joel"), link("/plugin-performance-audit/", "Performance audit"), link("/methodology/", "Methodology"),
                      link("/contact/", "Contact")]),
         ("Marketplaces", [link("https://plugins.jetbrains.com/vendor/gap-hunter-labs", "JetBrains Marketplace", True),
