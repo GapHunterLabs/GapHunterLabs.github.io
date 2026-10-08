@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-07 14:09:47 UTC",
+  "generatedAt": "2026-10-08 01:30:37 UTC",
   "totalPlugins": 146,
   "totalDownloads": 9244,
   "pending": 0,
@@ -7,10 +7,6 @@
   "totalReviews": 0,
   "avgRating": null,
   "trend7d": [
-    {
-      "date": "2026-10-01",
-      "totalDownloads": 8657
-    },
     {
       "date": "2026-10-02",
       "totalDownloads": 8845
@@ -34,45 +30,13 @@
     {
       "date": "2026-10-07",
       "totalDownloads": 9244
+    },
+    {
+      "date": "2026-10-08",
+      "totalDownloads": 9244
     }
   ],
-  "recentChanges": [
-    {
-      "date": "2026-10-07",
-      "type": "growth",
-      "name": "Terraform IAM Privesc Companion",
-      "niche": "IAM / Cloud Security",
-      "delta": 13
-    },
-    {
-      "date": "2026-10-07",
-      "type": "growth",
-      "name": "Import Cost Companion",
-      "niche": "JS/TS Tooling",
-      "delta": 13
-    },
-    {
-      "date": "2026-10-07",
-      "type": "growth",
-      "name": "Refactor Simulator",
-      "niche": "Refactoring Tools",
-      "delta": 10
-    },
-    {
-      "date": "2026-10-07",
-      "type": "growth",
-      "name": "Mermaid Companion",
-      "niche": "Diagrams",
-      "delta": 10
-    },
-    {
-      "date": "2026-10-07",
-      "type": "growth",
-      "name": "Go Timer Leak Companion",
-      "niche": "Code Quality / Logging",
-      "delta": 7
-    }
-  ],
+  "recentChanges": [],
   "plugins": [
     {
       "xmlId": "dev.gaphunter.mermaidcompanion",
