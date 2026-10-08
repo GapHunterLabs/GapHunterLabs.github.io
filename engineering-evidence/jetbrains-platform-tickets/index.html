@@ -252,7 +252,7 @@
       <div class="ticket-head">
         <a class="ticket-id" href="https://youtrack.jetbrains.com/issue/IJPL-257854" target="_blank" rel="noopener">IJPL-257854 &#8599;</a>
         <h3>Auto-test: the error check of DelayedDocumentWatcher blocks typing until the whole check ends</h3>
-        <span class="ticket-status is-submitted">Submitted</span>
+        <span class="ticket-status is-submitted">Wait for reply</span>
       </div>
       <p>Found with the same check, during an audit of components that do background work after each edit. With auto-test enabled, <code>DelayedDocumentWatcher</code> waits for a typing pause and then checks every changed file for syntax errors (<code>PsiErrorElementUtil.hasErrors()</code>) in one blocking read action on a pooled thread. The keystroke that resumes typing waits for the whole check. Measured with the platform test framework on IntelliJ IDEA 2025.2: on a 50,000-line file, that keystroke took 436 ms with the current code, 48 ms without auto-test, and 73 ms with the check in a non-blocking read action. The measurement test is attached to the ticket, and a fix is proposed in <a href="https://github.com/JetBrains/intellij-community/pull/3685" target="_blank" rel="noopener">pull request #3685</a>.</p>
     </article>
@@ -260,7 +260,7 @@
       <div class="ticket-head">
         <a class="ticket-id" href="https://youtrack.jetbrains.com/issue/IJPL-257908" target="_blank" rel="noopener">IJPL-257908 &#8599;</a>
         <h3>Live Templates settings: isModified() checks every template against every context type on the EDT after each click or key press</h3>
-        <span class="ticket-status is-submitted">Submitted</span>
+        <span class="ticket-status is-open">Open</span>
       </div>
       <p>Found by measuring every Settings page on the UI thread of IntelliJ IDEA 2026.2.3 with the platform test framework. The Settings dialog calls <code>isModified()</code> of the open page about one second after each mouse click or key press. On the Live Templates page, that call compares all 1,295 templates against all 336 context types (<code>TemplateContext.getDifference()</code>), and the UI thread stops for about 165 ms each time. The ticket proposes a one-line check: two templates whose own context settings are equal cannot differ in any context type. In the same test, that check takes the comparison from 157 ms to 0 ms with the same result. The measurement test is attached to the ticket.</p>
     </article>
@@ -268,7 +268,7 @@
       <div class="ticket-head">
         <a class="ticket-id" href="https://youtrack.jetbrains.com/issue/IJPL-257909" target="_blank" rel="noopener">IJPL-257909 &#8599;</a>
         <h3>Settings | Plugins: isRequiredForEssentialPlugin rebuilds the plugin maps and walks all essential dependencies once per plugin on the EDT</h3>
-        <span class="ticket-status is-submitted">Submitted</span>
+        <span class="ticket-status is-open">Open</span>
       </div>
       <p>Found in the same measurement of the Settings pages. Opening Settings &rsaquo; Plugins builds the list of installed plugins on the UI thread and asks, for each plugin, whether an essential plugin requires it. Each answer builds the plugin and module maps again and walks the dependencies of every essential plugin; the source code already has a <code>FIXME</code> about it. With 158 plugins loaded, the page took 689&ndash;931 ms to open. One walk followed by a lookup per plugin took 8&ndash;22 ms and gave the same answer for every plugin. The cost grows with the square of the number of installed plugins. The measurement test is attached to the ticket.</p>
     </article>
