@@ -41,6 +41,7 @@ PAGES = (
     ("privacy/index.html", None, "/privacy/"),
     ("terms/index.html", None, "/terms/"),
     ("eula/index.html", None, "/eula/"),
+    ("plugin-performance-audit/index.html", None, "/plugin-performance-audit/"),
 )
 
 # Un item con submenu es (etiqueta, [(href, texto), ...]); el resto (href, texto).
@@ -88,6 +89,7 @@ ES_PATHS = {
     "/privacy/": "/es/privacidad/",
     "/terms/": "/es/terminos/",
     "/eula/": "/es/eula/",
+    "/plugin-performance-audit/": "/es/auditoria-de-rendimiento/",
 }
 PLUGIN_PATH_RE = re.compile(r"^/catalog/((?:vscode/)?[a-z0-9][a-z0-9-]*)/$")
 
@@ -196,7 +198,7 @@ def footer_html(active):
                      link("/catalog/?platform=vscode", "VS Code extensions")]),
         ("Engineering &amp; Evidence", [link(EE, "Overview"), link(EE + "case-studies/", "Case studies"),
                                         link(EE + "jetbrains-platform-tickets/", "JetBrains Platform tickets")]),
-        ("Company", [link("/#work-with-joel", "Work with Joel"), link("/methodology/", "Methodology"),
+        ("Company", [link("/#work-with-joel", "Work with Joel"), link("/plugin-performance-audit/", "Performance audit"), link("/methodology/", "Methodology"),
                      link("/contact/", "Contact")]),
         ("Marketplaces", [link("https://plugins.jetbrains.com/vendor/gap-hunter-labs", "JetBrains Marketplace", True),
                           link("https://marketplace.visualstudio.com/publishers/GapHunterLabs", "VS Code Marketplace", True),

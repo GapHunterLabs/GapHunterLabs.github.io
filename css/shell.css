@@ -822,3 +822,5 @@ h1 .accent, h2 .accent, .hero-title .accent { color: inherit; }
 thead th { font-family: var(--sans); font-size: 12.5px; font-weight: 600; letter-spacing: 0; text-transform: none; }
 td.num-cell { font-family: var(--sans); font-variant-numeric: tabular-nums; }
 tr.row td[data-label]::before { font-family: var(--sans); font-size: 11px; letter-spacing: 0; text-transform: none; }
+/* Botones dentro del encabezado de una pagina interna (p. ej. la auditoria de rendimiento). */
+.gh-page-header:not(.hero) .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }

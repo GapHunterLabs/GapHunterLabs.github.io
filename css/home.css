@@ -2850,6 +2850,8 @@ h1, h2, h3 { font-family: var(--sans); letter-spacing: -0.01em; }
 .offer-card { box-shadow: none; background: var(--surface-2); }
 .offer-card h3 { margin: 0; font-size: 17px; }
 .offer-card p { margin: 0; color: var(--text-dim); line-height: 1.55; }
+.offer-card-main { background: var(--surface); border-color: var(--accent); }
+.offer-card-main .btn { align-self: flex-start; margin-top: 4px; }
 
 .loop-section { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px;
   padding: 24px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); }

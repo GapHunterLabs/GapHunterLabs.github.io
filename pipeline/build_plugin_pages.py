@@ -819,7 +819,7 @@ class PluginRenderer:
             h.append('</div></section>')
 
         h.append('<div class="hire-band"><div><strong>Need a tool like this built for your codebase?</strong>'
-                 '<span>Custom static-analysis rules, CI/CD integration and private plugin distribution.</span></div>'
+                 '<span>Custom static-analysis rules, CI/CD integration, private plugin distribution and performance audits for IntelliJ plugins.</span></div>'
                  '<a class="btn primary" href="/contact/?intent=hire&amp;plugin=%s" data-goatcounter-click="cta-plugin-hire-%s">'
                  'Work with Joel</a></div>' % (esc(p["repo"]), esc(p["repo"])))
         h.append('<p class="plugin-asof">Download and star counts as of %s, refreshed twice daily '
