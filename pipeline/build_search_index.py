@@ -34,7 +34,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from build_chrome import ES_PATHS  # noqa: E402
-from build_plugin_pages import Sources  # noqa: E402
+from build_plugin_pages import Sources, pitch_prose  # noqa: E402
 
 DATA_JS = ROOT / "js" / "search-data.js"
 SEARCH_JS = ROOT / "js" / "site-search.js"
@@ -80,14 +80,14 @@ def main() -> int:
     for p in src.plugins:
         cat = src.cat_by_key.get(p.get("categoryKey"), src.cat_by_key["other"])
         items.append({
-            "t": "p", "n": p["name"], "s": p["repo"], "d": short(plain(p.get("pitch")), 320),
+            "t": "p", "n": p["name"], "s": p["repo"], "d": short(plain(pitch_prose(p.get("pitch"))), 320),
             "k": p.get("niche") or "", "c": {"en": cat["label"], "es": es.get(cat["label"], cat["label"])},
             "pr": p.get("pricing") or "FREE", "dl": p.get("downloads") or 0,
             "u": "/catalog/%s/" % p["repo"], "m": p.get("marketplaceUrl") or "",
         })
     for e in src.vsx_list:
         items.append({
-            "t": "v", "n": e.get("displayName") or e["name"], "s": e["name"], "d": short(plain(e.get("pitch")), 320),
+            "t": "v", "n": e.get("displayName") or e["name"], "s": e["name"], "d": short(plain(pitch_prose(e.get("pitch"))), 320),
             "k": e.get("niche") or "", "c": {"en": "VS Code extension", "es": "Extensión para VS Code"},
             "pr": "FREE", "dl": e.get("installs") or 0,
             "u": "/catalog/vscode/%s/" % e["name"], "m": e.get("marketplaceUrl") or "",

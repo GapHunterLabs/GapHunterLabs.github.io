@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="/js/theme-init.js?v=c436d752"></script>
-<script src="/js/site-chrome.js?v=0566c6e5" defer></script>
+<script src="/js/site-chrome.js?v=9330bdc0" defer></script>
+<script src="/js/site-reveal.js?v=2b51b8a5" defer></script>
 <meta name="description" content="Plugins con la evidencia más sólida: un congelamiento que nombró JetBrains, una brecha de cumplimiento que la nube no cubre y sinks de inyección con CVE reales.">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://gc.zgo.at; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; media-src 'self'; manifest-src 'self'; connect-src https://gaphunterlabs.goatcounter.com; object-src 'none'; base-uri 'none'; form-action 'none'">
@@ -37,7 +38,7 @@
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Gap Hunter Labs — Informe del catálogo Plugin Intelligence">
+<meta property="og:image:alt" content="Catálogo de plugins de Gap Hunter Labs">
 <meta property="og:locale" content="es_ES">
 <meta property="og:locale:alternate" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
@@ -45,7 +46,7 @@
 <meta name="twitter:title" content="Casos de estudio — Ingeniería y evidencia | Gap Hunter Labs">
 <meta name="twitter:description" content="Plugins con la evidencia más sólida: un congelamiento que nombró JetBrains, una brecha de cumplimiento que la nube no cubre y sinks de inyección con CVE reales.">
 <meta name="twitter:image" content="https://gaphunterlabs.github.io/og-image.png">
-<meta name="twitter:image:alt" content="Gap Hunter Labs — Informe del catálogo Plugin Intelligence">
+<meta name="twitter:image:alt" content="Catálogo de plugins de Gap Hunter Labs">
 <link rel="stylesheet" href="/css/theme.css?v=73412941">
 <link rel="stylesheet" href="/css/base.css?v=78889c9e">
 <style>
@@ -197,7 +198,7 @@
     .case-meta-row { flex: 1 1 140px; }
   }
 </style>
-<link rel="stylesheet" href="/css/shell.css?v=81c5425b">
+<link rel="stylesheet" href="/css/shell.css?v=cf11ca9a">
 </head>
 <body>
 <div class="app-shell">
@@ -227,7 +228,7 @@
   <div class="page-hero method-intro band-dark gh-page-header">
     <p class="contact-kicker">Ingeniería y evidencia</p>
     <h1>Casos de estudio</h1>
-    <p class="contact-lead" style="margin-bottom:0">Los casos de estudio del catálogo &mdash; los plugins con la evidencia más sólida e inusual. Fuentes reales, patrones reales de la competencia, requisitos de cumplimiento reales. Nada aquí es una suposición.</p>
+    <p class="contact-lead" style="margin-bottom:0">Los casos de estudio del catálogo: los plugins con la evidencia más inusual, cada uno comprobado contra fuentes públicas, patrones de la competencia y requisitos de cumplimiento.</p>
   </div>
 
   <div class="lab-cases">
@@ -235,8 +236,8 @@
       <div class="case-body">
         <p class="eyebrow">Caso de estudio</p>
         <h2>Background ReadAction Freeze Companion</h2>
-        <p>No es la historia habitual de &ldquo;los usuarios de un competidor de pago se quejan&rdquo; sobre la que se construye este catálogo &mdash; esta nace directamente del Platform Blog de JetBrains: un punto de entrada en un hilo de fondo que llega a una llamada de read-lock bloqueante y no cancelable, un patrón que su propio equipo de Platform señaló públicamente como una causa real y recurrente de congelamientos del IDE.</p>
-        <p>Aplicado al propio código de IntelliJ, encontró el patrón en <code>SearchForTestsTask</code>, que ejecuta un paso con el cancelable <code>ReadAction.nonBlocking()</code> y el paso hermano con el bloqueante <code>ReadAction.run()</code>. Eso se convirtió en <a href="https://youtrack.jetbrains.com/issue/IDEA-393501" target="_blank" rel="noopener">IDEA-393501</a>, presentado a JetBrains y ya clasificado y asignado. Sobre ese mismo código real, descartó una read action cuyo único llamador corre en el EDT: un falso positivo evitado en código real, no en un ejemplo sintético.</p>
+        <p>La mayoría de los plugins de este catálogo nacen de usuarios que se quejan de un competidor de pago. Este nació del Platform Blog de JetBrains, que describe un punto de entrada en un hilo de fondo que llega a una llamada de read-lock bloqueante y no cancelable como una causa recurrente de congelamientos del IDE.</p>
+        <p>Aplicado al propio código de IntelliJ, encontró el patrón en <code>SearchForTestsTask</code>, que ejecuta un paso con el cancelable <code>ReadAction.nonBlocking()</code> y el paso hermano con el bloqueante <code>ReadAction.run()</code>. Eso se convirtió en <a href="https://youtrack.jetbrains.com/issue/IDEA-393501" target="_blank" rel="noopener">IDEA-393501</a>, presentado a JetBrains y ya clasificado y asignado. Sobre ese mismo código también descartó una read action cuyo único llamador corre en el EDT: un falso positivo evitado en código de producción, no en un ejemplo sintético.</p>
         <a class="btn" href="https://github.com/GapHunterLabs/background-readaction-freeze-companion#readme" target="_blank" rel="noopener">Ver la evidencia &rarr;</a>
       </div>
       <dl class="case-meta">
@@ -250,7 +251,7 @@
         </div>
         <div class="case-meta-row">
           <dt><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M8 1v14M2 8h12" stroke-linecap="round"/><circle cx="8" cy="8" r="6"/></svg>Impacto</dt>
-          <dd>Alta <span class="case-meta-note">&mdash; nombrado por la propia JetBrains y luego encontrado en el propio código de IntelliJ (IDEA-393501)</span></dd>
+          <dd>Alta <span class="case-meta-note">(nombrado por la propia JetBrains y luego encontrado en el propio código de IntelliJ, IDEA-393501)</span></dd>
         </div>
       </dl>
     </article>
@@ -259,7 +260,7 @@
       <div class="case-body">
         <p class="eyebrow">Caso de estudio</p>
         <h2>Dependency Vulnerability Companion</h2>
-        <p>Todas las alternativas principales &mdash; Aikido, Xygeni, los propios plugins de JFrog en Marketplace, Snyk &mdash; exigen una cuenta en la nube o un token de acceso personal antes de hacer nada; en diciembre de 2024, Semgrep pasó sus reglas mantenidas a una nueva licencia restrictiva, y un consorcio de proveedores AppSec competidores (Aikido, Endor Labs, Orca Security y otros) respondió bifurcando el motor como Opengrep. Este plugin revisa la misma clase de dependencias vulnerables sin cuenta, sin token y sin ninguna llamada de red &mdash; la única forma de atender a contratistas de defensa regulados por CMMC 2.0, un segmento real de compradores que estructuralmente no puede usar ninguna de las alternativas en la nube mencionadas.</p>
+        <p>Todas las alternativas principales (Aikido, Xygeni, los propios plugins de JFrog en Marketplace, Snyk) exigen una cuenta en la nube o un token de acceso personal antes de hacer nada. En diciembre de 2024, Semgrep pasó sus reglas mantenidas a una nueva licencia restrictiva, y un consorcio de proveedores de AppSec competidores (Aikido, Endor Labs, Orca Security y otros) respondió bifurcando el motor como Opengrep. Este plugin revisa la misma clase de dependencias vulnerables sin cuenta, sin token y sin llamadas de red. Es la única forma de servir a los contratistas de defensa regulados por CMMC 2.0, un segmento de compradores que no puede usar ninguna de las alternativas en la nube anteriores.</p>
         <a class="btn" href="https://github.com/GapHunterLabs/dependency-vulnerability-companion#readme" target="_blank" rel="noopener">Ver la evidencia &rarr;</a>
       </div>
       <dl class="case-meta">
@@ -273,7 +274,7 @@
         </div>
         <div class="case-meta-row">
           <dt><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M8 1v14M2 8h12" stroke-linecap="round"/><circle cx="8" cy="8" r="6"/></svg>Impacto</dt>
-          <dd>Alta <span class="case-meta-note">&mdash; CMMC 2.0 exige FedRAMP Moderate para cualquier herramienta en la nube que toque CUI; ninguna herramienta comercial SCA/SAST en la nube cumple ese requisito</span></dd>
+          <dd>Alta <span class="case-meta-note">(CMMC 2.0 exige FedRAMP Moderate para cualquier herramienta en la nube que toque CUI, y ninguna herramienta comercial SCA/SAST en la nube cumple ese requisito)</span></dd>
         </div>
       </dl>
     </article>
@@ -296,7 +297,7 @@
         </div>
         <div class="case-meta-row">
           <dt><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M8 1v14M2 8h12" stroke-linecap="round"/><circle cx="8" cy="8" r="6"/></svg>Impacto</dt>
-          <dd>Crítica <span class="case-meta-note">&mdash; CVSS 9.8, incluida por CISA entre las vulnerabilidades explotadas activamente</span></dd>
+          <dd>Crítica <span class="case-meta-note">(CVSS 9.8, incluida por CISA entre las vulnerabilidades explotadas activamente)</span></dd>
         </div>
       </dl>
     </article>
@@ -319,7 +320,7 @@
         </div>
         <div class="case-meta-row">
           <dt><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M8 1v14M2 8h12" stroke-linecap="round"/><circle cx="8" cy="8" r="6"/></svg>Impacto</dt>
-          <dd>Alta <span class="case-meta-note">&mdash; CVSS 8.1, en el propio Spring Framework, cuyo <code>RestTemplate</code> es uno de los sinks que se revisan aquí</span></dd>
+          <dd>Alta <span class="case-meta-note">(CVSS 8.1, en el propio Spring Framework, cuyo <code>RestTemplate</code> es uno de los sinks que se revisan aquí)</span></dd>
         </div>
       </dl>
     </article>
@@ -342,20 +343,20 @@
         </div>
         <div class="case-meta-row">
           <dt><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M8 1v14M2 8h12" stroke-linecap="round"/><circle cx="8" cy="8" r="6"/></svg>Impacto</dt>
-          <dd>Media <span class="case-meta-note">&mdash; CVSS 6.5, denegación de servicio más evasión de filtros; ninguna query pública de CodeQL cubre este sink</span></dd>
+          <dd>Media <span class="case-meta-note">(CVSS 6.5, denegación de servicio más evasión de filtros; ninguna query pública de CodeQL cubre este sink)</span></dd>
         </div>
       </dl>
     </article>
 
-    <p class="lab-pending">Aquí irán llegando más casos de estudio a medida que se seleccionen &mdash; cada uno exige leer toda la evidencia del plugin en su propio README y confirmar cada afirmación contra una fuente pública real, el mismo estándar que los de arriba. Cada plugin del <a href="/es/catalogo/">catálogo</a> ya incluye evidencia real en su propia ficha; esta página reúne los pocos con las historias más inusuales o mejor documentadas.</p>
+    <p class="lab-pending">Se irán sumando más casos de estudio a medida que se revisen. Cada uno exige leer toda la evidencia del plugin en su propio README y comprobar cada afirmación contra una fuente pública, el mismo estándar que los de arriba. Cada plugin del <a href="/es/catalogo/">catálogo</a> ya muestra su evidencia; esta página reúne los pocos con las historias más inusuales o mejor documentadas.</p>
   </div>
 
-  <p class="ee-next">Siguiente: <a href="/es/ingenieria-y-evidencia/tickets-jetbrains-platform/">Tickets de JetBrains Platform &rarr;</a></p>
+  <p class="ee-next">Siguiente: <a href="/es/ingenieria-y-evidencia/tickets-jetbrains-platform/">Tickets de JetBrains Platform</a></p>
 </main>
 <aside class="page-insights" aria-label="Sobre Gap Hunter Labs">
   <div class="pi-card">
     <p class="pi-eyebrow">Sobre el catálogo</p>
-    <p class="pi-note">Plugins enfocados de la familia IntelliJ, cada uno hecho para una brecha real y documentada en las herramientas para desarrolladores. Cada producto del catálogo existe por una queja documentada, no por una suposición.</p>
+    <p class="pi-note">Plugins enfocados de la familia IntelliJ, cada uno hecho para una brecha documentada en las herramientas para desarrolladores. Cada plugin del catálogo nació de una queja que se puede rastrear hasta su fuente.</p>
   </div>
   <div class="pi-card">
     <p class="pi-eyebrow">Por qué esta sección</p>

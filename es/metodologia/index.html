@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="/js/theme-init.js?v=c436d752"></script>
-<script src="/js/site-chrome.js?v=0566c6e5" defer></script>
+<script src="/js/site-chrome.js?v=9330bdc0" defer></script>
+<script src="/js/site-reveal.js?v=2b51b8a5" defer></script>
 <meta name="description" content="Cómo se evalúan las ideas de plugins y cómo se reportan los datos públicos del catálogo.">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://gc.zgo.at; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; media-src 'self'; manifest-src 'self'; connect-src https://gaphunterlabs.goatcounter.com; object-src 'none'; base-uri 'none'; form-action 'none'">
@@ -36,7 +37,7 @@
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Gap Hunter Labs — Informe del catálogo Plugin Intelligence">
+<meta property="og:image:alt" content="Catálogo de plugins de Gap Hunter Labs">
 <meta property="og:locale" content="es_ES">
 <meta property="og:locale:alternate" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
@@ -44,7 +45,7 @@
 <meta name="twitter:title" content="Metodología — Gap Hunter Labs">
 <meta name="twitter:description" content="Cómo se evalúan las ideas de plugins y cómo se reportan los datos públicos del catálogo.">
 <meta name="twitter:image" content="https://gaphunterlabs.github.io/og-image.png">
-<meta name="twitter:image:alt" content="Gap Hunter Labs — Informe del catálogo Plugin Intelligence">
+<meta name="twitter:image:alt" content="Catálogo de plugins de Gap Hunter Labs">
 <link rel="stylesheet" href="/css/theme.css?v=73412941">
 <link rel="stylesheet" href="/css/base.css?v=78889c9e">
 <style>
@@ -237,7 +238,7 @@
     .decision-figure { padding: var(--card-pad); }
   }
 </style>
-<link rel="stylesheet" href="/css/shell.css?v=81c5425b">
+<link rel="stylesheet" href="/css/shell.css?v=cf11ca9a">
 </head>
 <body>
 <div class="app-shell">
@@ -316,20 +317,20 @@
 </main>
 <aside class="page-insights" aria-label="Notas de metodología">
   <section class="disclosure" aria-labelledby="method-data"><h2 id="method-data">Metodología</h2><ul>
-    <li>Cada cifra de esta página &mdash; descargas, precio, valoración, fecha de primera publicación, GitHub &#9733; &mdash; viene directamente de los datos públicos de JetBrains Marketplace y GitHub. Nada aquí es una estimación ni está inventado.</li>
-    <li><b>Crecimiento</b> compara las descargas actuales de cada plugin con el primer punto con datos reales, no solo con la última vez que se actualizó esta página &mdash; por eso la fecha base bajo el % puede variar de un plugin a otro. Un plugin sin un punto de datos anterior muestra &ldquo;&mdash;&rdquo; en lugar de una estimación.</li>
-    <li>Un plugin marcado como <b>Pendiente</b> se envió hace poco a Marketplace y sigue en moderación &mdash; su ficha existe, solo que todavía no aparece en las búsquedas. Es el tiempo normal de revisión, no un problema del plugin.</li>
+    <li>Cada cifra de esta página (descargas, precio, valoración, fecha de primera publicación, GitHub &#9733;) viene directamente de los datos públicos de JetBrains Marketplace y GitHub. Nada aquí es una estimación ni está inventado.</li>
+    <li><b>Crecimiento</b> compara las descargas actuales de cada plugin con el primer dato registrado para él, no con la última actualización de esta página. Por eso la fecha base bajo el % cambia de un plugin a otro. Un plugin sin un dato anterior muestra &ldquo;&mdash;&rdquo; en lugar de una estimación.</li>
+    <li>Un plugin marcado como <b>Pendiente</b> se envió hace poco a Marketplace y sigue en moderación: su ficha existe, pero todavía no aparece en las búsquedas. Es el tiempo normal de revisión, no un problema del plugin.</li>
   </ul></section>
   <section class="disclosure" aria-labelledby="method-gap"><h2 id="method-gap">La brecha / La solución</h2><ul>
-    <li><b>La brecha</b> es la evidencia real y citada de que este plugin necesitaba existir &mdash; un patrón documentado de quejas sobre una herramienta existente (reseñas, valoraciones, reportes de errores recurrentes), no una suposición sobre lo que los desarrolladores podrían querer.</li>
-    <li><b>La solución</b> es la descripción real y publicada del propio plugin sobre lo que hace. Ninguna de las dos partes se genera ni se adorna &mdash; cada afirmación remite a algo verificable públicamente.</li>
+    <li><b>La brecha</b> es la evidencia citada de que el plugin hacía falta: un patrón documentado de quejas sobre una herramienta existente (reseñas, valoraciones, reportes de errores recurrentes), no una suposición sobre lo que los desarrolladores podrían querer.</li>
+    <li><b>La solución</b> es la descripción publicada del propio plugin sobre lo que hace. Ninguna de las dos partes se adorna, y cada afirmación remite a algo que se puede comprobar en público.</li>
   </ul></section>
   <section class="disclosure" aria-labelledby="method-signals"><h2 id="method-signals">Reseñas, valoración y estrellas</h2><ul>
-    <li>Las reseñas, la valoración en Marketplace y las estrellas de GitHub usan las mismas fuentes públicas que las descargas. Este catálogo todavía es joven y está centrado en el producto, así que esas cifras viven aquí &mdash; no en la portada &mdash; hasta que describan el trabajo en lugar de celdas vacías.</li>
+    <li>Las reseñas, la valoración en Marketplace y las estrellas de GitHub usan las mismas fuentes públicas que las descargas. El catálogo todavía es joven, así que esas cifras se quedan en esta página, fuera de la portada, hasta que haya suficientes para decir algo.</li>
   </ul></section>
   <section class="disclosure" aria-labelledby="method-privacy"><h2 id="method-privacy">Lo que nunca se guarda aquí</h2><ul>
-    <li>Nunca se publican identificadores privados de un competidor en las tiendas ni datos de contacto personales de un proveedor (correo, teléfono, dirección) &mdash; aunque la API pública que consulta este catálogo los exponga junto a los datos que sí usa.</li>
-    <li>&ldquo;Visitantes de hoy&rdquo; cuenta visitas reales con GoatCounter &mdash; sin cookies, sin guardar direcciones IP y sin identificar nunca a ningún visitante. Cuenta sesiones, no páginas vistas en bruto, así que recargar esta página o recorrer varias secciones no infla la cifra.</li>
+    <li>Nunca se publican identificadores privados de un competidor en las tiendas ni datos de contacto personales de un proveedor (correo, teléfono, dirección), aunque la API pública que consulta este catálogo los exponga junto a los datos que usa.</li>
+    <li>&ldquo;Visitantes de hoy&rdquo; cuenta visitas con GoatCounter, que no usa cookies, no guarda direcciones IP y no puede identificar a ningún visitante. Cuenta sesiones, no páginas vistas en bruto, así que recargar esta página o recorrer varias secciones no infla la cifra.</li>
   </ul></section>
 </aside>
 </div>

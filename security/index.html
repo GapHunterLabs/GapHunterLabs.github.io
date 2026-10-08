@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="/js/theme-init.js?v=c436d752"></script>
-<script src="/js/site-chrome.js?v=0566c6e5" defer></script>
+<script src="/js/site-chrome.js?v=9330bdc0" defer></script>
+<script src="/js/site-reveal.js?v=2b51b8a5" defer></script>
 <meta name="description" content="What Gap Hunter Labs plugins do and don't do with your code, how vulnerabilities are reported, and why there's no formal SOC 2/ISO certification yet.">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://gc.zgo.at; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; media-src 'self'; manifest-src 'self'; connect-src 'self' https://gaphunterlabs.goatcounter.com; object-src 'none'; base-uri 'none'; form-action 'none'">
@@ -36,14 +37,14 @@
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Gap Hunter Labs — Plugin Intelligence Catalog Report">
+<meta property="og:image:alt" content="Gap Hunter Labs plugin catalog">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@GapHunterLabs">
 <meta name="twitter:title" content="Security — Gap Hunter Labs">
 <meta name="twitter:description" content="What Gap Hunter Labs plugins do and don't do with your code, how vulnerabilities are reported, and why there's no formal SOC 2/ISO certification yet.">
 <meta name="twitter:image" content="https://gaphunterlabs.github.io/og-image.png">
-<meta name="twitter:image:alt" content="Gap Hunter Labs — Plugin Intelligence Catalog Report">
+<meta name="twitter:image:alt" content="Gap Hunter Labs plugin catalog">
 <link rel="stylesheet" href="/css/theme.css?v=73412941">
 <link rel="stylesheet" href="/css/base.css?v=78889c9e">
 <style>
@@ -123,7 +124,7 @@
   }
 
 </style>
-<link rel="stylesheet" href="/css/shell.css?v=81c5425b">
+<link rel="stylesheet" href="/css/shell.css?v=cf11ca9a">
 </head>
 <body>
 <div class="app-shell">
@@ -152,48 +153,48 @@
   <div class="page-hero band-dark gh-page-header">
     <p class="contact-kicker">Gap Hunter Labs</p>
     <h1>Security</h1>
-    <p class="contact-lead" style="margin-bottom:0">What the plugins actually touch, what they never send anywhere, how to report a vulnerability, and an honest answer on formal certification &mdash; not a compliance page written to sound reassuring.</p>
+    <p class="contact-lead" style="margin-bottom:0">What the plugins touch, what they never send anywhere, how to report a vulnerability, and where things stand on formal certification.</p>
   </div>
 
   <div class="disclosure-list">
     <section class="disclosure" aria-labelledby="sec-arch">
       <h2 id="sec-arch">How these plugins are built</h2>
       <p>Every plugin in this catalog runs as a normal IntelliJ Platform extension: inspections, annotators, and intentions that execute inside your own IDE process, on your own machine, using the IDE's own <code>PsiElement</code>/AST APIs or plain text/regex checks over files already open in your project.</p>
-      <p>There is no backend. No server exists for plugin code to call out to &mdash; there's nothing to send your source to, because nothing was built to send it anywhere. Detection logic (pattern matching, entropy checks, structural analysis) runs locally and its output goes straight to the editor: a warning, a gutter icon, a quick-fix. That's the full round trip.</p>
+      <p>There is no backend. Plugin code has no server to call, so your source has nowhere to go. Detection logic (pattern matching, entropy checks, structural analysis) runs locally, and its output goes straight to the editor as a warning, a gutter icon or a quick-fix.</p>
     </section>
 
     <section class="disclosure" aria-labelledby="sec-network">
       <h2 id="sec-network">Network activity</h2>
       <ul>
-        <li>Plugin installation and update checks go through JetBrains' own Marketplace infrastructure &mdash; the same channel every plugin on the platform uses, not a separate one.</li>
+        <li>Plugin installation and update checks go through JetBrains Marketplace, the same channel every plugin on the platform uses.</li>
         <li>A small number of plugins call an external API by design because that's the plugin's stated job (for example, a spec-validation plugin that checks a schema against a public registry). Each of those calls goes to the third-party service the plugin's own listing names, and to no other server.</li>
-        <li>This marketing site (the one you're reading now) uses GoatCounter for visit counts &mdash; cookie-free, no IP address stored, sessions rather than raw pageviews. See <a href="/methodology/#method-privacy">Methodology</a> for the exact wording. This has nothing to do with what plugins do inside your IDE.</li>
+        <li>This site uses GoatCounter to count visits: no cookies, no stored IP address, and sessions rather than raw pageviews. <a href="/methodology/#method-privacy">Methodology</a> has the details. It has nothing to do with what the plugins do inside your IDE.</li>
       </ul>
     </section>
 
     <section class="disclosure" aria-labelledby="sec-open">
       <h2 id="sec-open">Open by default</h2>
-      <p>Every plugin's source is a public repository under <a href="https://github.com/GapHunterLabs" target="_blank" rel="noopener">github.com/GapHunterLabs</a>. Nothing described above is a promise you have to take on faith &mdash; the inspection/annotator code that decides what runs and what it does with a match is readable in full, plugin by plugin.</p>
+      <p>Every plugin's source is a public repository under <a href="https://github.com/GapHunterLabs" target="_blank" rel="noopener">github.com/GapHunterLabs</a>. You don't have to take any of the above on trust: the inspection and annotator code that decides what runs, and what happens with a match, is there to read for every plugin.</p>
     </section>
 
     <section class="disclosure" aria-labelledby="sec-report">
       <h2 id="sec-report">Reporting a vulnerability</h2>
-      <p>Found something real &mdash; a plugin doing more than its listing says, an insecure default, a bundled dependency with a known CVE? Report it privately: with the <strong>Report a vulnerability</strong> button under the <strong>Security</strong> tab of the plugin's GitHub repository (preferred), or by email to <a href="mailto:gaphunterlabs@gmail.com">gaphunterlabs@gmail.com</a> with the subject <code>SECURITY: &lt;plugin name&gt;</code>.</p>
+      <p>Found a problem, such as a plugin doing more than its listing says, an insecure default, or a bundled dependency with a known CVE? Report it privately: with the <strong>Report a vulnerability</strong> button under the <strong>Security</strong> tab of the plugin's GitHub repository (preferred), or by email to <a href="mailto:gaphunterlabs@gmail.com">gaphunterlabs@gmail.com</a> with the subject <code>SECURITY: &lt;plugin name&gt;</code>.</p>
       <p>Acknowledgement within 5 business days and an assessment within 10. Details stay private until a fix ships, for up to 90 days unless another date is agreed, and each fix is published as a GitHub Security Advisory. If the issue is being exploited in the wild, say so in the first message: those reports are handled first.</p>
       <p>Security fixes for the paid plugins are provided at least until December 2031. Each repository's <code>SECURITY.md</code> has the full policy, and <a href="/.well-known/security.txt">security.txt</a> lists the security contacts.</p>
-      <p>Please don't open a public GitHub issue for a security report &mdash; everything else (bugs, feature requests) is fine in the open as usual.</p>
+      <p>Please don't open a public GitHub issue for a security report. Everything else (bugs, feature requests) is fine in the open as usual.</p>
     </section>
 
     <section class="disclosure disclosure-warn" aria-labelledby="sec-cert">
       <h2 id="sec-cert">What isn't in place (yet)</h2>
       <p>No SOC 2, ISO 27001, or other third-party security certification is held. This is a small, focused catalog, not a company with a dedicated compliance team, and saying that plainly beats implying a level of formal assurance that isn't there.</p>
-      <p>The sections above describe the actual architecture and practice, not a substitute for certification &mdash; if your organization's procurement process requires SOC 2 specifically, that's a real gap today, not a checkbox being quietly skipped.</p>
+      <p>The sections above describe how the plugins are built and run; they don't replace a certification. If your organization's procurement process requires SOC 2, that is a gap today.</p>
     </section>
   </div>
 </main>
 <aside class="page-insights" id="pageInsights" aria-label="Platform insights" hidden>
   <div class="pi-card">
-    <p class="pi-eyebrow">Platform Insights</p>
+    <p class="pi-eyebrow">Catalog at a glance</p>
     <div class="pi-stats">
       <div><span class="pi-stat-num" id="piPlugins">—</span><span class="pi-stat-label">Plugins active</span></div>
       <div><span class="pi-stat-num" id="piDownloads">—</span><span class="pi-stat-label">Total downloads</span></div>

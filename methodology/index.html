@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="/js/theme-init.js?v=c436d752"></script>
-<script src="/js/site-chrome.js?v=0566c6e5" defer></script>
+<script src="/js/site-chrome.js?v=9330bdc0" defer></script>
+<script src="/js/site-reveal.js?v=2b51b8a5" defer></script>
 <meta name="description" content="How plugin ideas are evaluated and how public catalog data is reported.">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://gc.zgo.at; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; media-src 'self'; manifest-src 'self'; connect-src https://gaphunterlabs.goatcounter.com; object-src 'none'; base-uri 'none'; form-action 'none'">
@@ -36,14 +37,14 @@
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Gap Hunter Labs — Plugin Intelligence Catalog Report">
+<meta property="og:image:alt" content="Gap Hunter Labs plugin catalog">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@GapHunterLabs">
 <meta name="twitter:title" content="Methodology — Gap Hunter Labs">
 <meta name="twitter:description" content="How plugin ideas are evaluated and how public catalog data is reported.">
 <meta name="twitter:image" content="https://gaphunterlabs.github.io/og-image.png">
-<meta name="twitter:image:alt" content="Gap Hunter Labs — Plugin Intelligence Catalog Report">
+<meta name="twitter:image:alt" content="Gap Hunter Labs plugin catalog">
 <link rel="stylesheet" href="/css/theme.css?v=73412941">
 <link rel="stylesheet" href="/css/base.css?v=78889c9e">
 <style>
@@ -236,7 +237,7 @@
     .decision-figure { padding: var(--card-pad); }
   }
 </style>
-<link rel="stylesheet" href="/css/shell.css?v=81c5425b">
+<link rel="stylesheet" href="/css/shell.css?v=cf11ca9a">
 </head>
 <body>
 <div class="app-shell">
@@ -315,20 +316,20 @@
 </main>
 <aside class="page-insights" aria-label="Methodology notes">
   <section class="disclosure" aria-labelledby="method-data"><h2 id="method-data">Methodology</h2><ul>
-    <li>Every number on this page &mdash; downloads, pricing, rating, first-published date, GitHub &#9733; &mdash; comes straight from JetBrains Marketplace and GitHub's own public data. Nothing here is estimated or made up.</li>
-    <li><b>Growth</b> compares each plugin's current downloads against the earliest point with real data for it, not just the last time this page was refreshed &mdash; that's why the baseline date under the % can vary from plugin to plugin. A plugin with no earlier data point yet shows "&mdash;" instead of a guess.</li>
-    <li>A plugin marked <b>Pending</b> was recently submitted to Marketplace and is still in moderation &mdash; its listing exists, it just isn't indexed for search yet. That's normal review turnaround, not a problem with the plugin.</li>
+    <li>Every number on this page (downloads, pricing, rating, first-published date, GitHub &#9733;) comes straight from JetBrains Marketplace and GitHub's own public data. Nothing here is estimated or made up.</li>
+    <li><b>Growth</b> compares each plugin's current downloads with the earliest data point recorded for it, not with the last refresh of this page. That's why the baseline date under the % differs from plugin to plugin. A plugin without an earlier data point shows "&mdash;" instead of a guess.</li>
+    <li>A plugin marked <b>Pending</b> was recently submitted to Marketplace and is still in moderation: the listing exists but isn't indexed for search yet. That's the normal review time, not a problem with the plugin.</li>
   </ul></section>
   <section class="disclosure" aria-labelledby="method-gap"><h2 id="method-gap">The Gap / The Fix</h2><ul>
-    <li><b>The Gap</b> is the real, cited evidence that this plugin needed to exist &mdash; a documented pattern of complaints about an existing tool (reviews, ratings, recurring bug reports), not a guess about what developers might want.</li>
-    <li><b>The Fix</b> is the plugin's own real, published description of what it actually does. Neither side is generated or embellished &mdash; every claim traces back to something publicly verifiable.</li>
+    <li><b>The Gap</b> is the cited evidence that the plugin was needed: a documented pattern of complaints about an existing tool (reviews, ratings, recurring bug reports), not a guess about what developers might want.</li>
+    <li><b>The Fix</b> is the plugin's own published description of what it does. Neither side is embellished, and every claim traces back to something you can check in public.</li>
   </ul></section>
   <section class="disclosure" aria-labelledby="method-signals"><h2 id="method-signals">Reviews, rating, and stars</h2><ul>
-    <li>Reviews, Marketplace rating, and GitHub stars use the same public sources as downloads. This catalog is still early and product-focused, so those figures live here &mdash; not in the hero &mdash; until they describe the work rather than empty cells.</li>
+    <li>Reviews, Marketplace rating, and GitHub stars use the same public sources as downloads. The catalog is still young, so those figures stay on this page, out of the hero, until there are enough of them to say something.</li>
   </ul></section>
   <section class="disclosure" aria-labelledby="method-privacy"><h2 id="method-privacy">What's Never Stored Here</h2><ul>
-    <li>A competitor's private marketplace identifiers or a vendor's personal contact details (email, phone, address) are never published &mdash; even when the public API this catalog reads from happens to expose them alongside the data it does use.</li>
-    <li>"Visitors today" counts real visits via GoatCounter &mdash; cookie-free, no IP address stored, no individual visitor ever identifiable. It counts sessions, not raw pageviews, so reloading this page or browsing multiple sections doesn't inflate the number.</li>
+    <li>A competitor's private marketplace identifiers or a vendor's personal contact details (email, phone, address) are never published, even when the public API this catalog reads from exposes them next to the data it uses.</li>
+    <li>"Visitors today" counts visits with GoatCounter, which uses no cookies, stores no IP address and can't identify individual visitors. It counts sessions, not raw pageviews, so reloading this page or browsing several sections doesn't inflate the number.</li>
   </ul></section>
 </aside>
 </div>

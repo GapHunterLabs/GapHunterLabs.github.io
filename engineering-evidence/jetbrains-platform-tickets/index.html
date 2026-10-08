@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="/js/theme-init.js?v=c436d752"></script>
-<script src="/js/site-chrome.js?v=0566c6e5" defer></script>
+<script src="/js/site-chrome.js?v=9330bdc0" defer></script>
+<script src="/js/site-reveal.js?v=2b51b8a5" defer></script>
 <meta name="description" content="Bugs filed in JetBrains&#x27; YouTrack after a catalog check found them in IntelliJ&#x27;s source, plus root-cause analysis on existing IntelliJ Platform tickets.">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://gc.zgo.at; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; media-src 'self'; manifest-src 'self'; connect-src https://gaphunterlabs.goatcounter.com; object-src 'none'; base-uri 'none'; form-action 'none'">
@@ -37,14 +38,14 @@
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Gap Hunter Labs — Plugin Intelligence Catalog Report">
+<meta property="og:image:alt" content="Gap Hunter Labs plugin catalog">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@GapHunterLabs">
 <meta name="twitter:title" content="JetBrains Platform Tickets — Gap Hunter Labs">
 <meta name="twitter:description" content="Bugs filed in JetBrains&#x27; YouTrack after a catalog check found them in IntelliJ&#x27;s source, plus root-cause analysis on existing IntelliJ Platform tickets.">
 <meta name="twitter:image" content="https://gaphunterlabs.github.io/og-image.png">
-<meta name="twitter:image:alt" content="Gap Hunter Labs — Plugin Intelligence Catalog Report">
+<meta name="twitter:image:alt" content="Gap Hunter Labs plugin catalog">
 <link rel="stylesheet" href="/css/theme.css?v=73412941">
 <link rel="stylesheet" href="/css/base.css?v=78889c9e">
 <style>
@@ -193,7 +194,7 @@
     .case-meta-row { flex: 1 1 140px; }
   }
 </style>
-<link rel="stylesheet" href="/css/shell.css?v=81c5425b">
+<link rel="stylesheet" href="/css/shell.css?v=cf11ca9a">
 </head>
 <body>
 <div class="app-shell">
@@ -237,7 +238,7 @@
         <h3>SearchForTestsTask: non-cancellable ReadAction.run() in a background task</h3>
         <span class="ticket-status is-open">Open</span>
       </div>
-      <p>Found by <a href="/catalog/background-readaction-freeze-companion/">Background ReadAction Freeze Companion</a>. <code>SearchForTestsTask</code> is a <code>Task.Backgroundable</code> whose <code>run()</code> wraps <code>search()</code> in the cancellable <code>ReadAction.nonBlocking()</code>, then calls the sibling <code>onFound()</code> through the blocking <code>ReadAction.run()</code> a few lines later, with no <code>checkCanceled()</code> anywhere in the class &mdash; the pattern JetBrains&rsquo; Platform Blog names as a recurring cause of UI freezes. Filed as IJPL-254654; JetBrains moved it to the IDEA project (Java &rsaquo; Tests) and assigned it to a developer.</p>
+      <p>Found by <a href="/catalog/background-readaction-freeze-companion/">Background ReadAction Freeze Companion</a>. <code>SearchForTestsTask</code> is a <code>Task.Backgroundable</code> whose <code>run()</code> wraps <code>search()</code> in the cancellable <code>ReadAction.nonBlocking()</code>, then calls the sibling <code>onFound()</code> through the blocking <code>ReadAction.run()</code> a few lines later, with no <code>checkCanceled()</code> anywhere in the class. JetBrains&rsquo; Platform Blog names this pattern as a recurring cause of UI freezes. Filed as IJPL-254654; JetBrains moved it to the IDEA project (Java &rsaquo; Tests) and assigned it to a developer.</p>
       <p>A <a href="https://youtrack.jetbrains.com/issue/IDEA-393501#focus=Comments-27-14497295.0-0" target="_blank" rel="noopener">follow-up comment</a> (October 2026) added two points. The default smart-mode branch also blocks: it calls the deprecated <code>DumbService.runReadActionInSmartMode()</code>, which uses <code>ReadAction.computeBlocking()</code> internally. And a plain switch to <code>ReadAction.nonBlocking()</code> is not safe, because <code>onFound()</code> writes files and a restarted read action would write them again. Both calls are still on <code>master</code> as of October 2026.</p>
     </article>
     <article class="ticket-card">
@@ -316,7 +317,7 @@
         <h3>CME in InspectionToolRegistrar.createTools on loading/unloading plugins</h3>
         <span class="ticket-status is-submitted">Submitted</span>
       </div>
-      <p><code>toolFactories</code> is iterated as a live, unsynchronized view of a mutable map inside <code>createTools()</code>, running on background threads with no read-action lock &mdash; a concurrent plugin unload can mutate the map mid-iteration. The same live view is still on <code>master</code> (now in Kotlin), so the 2020 failure looks reproducible under the same conditions.</p>
+      <p><code>toolFactories</code> is iterated as a live, unsynchronized view of a mutable map inside <code>createTools()</code>, running on background threads with no read-action lock, so a concurrent plugin unload can mutate the map mid-iteration. The same live view is still on <code>master</code> (now in Kotlin), so the 2020 failure looks reproducible under the same conditions.</p>
     </article>
     <article class="ticket-card">
       <div class="ticket-head">
@@ -324,7 +325,7 @@
         <h3>Cannot create light service git4ide.repo.GitRepositoryManager because container is already disposed</h3>
         <span class="ticket-status is-submitted">Submitted</span>
       </div>
-      <p>The original call site moved after a widget restructuring, but the repository lookup still runs under the deprecated <code>runInReadActionWithWriteActionPriority</code>, and none of the utility functions in the new chain (<code>GitBranchUtil</code>, <code>DvcsUtil</code>, <code>GitUtil</code>) call <code>checkCanceled()</code> &mdash; so a project closing can still race into an <code>AlreadyDisposedException</code>, with a narrower window than when it was reported.</p>
+      <p>The original call site moved after a widget restructuring, but the repository lookup still runs under the deprecated <code>runInReadActionWithWriteActionPriority</code>, and none of the utility functions in the new chain (<code>GitBranchUtil</code>, <code>DvcsUtil</code>, <code>GitUtil</code>) call <code>checkCanceled()</code>, so a project closing can still race into an <code>AlreadyDisposedException</code>, with a narrower window than when it was reported.</p>
     </article>
     <article class="ticket-card">
       <div class="ticket-head">
@@ -340,16 +341,16 @@
         <h3>Memory leak via ProjectRootManagerImpl::rootsChanged</h3>
         <span class="ticket-status is-open">Open</span>
       </div>
-      <p><code>BatchSession</code>'s <code>changes</code> list only clears once its <code>pendingRootsChanged</code> counter hits exactly 0 &mdash; but the counter is incremented without matching exception handling, so one exception or an asymmetric reentrant call can leave it stuck above 0 permanently, and <code>changes</code> then keeps growing on every later roots-changed event. The missing safety net is visible in the code; the exact first imbalance was not traced.</p>
+      <p><code>BatchSession</code>'s <code>changes</code> list only clears once its <code>pendingRootsChanged</code> counter hits exactly 0, but the counter is incremented without matching exception handling, so one exception or an asymmetric reentrant call can leave it stuck above 0 permanently, and <code>changes</code> then keeps growing on every later roots-changed event. The missing safety net is visible in the code; the exact first imbalance was not traced.</p>
     </article>
   </div>
 
-  <p class="ee-next">See also: <a href="/engineering-evidence/case-studies/">Case studies &rarr;</a></p>
+  <p class="ee-next">See also: <a href="/engineering-evidence/case-studies/">Case studies</a></p>
 </main>
 <aside class="page-insights" aria-label="About Gap Hunter Labs">
   <div class="pi-card">
     <p class="pi-eyebrow">About the catalog</p>
-    <p class="pi-note">Focused IntelliJ-family plugins, each built for a real, evidence-based gap in developer tooling. Every product in the catalog exists because of a documented complaint, not a guess.</p>
+    <p class="pi-note">Focused IntelliJ-family plugins, each built for a documented gap in developer tooling. Every plugin in the catalog started from a complaint that can be traced to its source.</p>
   </div>
   <div class="pi-card">
     <p class="pi-eyebrow">Why this section</p>

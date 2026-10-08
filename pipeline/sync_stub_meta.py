@@ -36,7 +36,7 @@ _sys.path.insert(0, str(_Path(__file__).resolve().parent))
 from site_config import SITE_URL  # noqa: E402
 SITE = SITE_URL
 OG_IMAGE = SITE + "/og-image.png"
-OG_ALT = "Gap Hunter Labs — Plugin Intelligence Catalog Report"
+OG_ALT = "Gap Hunter Labs plugin catalog"
 
 STUBS = (
     ("catalog.html", "catalog/index.html", "/catalog/"),

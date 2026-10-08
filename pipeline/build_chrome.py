@@ -242,6 +242,7 @@ OLD_HEADER_RE = re.compile(r'<nav class="topbar" id="topbar">.*?</nav>\s*<aside 
 OLD_FOOTER_RE = re.compile(r'<footer class="site-footer[^"]*">.*?</footer>', re.S)
 HEAD_SCRIPTS = ('<script src="/js/theme-init.js"></script>\n'
                 '<script src="/js/site-chrome.js" defer></script>\n')
+REVEAL_SCRIPT = '<script src="/js/site-reveal.js" defer></script>\n'
 
 
 def replace_region(html, start, end, content, old_re, label, path):
@@ -277,6 +278,12 @@ def main() -> int:
             new, n = re.subn(r'(<meta name="viewport"[^>]*>\n)', lambda m: m.group(1) + HEAD_SCRIPTS, new, count=1)
             if n != 1:
                 sys.exit("[build_chrome] ERROR: sin <meta name=viewport> en %s" % rel)
+        # Aparicion al hacer scroll (2026-10-08): despues de site-chrome.js, con defer.
+        if "/js/site-reveal.js" not in new:
+            new, n = re.subn(r'(<script src="/js/site-chrome\.js[^"]*" defer></script>\n)',
+                             lambda m: m.group(1) + REVEAL_SCRIPT, new, count=1)
+            if n != 1:
+                sys.exit("[build_chrome] ERROR: sin site-chrome.js en %s" % rel)
         if new != html:
             stale += 1
             if not args.check:

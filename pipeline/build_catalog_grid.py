@@ -34,7 +34,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from build_plugin_pages import Sources, PluginRenderer, esc, thousands, die, plain_text  # noqa: E402
+from build_plugin_pages import Sources, PluginRenderer, esc, thousands, die, plain_text, pitch_text  # noqa: E402
 import json  # noqa: E402
 
 PRICE_LABEL = {"FREE": "Free", "FREEMIUM": "Freemium", "PAID": "Paid"}
@@ -103,7 +103,7 @@ def card_html(p, renderer: PluginRenderer, src: Sources) -> str:
         '<div class="card-metrics"><span class="card-dl-wrap">%s</span><span class="card-go">Details &rarr;</span></div></a>'
     ) % (esc(p["repo"]), esc(p["name"]), " ".join(attrs), color, esc(cat["label"]),
          renderer.cat_icon_html(p["categoryKey"]), price_badge, esc(p["name"]), esc(p.get("niche")),
-         esc(plain_text(p.get("pitch")) or ""), downloads)
+         esc(pitch_text(p.get("pitch")) or ""), downloads)
 
 
 def table_row_html(p, renderer: PluginRenderer, src: Sources) -> str:
@@ -245,7 +245,7 @@ def build(dry_run: bool = False) -> None:
             '<div class="card-metrics"><span class="card-dl-wrap">%s %s</span>'
             '<span class="card-go">Details &rarr;</span></div></a>'
             % (esc(e.get("name")), esc(e.get("displayName")), VS_ICON, esc(e.get("displayName")), esc(e.get("niche")),
-               esc(e.get("pitch")), thousands(n), "install" if n == 1 else "installs"))
+               esc(pitch_text(e.get("pitch"))), thousands(n), "install" if n == 1 else "installs"))
 
     html = inject(html, "<!-- PRERENDER:VSXSUB:START -->", "<!-- PRERENDER:VSXSUB:END -->",
                   "%d extensions, built with the same evidence-driven approach and free on the VS Code Marketplace." % len(vsx),

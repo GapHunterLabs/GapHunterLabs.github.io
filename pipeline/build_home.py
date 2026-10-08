@@ -28,7 +28,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
-from build_plugin_pages import Sources, PluginRenderer, esc, thousands  # noqa: E402
+from build_plugin_pages import Sources, PluginRenderer, esc, thousands, pitch_text  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 HOME_PAGE = ROOT / "index.html"
@@ -143,15 +143,16 @@ def build(dry_run: bool = False) -> None:
 
     # ---- plugins de pago (FREEMIUM/PAID) desde el campo pricing ----------
     def clean(text):
-        return re.sub(r"`([^`]*)`", r"\1", text or "")
+        """Texto de la tarjeta: el mismo que usan el catalogo y las fichas (pitch_text en build_plugin_pages.py)."""
+        return pitch_text(text)
 
     paid = sorted((p for p in plugins if p.get("pricing") in ("FREEMIUM", "PAID")),
                   key=lambda p: p.get("downloads") or 0, reverse=True)
     paid_html = "".join(
         '<article class="paid-card">'
-        '<div class="paid-card-head"><span class="price-badge price-%s">%s</span>'
-        '<span class="paid-niche">%s</span></div>'
-        '<h3><a href="/catalog/%s/">%s</a></h3><p>%s</p>'
+        '<header class="paid-card-head"><span class="price-badge price-%s">%s</span>'
+        '<span class="paid-niche">%s</span></header>'
+        '<h3 class="paid-card-title"><a href="/catalog/%s/">%s</a></h3><p class="paid-card-desc">%s</p>'
         '<div class="paid-actions">'
         '<a class="btn primary" href="%s" target="_blank" rel="noopener" data-goatcounter-click="out-trial-%s">Start free trial &#8599;</a>'
         '<a class="btn" href="/catalog/%s/">Details</a></div></article>'

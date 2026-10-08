@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="/js/theme-init.js?v=c436d752"></script>
-<script src="/js/site-chrome.js?v=0566c6e5" defer></script>
+<script src="/js/site-chrome.js?v=9330bdc0" defer></script>
+<script src="/js/site-reveal.js?v=2b51b8a5" defer></script>
 <meta name="description" content="Contact Gap Hunter Labs. Plugin support, catalog questions, and partnerships — via GitHub, JetBrains Marketplace, email, and LinkedIn.">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://gc.zgo.at; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; media-src 'self'; manifest-src 'self'; connect-src https://gaphunterlabs.goatcounter.com; object-src 'none'; base-uri 'none'; form-action 'none'">
@@ -36,14 +37,14 @@
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Gap Hunter Labs — Plugin Intelligence Catalog Report">
+<meta property="og:image:alt" content="Gap Hunter Labs plugin catalog">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@GapHunterLabs">
 <meta name="twitter:title" content="Contact — Gap Hunter Labs">
 <meta name="twitter:description" content="Contact Gap Hunter Labs. Plugin support, catalog questions, and partnerships — via GitHub, JetBrains Marketplace, email, and LinkedIn.">
 <meta name="twitter:image" content="https://gaphunterlabs.github.io/og-image.png">
-<meta name="twitter:image:alt" content="Gap Hunter Labs — Plugin Intelligence Catalog Report">
+<meta name="twitter:image:alt" content="Gap Hunter Labs plugin catalog">
 <link rel="stylesheet" href="/css/theme.css?v=73412941">
 <link rel="stylesheet" href="/css/base.css?v=78889c9e">
 <style>
@@ -75,7 +76,7 @@
   /* ---- Hero: headline + badges + decorative code window ---- */
   .contact-hero {
     display: grid;
-    grid-template-columns: minmax(0,1fr) 320px;
+    grid-template-columns: minmax(0,1fr);
     gap: var(--space-8);
     align-items: start;
     margin-bottom: var(--space-8);
@@ -263,7 +264,7 @@
   }
 
 </style>
-<link rel="stylesheet" href="/css/shell.css?v=81c5425b">
+<link rel="stylesheet" href="/css/shell.css?v=cf11ca9a">
 </head>
 <body>
 <div class="app-shell">
@@ -292,45 +293,8 @@
   <section class="contact-hero page-hero band-dark gh-page-header">
     <div>
       <p class="contact-kicker">Contact</p>
-      <h1>Let&rsquo;s investigate<br>the <span style="color:var(--accent)">next gap.</span></h1>
-      <p class="contact-lead">Describe what you&rsquo;re seeing in your tooling, and help find, validate and build the plugins that matter.</p>
-      <div class="contact-badges">
-        <div class="contact-badge">
-          <span class="contact-badge-icon" aria-hidden="true"><svg viewBox="-8 -8 16 16"><path d="M0-6.5 5.5-4v4.2C5.5 3.8 2.8 6 0 6.5-2.8 6-5.5 3.8-5.5.2V-4Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/><path d="M-2.5 0 -.7 1.8 3-1.8" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          <span>Better tools<br>for real teams</span>
-        </div>
-        <div class="contact-badge">
-          <span class="contact-badge-icon" aria-hidden="true"><svg viewBox="-8 -8 16 16"><circle cx="-1" cy="-1" r="4" fill="none" stroke="currentColor" stroke-width="1.3"/><path d="M2 2l3.2 3.2" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg></span>
-          <span>Evidence-based<br>decisions</span>
-        </div>
-        <div class="contact-badge">
-          <span class="contact-badge-icon" aria-hidden="true"><svg viewBox="-8 -8 16 16"><path d="M-3-4-6 0l3 4M3-4l3 4-3 4" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          <span>Built by developers,<br>for developers</span>
-        </div>
-      </div>
-    </div>
-    <div class="contact-hero-art" aria-hidden="true">
-      <div class="code-window">
-        <div class="code-window-bar">
-          <span class="code-window-dot"></span><span class="code-window-dot"></span><span class="code-window-dot"></span>
-          <span class="code-window-title">GapDetector.java</span>
-        </div>
-        <pre><span class="tok-kw">public class</span> <span class="tok-fn">GapDetector</span> {
-
-  <span class="tok-cm">// Flag the missing check</span>
-  <span class="tok-kw">void</span> <span class="tok-fn">inspect</span>(PsiElement el) {
-    <span class="tok-kw">if</span> (isUnvalidated(el)) {
-      report(<span class="tok-str">"Real gap found"</span>);
-    }
-  }
-}</pre>
-      </div>
-      <div class="feedback-card">
-        <span class="feedback-card-icon" aria-hidden="true">
-          <svg viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#fff"/></svg>
-        </span>
-        <span>Your feedback builds better tools.</span>
-      </div>
+      <h1>Get in touch</h1>
+      <p class="contact-lead">Report a problem with a plugin, suggest a tool that doesn&rsquo;t exist yet, or ask about custom work. Messages go out by email or as a GitHub issue.</p>
     </div>
   </section>
 
@@ -389,16 +353,16 @@
   </div>
   <div class="pi-card">
     <p class="pi-eyebrow">What to expect</p>
-    <p class="pi-note">No published response-time SLA. GitHub issues stay on the plugin's repository. Email is the address this site already publishes — no phone number, mailing address, or backend form, none omitted by accident.</p>
+    <p class="pi-note">There's no published response-time SLA. GitHub issues stay on the plugin's repository, and email goes to the address published on this site. There's no phone number, mailing address or backend form.</p>
   </div>
   <div class="pi-card">
     <p class="pi-eyebrow">What makes a useful report</p>
     <ol class="pi-steps">
-      <li><span class="pi-step-num">01</span><span class="pi-step-body"><strong>The problem</strong>What friction are you experiencing?</span></li>
-      <li><span class="pi-step-num">02</span><span class="pi-step-body"><strong>The environment</strong>IDE, language, framework or workflow.</span></li>
-      <li><span class="pi-step-num">03</span><span class="pi-step-body"><strong>Existing solutions</strong>What have you tried?</span></li>
-      <li><span class="pi-step-num">04</span><span class="pi-step-body"><strong>Evidence</strong>Links, screenshots, or references.</span></li>
-      <li><span class="pi-step-num">05</span><span class="pi-step-body"><strong>Impact</strong>Why does this problem matter?</span></li>
+      <li><span class="pi-step-num">1</span><span class="pi-step-body"><strong>The problem</strong>What friction are you experiencing?</span></li>
+      <li><span class="pi-step-num">2</span><span class="pi-step-body"><strong>The environment</strong>IDE, language, framework or workflow.</span></li>
+      <li><span class="pi-step-num">3</span><span class="pi-step-body"><strong>Existing solutions</strong>What have you tried?</span></li>
+      <li><span class="pi-step-num">4</span><span class="pi-step-body"><strong>Evidence</strong>Links, screenshots, or references.</span></li>
+      <li><span class="pi-step-num">5</span><span class="pi-step-body"><strong>Impact</strong>Why does this problem matter?</span></li>
     </ol>
   </div>
 </aside>

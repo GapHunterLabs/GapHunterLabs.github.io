@@ -242,9 +242,7 @@
   border-radius: var(--radius-lg);
   border: 1px solid var(--border);
   overflow: hidden;
-  background:
-    radial-gradient(ellipse 700px 420px at 85% -10%, color-mix(in srgb, var(--accent) 16%, transparent), transparent 65%),
-    var(--surface);
+  background: var(--surface);
 }
 
 .app-main {
@@ -574,13 +572,14 @@
 @media (prefers-reduced-motion: reduce) { .gh-chevron, .gh-burger span, .gh-burger span::before, .gh-burger span::after { transition: none; } }
 
 /* =====================================================================
-   2026-09-27 -- Encabezado de pagina de marca (.gh-page-header), el
-   mismo en las 10 paginas con encabezado. Panel azul marino de la
-   marca con: franja superior en los 3 colores del logo, dos luces
-   radiales azul/cian, el isotipo como marca de agua y un eyebrow con
-   la mini marca. Siempre ocupa el ancho completo de su columna (el
-   limite de lectura va en el texto, no en la caja) para que todos los
-   encabezados compartan el mismo eje y el mismo borde.
+   Encabezado de pagina (.gh-page-header), el mismo en las 10 paginas con
+   encabezado. 2026-10-08: panel azul marino liso con el isotipo como
+   marca de agua (se conserva por pedido del usuario). Se quitaron la
+   franja superior en los 3 colores del logo, las dos luces radiales, el
+   degradado de fondo y el cuadro con degradado del eyebrow. Siempre
+   ocupa el ancho completo de su columna (el limite de lectura va en el
+   texto, no en la caja) para que todos los encabezados compartan el
+   mismo eje y el mismo borde.
    ===================================================================== */
 .page-hero.gh-page-header {
   position: relative;
@@ -588,20 +587,10 @@
   overflow: hidden;
   max-width: none;
   padding: clamp(28px, 4vw, 56px);
-  border: 1px solid rgba(90, 169, 255, 0.20);
-  border-radius: 16px;
-  background:
-    radial-gradient(640px 320px at 100% 0%, rgba(1, 179, 253, 0.20), transparent 62%),
-    radial-gradient(560px 320px at 0% 100%, rgba(1, 81, 252, 0.30), transparent 62%),
-    linear-gradient(135deg, #0B1B34 0%, #0F2649 100%);
-  box-shadow: var(--shadow-lg);
-}
-.page-hero.gh-page-header::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto 0;
-  height: 3px;
-  background: linear-gradient(90deg, #0151FC 0%, #01B3FD 55%, #02F172 100%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: #0F2346;
+  box-shadow: none;
 }
 .page-hero.gh-page-header:not(.hero):not(.contact-hero)::after {
   content: "";
@@ -616,26 +605,15 @@
   background: no-repeat center / contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'%3E%3Cpath fill='%23ffffff' d='M511 81L847 283L725 351L508 223L296 348L296 588L463 691L342 765L173 665L172 281Z'/%3E%3Cpath fill='%23ffffff' d='M846 412L844 668L518 863L393 795L724 589L721 540L567 538L568 412Z'/%3E%3Cpath fill='%23ffffff' d='M569 413H695V539H569Z'/%3E%3C/svg%3E");
 }
 
-/* Eyebrow con la mini marca (cuadro con los 3 colores del logo). */
+/* Eyebrow: texto en caja normal, sin icono. */
 .gh-page-header .contact-kicker,
 .gh-page-header .ch-copy > .eyebrow {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
+  display: block;
   margin: 0;
-  color: var(--cyan);
-  font: 700 12px var(--sans);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-.gh-page-header .contact-kicker::before,
-.gh-page-header .ch-copy > .eyebrow::before {
-  content: "";
-  flex: none;
-  width: 10px;
-  height: 10px;
-  border-radius: 2px;
-  background: linear-gradient(135deg, #0151FC, #01B3FD 60%, #02F172);
+  color: var(--text-dim);
+  font: 600 14px var(--sans);
+  letter-spacing: 0;
+  text-transform: none;
 }
 
 /* Titulo y bajada: misma escala tipografica en todas las paginas. */
@@ -657,7 +635,7 @@
 .gh-page-header.method-intro { max-width: none; }
 
 @media (max-width: 640px) {
-  .page-hero.gh-page-header { border-radius: 12px; }
+  .page-hero.gh-page-header { border-radius: 10px; }
   .page-hero.gh-page-header:not(.hero):not(.contact-hero)::after { width: 190px; height: 190px; right: -40px; bottom: -50px; }
   .gh-page-header .contact-lead, .gh-page-header .ch-copy > p:not(.eyebrow) { font-size: 16px; }
 }
@@ -785,3 +763,56 @@ html.ghs-open { overflow: hidden; }
   .ghs-dialog { animation: ghs-in .14s ease-out; }
   @keyframes ghs-in { from { opacity: 0; transform: translateY(-6px); } }
 }
+
+/* =====================================================================
+   2026-10-08 -- Sitio sin adornos. Estas reglas anulan efectos que
+   siguen en home.css, catalog.css y plugin.css (copias historicas de la
+   misma hoja): resplandores de fondo, corchetes y barrido de brillo en
+   las tarjetas, cajas con degradado y la linea animada de la hoja de
+   ruta. shell.css se carga ultimo en todas las paginas.
+   ===================================================================== */
+body { background-image: none; }
+.topbar::after { content: none; }
+.plugin-card::before, .plugin-card::after { content: none; }
+.svc-band, .hire-band, .path-card-strong { background: var(--surface); }
+.identity-process .flow-line-1 { stroke: var(--accent); stroke-dasharray: none; opacity: 0.5; animation: none; }
+.identity-process .flow-line-2, .identity-process .flow-line-3, .flow-line { animation: none; }
+.rm-dot { box-shadow: none; }
+/* Eyebrows: caja normal y color de texto secundario, como el del encabezado de pagina. */
+.eyebrow, .path-card .path-kicker, .lab-cases .eyebrow, .identity-case .eyebrow {
+  font: 600 14px var(--sans); letter-spacing: 0; text-transform: none; color: var(--text-dim);
+}
+
+/* =====================================================================
+   Aparicion al hacer scroll (js/site-reveal.js). Solo actua sobre los
+   elementos que el script marca con [data-rv] y solo si <html> tiene
+   .rv-on; sin JavaScript, con "reducir movimiento" o al imprimir, todo
+   se ve desde el principio. Temporalidad y posicion salen de variables
+   que el script fija por elemento desde su CONFIG y los data-reveal-*.
+   ===================================================================== */
+.rv-on [data-rv] {
+  opacity: 0;
+  transform: translate3d(var(--rv-x, 0px), var(--rv-y, 0px), 0);
+  transition:
+    opacity var(--rv-dur, 450ms) var(--rv-ease, ease-out) var(--rv-delay, 0ms),
+    transform var(--rv-dur, 450ms) var(--rv-ease, ease-out) var(--rv-delay, 0ms);
+}
+.rv-on [data-rv].rv-in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .rv-on [data-rv] { opacity: 1; transform: none; transition: none; }
+}
+@media print {
+  .rv-on [data-rv] { opacity: 1 !important; transform: none !important; }
+}
+
+/* 2026-10-08, segunda pasada de naturalizacion: rotulos pequenos en caja normal, titulares sin palabras de otro color
+   y pasos numerados con un numero simple, sin circulo. */
+.pi-eyebrow, .svc-kicker, .cv-eyebrow, .ee-kicker, .plat-label, .share-label, .case-meta-row dt, .lab-cases dt {
+  text-transform: none; letter-spacing: 0;
+}
+h1 .accent, h2 .accent, .hero-title .accent { color: inherit; }
+.pi-step-num { width: auto; height: auto; border-radius: 0; background: none; color: var(--text-dim); font-weight: 600; }
+/* Cifras del encabezado como una fila de datos, sin cajas; estado de los tickets en texto normal. */
+.hdr-stats { gap: 12px 24px; overflow: visible; border: 0; border-radius: 0; background: none; }
+.hdr-stat, .hero .hdr-stat { padding: 0; background: none; }
+.ticket-status { font-family: var(--sans); font-size: 12px; font-weight: 600; letter-spacing: 0; text-transform: none; }

@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="/js/theme-init.js?v=c436d752"></script>
-<script src="/js/site-chrome.js?v=0566c6e5" defer></script>
+<script src="/js/site-chrome.js?v=9330bdc0" defer></script>
+<script src="/js/site-reveal.js?v=2b51b8a5" defer></script>
 <meta name="description" content="Qué hacen y qué no hacen los plugins de Gap Hunter Labs con tu código, cómo se reportan vulnerabilidades y por qué todavía no hay una certificación formal SOC 2/ISO.">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://gc.zgo.at; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; media-src 'self'; manifest-src 'self'; connect-src 'self' https://gaphunterlabs.goatcounter.com; object-src 'none'; base-uri 'none'; form-action 'none'">
@@ -36,7 +37,7 @@
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Gap Hunter Labs — Informe del catálogo Plugin Intelligence">
+<meta property="og:image:alt" content="Catálogo de plugins de Gap Hunter Labs">
 <meta property="og:locale" content="es_ES">
 <meta property="og:locale:alternate" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
@@ -44,7 +45,7 @@
 <meta name="twitter:title" content="Seguridad — Gap Hunter Labs">
 <meta name="twitter:description" content="Qué hacen y qué no hacen los plugins de Gap Hunter Labs con tu código, cómo se reportan vulnerabilidades y por qué todavía no hay una certificación formal SOC 2/ISO.">
 <meta name="twitter:image" content="https://gaphunterlabs.github.io/og-image.png">
-<meta name="twitter:image:alt" content="Gap Hunter Labs — Informe del catálogo Plugin Intelligence">
+<meta name="twitter:image:alt" content="Catálogo de plugins de Gap Hunter Labs">
 <link rel="stylesheet" href="/css/theme.css?v=73412941">
 <link rel="stylesheet" href="/css/base.css?v=78889c9e">
 <style>
@@ -124,7 +125,7 @@
   }
 
 </style>
-<link rel="stylesheet" href="/css/shell.css?v=81c5425b">
+<link rel="stylesheet" href="/css/shell.css?v=cf11ca9a">
 </head>
 <body>
 <div class="app-shell">
@@ -153,48 +154,48 @@
   <div class="page-hero band-dark gh-page-header">
     <p class="contact-kicker">Gap Hunter Labs</p>
     <h1>Seguridad</h1>
-    <p class="contact-lead" style="margin-bottom:0">Lo que los plugins tocan de verdad, lo que nunca envían a ningún lado, cómo reportar una vulnerabilidad y una respuesta honesta sobre la certificación formal &mdash; no una página de cumplimiento escrita para sonar tranquilizadora.</p>
+    <p class="contact-lead" style="margin-bottom:0">Qué tocan los plugins, qué no envían nunca a ningún lado, cómo reportar una vulnerabilidad y en qué punto está la certificación formal.</p>
   </div>
 
   <div class="disclosure-list">
     <section class="disclosure" aria-labelledby="sec-arch">
       <h2 id="sec-arch">Cómo se construyen estos plugins</h2>
       <p>Cada plugin de este catálogo funciona como una extensión normal de IntelliJ Platform: inspecciones, anotadores e intenciones que se ejecutan dentro del proceso de tu propio IDE, en tu propia máquina, usando las API <code>PsiElement</code>/AST del propio IDE o comprobaciones de texto plano y expresiones regulares sobre archivos que ya están abiertos en tu proyecto.</p>
-      <p>No hay servidor propio. No existe ningún servidor al que el código de los plugins llame &mdash; no hay adónde enviar tu código, porque no se construyó nada para enviarlo a ningún lado. La lógica de detección (búsqueda de patrones, comprobaciones de entropía, análisis estructural) se ejecuta en local y su resultado va directo al editor: una advertencia, un ícono en el margen, una corrección rápida. Ese es todo el recorrido.</p>
+      <p>No hay servidor propio. El código de los plugins no tiene un servidor al que llamar, así que tu código no tiene adónde ir. La lógica de detección (búsqueda de patrones, comprobaciones de entropía, análisis estructural) se ejecuta en local, y su resultado va directo al editor como una advertencia, un ícono en el margen o una corrección rápida.</p>
     </section>
 
     <section class="disclosure" aria-labelledby="sec-network">
       <h2 id="sec-network">Actividad de red</h2>
       <ul>
-        <li>La instalación de plugins y la búsqueda de actualizaciones pasan por la infraestructura del propio Marketplace de JetBrains &mdash; el mismo canal que usan todos los plugins de la plataforma, no uno aparte.</li>
+        <li>La instalación de plugins y la búsqueda de actualizaciones pasan por JetBrains Marketplace, el mismo canal que usan todos los plugins de la plataforma.</li>
         <li>Unos pocos plugins llaman a una API externa por diseño, porque esa es su función declarada (por ejemplo, un plugin de validación de especificaciones que contrasta un esquema con un registro público). Cada una de esas llamadas va al servicio de terceros que nombra la propia ficha del plugin, y a ningún otro servidor.</li>
-        <li>Este sitio (el que estás leyendo) usa GoatCounter para contar visitas &mdash; sin cookies, sin guardar direcciones IP, por sesiones en lugar de páginas vistas en bruto. Consulta la <a href="/es/metodologia/#method-privacy">Metodología</a> para ver la redacción exacta. Esto no tiene nada que ver con lo que hacen los plugins dentro de tu IDE.</li>
+        <li>Este sitio usa GoatCounter para contar visitas: sin cookies, sin guardar direcciones IP y por sesiones en lugar de páginas vistas en bruto. La <a href="/es/metodologia/#method-privacy">Metodología</a> tiene los detalles. No tiene nada que ver con lo que hacen los plugins dentro de tu IDE.</li>
       </ul>
     </section>
 
     <section class="disclosure" aria-labelledby="sec-open">
       <h2 id="sec-open">Abierto por defecto</h2>
-      <p>El código de cada plugin está en un repositorio público en <a href="https://github.com/GapHunterLabs" target="_blank" rel="noopener">github.com/GapHunterLabs</a>. Nada de lo descrito arriba es una promesa que haya que creer a ciegas &mdash; el código de inspección y de anotación que decide qué se ejecuta y qué hace con cada coincidencia se puede leer completo, plugin por plugin.</p>
+      <p>El código de cada plugin está en un repositorio público en <a href="https://github.com/GapHunterLabs" target="_blank" rel="noopener">github.com/GapHunterLabs</a>. No hace falta creer nada de lo anterior a ciegas: el código de inspección y de anotación que decide qué se ejecuta, y qué pasa con una coincidencia, está a la vista en cada plugin.</p>
     </section>
 
     <section class="disclosure" aria-labelledby="sec-report">
       <h2 id="sec-report">Reportar una vulnerabilidad</h2>
-      <p>¿Encontraste algo real &mdash; un plugin que hace más de lo que dice su ficha, un valor por defecto inseguro, una dependencia incluida con un CVE conocido? Repórtalo en privado: con el botón <strong>Report a vulnerability</strong> de la pestaña <strong>Security</strong> del repositorio del plugin en GitHub (preferido), o por correo a <a href="mailto:gaphunterlabs@gmail.com">gaphunterlabs@gmail.com</a> con el asunto <code>SECURITY: &lt;nombre del plugin&gt;</code>.</p>
+      <p>¿Encontraste un problema, como un plugin que hace más de lo que dice su ficha, un valor por defecto inseguro o una dependencia incluida con un CVE conocido? Repórtalo en privado: con el botón <strong>Report a vulnerability</strong> de la pestaña <strong>Security</strong> del repositorio del plugin en GitHub (preferido), o por correo a <a href="mailto:gaphunterlabs@gmail.com">gaphunterlabs@gmail.com</a> con el asunto <code>SECURITY: &lt;nombre del plugin&gt;</code>.</p>
       <p>Acuse de recibo en 5 días hábiles y evaluación en 10. Los detalles se mantienen en privado hasta que sale la corrección, por un máximo de 90 días salvo que se acuerde otra fecha, y cada corrección se publica como un GitHub Security Advisory. Si el problema se está explotando activamente, indícalo en el primer mensaje: esos reportes se atienden primero.</p>
       <p>Las correcciones de seguridad de los plugins de pago se publican al menos hasta diciembre de 2031. El <code>SECURITY.md</code> de cada repositorio tiene la política completa, y <a href="/.well-known/security.txt">security.txt</a> indica los contactos de seguridad.</p>
-      <p>Por favor, no abras un issue público en GitHub para un reporte de seguridad &mdash; todo lo demás (errores, pedidos de funciones) puede ir en público como siempre.</p>
+      <p>Por favor, no abras un issue público en GitHub para un reporte de seguridad. Todo lo demás (errores, pedidos de funciones) puede ir en público como siempre.</p>
     </section>
 
     <section class="disclosure disclosure-warn" aria-labelledby="sec-cert">
       <h2 id="sec-cert">Lo que (todavía) no hay</h2>
       <p>No hay certificación SOC 2, ISO 27001 ni ninguna otra certificación de seguridad de terceros. Es un catálogo pequeño y enfocado, no una empresa con un equipo de cumplimiento dedicado, y es mejor decirlo claramente que insinuar un nivel de garantía formal que no existe.</p>
-      <p>Las secciones anteriores describen la arquitectura y la práctica reales, no sustituyen una certificación &mdash; si el proceso de compras de tu organización exige SOC 2 específicamente, hoy es una carencia real, no una casilla que se salta en silencio.</p>
+      <p>Las secciones anteriores describen cómo se construyen y se ejecutan los plugins; no reemplazan una certificación. Si el proceso de compras de tu organización exige SOC 2, hoy eso es una carencia.</p>
     </section>
   </div>
 </main>
 <aside class="page-insights" id="pageInsights" aria-label="Datos de la plataforma" hidden>
   <div class="pi-card">
-    <p class="pi-eyebrow">Datos de la plataforma</p>
+    <p class="pi-eyebrow">El catálogo en cifras</p>
     <div class="pi-stats">
       <div><span class="pi-stat-num" id="piPlugins">—</span><span class="pi-stat-label">Plugins activos</span></div>
       <div><span class="pi-stat-num" id="piDownloads">—</span><span class="pi-stat-label">Descargas totales</span></div>

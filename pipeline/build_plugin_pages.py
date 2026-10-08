@@ -67,7 +67,7 @@ SITEMAP = ROOT / "sitemap.xml"
 LASTMOD_STORE = ROOT / "_review" / "plugin_lastmod.json"
 
 OG_IMAGE = SITE + "/og-image.png"
-OG_IMAGE_ALT = "Gap Hunter Labs - Plugin Intelligence Catalog Report"
+OG_IMAGE_ALT = "Gap Hunter Labs plugin catalog"
 MEDIA_DIR = ROOT / "media"
 SHARE_ICON_X = ('<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 '
                 '8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833'
@@ -331,6 +331,33 @@ def plain_text(value) -> str:
     text = re.sub(r"\*\*([^*]+)\*\*", r"\1", text)
     text = re.sub(r"\*([^*]+)\*", r"\1", text)
     return re.sub(r"\s+", " ", text).strip()
+
+
+PITCH_PREFIX_RE = re.compile(r"^\s*(?:IntelliJ|JetBrains|VS Code|Visual Studio Code)[^.]{0,60}\b(?:plugin|extension)\.\s+")
+PAIRED_DASH_RE = re.compile(r"\s+[—–]\s+([^—–.]{1,140}?)\s+[—–]\s+")
+SINGLE_DASH_RE = re.compile(r"\s+(?:[—–]|--)\s+")
+
+
+def pitch_prose(value) -> str:
+    """Descripcion de un plugin tal como la muestra el sitio (2026-10-08). Sale del README y repite en todas el mismo
+    molde: un prefijo de plataforma ("IntelliJ-family plugin.") que ya dice la ficha, y rayas largas para incisos y
+    explicaciones. Aqui el prefijo se quita, un par de rayas pasa a parentesis y una raya suelta a dos puntos (o a coma
+    si la frase ya tiene dos puntos). Solo para descripciones: la evidencia ("why") trae citas textuales y no pasa por
+    aqui. Conserva el markdown en linea para md_inline()."""
+    text = "" if value is None else str(value)
+    text = PITCH_PREFIX_RE.sub("", text)
+    text = PAIRED_DASH_RE.sub(lambda m: " (%s) " % m.group(1), text)
+
+    def single(m):
+        before = text[:m.start()]
+        sentence = before[before.rfind(". ") + 1:]
+        return ", " if ":" in sentence else ": "
+    return SINGLE_DASH_RE.sub(single, text)
+
+
+def pitch_text(value) -> str:
+    """pitch_prose() sin markdown, para tarjetas, metadatos y el buscador."""
+    return plain_text(pitch_prose(value))
 
 
 def thousands(n) -> str:
@@ -676,7 +703,7 @@ class PluginRenderer:
             '<p class="rel-pitch">%s</p>'
             '<div class="rel-foot"><span>%s</span><span class="rel-go">Details &rarr;</span></div></a>'
         ) % (esc(s["repo"]), esc(s["name"]), color, esc(cat["label"]), self.cat_icon_html(s["categoryKey"]),
-             price_key, price, esc(s["name"]), esc(s.get("niche")), esc(plain_text(s.get("pitch")) or ""), dl)
+             price_key, price, esc(s["name"]), esc(s.get("niche")), esc(pitch_text(s.get("pitch")) or ""), dl)
 
     # ---- compartir --------------------------------------------------------
     # Enlaces planos (X, LinkedIn): no cargan ningun script de terceros ni
@@ -733,7 +760,7 @@ class PluginRenderer:
         h.append('<div class="ph-title-row"><h1>%s</h1><span class="price-badge price-%s">%s</span></div>'
                  % (esc(p["name"]), price_key, esc(price_text)))
         h.append('<p class="ph-niche">%s</p>' % esc(p.get("niche")))
-        h.append('<p class="ph-lead">%s</p>' % md_inline(p.get("pitch") or "—"))
+        h.append('<p class="ph-lead">%s</p>' % md_inline(pitch_prose(p.get("pitch")) or "—"))
 
         h.append('<div class="ph-actions">')
         if p.get("marketplaceUrl"):
@@ -769,7 +796,7 @@ class PluginRenderer:
         # 2026-09-27: la brecha va a todo el ancho y con su evidencia completa
         # (citas en lista); los datos pasan a una grilla y los relacionados
         # usan la misma tarjeta que el catalogo.
-        h.append('<section class="pb-card pb-gap"><h2 class="pb-title"><span class="ib-icon gap">!</span>The gap it fixes</h2>'
+        h.append('<section class="pb-card pb-gap"><h2 class="pb-title">The gap it fixes</h2>'
                  '<div class="pb-text">%s</div></section>' % md_block(self.gap_text(p)))
         fact = lambda k, v: '<div class="fact"><dt>%s</dt><dd>%s</dd></div>' % (k, v)
         h.append('<section class="pb-card pb-facts"><div class="pb-facts-head"><h2 class="pb-title">Facts and pricing</h2>%s</div>'
@@ -812,7 +839,7 @@ class PluginRenderer:
         return branded if len(branded) <= TITLE_SOFT_MAX else truncate(base, TITLE_SOFT_MAX)
 
     def vsx_description(self, e):
-        text = plain_text(e.get("pitch")) or ("%s for Visual Studio Code." % e["displayName"])
+        text = pitch_text(e.get("pitch")) or ("%s for Visual Studio Code." % e["displayName"])
         limit = DESC_MAX
         result = truncate(text, limit)
         while len(esc(result)) > DESC_MAX and limit > 40:
@@ -823,7 +850,7 @@ class PluginRenderer:
     def vsx_jsonld(self, e, url):
         app = {
             "@type": "SoftwareApplication", "@id": url + "#app", "name": e["displayName"], "url": url,
-            "description": plain_text(e.get("pitch")), "applicationCategory": "DeveloperApplication",
+            "description": pitch_text(e.get("pitch")), "applicationCategory": "DeveloperApplication",
             "operatingSystem": "Visual Studio Code", "publisher": {"@id": ORG_ID},
             "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
             "sameAs": [u for u in (e.get("marketplaceUrl"), e.get("githubUrl")) if u],
@@ -850,7 +877,7 @@ class PluginRenderer:
             '<div class="rel-name">%s</div><div class="rel-niche">%s</div><p class="rel-pitch">%s</p>'
             '<div class="rel-foot"><span>%s %s</span><span class="rel-go">Details &rarr;</span></div></a>'
         ) % (esc(o["name"]), esc(o["displayName"]), self.src.icons["vscode"], esc(o["displayName"]),
-             esc(o.get("niche")), esc(plain_text(o.get("pitch")) or ""), thousands(n), "install" if n == 1 else "installs")
+             esc(o.get("niche")), esc(pitch_text(o.get("pitch")) or ""), thousands(n), "install" if n == 1 else "installs")
 
     def vsx_body_html(self, e):
         src, icons = self.src, self.src.icons
@@ -866,7 +893,7 @@ class PluginRenderer:
         h.append('<p class="contact-kicker">VS Code extension</p>')
         h.append('<div class="ph-title-row"><h1>%s</h1><span class="price-badge price-free">Free</span></div>' % esc(e["displayName"]))
         h.append('<p class="ph-niche">%s</p>' % esc(e.get("niche")))
-        h.append('<p class="ph-lead">%s</p>' % md_inline(e.get("pitch") or "—"))
+        h.append('<p class="ph-lead">%s</p>' % md_inline(pitch_prose(e.get("pitch")) or "—"))
         h.append('<div class="ph-actions">')
         if e.get("marketplaceUrl"):
             h.append('<a class="btn primary" href="%s" target="_blank" rel="noopener" data-goatcounter-click="out-vsx-install-%s">'
@@ -937,7 +964,7 @@ class PluginRenderer:
         return with_brand if len(esc(with_brand)) <= TITLE_SOFT_MAX else base
 
     def description(self, p):
-        text = plain_text(p.get("pitch")) or plain_text(self.gap_text(p))
+        text = pitch_text(p.get("pitch")) or plain_text(self.gap_text(p))
         # 35 pitches empiezan con "IntelliJ-family plugin." -- desperdicia el
         # inicio del snippet; el titulo ya dice "for IntelliJ".
         text = re.sub(r"^IntelliJ-family plugin\.\s*", "", text)
@@ -959,7 +986,7 @@ class PluginRenderer:
             "@id": url + "#app",
             "name": p["name"],
             "url": url,
-            "description": plain_text(p.get("pitch")),
+            "description": pitch_text(p.get("pitch")),
             "applicationCategory": "DeveloperApplication",
             "operatingSystem": "IntelliJ Platform",
             "publisher": {"@id": ORG_ID},

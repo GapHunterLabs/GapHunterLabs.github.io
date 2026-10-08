@@ -2825,10 +2825,15 @@ h1, h2, h3 { font-family: var(--sans); letter-spacing: -0.01em; }
 .path-card .path-go { margin-top: auto; padding-top: 8px; color: var(--accent); font-weight: 600; }
 .path-card-strong { border-color: var(--accent); background: linear-gradient(180deg, var(--accent-soft), var(--surface) 70%); }
 
+/* Tarjetas de plugins de pago (2026-10-08): todas del mismo alto. Cada una tiene cabecera (precio y categoria),
+   titulo y descripcion de hasta 4 lineas; las acciones quedan al pie. */
+.paid-grid { grid-auto-rows: 1fr; }
 .paid-card h3 { margin: 4px 0 0; font-size: 18px; }
 .paid-card h3 a { color: var(--text); text-decoration: none; }
 .paid-card h3 a:hover { color: var(--accent); }
 .paid-card p { margin: 0; color: var(--text-dim); line-height: 1.55; }
+.paid-card .paid-card-desc { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 4; line-clamp: 4;
+  overflow: hidden; }
 .paid-card-head { display: flex; align-items: center; gap: 10px; }
 .paid-niche { color: var(--text-faint); font-size: 13px; }
 .paid-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 10px; }
@@ -2848,6 +2853,9 @@ h1, h2, h3 { font-family: var(--sans); letter-spacing: -0.01em; }
 
 .loop-section { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px;
   padding: 24px; border: 1px solid var(--border); border-radius: 12px; background: var(--surface); }
+/* Centrada entre el contenido y el pie (2026-10-08): debajo ya hay 104px de rellenos del contenedor, asi que no lleva
+   margen inferior y arriba lleva los mismos 104px. */
+.loop-section { margin: 104px 0 0; }
 .loop-links { display: flex; flex-wrap: wrap; gap: 8px; }
 
 .identity-card, .cat-cell { box-shadow: var(--shadow); }
