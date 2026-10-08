@@ -40,6 +40,7 @@ PAGES = (
     ("security/index.html", None, "/security/"),
     ("privacy/index.html", None, "/privacy/"),
     ("terms/index.html", None, "/terms/"),
+    ("eula/index.html", None, "/eula/"),
 )
 
 # Un item con submenu es (etiqueta, [(href, texto), ...]); el resto (href, texto).
@@ -86,6 +87,7 @@ ES_PATHS = {
     "/security/": "/es/seguridad/",
     "/privacy/": "/es/privacidad/",
     "/terms/": "/es/terminos/",
+    "/eula/": "/es/eula/",
 }
 PLUGIN_PATH_RE = re.compile(r"^/catalog/((?:vscode/)?[a-z0-9][a-z0-9-]*)/$")
 
@@ -199,7 +201,8 @@ def footer_html(active):
         ("Marketplaces", [link("https://plugins.jetbrains.com/vendor/gap-hunter-labs", "JetBrains Marketplace", True),
                           link("https://marketplace.visualstudio.com/publishers/GapHunterLabs", "VS Code Marketplace", True),
                           link("https://github.com/GapHunterLabs", "GitHub", True)]),
-        ("Legal", [link("/security/", "Security"), link("/privacy/", "Privacy"), link("/terms/", "Terms")]),
+        ("Legal", [link("/security/", "Security"), link("/privacy/", "Privacy"), link("/terms/", "Terms"),
+                   link("/eula/", "EULA")]),
     )
     cols_html = "".join(
         '<div class="gh-footer-col"><p class="gh-footer-title">%s</p>%s</div>' % (title, "".join(items))

@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script src="/js/theme-init.js?v=c436d752"></script>
+<script src="/js/site-chrome.js?v=0566c6e5" defer></script>
+<meta name="description" content="License terms for the Gap Hunter Labs paid plugins on JetBrains Marketplace: the license, the Apache-2.0 source code, warranty, liability and support.">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' https://gc.zgo.at; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data:; media-src 'self'; manifest-src 'self'; connect-src 'self' https://gaphunterlabs.goatcounter.com; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="theme-color" content="#0B1B34">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://gaphunterlabs.github.io/eula/">
+<!-- HREFLANG:START -->
+<link rel="alternate" hreflang="en" href="https://gaphunterlabs.github.io/eula/">
+<link rel="alternate" hreflang="es" href="https://gaphunterlabs.github.io/es/eula/">
+<link rel="alternate" hreflang="x-default" href="https://gaphunterlabs.github.io/eula/">
+<link rel="alternate" type="application/rss+xml" title="Gap Hunter Labs — new plugins" href="/feed.xml">
+<!-- HREFLANG:END -->
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/manifest.json">
+<link rel="preload" href="/fonts/IBMPlexSans-Latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="/fonts/JetBrainsMono-Latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preconnect" href="https://gc.zgo.at">
+<link rel="preconnect" href="https://gaphunterlabs.goatcounter.com">
+<title>End User License Agreement &mdash; Gap Hunter Labs</title>
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Gap Hunter Labs">
+<meta property="og:url" content="https://gaphunterlabs.github.io/eula/">
+<meta property="og:title" content="End User License Agreement — Gap Hunter Labs">
+<meta property="og:description" content="License terms for the Gap Hunter Labs paid plugins on JetBrains Marketplace: the license, the Apache-2.0 source code, warranty, liability and support.">
+<meta property="og:image" content="https://gaphunterlabs.github.io/og-image.png">
+<meta property="og:image:secure_url" content="https://gaphunterlabs.github.io/og-image.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Gap Hunter Labs — Plugin Intelligence Catalog Report">
+<meta property="og:locale" content="en_US">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@GapHunterLabs">
+<meta name="twitter:title" content="End User License Agreement — Gap Hunter Labs">
+<meta name="twitter:description" content="License terms for the Gap Hunter Labs paid plugins on JetBrains Marketplace: the license, the Apache-2.0 source code, warranty, liability and support.">
+<meta name="twitter:image" content="https://gaphunterlabs.github.io/og-image.png">
+<meta name="twitter:image:alt" content="Gap Hunter Labs — Plugin Intelligence Catalog Report">
+<link rel="stylesheet" href="/css/theme.css?v=73412941">
+<link rel="stylesheet" href="/css/base.css?v=78889c9e">
+<style>
+  @font-face {
+    font-family: "IBM Plex Sans";
+    src: url("/fonts/IBMPlexSans-Latin.woff2") format("woff2");
+    font-weight: 100 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "JetBrains Mono";
+    src: url("/fonts/JetBrainsMono-Latin.woff2") format("woff2");
+    font-weight: 100 800;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  
+  /* Bug real reportado 2026-09-10: el botón "Security report" de
+     contact.html (href="/security/#sec-report") SÍ navegaba, pero
+     sin esto el <h2> destino quedaba pegado al borde superior del
+     viewport y el topbar sticky lo tapaba -- se veía como si el botón
+     "no hiciera nada". Mismo valor (72px) que #top/#identity ya usan
+     en index.html/catalog.html para el mismo problema. */
+  #sec-arch, #sec-network, #sec-open, #sec-report, #sec-cert { scroll-margin-top: 72px; }
+
+  .methodology-main {
+    flex: 1;
+    width: 100%;
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 40px var(--page-pad) 56px;
+  }
+
+  .methodology-main h1 {
+    margin: 0 0 16px;
+    font-size: 32px;
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+  }
+
+  .disclosure-list { display: grid; gap: var(--section-gap); }
+  .disclosure {
+    padding: var(--card-pad);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--accent);
+    border-radius: var(--radius);
+  }
+  .disclosure.disclosure-warn { border-left-color: var(--warn); }
+  .disclosure h2 { margin: 0 0 10px; font-size: 18px; }
+  .disclosure p { margin: 0 0 10px; color: var(--text-dim); line-height: 1.65; }
+  .disclosure p:last-child { margin-bottom: 0; }
+  .disclosure ul { margin: 0; padding-left: 1.25em; }
+  .disclosure li { color: var(--text-dim); line-height: 1.65; margin-bottom: 8px; }
+  .disclosure li:last-child { margin-bottom: 0; }
+  .disclosure b { color: var(--text); }
+  .disclosure code {
+    font-family: var(--mono);
+    font-size: 0.92em;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 1px 5px;
+    color: var(--text);
+  }
+
+  
+
+  
+
+  @media (max-width: 760px) {
+        .methodology-main { padding-top: 28px; }
+        .methodology-main h1 { font-size: 26px; }
+  }
+
+</style>
+<link rel="stylesheet" href="/css/shell.css?v=81c5425b">
+</head>
+<body>
+<div class="app-shell">
+<!-- CHROME:HEADER:START -->
+<header class="gh-header" id="topbar">
+  <div class="gh-header-inner">
+    <a class="gh-brand" href="/" aria-label="Gap Hunter Labs home"><svg class="gh-logo" viewBox="0 0 1024 1024" aria-hidden="true"><path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#0151FC"/><path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z" fill="#01B3FD"/><polygon points="569,413 695,413 695,539 569,539" fill="#02F172"/></svg><span class="gh-brand-name">Gap Hunter Labs</span></a>
+    <nav class="gh-nav" id="siteNav" aria-label="Primary"><a class="gh-nav-link" href="/catalog/">Catalog</a><div class="gh-menu gh-nav-group"><button type="button" class="gh-nav-link gh-nav-toggle" data-menu-toggle aria-expanded="false">Engineering &amp; Evidence<svg class="gh-chevron" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 8l4 4 4-4"/></svg></button><div class="gh-pop gh-pop-wide" data-menu hidden><a class="gh-pop-link" href="/engineering-evidence/"><strong>Overview</strong><span>What this section covers</span></a><a class="gh-pop-link" href="/engineering-evidence/case-studies/"><strong>Case studies</strong><span>Plugins with the strongest evidence</span></a><a class="gh-pop-link" href="/engineering-evidence/jetbrains-platform-tickets/"><strong>JetBrains Platform tickets</strong><span>Root-cause reports in the IntelliJ Platform tracker</span></a></div></div><a class="gh-nav-link" href="/methodology/">Methodology</a><a class="gh-nav-link" href="/contact/">Contact</a><a class="btn primary gh-nav-cta" href="/#work-with-joel" data-goatcounter-click="cta-nav-hire-mobile">Work with Joel</a></nav>
+    <div class="gh-tools">
+      <button type="button" class="gh-search-btn" data-search-open aria-haspopup="dialog" aria-expanded="false" aria-label="Search plugins and pages"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M12.6 12.6 17 17"/></svg><span class="gh-search-label">Search</span><kbd class="gh-search-kbd">Ctrl K</kbd></button>
+      <!-- LANG:START --><div class="gh-menu gh-lang"><button type="button" class="gh-icon-btn gh-lang-btn" data-menu-toggle aria-expanded="false" aria-label="Language"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5"/><path d="M2.5 10h15M10 2.5c2.2 2.3 3.2 4.8 3.2 7.5s-1 5.2-3.2 7.5c-2.2-2.3-3.2-4.8-3.2-7.5s1-5.2 3.2-7.5z"/></svg><span class="gh-lang-code">EN</span></button><div class="gh-pop" data-menu hidden role="group" aria-label="Language"><a class="gh-pop-item" href="/eula/" hreflang="en" lang="en" aria-current="true">English</a><a class="gh-pop-item" href="/es/eula/" hreflang="es" lang="es">Espa&ntilde;ol</a></div></div><!-- LANG:END -->
+      <div class="gh-menu">
+        <button type="button" class="gh-icon-btn" data-menu-toggle aria-expanded="false" aria-label="Color theme"><span class="gh-ico gh-ico-system"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2.5" y="3.5" width="15" height="10" rx="1.5"/><path d="M7 17h6M10 13.5V17"/></svg></span><span class="gh-ico gh-ico-light"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.5"/><path d="M10 1.8v2M10 16.2v2M1.8 10h2M16.2 10h2M4.2 4.2l1.4 1.4M14.4 14.4l1.4 1.4M4.2 15.8l1.4-1.4M14.4 5.6l1.4-1.4"/></svg></span><span class="gh-ico gh-ico-dark"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16.5 12.3A7 7 0 0 1 7.7 3.5a7 7 0 1 0 8.8 8.8z"/></svg></span></button>
+        <div class="gh-pop" data-menu hidden role="group" aria-label="Color theme"><button type="button" class="gh-pop-item" data-theme-choice="system" aria-pressed="false"><span class="gh-ico"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2.5" y="3.5" width="15" height="10" rx="1.5"/><path d="M7 17h6M10 13.5V17"/></svg></span>System</button><button type="button" class="gh-pop-item" data-theme-choice="light" aria-pressed="false"><span class="gh-ico"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.5"/><path d="M10 1.8v2M10 16.2v2M1.8 10h2M16.2 10h2M4.2 4.2l1.4 1.4M14.4 14.4l1.4 1.4M4.2 15.8l1.4-1.4M14.4 5.6l1.4-1.4"/></svg></span>Light</button><button type="button" class="gh-pop-item" data-theme-choice="dark" aria-pressed="false"><span class="gh-ico"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16.5 12.3A7 7 0 0 1 7.7 3.5a7 7 0 1 0 8.8 8.8z"/></svg></span>Dark</button></div>
+      </div>
+      <a class="btn primary gh-cta" href="/#work-with-joel" data-goatcounter-click="cta-nav-hire">Work with Joel</a>
+      <button type="button" class="gh-burger" id="topbarBurger" aria-label="Toggle navigation" aria-expanded="false" aria-controls="siteNav"><span></span></button>
+    </div>
+  </div>
+</header>
+<!-- CHROME:HEADER:END -->
+
+<div class="app-main">
+<div class="main-with-rail">
+<main class="methodology-main">
+  <div class="page-hero band-dark gh-page-header">
+    <p class="contact-kicker">Gap Hunter Labs</p>
+    <h1>End User License Agreement</h1>
+    <p class="contact-lead" style="margin-bottom:0"><strong>Version 1.0.</strong> Effective date: 8 October 2026. Published at <a href="https://gaphunterlabs.github.io/eula/">https://gaphunterlabs.github.io/eula/</a>. A Spanish version is available at <a href="https://gaphunterlabs.github.io/es/eula/">https://gaphunterlabs.github.io/es/eula/</a>; Section 12 explains which version prevails.</p>
+  </div>
+
+  <div class="disclosure-list">
+    <section class="disclosure">
+      <p>This End User License Agreement ("EULA") is based on the Standard EULA of the JetBrains Marketplace Developer Agreement (version of 12 February 2025), adapted for the plugins listed below. It covers these plugins for JetBrains IDEs (each, a "Plugin"):</p>
+      <ul>
+        <li>Ansible Companion</li>
+        <li>API Security Companion</li>
+        <li>Firestore Companion</li>
+        <li>Mermaid Companion</li>
+        <li>OpenAPI Companion</li>
+        <li>Refactor Simulator</li>
+      </ul>
+      <p>This EULA is concluded between You and the Developer with respect to the Plugin. The Developer is the licensor of the Plugin. JetBrains is not a party to this EULA and is not responsible for or liable to You under or in connection with this EULA or the Plugin.</p>
+    </section>
+
+    <section class="disclosure" aria-labelledby="eula-1">
+      <h2 id="eula-1">1. Definitions</h2>
+      <p>"Confirmation" means an email from JetBrains confirming Your rights to use a Paid Plugin and containing important information about Your license or Subscription.</p>
+      <p>"Consumer" means an individual acting for purposes outside their trade, business, craft or profession, and any other person that the mandatory law applicable to You treats as a consumer.</p>
+      <p>"Developer" means Joel Diaz, an individual residing in Copacabana, Antioquia, Colombia, doing business as Gap Hunter Labs, contact email <a href="mailto:gaphunterlabs@gmail.com">gaphunterlabs@gmail.com</a>. JetBrains Marketplace shows the additional contact details that apply to the Developer as a trader on each Plugin's page.</p>
+      <p>"Documentation" means the latest versions of all online technical documentation available for a Plugin at JetBrains Marketplace and any other relevant Plugin documentation provided either by JetBrains or the Developer that applies to the Plugin.</p>
+      <p>"Fallback Date" means the date falling twelve (12) months prior to the date Your Subscription expired.</p>
+      <p>"Fallback Version" means the most recent Plugin Version that the Developer made available for public purchase prior to the Fallback Date, along with any bug-fix updates for that Plugin Version. The Fallback Version does not include any Plugin updates or upgrades other than bug-fix updates that You may have used in the period between the Fallback Date and the expiration date of Your Subscription. For more information, see FAQ available at <a href="https://sales.jetbrains.com/hc/en-gb" target="_blank" rel="noopener">https://sales.jetbrains.com/hc/en-gb</a>.</p>
+      <p>"Free Features" means the features of a Plugin that can be used without a paid license, as identified in the Documentation. OpenAPI Companion has no Free Features.</p>
+      <p>"Free Plugin" means a Plugin that is offered at no cost.</p>
+      <p>"JetBrains" means JetBrains s.r.o., which has its registered office at Na Hřebenech II 1718/8, Prague, 14000, Czech Republic, registered with the Commercial Register kept by the Municipal Court of Prague, Section C, file 86211, ID.Nr.: 265 02 275, together with the JetBrains Affiliates and resellers through which You buy a license.</p>
+      <p>"JetBrains Affiliate" means the subsidiary and/or any associated companies of JetBrains.</p>
+      <p>"JetBrains Marketplace" means any platform operated by JetBrains or a JetBrains Affiliate on which JetBrains or a JetBrains Affiliate markets Plugins for JetBrains Products, including the website <a href="https://plugins.jetbrains.com" target="_blank" rel="noopener">https://plugins.jetbrains.com</a> and/or any other website or other platform, whether named JetBrains Marketplace, JetBrains Plugins Repository, or otherwise.</p>
+      <p>"JetBrains Product" means any software program or service made available by JetBrains.</p>
+      <p>"Paid Features" means the features of a Plugin that require a paid license, as identified in the Documentation. All the features of OpenAPI Companion are Paid Features.</p>
+      <p>"Paid Plugin" means a Plugin, or the Paid Features of a Plugin, offered for a fee (either a one-time license fee or a recurring subscription fee).</p>
+      <p>"Plugin Users" means users that are able to access and use the Plugin concurrently.</p>
+      <p>"Plugin Version" means a release, update, or upgrade of a particular Plugin that is not identified by the Developer as being made for the purpose of fixing software bugs.</p>
+      <p>"Source Code" means the source code of a Plugin that the Developer publishes at <a href="https://github.com/GapHunterLabs" target="_blank" rel="noopener">https://github.com/GapHunterLabs</a> under the Apache License, Version 2.0.</p>
+      <p>"Subscription" means Your right to use a Paid Plugin during the Subscription Period.</p>
+      <p>"Subscription Period" means the Subscription period described in Your Confirmation.</p>
+      <p>"You" means an individual or an entity concluding this EULA.</p>
+    </section>
+
+    <section class="disclosure" aria-labelledby="eula-2">
+      <h2 id="eula-2">2. Grant of License</h2>
+      <p>2.1. <strong>License.</strong> The Developer hereby grants You a limited, worldwide, non-exclusive, non-transferable license to use the Plugin (including any generally available updates and upgrades released during Your rightful use of the Plugin) as long as the use is in line with Your Confirmation, the Documentation, and the limits set out in this EULA. You may:</p>
+      <ul>
+        <li>install the Plugin;</li>
+        <li>use the Plugin subject to the limits described in Your Confirmation (if any); and</li>
+        <li>make backup copies of the Plugin for archival purposes.</li>
+      </ul>
+      <p>2.2. <strong>Restrictions.</strong> Except as permitted by the Apache License, Version 2.0 for the Source Code (Section 5) or by applicable law, You may not:</p>
+      <ul>
+        <li>remove, disable or circumvent the license verification of a Plugin obtained through JetBrains Marketplace, or use its Paid Features without a valid license or trial;</li>
+        <li>allow more Plugin Users to use the Paid Features than Your Confirmation allows; or</li>
+        <li>sublicense, resell, rent or share a license bought for Paid Features.</li>
+      </ul>
+      <p>Nothing in this EULA restricts any act that applicable law allows regardless of a contract, such as making a backup copy, or observing, studying or testing how the Plugin works, or decompiling it where that is necessary for interoperability.</p>
+      <p>2.3. <strong>Duration of License.</strong> The license granted under this EULA can be provided as:</p>
+      <ul>
+        <li>perpetual in case of Free Plugins, Free Features or Paid Plugins for which You are charged a one-time license fee, and</li>
+        <li>time-limited for the duration of Your Subscription Period, in case of Paid Plugins for which You pay an annual or monthly Subscription fee.</li>
+      </ul>
+      <p>For more details about the type of Paid Plugin, see the information in Your Confirmation.</p>
+      <p>2.4. <strong>Free Features.</strong> You may use the Free Features of a Plugin without a paid license, for any lawful purpose, including commercial use, on any number of devices.</p>
+      <p>2.5. <strong>Purchases.</strong> JetBrains sells the licenses for Paid Features and handles payments, invoices, refunds and withdrawal under its own terms of purchase. The Developer does not charge You directly.</p>
+    </section>
+
+    <section class="disclosure" aria-labelledby="eula-3">
+      <h2 id="eula-3">3. Subscription</h2>
+      <p>3.1. <strong>Subscription Limits.</strong> If You purchased a Plugin Subscription, You must use the Paid Plugin in accordance with the limits described in Your subscription plan (e.g., You must ensure that the maximum number of Plugin Users does not exceed the number of Plugin Users for which You have purchased the Subscription).</p>
+      <p>3.2. <strong>Subscription Period.</strong> The Subscription Period can be either annual or monthly.</p>
+      <p>3.3. <strong>Fallback License.</strong> If the Plugin is provided with a Fallback license according to the Confirmation, following the expiration of the Subscription Period without a renewal, Your license to use the Plugin as stipulated in Section 2 shall continue on a perpetual, royalty-free, non-exclusive, and non-transferable basis with respect to the Fallback Version of the Plugin (including all limitations). The granting of the Fallback license is expressly contingent upon Your compliance with this EULA, including Your payment of the applicable Subscription fees for at least the preceding 12 months in full and without interruptions.</p>
+    </section>
+
+    <section class="disclosure" aria-labelledby="eula-4">
+      <h2 id="eula-4">4. Intellectual Property</h2>
+      <p>The Plugin is protected by copyright and other intellectual property laws and treaties. The Developer or its licensors own all title, copyright, and other intellectual property rights to the Plugin.</p>
+    </section>
+
+    <section class="disclosure" aria-labelledby="eula-5">
+      <h2 id="eula-5">5. Source Code and open-source components</h2>
+      <p>5.1. The Source Code is licensed under the Apache License, Version 2.0, which is a separate license. Nothing in this EULA limits, conditions or revokes any right You have under that license with respect to the Source Code or any work You build from it.</p>
+      <p>5.2. This EULA governs the use of the Plugins distributed through JetBrains Marketplace, the paid license for their Paid Features, and the warranty, liability and support terms that apply to them.</p>
+      <p>5.3. The Plugins include third-party open-source components. Each component is licensed under its own terms, which prevail over this EULA for that component.</p>
+    </section>
+
+    <section class="disclosure" aria-labelledby="eula-6">
+      <h2 id="eula-6">6. Disclaimer of Warranty</h2>
+      <p>6.1. ALL PLUGINS ARE PROVIDED TO YOU ON AN "AS-IS" AND "AS AVAILABLE" BASIS WITHOUT WARRANTIES. YOUR USE OF PLUGINS IS AT YOUR OWN RISK. THE DEVELOPER PROVIDES NO WARRANTY AS TO THE PLUGIN'S USE OR PERFORMANCE. TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, THE DEVELOPER DISCLAIMS ALL OTHER WARRANTIES AND CONDITIONS, EITHER EXPRESS OR IMPLIED, INCLUDING, BUT NOT LIMITED TO, IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE, TITLE, AND NON-INFRINGEMENT, WITH REGARD TO THE PLUGIN, AND THE PROVISION OF OR FAILURE TO PROVIDE SUPPORT SERVICES. THE DEVELOPER DOES NOT WARRANT THAT THE PLUGIN IS ACCURATE, RELIABLE, OR CORRECT; THAT THE PLUGIN MEETS YOUR REQUIREMENTS; THAT THE PLUGIN WILL BE AVAILABLE AT ANY PARTICULAR TIME OR LOCATION, UNINTERRUPTED, OR SECURE; THAT ANY DEFECTS OR ERRORS WILL BE CORRECTED; OR THAT THE PLUGIN IS FREE OF VIRUSES OR OTHER HARMFUL COMPONENTS. EXCEPT AS REQUIRED BY APPLICABLE LAWS, ANY UPDATES AND UPGRADES TO THE PLUGIN WILL ONLY BE PROVIDED ON AN "AS AVAILABLE" BASIS, I.E., AT THE DEVELOPER'S SOLE DISCRETION.</p>
+      <p>6.2. <strong>Consumers.</strong> If You are a Consumer, Section 6.1 does not affect the warranties and guarantees of conformity that the law of Your country gives You and that cannot be excluded by contract.</p>
+      <p>6.3. <strong>Consumers in Colombia.</strong> For Consumers in Colombia, the legal warranty of Law 1480 of 2011 applies to the Paid Features for one (1) year from the purchase or renewal of the license. If the Paid Features do not work as described in the Documentation, You may choose between the correction of the defect and the refund of the price paid for the affected period. To use this warranty, write to <a href="mailto:gaphunterlabs@gmail.com">gaphunterlabs@gmail.com</a>. A refund is processed through JetBrains.</p>
+    </section>
+
+    <section class="disclosure" aria-labelledby="eula-7">
+      <h2 id="eula-7">7. Limitation of Liability</h2>
+      <p>7.1. TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, THE DEVELOPER SHALL NOT BE LIABLE TO YOU FOR ANY LOST PROFITS OR CONSEQUENTIAL DAMAGES, NO MATTER THE CAUSE OF SAID PROFITS OR DAMAGES, AND IN NO EVENT WILL THE DEVELOPER'S AGGREGATE LIABILITY ARISING OUT OF OR RELATED TO THIS AGREEMENT OR THE USE OF THE PLUGIN EXCEED THE GREATER OF (A) THE FEES WHICH YOU PAID FOR THE PLUGIN VIA JETBRAINS MARKETPLACE IN THE TWELVE-MONTH PERIOD PRECEDING THE CLAIM, AND (B) ONE HUNDRED US DOLLARS (USD 100). THIS LIMITATION WILL APPLY EVEN IF THE DEVELOPER HAS BEEN ADVISED OF THE POSSIBILITY OF THE LIABILITY EXCEEDING THE AMOUNT AND NOTWITHSTANDING ANY FAILURE OF ESSENTIAL PURPOSE OF ANY LIMITED REMEDY.</p>
+      <p>7.2. Section 7.1 does not limit or exclude liability for fraud or wilful misconduct, gross negligence, death or personal injury, or any other liability that cannot be limited or excluded under applicable law, including the mandatory rights of Consumers.</p>
+      <p>7.3. JETBRAINS' LIABILITY IS EXCLUDED IN ITS ENTIRETY AS JETBRAINS IS NOT A PARTY TO THE CONTRACTUAL RELATIONSHIP BETWEEN THE DEVELOPER AND YOU.</p>
+    </section>
+
+    <section class="disclosure" aria-labelledby="eula-8">
+      <h2 id="eula-8">8. Support and security updates</h2>
+      <p>8.1. The Developer provides support for the Paid Features by email at <a href="mailto:gaphunterlabs@gmail.com">gaphunterlabs@gmail.com</a> and through each Plugin's GitHub issue tracker, during normal business hours in Colombia, and uses commercially reasonable efforts to respond within two (2) business days to requests that JetBrains identifies as critical and within five (5) business days to all other requests.</p>
+      <p>8.2. The Developer releases fixes for security vulnerabilities for the latest version of each Plugin published on JetBrains Marketplace, at least until 31 December 2031. Report suspected vulnerabilities privately, as described in the <code>SECURITY.md</code> file of each Plugin's repository.</p>
+      <p>8.3. If You are a Consumer, the Developer supplies the updates needed to keep the Plugin in conformity with this EULA for as long as applicable law requires, including throughout Your Subscription Period.</p>
+    </section>
+
+    <section class="disclosure" aria-labelledby="eula-9">
+      <h2 id="eula-9">9. Privacy</h2>
+      <p>Each Plugin's privacy notice (the <code>PRIVACY.md</code> file in its repository at <a href="https://github.com/GapHunterLabs" target="_blank" rel="noopener">https://github.com/GapHunterLabs</a>) describes what the Plugin stores and whether it connects to any service.</p>
+    </section>
+
+    <section class="disclosure" aria-labelledby="eula-10">
+      <h2 id="eula-10">10. Changes to this EULA</h2>
+      <p>The Developer may publish new versions of this EULA at the address shown at the top of this document and will announce material changes at least thirty (30) days before they take effect. A new version applies to You only from the start of Your next Subscription Period, or for a Plugin version released after its effective date. It never applies retroactively.</p>
+    </section>
+
+    <section class="disclosure" aria-labelledby="eula-11">
+      <h2 id="eula-11">11. Governing law</h2>
+      <p>This EULA is governed by the laws of the Republic of Colombia, excluding its conflict-of-laws rules. The United Nations Convention on Contracts for the International Sale of Goods does not apply. If You are a Consumer, You keep the protection of the mandatory law of the country where You habitually reside, and nothing in this EULA limits Your right to bring proceedings there.</p>
+    </section>
+
+    <section class="disclosure" aria-labelledby="eula-12">
+      <h2 id="eula-12">12. Language</h2>
+      <p>This EULA is provided in English and in Spanish. For Consumers in Colombia, the Spanish version prevails. In every other case, the English version prevails if the two versions differ.</p>
+    </section>
+
+    <section class="disclosure" aria-labelledby="eula-13">
+      <h2 id="eula-13">13. Contact and version</h2>
+      <p>Notices and questions about this EULA: <a href="mailto:gaphunterlabs@gmail.com">gaphunterlabs@gmail.com</a>. Version 1.0, effective 8 October 2026.</p>
+    </section>
+  </div>
+</main>
+<aside class="page-insights" id="pageInsights" aria-label="Platform insights" hidden>
+  <div class="pi-card">
+    <p class="pi-eyebrow">Platform Insights</p>
+    <div class="pi-stats">
+      <div><span class="pi-stat-num" id="piPlugins">—</span><span class="pi-stat-label">Plugins active</span></div>
+      <div><span class="pi-stat-num" id="piDownloads">—</span><span class="pi-stat-label">Total downloads</span></div>
+    </div>
+  </div>
+  <div class="pi-card">
+    <p class="pi-eyebrow">Categories</p>
+    <div class="pi-categories" id="piCategories"></div>
+  </div>
+  <div class="pi-card" id="piFeaturedCard" hidden>
+    <p class="pi-eyebrow">Featured plugin</p>
+    <a class="pi-featured" id="piFeatured"></a>
+  </div>
+</aside>
+</div>
+</div>
+</div>
+<!-- CHROME:FOOTER:START -->
+<footer class="site-footer gh-footer band-dark">
+  <div class="gh-footer-inner">
+    <div class="gh-footer-top">
+      <div class="gh-footer-brand">
+        <a class="gh-brand" href="/"><svg class="gh-logo" viewBox="0 0 1024 1024" aria-hidden="true"><path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#0151FC"/><path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z" fill="#01B3FD"/><polygon points="569,413 695,413 695,539 569,539" fill="#02F172"/></svg><span class="gh-brand-name">Gap Hunter Labs</span></a>
+        <p>Focused JetBrains and VS Code plugins for documented gaps in developer tooling, and custom tooling for teams.</p>
+        <a class="btn primary" href="/#work-with-joel" data-goatcounter-click="cta-footer-hire">Work with Joel</a>
+      </div>
+      <nav class="gh-footer-cols" aria-label="Footer"><div class="gh-footer-col"><p class="gh-footer-title">Product</p><a href="/catalog/">Plugin catalog</a><a href="/catalog/?pricing=paid">Paid &amp; Pro plugins</a><a href="/catalog/?platform=vscode">VS Code extensions</a></div><div class="gh-footer-col"><p class="gh-footer-title">Engineering &amp; Evidence</p><a href="/engineering-evidence/">Overview</a><a href="/engineering-evidence/case-studies/">Case studies</a><a href="/engineering-evidence/jetbrains-platform-tickets/">JetBrains Platform tickets</a></div><div class="gh-footer-col"><p class="gh-footer-title">Company</p><a href="/#work-with-joel">Work with Joel</a><a href="/methodology/">Methodology</a><a href="/contact/">Contact</a></div><div class="gh-footer-col"><p class="gh-footer-title">Marketplaces</p><a href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" target="_blank" rel="noopener">JetBrains Marketplace</a><a href="https://marketplace.visualstudio.com/publishers/GapHunterLabs" target="_blank" rel="noopener">VS Code Marketplace</a><a href="https://github.com/GapHunterLabs" target="_blank" rel="noopener">GitHub</a></div><div class="gh-footer-col"><p class="gh-footer-title">Legal</p><a href="/security/">Security</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/eula/" aria-current="page">EULA</a></div></nav>
+    </div>
+    <div class="gh-footer-bottom">
+      <p class="gh-footer-legal">&copy; 2026 Gap Hunter Labs. Download data is synced twice daily from the public JetBrains Marketplace and GitHub APIs.</p>
+      <div class="gh-footer-social"><a class="gh-social" href="https://github.com/GapHunterLabs" target="_blank" rel="noopener" aria-label="Gap Hunter Labs on GitHub"><svg viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" stroke="none" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></a><a class="gh-social" href="https://www.linkedin.com/in/joel-diaz-82687b428/?locale=en" target="_blank" rel="noopener" aria-label="Joel Diaz on LinkedIn"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" stroke="none" d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg></a><a class="gh-social" href="https://x.com/GapHunterLabs" target="_blank" rel="noopener" aria-label="Gap Hunter Labs on X"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" stroke="none" d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a></div>
+      <div class="gh-seg" role="group" aria-label="Color theme"><button type="button" class="gh-seg-btn" data-theme-choice="system" aria-pressed="false" aria-label="System theme" title="System"><svg viewBox="0 0 20 20" aria-hidden="true"><rect x="2.5" y="3.5" width="15" height="10" rx="1.5"/><path d="M7 17h6M10 13.5V17"/></svg></button><button type="button" class="gh-seg-btn" data-theme-choice="light" aria-pressed="false" aria-label="Light theme" title="Light"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="3.5"/><path d="M10 1.8v2M10 16.2v2M1.8 10h2M16.2 10h2M4.2 4.2l1.4 1.4M14.4 14.4l1.4 1.4M4.2 15.8l1.4-1.4M14.4 5.6l1.4-1.4"/></svg></button><button type="button" class="gh-seg-btn" data-theme-choice="dark" aria-pressed="false" aria-label="Dark theme" title="Dark"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M16.5 12.3A7 7 0 0 1 7.7 3.5a7 7 0 1 0 8.8 8.8z"/></svg></button></div>
+    </div>
+  </div>
+</footer>
+<!-- CHROME:FOOTER:END -->
+<script src="/js/catalog-shared.js?v=c626ce5b"></script>
+<script src="/js/security-rail.js?v=962edda8" defer></script>
+<script src="/js/shell.js?v=9e040297" defer></script>
+<script data-goatcounter="https://gaphunterlabs.goatcounter.com/count"
+        async src="https://gc.zgo.at/count.js"></script>
+</body>
+</html>

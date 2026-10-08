@@ -18,7 +18,11 @@
   </url>
   <url>
     <loc>https://gaphunterlabs.github.io/terms/</loc>
-    <lastmod>2026-09-24</lastmod>
+    <lastmod>2026-10-08</lastmod>
+  </url>
+  <url>
+    <loc>https://gaphunterlabs.github.io/eula/</loc>
+    <lastmod>2026-10-08</lastmod>
   </url>
   <url>
     <loc>https://gaphunterlabs.github.io/security/</loc>
@@ -787,6 +791,10 @@
   <url>
     <loc>https://gaphunterlabs.github.io/es/catalogo/vscode/wrangler-config-companion/</loc>
     <lastmod>2026-09-28</lastmod>
+  </url>
+  <url>
+    <loc>https://gaphunterlabs.github.io/es/eula/</loc>
+    <lastmod>2026-10-08</lastmod>
   </url>
   <url>
     <loc>https://gaphunterlabs.github.io/catalog/mermaid-companion/</loc>
