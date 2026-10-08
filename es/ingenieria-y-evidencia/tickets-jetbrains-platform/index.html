@@ -253,7 +253,7 @@
       <div class="ticket-head">
         <a class="ticket-id" href="https://youtrack.jetbrains.com/issue/IJPL-257854" target="_blank" rel="noopener">IJPL-257854 &#8599;</a>
         <h3>Auto-test: the error check of DelayedDocumentWatcher blocks typing until the whole check ends</h3>
-        <span class="ticket-status is-submitted">Esperando respuesta</span>
+        <span class="ticket-status is-submitted">Enviado</span>
       </div>
       <p>Encontrado con el mismo control, durante una auditoría de componentes que trabajan en segundo plano después de cada edición. Con auto-test activado, <code>DelayedDocumentWatcher</code> espera una pausa de tipeo y luego revisa si cada archivo cambiado tiene errores de sintaxis (<code>PsiErrorElementUtil.hasErrors()</code>) en una sola acción de lectura bloqueante, en un hilo del pool. La tecla que retoma la escritura espera toda la revisión. Medido con el framework de tests de la plataforma sobre IntelliJ IDEA 2025.2: en un archivo de 50,000 líneas, esa tecla tardó 436 ms con el código actual, 48 ms sin auto-test y 73 ms con la revisión en una acción de lectura no bloqueante. El test de medición está adjunto al ticket, y el arreglo se propone en el <a href="https://github.com/JetBrains/intellij-community/pull/3685" target="_blank" rel="noopener">pull request #3685</a>.</p>
     </article>
