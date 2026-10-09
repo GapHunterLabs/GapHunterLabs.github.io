@@ -175,7 +175,7 @@
       "name": "Gap Hunter Labs",
       "url": "https://gaphunterlabs.github.io/",
       "email": "gaphunterlabs@gmail.com",
-      "description": "Gap Hunter Labs builds focused JetBrains and VS Code plugins for documented gaps in developer tooling, and offers custom static-analysis rules, CI/CD integration and private plugin distribution.",
+      "description": "Gap Hunter Labs builds focused JetBrains and VS Code plugins for documented gaps in developer tooling, and offers plugin performance audits, plugin updates for new IDE versions, dependency and CI/CD security reviews, and custom plugins with CI/CD integration and private distribution.",
       "logo": "https://gaphunterlabs.github.io/icon-512.png",
       "founder": {
         "@id": "https://gaphunterlabs.github.io/#joel"
@@ -188,7 +188,7 @@
       ],
       "hasOfferCatalog": {
         "@type": "OfferCatalog",
-        "name": "Custom developer tooling services",
+        "name": "Developer tooling services",
         "itemListElement": [
           {
             "@type": "Offer",
@@ -198,6 +198,20 @@
             "itemOffered": {
               "@type": "Service",
               "name": "Plugin performance audit"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Plugin update for new IntelliJ Platform versions"
+            }
+          },
+          {
+            "@type": "Offer",
+            "itemOffered": {
+              "@type": "Service",
+              "name": "Dependency and CI/CD security review"
             }
           },
           {
@@ -241,7 +255,7 @@
 }
 </script>
 <link rel="stylesheet" href="/css/theme.css?v=73412941">
-<link rel="stylesheet" href="/css/home.css?v=be0f8c7b">
+<link rel="stylesheet" href="/css/home.css?v=dd80b1b8">
 <link rel="stylesheet" href="/css/shell.css?v=12c9b263">
 </head>
 <body>
@@ -325,8 +339,8 @@
       </a>
       <a class="path-card path-card-strong" href="#work-with-joel" data-goatcounter-click="cta-path-companies">
         <span class="path-kicker">Empresas</span>
-        <strong>Auditorías de rendimiento y herramientas a medida</strong>
-        <span>Una auditoría de rendimiento a precio fijo para tu plugin IntelliJ, además de reglas de análisis estático a medida, integración en CI/CD y distribución privada de plugins.</span>
+        <strong>Auditorías, actualizaciones y herramientas a medida</strong>
+        <span>Una auditoría de rendimiento a precio fijo para tu plugin IntelliJ, actualizaciones para versiones nuevas del IDE, revisiones de seguridad de dependencias y CI/CD, y plugins a medida para tu equipo.</span>
         <span class="path-go">Trabaja con Joel</span>
       </a>
     </div>
@@ -425,7 +439,7 @@
   <section class="founder-section" id="work-with-joel" aria-labelledby="founderTitle">
     <div class="founder-lead">
       <p class="eyebrow">Trabaja con Joel</p>
-      <h2 id="founderTitle">Auditorías de rendimiento y herramientas a medida para plugins IntelliJ</h2>
+      <h2 id="founderTitle">Auditorías, actualizaciones y herramientas a medida para equipos de desarrollo</h2>
       <p class="founder-bio"><strong>Joel Diaz, fundador.</strong> Cursó estudios de Ingeniería de Sistemas y luego hizo carrera en producción industrial y logística. Hoy dirige un pipeline de construcción con controles de calidad de línea de producción: cada herramienta se observa, se detecta, se valida y se construye a partir de evidencia pública.</p>
       <p class="founder-meta">Alcance cerrado &middot; entregables por escrito &middot; asíncrono por defecto &middot; UTC&minus;5<br>Abierto a proyectos de consultoría y a oportunidades seleccionadas.</p>
       <div class="hero-actions">
@@ -440,16 +454,17 @@
         <a class="btn primary" href="/es/auditoria-de-rendimiento/" data-goatcounter-click="cta-founder-audit">Ver qué cubre la auditoría</a>
       </article>
       <article class="offer-card">
-        <h3>Reglas de análisis estático a medida</h3>
-        <p>Inspecciones adaptadas a tu código, como API internas, formatos de secretos y patrones de seguridad, entregadas como un plugin que tu equipo instala.</p>
+        <h3>Actualización de plugins para versiones nuevas del IDE</h3>
+        <p>Tu plugin compilado y verificado contra las versiones de IntelliJ que necesitas soportar: API eliminadas u obsoletas, el modo K2 de Kotlin, el IntelliJ Platform Gradle Plugin 2.x y los fallos de Plugin Verifier. Es el proceso que mantiene nuestro propio catálogo compatible con cada versión nueva. Precio fijo, cotizado tras una primera revisión de tu plugin.</p>
       </article>
       <article class="offer-card">
-        <h3>Integración en CI/CD</h3>
-        <p>Las mismas comprobaciones ejecutándose en GitHub Actions o GitLab CI, para que los problemas aparezcan antes de la revisión de código.</p>
+        <h3>Revisión de seguridad de dependencias y CI/CD</h3>
+        <p>Una revisión de solo lectura de los repositorios que elijas: vulnerabilidades conocidas en las dependencias de producción, riesgos de dependency confusion en manifiestos y lockfiles, y permisos de los workflows de CI/CD, con OSV-Scanner y OpenSSF Scorecard. Opcional: preparación para la Ley de Ciberresiliencia de la UE (CRA): política de seguridad, security.txt, SBOM y el flujo de notificación de vulnerabilidades (técnica, no asesoría legal). Informe escrito, precio fijo según el alcance. Lo explotable se reporta primero por tu canal de seguridad.</p>
+        <a class="btn" href="/es/ingenieria-y-evidencia/reportes-de-seguridad/" data-goatcounter-click="cta-founder-security">Ver los reportes de seguridad</a>
       </article>
       <article class="offer-card">
-        <h3>Distribución privada de plugins</h3>
-        <p>Herramientas internas empaquetadas y servidas a tus desarrolladores desde un repositorio privado de plugins.</p>
+        <h3>Plugins e inspecciones a medida</h3>
+        <p>Inspecciones adaptadas a tu código, como API internas, formatos de secretos y patrones de seguridad, entregadas como un plugin que tu equipo instala. Las mismas comprobaciones pueden ejecutarse en GitHub Actions o GitLab CI, y el plugin puede servirse desde un repositorio privado de plugins.</p>
       </article>
     </div>
   </section>

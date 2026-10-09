@@ -173,7 +173,7 @@ for slug in ("catalog", "methodology", "contact", "security", "engineering-evide
 # Security/Privacy/Terms viven en el pie: su enlace activo se marca ahi.
 import html as _html
 TOP_LABELS = ["Catalog", "Engineering & Evidence", "Methodology", "Contact"]
-SUB_LABELS = ["Overview", "Case studies", "JetBrains Platform tickets"]
+SUB_LABELS = ["Overview", "Case studies", "JetBrains Platform tickets", "Open-source security reports"]
 for display_name, rel_path, active, footer_active in (
     ("index.html", "index.html", None, None),
     ("catalog.html", "catalog/index.html", "Catalog", None),

@@ -51,13 +51,16 @@
       label: 'hire',
       mail: true,
       title: t('Work with Joel', 'Trabaja con Joel'),
-      sub: t('Custom static-analysis rules, CI/CD integration, private plugin distribution or team licenses. Joel replies personally by email.',
-             'Reglas de análisis estático a medida, integración en CI/CD, distribución privada de plugins o licencias de equipo. Joel responde personalmente por correo.'),
+      sub: t('Performance audits, plugin updates, security reviews, custom plugins or team licenses. Joel replies personally by email.',
+             'Auditorías de rendimiento, actualización de plugins, revisiones de seguridad, plugins a medida o licencias de equipo. Joel responde personalmente por correo.'),
       submitLabel: t('Email Joel', 'Escribir a Joel'),
       fields: [
         { name: 'org', label: t('Company', 'Empresa'), type: 'text', required: true, placeholder: t('Your company or team', 'Tu empresa o equipo') },
         { name: 'service', label: t('What do you need?', '¿Qué necesitas?'), prompt: t('Select one', 'Elige una opción'), type: 'select', required: true,
-          options: [t('Custom static-analysis rules', 'Reglas de análisis estático a medida'), t('CI/CD integration', 'Integración en CI/CD'),
+          options: [t('Plugin performance audit', 'Auditoría de rendimiento de un plugin'),
+                    t('Plugin update for new IDE versions', 'Actualización de un plugin para versiones nuevas del IDE'),
+                    t('Dependency and CI/CD security review', 'Revisión de seguridad de dependencias y CI/CD'),
+                    t('Custom static-analysis rules', 'Reglas de análisis estático a medida'), t('CI/CD integration', 'Integración en CI/CD'),
                     t('Private plugin distribution', 'Distribución privada de plugins'), TEAM_OPTION, t('Something else', 'Otra cosa')] },
         { name: 'message', label: t('Details', 'Detalles'), type: 'textarea', max: 1500, required: true, placeholder: t('Your stack, what the tool should catch or do, and any timeline…', 'Tu stack, qué debe detectar o hacer la herramienta y los plazos…') }
       ]
