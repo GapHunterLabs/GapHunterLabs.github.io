@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-08 11:41:32 UTC",
+  "generatedAt": "2026-10-09 01:39:37 UTC",
   "totalPlugins": 146,
   "totalDownloads": 9666,
   "pending": 0,
@@ -7,10 +7,6 @@
   "totalReviews": 0,
   "avgRating": null,
   "trend7d": [
-    {
-      "date": "2026-10-02",
-      "totalDownloads": 8845
-    },
     {
       "date": "2026-10-03",
       "totalDownloads": 8941
@@ -34,45 +30,13 @@
     {
       "date": "2026-10-08",
       "totalDownloads": 9666
+    },
+    {
+      "date": "2026-10-09",
+      "totalDownloads": 9666
     }
   ],
-  "recentChanges": [
-    {
-      "date": "2026-10-08",
-      "type": "growth",
-      "name": "Import Cost Companion",
-      "niche": "JS/TS Tooling",
-      "delta": 18
-    },
-    {
-      "date": "2026-10-08",
-      "type": "growth",
-      "name": "Mermaid Companion",
-      "niche": "Diagrams",
-      "delta": 16
-    },
-    {
-      "date": "2026-10-08",
-      "type": "growth",
-      "name": "Background ReadAction Freeze Companion",
-      "niche": "Concurrency / Async Bugs",
-      "delta": 13
-    },
-    {
-      "date": "2026-10-08",
-      "type": "growth",
-      "name": "Refactor Simulator",
-      "niche": "Refactoring Tools",
-      "delta": 10
-    },
-    {
-      "date": "2026-10-08",
-      "type": "growth",
-      "name": "Go Timer Leak Companion",
-      "niche": "Code Quality / Logging",
-      "delta": 10
-    }
-  ],
+  "recentChanges": [],
   "plugins": [
     {
       "xmlId": "dev.gaphunter.mermaidcompanion",
