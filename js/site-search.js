@@ -5,7 +5,7 @@
    accesibilidad: dialogo modal + combobox con listbox (aria-activedescendant). */
 (function () {
   'use strict';
-  var DATA_URL = /*DATA_URL*/'/js/search-data.js?v=d25e4514'/*ENDDATA_URL*/;
+  var DATA_URL = /*DATA_URL*/'/js/search-data.js?v=d459e41d'/*ENDDATA_URL*/;
   var ES = document.documentElement.lang === 'es';
   var LOCALE = ES ? 'es-ES' : 'en-US';
   var T = ES ? {
