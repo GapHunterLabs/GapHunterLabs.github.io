@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-10 10:52:58 UTC",
+  "generatedAt": "2026-10-11 00:38:38 UTC",
   "totalPlugins": 146,
   "totalDownloads": 10012,
   "pending": 0,
@@ -7,10 +7,6 @@
   "totalReviews": 0,
   "avgRating": null,
   "trend7d": [
-    {
-      "date": "2026-10-04",
-      "totalDownloads": 9016
-    },
     {
       "date": "2026-10-05",
       "totalDownloads": 9075
@@ -34,45 +30,13 @@
     {
       "date": "2026-10-10",
       "totalDownloads": 10012
+    },
+    {
+      "date": "2026-10-11",
+      "totalDownloads": 10012
     }
   ],
-  "recentChanges": [
-    {
-      "date": "2026-10-10",
-      "type": "growth",
-      "name": "Refactor Simulator",
-      "niche": "Refactoring Tools",
-      "delta": 10
-    },
-    {
-      "date": "2026-10-10",
-      "type": "growth",
-      "name": "Mermaid Companion",
-      "niche": "Diagrams",
-      "delta": 10
-    },
-    {
-      "date": "2026-10-10",
-      "type": "growth",
-      "name": "API Security Companion",
-      "niche": "API Security",
-      "delta": 9
-    },
-    {
-      "date": "2026-10-10",
-      "type": "growth",
-      "name": "Dependency Vulnerability Companion",
-      "niche": "Dependency / SCA Security",
-      "delta": 6
-    },
-    {
-      "date": "2026-10-10",
-      "type": "growth",
-      "name": "PHP Composer Script Companion",
-      "niche": "Node.js / npm Tooling",
-      "delta": 4
-    }
-  ],
+  "recentChanges": [],
   "plugins": [
     {
       "xmlId": "dev.gaphunter.mermaidcompanion",
