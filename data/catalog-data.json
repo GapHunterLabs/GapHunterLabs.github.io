@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-11 11:05:26 UTC",
+  "generatedAt": "2026-10-12 00:55:18 UTC",
   "totalPlugins": 146,
   "totalDownloads": 10169,
   "pending": 0,
@@ -7,10 +7,6 @@
   "totalReviews": 0,
   "avgRating": null,
   "trend7d": [
-    {
-      "date": "2026-10-05",
-      "totalDownloads": 9075
-    },
     {
       "date": "2026-10-06",
       "totalDownloads": 9140
@@ -34,45 +30,13 @@
     {
       "date": "2026-10-11",
       "totalDownloads": 10169
+    },
+    {
+      "date": "2026-10-12",
+      "totalDownloads": 10169
     }
   ],
-  "recentChanges": [
-    {
-      "date": "2026-10-11",
-      "type": "growth",
-      "name": "React Native Companion",
-      "niche": "React Native Tooling",
-      "delta": 6
-    },
-    {
-      "date": "2026-10-11",
-      "type": "growth",
-      "name": "Mermaid Companion",
-      "niche": "Diagrams",
-      "delta": 5
-    },
-    {
-      "date": "2026-10-11",
-      "type": "growth",
-      "name": "Kafka Topic Feedback-Loop Companion",
-      "niche": "Kafka / Messaging Bugs",
-      "delta": 4
-    },
-    {
-      "date": "2026-10-11",
-      "type": "growth",
-      "name": "K8s Label-Selector Exposure Companion",
-      "niche": "Kubernetes Security",
-      "delta": 4
-    },
-    {
-      "date": "2026-10-11",
-      "type": "growth",
-      "name": "JDBC Double-Close Companion",
-      "niche": "Resource Leak Detection",
-      "delta": 4
-    }
-  ],
+  "recentChanges": [],
   "plugins": [
     {
       "xmlId": "dev.gaphunter.mermaidcompanion",
