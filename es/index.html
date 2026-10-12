@@ -125,8 +125,9 @@
      social-preview metadata before -- sharing the link in Slack/
      Discord/LinkedIn/X rendered as a bare URL with no title, blurb, or
      image. og-image.png is a deliberately timeless static asset (no
-     live catalog numbers baked in) so it never needs regenerating by
-     the twice-daily refresh workflow; the description text below
+     live catalog numbers baked in) so the twice-daily refresh
+     workflow never regenerates it (the ?v= query busts social caches
+     after the 2026-10-12 redesign); the description text below
      mirrors the existing <meta name="description"> above so there's
      one source of truth for "what is this page" copy, not two that
      can drift apart. -->
@@ -135,7 +136,7 @@
 <meta property="og:url" content="https://gaphunterlabs.github.io/es/">
 <meta property="og:title" content="Gap Hunter Labs — Plugins para JetBrains y VS Code y herramientas a medida">
 <meta property="og:description" content="Plugins enfocados para JetBrains y VS Code, creados para brechas documentadas en herramientas de desarrollo, y reglas de análisis estático e integración en CI/CD a medida del fundador Joel Diaz.">
-<meta property="og:image" content="https://gaphunterlabs.github.io/og-image.png">
+<meta property="og:image" content="https://gaphunterlabs.github.io/og-image.png?v=2">
 <!-- og:image:secure_url + og:image:type added 2026-08-23: some
      crawlers (WhatsApp's included, per their own scraper docs) prefer
      an explicit secure_url alongside og:image even when they're
@@ -145,22 +146,22 @@
      that can silently fail on a stricter client. og:locale declares
      the page's real language explicitly rather than leaving it
      unstated. -->
-<meta property="og:image:secure_url" content="https://gaphunterlabs.github.io/og-image.png">
+<meta property="og:image:secure_url" content="https://gaphunterlabs.github.io/og-image.png?v=2">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Catálogo de plugins de Gap Hunter Labs">
+<meta property="og:image:alt" content="Auditoría de rendimiento de plugins IntelliJ a precio fijo — Gap Hunter Labs">
 <meta property="og:locale" content="es_ES">
 <meta property="og:locale:alternate" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@GapHunterLabs">
 <meta name="twitter:title" content="Gap Hunter Labs — Plugins para JetBrains y VS Code y herramientas a medida">
 <meta name="twitter:description" content="Plugins enfocados para JetBrains y VS Code, creados para brechas documentadas en herramientas de desarrollo, y reglas de análisis estático e integración en CI/CD a medida del fundador Joel Diaz.">
-<meta name="twitter:image" content="https://gaphunterlabs.github.io/og-image.png">
+<meta name="twitter:image" content="https://gaphunterlabs.github.io/og-image.png?v=2">
 <!-- twitter:image:alt added 2026-08-23 -- Twitter/X reads its own
      separate alt for the card image rather than falling back to
      og:image:alt, which had no Twitter-specific equivalent before this. -->
-<meta name="twitter:image:alt" content="Catálogo de plugins de Gap Hunter Labs">
+<meta name="twitter:image:alt" content="Auditoría de rendimiento de plugins IntelliJ a precio fijo — Gap Hunter Labs">
 
 <!-- Home-page organization and website metadata. The full generated
      plugin listing and its structured data live on catalog.html. -->

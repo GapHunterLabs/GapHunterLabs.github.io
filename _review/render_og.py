@@ -1,11 +1,18 @@
-"""Render og-image-source.html to og-image.png at 1200x630."""
+"""Render the social share images (1200x630): home + services.
+
+Each *-source.html is a standalone, noindex HTML page that loads the same
+fonts/ and brand mark as the live site; Chromium (via Playwright) screenshots
+it at exactly 1200x630. Deliberately timeless: no live catalog numbers baked
+in, so the twice-daily refresh workflow never has to regenerate these.
+"""
 from pathlib import Path
 import sys
 
 ROOT = Path(__file__).resolve().parents[1]
-SRC = ROOT / "og-image-source.html"
-OUT = ROOT / "og-image.png"
-URL = SRC.resolve().as_uri()
+PAIRS = [
+    (ROOT / "og-image-source.html", ROOT / "og-image.png"),          # home
+    (ROOT / "og-services-source.html", ROOT / "og-services.png"),    # /services/
+]
 
 
 def render_playwright() -> None:
@@ -13,12 +20,16 @@ def render_playwright() -> None:
 
     with sync_playwright() as p:
         browser = p.chromium.launch()
-        page = browser.new_page(viewport={"width": 1200, "height": 630}, device_scale_factor=1)
-        page.goto(URL, wait_until="networkidle")
-        page.evaluate("() => document.fonts.ready")
-        page.wait_for_timeout(400)
-        page.screenshot(path=str(OUT), type="png", omit_background=False)
-        browser.close()
+        try:
+            for src, out in PAIRS:
+                page = browser.new_page(viewport={"width": 1200, "height": 630}, device_scale_factor=1)
+                page.goto(src.resolve().as_uri(), wait_until="networkidle")
+                page.evaluate("() => document.fonts.ready")
+                page.wait_for_timeout(400)
+                page.screenshot(path=str(out), type="png", omit_background=False)
+                page.close()
+        finally:
+            browser.close()
 
 
 if __name__ == "__main__":
@@ -27,4 +38,5 @@ if __name__ == "__main__":
     except Exception as exc:
         print(f"playwright failed: {exc}", file=sys.stderr)
         sys.exit(1)
-    print(f"wrote {OUT} ({OUT.stat().st_size} bytes)")
+    for _, out in PAIRS:
+        print(f"wrote {out} ({out.stat().st_size} bytes)")

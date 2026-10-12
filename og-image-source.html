@@ -3,202 +3,45 @@
 <head>
 <meta charset="utf-8">
 <meta name="robots" content="noindex">
-<title>Gap Hunter Labs — social share preview</title>
+<title>Gap Hunter Labs — social share preview (home)</title>
 <style>
-  @font-face {
-    font-family: "IBM Plex Sans";
-    src: url("fonts/IBMPlexSans-Latin.woff2") format("woff2");
-    font-weight: 100 700;
-    font-style: normal;
-    font-display: block;
-  }
-  @font-face {
-    font-family: "JetBrains Mono";
-    src: url("fonts/JetBrainsMono-Latin.woff2") format("woff2");
-    font-weight: 100 800;
-    font-style: normal;
-    font-display: block;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html, body {
-    width: 1200px;
-    height: 630px;
-    background: #090D16;
-    font-family: "IBM Plex Sans", sans-serif;
-    overflow: hidden;
-    position: relative;
-    color: #E9EDF8;
-  }
-  /* Same faint dot-grid texture as the live site. */
-  body::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background-image: radial-gradient(circle, #29334A 1px, transparent 1px);
-    background-size: 22px 22px;
-    opacity: 0.35;
-  }
-  .wash {
-    position: absolute;
-    inset: 0;
-    background: radial-gradient(ellipse 900px 480px at 28% 0%, rgba(63,162,255,0.10), transparent 62%);
-    pointer-events: none;
-  }
-  .corner {
-    position: absolute;
-    width: 40px;
-    height: 40px;
-    border: 2px solid #3FA2FF;
-    opacity: 0.6;
-  }
-  .corner.tl { top: 28px; left: 28px; border-right: none; border-bottom: none; }
-  .corner.br { bottom: 28px; right: 28px; border-left: none; border-top: none; }
+  @font-face { font-family:"IBM Plex Sans"; src:url("fonts/IBMPlexSans-Latin.woff2") format("woff2"); font-weight:100 700; font-style:normal; font-display:block; }
+  @font-face { font-family:"JetBrains Mono"; src:url("fonts/JetBrainsMono-Latin.woff2") format("woff2"); font-weight:100 800; font-style:normal; font-display:block; }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html, body { width:1200px; height:630px; background:#090D16; font-family:"IBM Plex Sans",sans-serif; overflow:hidden; position:relative; color:#E9EDF8; }
+  body::before { content:""; position:absolute; inset:0; background-image:radial-gradient(circle,#29334A 1px,transparent 1px); background-size:22px 22px; opacity:0.35; }
+  .wash { position:absolute; inset:0; background:radial-gradient(ellipse 820px 520px at 24% -8%, rgba(63,162,255,0.13), transparent 58%); pointer-events:none; }
+  .corner { position:absolute; width:40px; height:40px; border:2px solid #3FA2FF; opacity:0.6; }
+  .corner.tl { top:28px; left:28px; border-right:none; border-bottom:none; }
+  .corner.br { bottom:28px; right:28px; border-left:none; border-top:none; }
 
-  .frame {
-    position: relative;
-    height: 630px;
-    padding: 64px 64px 56px;
-    display: grid;
-    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
-    column-gap: 48px;
-    align-items: stretch;
-  }
+  .frame { position:relative; height:630px; padding:58px 60px 52px; display:grid; grid-template-columns:minmax(0,1.12fr) minmax(0,0.88fr); column-gap:44px; align-items:stretch; }
+  .copy { display:flex; flex-direction:column; min-width:0; }
+  .brand-row { display:flex; align-items:center; gap:15px; }
+  .brand-logo { width:54px; height:62px; display:block; flex:none; }
+  .brand-name { font-size:31px; font-weight:700; letter-spacing:-0.02em; background:linear-gradient(90deg,#FFFFFF 0%,#FFFFFF 42%,#3FA2FF 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
 
-  .copy {
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-  }
-  .brand-row {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-  }
-  .brand-logo {
-    width: 64px;
-    height: 74px;
-    display: block;
-    flex: none;
-  }
-  .brand-name {
-    font-size: 36px;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-    background: linear-gradient(90deg, #FFFFFF 0%, #FFFFFF 42%, #3FA2FF 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
+  .kicker { margin-top:32px; font-family:"JetBrains Mono",ui-monospace,monospace; font-size:14px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:#34D5C7; }
+  .headline { margin-top:12px; font-size:62px; font-weight:700; line-height:1.05; letter-spacing:-0.035em; }
+  .headline .line2 { background:linear-gradient(90deg,#3FA2FF,#01B3FD); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  .subhead { margin-top:20px; max-width:500px; font-size:20px; line-height:1.45; color:#9AA6C4; }
 
-  .headline {
-    margin-top: 36px;
-    font-size: 52px;
-    font-weight: 700;
-    line-height: 1.12;
-    letter-spacing: -0.03em;
-  }
-  .headline .line2 {
-    background: linear-gradient(90deg, #3FA2FF, #01B3FD);
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-  .subhead {
-    margin-top: 22px;
-    max-width: 560px;
-    font-size: 22px;
-    line-height: 1.45;
-    color: #9AA6C4;
-  }
+  .proof { margin-top:auto; display:flex; flex-wrap:wrap; gap:14px 22px; align-items:center; }
+  .proof .b { display:flex; align-items:center; gap:9px; font-family:"JetBrains Mono",ui-monospace,monospace; font-size:13.5px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; color:#FFFFFF; }
+  .proof .b .dot { width:9px; height:9px; border-radius:50%; background:#34D5C7; }
+  .proof .b svg { width:18px; height:18px; flex:none; }
+  .jb-icon { border-radius:3px; background:linear-gradient(135deg,#FF318C,#FF6E00); }
 
-  .badges {
-    margin-top: auto;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 22px 26px;
-    align-items: center;
-  }
-  .badge {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-family: "JetBrains Mono", ui-monospace, monospace;
-    font-size: 15px;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: #FFFFFF;
-  }
-  .badge .dot {
-    width: 9px;
-    height: 9px;
-    border-radius: 50%;
-    background: #34D5C7;
-  }
-  .badge svg {
-    width: 20px;
-    height: 20px;
-    flex: none;
-  }
-  .jb-icon {
-    border-radius: 4px;
-    background: linear-gradient(135deg, #FF318C, #FF6E00);
-  }
-
-  /* Tiles re-hechos 2026-09-10 para calzar con el rediseño "Intelligence
-     Cockpit" real -- .category-links .cat-cell en index.html YA NO usa
-     la barra de acento izquierda (::before), pasó a un ícono en badge
-     redondeado con fondo/borde teñidos del color de categoría. Valores
-     (padding, radios, color-mix%) copiados tal cual de index.html para
-     que este preview no quede desincronizado del sitio real de nuevo. */
-  .tiles {
-    align-self: center;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 14px;
-  }
-  .tile {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    min-height: 108px;
-    padding: 18px 20px;
-    background: #111726;
-    border: 1px solid #29334A;
-    border-radius: 12px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.35), 0 8px 24px rgba(0,0,0,0.4);
-  }
-  .tile-icon {
-    flex: none;
-    width: 44px;
-    height: 44px;
-    display: grid;
-    place-items: center;
-    color: var(--cat);
-    background: color-mix(in srgb, var(--cat) 14%, #212C45);
-    border: 1px solid color-mix(in srgb, var(--cat) 40%, #29334A);
-    border-radius: 12px;
-  }
-  .tile-icon svg {
-    width: 22px;
-    height: 22px;
-    stroke: currentColor;
-    fill: none;
-    stroke-width: 1.5;
-  }
-  .tile-copy { display: grid; gap: 3px; }
-  .tile-label {
-    font-family: "IBM Plex Sans", sans-serif;
-    font-size: 17px;
-    font-weight: 650;
-    letter-spacing: -0.01em;
-  }
-  .tile-count {
-    font-family: "JetBrains Mono", ui-monospace, monospace;
-    font-size: 13px;
-    color: #9AA6C4;
-    letter-spacing: 0.04em;
-  }
+  .offer { align-self:center; background:linear-gradient(180deg,#121A2B,#0C1220); border:1px solid #2A3550; border-radius:18px; padding:26px 26px 22px; box-shadow:0 1px 2px rgba(0,0,0,.4),0 18px 46px rgba(0,0,0,.5); position:relative; overflow:hidden; }
+  .offer::before { content:""; position:absolute; left:0; right:0; top:0; height:3px; background:linear-gradient(90deg,#3FA2FF,#34D5C7); }
+  .offer-tag { font-family:"JetBrains Mono",ui-monospace,monospace; font-size:12px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:#8CA0C6; }
+  .price { margin-top:10px; font-family:"JetBrains Mono",ui-monospace,monospace; font-size:56px; font-weight:800; letter-spacing:-0.02em; color:#FFFFFF; line-height:1; }
+  .price .cur { font-size:24px; font-weight:700; color:#34D5C7; margin-right:8px; vertical-align:0.18em; }
+  .per { margin-top:10px; font-size:15px; color:#9AA6C4; }
+  .incl { list-style:none; margin-top:16px; display:flex; flex-direction:column; gap:9px; }
+  .incl li { position:relative; padding-left:24px; font-size:15.5px; color:#D4DBEA; line-height:1.25; }
+  .incl li::before { content:""; position:absolute; left:2px; top:7px; width:9px; height:9px; border-radius:50%; background:#02F172; box-shadow:0 0 0 3px rgba(2,241,114,.15); }
+  .cta { margin-top:20px; display:inline-flex; align-items:center; gap:8px; font-family:"JetBrains Mono",ui-monospace,monospace; font-size:14px; font-weight:700; letter-spacing:0.02em; color:#071018; background:linear-gradient(90deg,#3FA2FF,#34D5C7); padding:11px 16px; border-radius:9px; }
 </style>
 </head>
 <body>
@@ -217,45 +60,32 @@
         <div class="brand-name">Gap Hunter Labs</div>
       </div>
 
+      <div class="kicker">IntelliJ plugin performance audit</div>
       <div class="headline">
-        <div>We hunt gaps</div>
-        <div class="line2">others miss</div>
+        <div>Your plugin freezes.</div>
+        <div class="line2">I fix that.</div>
       </div>
-      <p class="subhead">Evidence-based gaps in developer tooling: every plugin starts from a documented complaint.</p>
+      <p class="subhead">A fixed-price audit for IntelliJ plugins: reproduction, UI-thread measurements and patches.</p>
 
-      <div class="badges">
-        <div class="badge">
-          <span class="dot"></span>
-          8 Categories
-        </div>
-        <div class="badge">
+      <div class="proof">
+        <div class="b"><span class="dot"></span>140+ plugins shipped</div>
+        <div class="b">
           <svg class="jb-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.43 3.43h9.14v9.14H3.43z"/><g fill="#fff"><path d="M4.42 10.86h3.43v.57H4.42z"/><path d="M4.28 5.79l.25-.24a.29.29 0 00.23.13c.1 0 .16-.07.16-.2V4.57h.39v.91a.53.53 0 01-.13.4.54.54 0 01-.39.14.59.59 0 01-.51-.23z"/><path d="M5.49 4.57h1.15v.33h-.76v.22h.68v.3h-.67v.23h.77v.33H5.49z"/><path d="M7.21 4.92h-.43v-.35h1.25v.35h-.43v1.08h-.4z"/><path d="M4.44 6.51h.67a.54.54 0 01.39.13.32.32 0 01.09.23.33.33 0 01-.22.32.35.35 0 01.28.35c0 .25-.2.39-.54.39h-.68zm.76.44c0-.08-.06-.12-.18-.12h-.2v.25h.19c.12 0 .19-.04.19-.12zm-.14.4h-.24v.27h.25c.12 0 .19-.05.19-.13s-.06-.14-.19-.14z"/><path d="M5.79 6.51h.62a.64.64 0 01.46.16.44.44 0 01.13.33.46.46 0 01-.29.44l.34.5h-.45l-.29-.43h-.13v.43h-.4zm.61.68c.13 0 .21-.07.21-.17s-.08-.17-.21-.17h-.22v.34z"/><path d="M7.5 6.5h.38l.61 1.44h-.42l-.1-.26h-.55l-.1.26h-.42zm.35.87l-.16-.4-.16.4z"/><path d="M8.5 6.51h.4v1.42h-.4z"/><path d="M9.05 6.51h.37l.51.76v-.76h.39v1.42h-.34l-.54-.78v.78h-.39z"/><path d="M10.35 7.7l.22-.26a.74.74 0 00.46.17c.11 0 .16-.04.16-.1s-.05-.09-.24-.14c-.31-.07-.54-.15-.54-.44s.21-.46.55-.46a.89.89 0 01.59.19l-.19.28a.7.7 0 00-.4-.14c-.1 0-.14.04-.14.09s.05.09.25.14c.33.07.53.18.53.44 0 .29-.23.45-.58.45a1 1 0 01-.67-.22z"/></g></svg>
-          JetBrains Marketplace
-        </div>
-        <div class="badge">
-          <svg viewBox="0 0 16 16" fill="#FFFFFF" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>
-          GitHub
+          Freeze bugs reported to JetBrains
         </div>
       </div>
     </div>
 
-    <div class="tiles" aria-hidden="true">
-      <div class="tile">
-        <span class="tile-icon" style="--cat:#3FA2FF"><svg viewBox="-8 -8 16 16"><path d="M-4.5-6.5v3M-1.5-6.5v3M-6-3.5h7a2 2 0 0 1 2 2v1a2 2 0 0 0 2 2h1M6 6.5v-3M1.5 6.5v-3M6 3.5H-1a2 2 0 0 1-2-2v-1a2 2 0 0 0-2-2h-1" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        <span class="tile-copy"><span class="tile-label">API</span><span class="tile-count">12 plugins</span></span>
-      </div>
-      <div class="tile">
-        <span class="tile-icon" style="--cat:#02F172"><svg viewBox="-8 -8 16 16"><path d="M-6 0a3 3 0 1 0 6 0 3 3 0 1 1 6 0 3 3 0 1 1-6 0 3 3 0 1 0-6 0Z" stroke-linejoin="round"/></svg></span>
-        <span class="tile-copy"><span class="tile-label">DevOps</span><span class="tile-count">48 plugins</span></span>
-      </div>
-      <div class="tile">
-        <span class="tile-icon" style="--cat:#FF6E7A"><svg viewBox="-8 -8 16 16"><path d="M0-6.5 5.5-4v4.2C5.5 3.8 2.8 6 0 6.5-2.8 6-5.5 3.8-5.5.2V-4Z" stroke-linejoin="round"/></svg></span>
-        <span class="tile-copy"><span class="tile-label">Security</span><span class="tile-count">37 plugins</span></span>
-      </div>
-      <div class="tile">
-        <span class="tile-icon" style="--cat:#B98CFF"><svg viewBox="-8 -8 16 16"><path d="M-5-3c0-1.4 2.2-2.5 5-2.5s5 1.1 5 2.5v6c0 1.4-2.2 2.5-5 2.5s-5-1.1-5-2.5Z"/><path d="M-5-3c0 1.4 2.2 2.5 5 2.5s5-1.1 5-2.5"/></svg></span>
-        <span class="tile-copy"><span class="tile-label">Data</span><span class="tile-count">4 plugins</span></span>
-      </div>
+    <div class="offer" aria-hidden="true">
+      <div class="offer-tag">Fixed-price audit</div>
+      <div class="price"><span class="cur">USD</span>2,500</div>
+      <div class="per">one plugin &middot; delivered in 10 business days</div>
+      <ul class="incl">
+        <li>Reproduction on every IDE version you support</li>
+        <li>UI-thread (EDT) measurements</li>
+        <li>Freeze-pattern review + patches</li>
+      </ul>
+      <div class="cta">gaphunterlabs.github.io &rarr;</div>
     </div>
   </div>
 </body>
