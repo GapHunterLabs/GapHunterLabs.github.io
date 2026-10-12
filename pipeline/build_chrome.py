@@ -43,6 +43,7 @@ PAGES = (
     ("terms/index.html", None, "/terms/"),
     ("eula/index.html", None, "/eula/"),
     ("plugin-performance-audit/index.html", None, "/plugin-performance-audit/"),
+    ("services/index.html", "/services/", None),
 )
 
 # Un item con submenu es (etiqueta, [(href, texto), ...]); el resto (href, texto).
@@ -51,7 +52,7 @@ EE_ITEMS = ((EE, "Overview", "What this section covers"),
             (EE + "case-studies/", "Case studies", "Plugins with the strongest evidence"),
             (EE + "jetbrains-platform-tickets/", "JetBrains Platform tickets", "Root-cause reports in the IntelliJ Platform tracker"),
             (EE + "open-source-security-reports/", "Open-source security reports", "Vulnerable dependencies reported to maintainers"))
-NAV = (("/catalog/", "Catalog"), ("Engineering &amp; Evidence", EE_ITEMS),
+NAV = (("/catalog/", "Catalog"), ("/services/", "Services"), ("Engineering &amp; Evidence", EE_ITEMS),
        ("/methodology/", "Methodology"), ("/contact/", "Contact"))
 
 LOGO = ('<svg class="gh-logo" viewBox="0 0 1024 1024" aria-hidden="true">'
@@ -93,6 +94,7 @@ ES_PATHS = {
     "/terms/": "/es/terminos/",
     "/eula/": "/es/eula/",
     "/plugin-performance-audit/": "/es/auditoria-de-rendimiento/",
+    "/services/": "/es/servicios/",
 }
 PLUGIN_PATH_RE = re.compile(r"^/catalog/((?:vscode/)?[a-z0-9][a-z0-9-]*)/$")
 
@@ -168,7 +170,7 @@ def header_html(active, en_path="/"):
         '  <div class="gh-header-inner">\n'
         '    <a class="gh-brand" href="/" aria-label="Gap Hunter Labs home">%s<span class="gh-brand-name">Gap Hunter Labs</span></a>\n'
         '    <nav class="gh-nav" id="siteNav" aria-label="Primary">%s'
-        '<a class="btn primary gh-nav-cta" href="/#work-with-joel" data-goatcounter-click="cta-nav-hire-mobile">Work with Joel</a></nav>\n'
+        '<a class="btn primary gh-nav-cta" href="/services/" data-goatcounter-click="cta-nav-hire-mobile">Work with Joel</a></nav>\n'
         '    <div class="gh-tools">\n'
         # 2026-10-05: buscador del sitio (js/site-search.js, se carga al abrirlo)
         '      <button type="button" class="gh-search-btn" data-search-open aria-haspopup="dialog" aria-expanded="false"'
@@ -181,7 +183,7 @@ def header_html(active, en_path="/"):
         '<span class="gh-ico gh-ico-system">%s</span><span class="gh-ico gh-ico-light">%s</span><span class="gh-ico gh-ico-dark">%s</span></button>\n'
         '        <div class="gh-pop" data-menu hidden role="group" aria-label="Color theme">%s</div>\n'
         '      </div>\n'
-        '      <a class="btn primary gh-cta" href="/#work-with-joel" data-goatcounter-click="cta-nav-hire">Work with Joel</a>\n'
+        '      <a class="btn primary gh-cta" href="/services/" data-goatcounter-click="cta-nav-hire">Work with Joel</a>\n'
         '      <button type="button" class="gh-burger" id="topbarBurger" aria-label="Toggle navigation" aria-expanded="false" aria-controls="siteNav"><span></span></button>\n'
         '    </div>\n'
         '  </div>\n'
@@ -202,7 +204,7 @@ def footer_html(active):
         ("Engineering &amp; Evidence", [link(EE, "Overview"), link(EE + "case-studies/", "Case studies"),
                                         link(EE + "jetbrains-platform-tickets/", "JetBrains Platform tickets"),
                                         link(EE + "open-source-security-reports/", "Open-source security reports")]),
-        ("Company", [link("/#work-with-joel", "Work with Joel"), link("/plugin-performance-audit/", "Performance audit"), link("/methodology/", "Methodology"),
+        ("Company", [link("/services/", "Work with Joel"), link("/plugin-performance-audit/", "Performance audit"), link("/methodology/", "Methodology"),
                      link("/contact/", "Contact")]),
         ("Marketplaces", [link("https://plugins.jetbrains.com/vendor/gap-hunter-labs", "JetBrains Marketplace", True),
                           link("https://marketplace.visualstudio.com/publishers/GapHunterLabs", "VS Code Marketplace", True),
@@ -228,7 +230,7 @@ def footer_html(active):
         '      <div class="gh-footer-brand">\n'
         '        <a class="gh-brand" href="/">%s<span class="gh-brand-name">Gap Hunter Labs</span></a>\n'
         '        <p>Focused JetBrains and VS Code plugins for documented gaps in developer tooling, and custom tooling for teams.</p>\n'
-        '        <a class="btn primary" href="/#work-with-joel" data-goatcounter-click="cta-footer-hire">Work with Joel</a>\n'
+        '        <a class="btn primary" href="/services/" data-goatcounter-click="cta-footer-hire">Work with Joel</a>\n'
         '      </div>\n'
         '      <nav class="gh-footer-cols" aria-label="Footer">%s</nav>\n'
         '    </div>\n'
