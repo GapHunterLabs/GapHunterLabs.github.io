@@ -224,7 +224,7 @@
   <div class="page-hero method-intro band-dark gh-page-header">
     <p class="contact-kicker">Engineering &amp; Evidence</p>
     <h1>JetBrains Platform tickets</h1>
-    <p class="contact-lead" style="margin-bottom:0">Bugs in JetBrains&rsquo; own code, documented publicly in JetBrains&rsquo; YouTrack tracker: five filed directly, three after a check from this catalog found them in IntelliJ&rsquo;s source and two after measuring the Settings pages on the UI thread, plus root-cause analysis posted on existing IntelliJ Platform (IJPL) tickets, and two fixes sent as pull requests.</p>
+    <p class="contact-lead" style="margin-bottom:0">Bugs in JetBrains&rsquo; own code, documented publicly in JetBrains&rsquo; YouTrack tracker: six filed directly, four found in IntelliJ&rsquo;s source by a check from this catalog or a related scan and two by measuring the Settings pages on the UI thread, plus root-cause analysis posted on existing IntelliJ Platform (IJPL) tickets, and two fixes sent as pull requests.</p>
   </div>
 
   <div class="lab-section-head">
@@ -245,7 +245,7 @@
       <div class="ticket-head">
         <a class="ticket-id" href="https://youtrack.jetbrains.com/issue/IJPL-257836" target="_blank" rel="noopener">IJPL-257836 &#8599;</a>
         <h3>DependenciesUsagesPanel.findUsages runs the whole dependency usage search in one non-cancellable read action</h3>
-        <span class="ticket-status is-submitted">Submitted</span>
+        <span class="ticket-status is-open">Open</span>
       </div>
       <p>Found by the same check as <a href="/catalog/background-readaction-freeze-companion/">Background ReadAction Freeze Companion</a>, run as a scan over IntelliJ&rsquo;s own <code>master</code>. When a node is selected in the Dependency Viewer (Code &rsaquo; Analyze Code &rsaquo; Dependencies), <code>DependenciesUsagesPanel.findUsages()</code> analyzes every file of the selected scope inside one top-level <code>ReadAction.runBlocking()</code> on a pooled thread. A pending write action, such as typing in an editor, waits until the whole search ends. The ticket proposes the fix shape JetBrains used for IJPL-236316 (<code>FindUsagesHelper</code>): a non-blocking read action that no longer swallows <code>ProcessCanceledException</code>, with the UI update moved out of the read action. JetBrains support asked for reproduction steps. A headless test on a synthetic project reproduced it: with 2,000 files, a write action waited 4.8 s for the search, and 1 ms with a non-blocking read action. The test is attached to the ticket, and a fix is proposed in <a href="https://github.com/JetBrains/intellij-community/pull/3684" target="_blank" rel="noopener">pull request #3684</a>.</p>
     </article>
@@ -253,7 +253,7 @@
       <div class="ticket-head">
         <a class="ticket-id" href="https://youtrack.jetbrains.com/issue/IJPL-257854" target="_blank" rel="noopener">IJPL-257854 &#8599;</a>
         <h3>Auto-test: the error check of DelayedDocumentWatcher blocks typing until the whole check ends</h3>
-        <span class="ticket-status is-submitted">Submitted</span>
+        <span class="ticket-status is-open">Open</span>
       </div>
       <p>Found with the same check, during an audit of components that do background work after each edit. With auto-test enabled, <code>DelayedDocumentWatcher</code> waits for a typing pause and then checks every changed file for syntax errors (<code>PsiErrorElementUtil.hasErrors()</code>) in one blocking read action on a pooled thread. The keystroke that resumes typing waits for the whole check. Measured with the platform test framework on IntelliJ IDEA 2025.2: on a 50,000-line file, that keystroke took 436 ms with the current code, 48 ms without auto-test, and 73 ms with the check in a non-blocking read action. The measurement test is attached to the ticket, and a fix is proposed in <a href="https://github.com/JetBrains/intellij-community/pull/3685" target="_blank" rel="noopener">pull request #3685</a>.</p>
     </article>
@@ -272,6 +272,14 @@
         <span class="ticket-status is-open">Open</span>
       </div>
       <p>Found in the same measurement of the Settings pages. Opening Settings &rsaquo; Plugins builds the list of installed plugins on the UI thread and asks, for each plugin, whether an essential plugin requires it. Each answer builds the plugin and module maps again and walks the dependencies of every essential plugin; the source code already has a <code>FIXME</code> about it. With 158 plugins loaded, the page took 689&ndash;931 ms to open. One walk followed by a lookup per plugin took 8&ndash;22 ms and gave the same answer for every plugin. The cost grows with the square of the number of installed plugins. The measurement test is attached to the ticket.</p>
+    </article>
+    <article class="ticket-card">
+      <div class="ticket-head">
+        <a class="ticket-id" href="https://youtrack.jetbrains.com/issue/IJPL-257919" target="_blank" rel="noopener">IJPL-257919 &#8599;</a>
+        <h3>Package File: PackageFileWorker does all the file I/O inside one blocking read action, so write actions wait for it</h3>
+        <span class="ticket-status is-submitted">Submitted</span>
+      </div>
+      <p>Found by a scan of IntelliJ&rsquo;s own <code>master</code> for slow work inside read actions, then measured. Build &rsaquo; Package File copies a file into the artifacts that contain it. <code>PackageFileWorker</code> finds those artifacts and then does all the file I/O inside the same blocking <code>ReadAction.run()</code>: the copy, opening the archive, and repacking a nested archive. A write action requested meanwhile, such as a key press, waits until the I/O ends. Measured with the platform test framework on IntelliJ IDEA 2026.2.3, with a WAR that contains a 40 MB JAR: the write action waited 2,219&ndash;2,508 ms. With only the artifact lookup in the read action and the I/O outside it, it waited 0 ms in 4 of 4 runs. The measurement test is attached to the ticket.</p>
     </article>
   </div>
 
@@ -300,7 +308,7 @@
 
   <div class="lab-section-head">
     <h2>Analysis on existing tickets</h2>
-    <p>Root-cause comments posted on open IntelliJ Platform tickets, each from reading the current source on <code>master</code>, not from a live reproduction.</p>
+    <p>Root-cause comments posted on open IntelliJ Platform tickets. Most come from reading the current source on <code>master</code>; the comment on IJPL-223452 adds a headless reproduction.</p>
   </div>
   <div class="lab-tickets">
     <article class="ticket-card">
@@ -342,6 +350,14 @@
         <span class="ticket-status is-open">Open</span>
       </div>
       <p><code>BatchSession</code>'s <code>changes</code> list only clears once its <code>pendingRootsChanged</code> counter hits exactly 0, but the counter is incremented without matching exception handling, so one exception or an asymmetric reentrant call can leave it stuck above 0 permanently, and <code>changes</code> then keeps growing on every later roots-changed event. The missing safety net is visible in the code; the exact first imbalance was not traced.</p>
+    </article>
+    <article class="ticket-card">
+      <div class="ticket-head">
+        <a class="ticket-id" href="https://youtrack.jetbrains.com/issue/IJPL-223452#focus=Comments-27-14501015.0-0" target="_blank" rel="noopener">IJPL-223452 &#8599;</a>
+        <h3>PsiSmartPointer improvements</h3>
+        <span class="ticket-status is-open">Open</span>
+      </div>
+      <p>A comment with a headless reproduction of slow typing in large files. With the Structure tool window built for a Java file with 10,000 methods, the file holds 10,001 smart pointers, one per tree node (<code>PsiTreeAnchorizer</code>). After each keystroke the IDE restores every pointer: in IntelliJ IDEA 2026.2.3 a keystroke took a median of 1,080 ms, against 33 ms without the structure view, with 98% of the time in <code>SmartPsiElementPointerImpl.doRestoreElement()</code>. This matches the slow typing events reported in IJPL-173280. The test is attached to the comment.</p>
     </article>
   </div>
 
