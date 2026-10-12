@@ -3,17 +3,20 @@
 """
 build_og_images.py -- genera media/<slug>/og.png (1200x630) para cada
 plugin, sustituyendo pipeline/og_plugin_template.html y renderizandolo
-con Chromium headless via pipeline/render_og.js.
+con Chromium headless via Playwright (mismo motor que _review/render_og.py
+para la home/services -- un solo renderizador en todo el sitio).
 
 Reusa Sources/PluginRenderer de build_plugin_pages.py -- misma fuente de
 verdad de categoria/color/icono/pricing que ya usa el resto del sitio,
 nada duplicado a mano.
 
+Migrado 2026-10-12 de puppeteer-core/Edge (que exigia un Edge/Chrome del
+sistema, ausente en esta maquina) a Playwright, que trae su propio
+Chromium. Un unico navegador renderiza los 146 en una sola sesion.
+
 Requiere:
-  * node + `npm install` corrido una vez dentro de pipeline/ (ver
-    pipeline/package.json -- instala puppeteer-core, no se commitea).
-  * un Chromium/Chrome/Edge real en el sistema (PUPPETEER_EXECUTABLE_PATH
-    para overridear el default de Windows/Edge que trae render_og.js).
+  * playwright instalado (`pip install playwright` +
+    `python -m playwright install chromium`).
 
 Uso:
     python pipeline/build_og_images.py --limit 3         # prueba rapida
@@ -25,7 +28,6 @@ from __future__ import annotations
 
 import argparse
 import re
-import subprocess
 import sys
 import tempfile
 from pathlib import Path
@@ -37,7 +39,6 @@ sys.path.insert(0, str(PIPELINE))
 from build_plugin_pages import Sources, PluginRenderer, esc, thousands, truncate, plain_text  # noqa: E402
 
 TEMPLATE = PIPELINE / "og_plugin_template.html"
-RENDER_JS = PIPELINE / "render_og.js"
 MEDIA_DIR = ROOT / "media"
 FONT_SANS = (ROOT / "fonts" / "IBMPlexSans-Latin.woff2").resolve()
 FONT_MONO = (ROOT / "fonts" / "JetBrainsMono-Latin.woff2").resolve()
@@ -85,11 +86,11 @@ def stat_pair(p):
     else:
         stat1 = ("New", "Listing")
     if p.get("rating") is not None:
-        stat2 = ("%.1f \u2605" % p["rating"], "Rating")
+        stat2 = ("%.1f ★" % p["rating"], "Rating")
     elif p.get("stars"):
         stat2 = (thousands(p["stars"]), "GitHub stars")
     else:
-        stat2 = (esc(p.get("firstPublished") or "\u2014"), "Published")
+        stat2 = (esc(p.get("firstPublished") or "—"), "Published")
     return stat1, stat2
 
 
@@ -132,25 +133,38 @@ def build_html(renderer: PluginRenderer, src: Sources, p: dict) -> str:
     return tpl
 
 
-def render_one(slug: str, html: str) -> Path:
-    out_dir = MEDIA_DIR / slug
-    out_dir.mkdir(parents=True, exist_ok=True)
-    out_png = out_dir / "og.png"
-    with tempfile.NamedTemporaryFile("w", suffix=".html", delete=False, encoding="utf-8") as f:
-        f.write(html)
-        tmp_path = Path(f.name)
+def render_batch(pairs):
+    """Renderiza todos los (slug, html) en una sola sesion de Chromium."""
     try:
-        result = subprocess.run(
-            ["node", str(RENDER_JS), str(tmp_path), str(out_png)],
-            capture_output=True, text=True, cwd=str(PIPELINE),
-        )
-        if result.returncode != 0:
-            die("render_og.js fallo para %s:\n%s" % (slug, result.stderr[-2000:]))
-    finally:
-        tmp_path.unlink(missing_ok=True)
-    if not out_png.exists() or out_png.stat().st_size < 5000:
-        die("PNG de salida sospechosamente chico o ausente para %s" % slug)
-    return out_png
+        from playwright.sync_api import sync_playwright
+    except ImportError:
+        die("falta playwright -- `pip install playwright` + `python -m playwright install chromium`")
+
+    outputs = []
+    with sync_playwright() as pw:
+        browser = pw.chromium.launch()
+        try:
+            page = browser.new_page(viewport={"width": 1200, "height": 630}, device_scale_factor=1)
+            for slug, html in pairs:
+                out_dir = MEDIA_DIR / slug
+                out_dir.mkdir(parents=True, exist_ok=True)
+                out_png = out_dir / "og.png"
+                with tempfile.NamedTemporaryFile("w", suffix=".html", delete=False, encoding="utf-8") as f:
+                    f.write(html)
+                    tmp_path = Path(f.name)
+                try:
+                    page.goto(tmp_path.resolve().as_uri(), wait_until="load")
+                    page.evaluate("() => document.fonts.ready")
+                    page.wait_for_timeout(300)
+                    page.screenshot(path=str(out_png), type="png")
+                finally:
+                    tmp_path.unlink(missing_ok=True)
+                if not out_png.exists() or out_png.stat().st_size < 5000:
+                    die("PNG de salida sospechosamente chico o ausente para %s" % slug)
+                outputs.append((slug, out_png))
+        finally:
+            browser.close()
+    return outputs
 
 
 def main() -> None:
@@ -159,11 +173,8 @@ def main() -> None:
     ap.add_argument("--slug", default=None, help="generar solo este repo")
     args = ap.parse_args()
 
-    if not RENDER_JS.exists():
-        die("falta pipeline/render_og.js")
-    node_modules = PIPELINE / "node_modules" / "puppeteer-core"
-    if not node_modules.exists():
-        die("falta pipeline/node_modules/puppeteer-core -- correr `npm install` dentro de pipeline/")
+    if not TEMPLATE.exists():
+        die("falta pipeline/og_plugin_template.html")
 
     src = Sources()
     renderer = PluginRenderer(src)
@@ -176,15 +187,13 @@ def main() -> None:
     elif args.limit:
         rows = rows[: args.limit]
 
-    done = 0
-    for p in rows:
-        html = build_html(renderer, src, p)
-        out_png = render_one(p["repo"], html)
+    pairs = [(p["repo"], build_html(renderer, src, p)) for p in rows]
+    results = render_batch(pairs)
+    for slug, out_png in results:
         size_kb = out_png.stat().st_size / 1024
-        print("  %-40s -> %s (%.0f KB)" % (p["repo"], out_png.relative_to(ROOT), size_kb))
-        done += 1
+        print("  %-40s -> %s (%.0f KB)" % (slug, out_png.relative_to(ROOT), size_kb))
 
-    print("\nOK -- %d imagen(es) OG generada(s)." % done)
+    print("\nOK -- %d imagen(es) OG generada(s)." % len(results))
 
 
 if __name__ == "__main__":

@@ -8,9 +8,10 @@ __pycache__/
 _review/screenshots/
 _review/*.png
 
-# pipeline/render_og.js necesita puppeteer-core (Chromium headless) solo
-# para regenerar imagenes OG por plugin a mano -- no es parte del sitio
-# servido ni del build de CI, asi que no se commitea.
+# OG rendering (home/services via _review/render_og.py, per-plugin catalog
+# via pipeline/build_og_images.py) uses Playwright now; its Chromium lives
+# in the user cache, not the repo. These stay ignored defensively as
+# leftovers from the old puppeteer-core/Edge renderer.
 pipeline/node_modules/
 pipeline/package-lock.json
 
