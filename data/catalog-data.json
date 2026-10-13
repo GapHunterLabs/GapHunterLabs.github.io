@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-12 12:36:06 UTC",
+  "generatedAt": "2026-10-13 02:49:38 UTC",
   "totalPlugins": 146,
   "totalDownloads": 10434,
   "pending": 0,
@@ -7,10 +7,6 @@
   "totalReviews": 0,
   "avgRating": null,
   "trend7d": [
-    {
-      "date": "2026-10-06",
-      "totalDownloads": 9140
-    },
     {
       "date": "2026-10-07",
       "totalDownloads": 9244
@@ -34,45 +30,13 @@
     {
       "date": "2026-10-12",
       "totalDownloads": 10434
+    },
+    {
+      "date": "2026-10-13",
+      "totalDownloads": 10434
     }
   ],
-  "recentChanges": [
-    {
-      "date": "2026-10-12",
-      "type": "growth",
-      "name": "GraphQL Companion",
-      "niche": "GraphQL Tooling",
-      "delta": 5
-    },
-    {
-      "date": "2026-10-12",
-      "type": "growth",
-      "name": "Git Hygiene Companion",
-      "niche": "Git Tooling",
-      "delta": 5
-    },
-    {
-      "date": "2026-10-12",
-      "type": "growth",
-      "name": "Feature Flag Reference Companion",
-      "niche": "Code Quality / Feature Flags",
-      "delta": 5
-    },
-    {
-      "date": "2026-10-12",
-      "type": "growth",
-      "name": "AWS SDK Client Reuse Companion",
-      "niche": "Cloud SDK Client Reuse",
-      "delta": 5
-    },
-    {
-      "date": "2026-10-12",
-      "type": "growth",
-      "name": "Mermaid Companion",
-      "niche": "Diagrams",
-      "delta": 4
-    }
-  ],
+  "recentChanges": [],
   "plugins": [
     {
       "xmlId": "dev.gaphunter.mermaidcompanion",
@@ -1874,7 +1838,7 @@
       "pricing": "FREE",
       "reviews": 0,
       "rating": null,
-      "stars": null,
+      "stars": 0,
       "growth": null,
       "growthSince": "2026-08-29",
       "growthFrom": 0
