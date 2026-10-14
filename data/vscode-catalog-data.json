@@ -1,7 +1,7 @@
 {
-  "generatedAt": "2026-10-14 10:26:34 UTC",
-  "totalExtensions": 31,
-  "totalInstalls": 147,
+  "generatedAt": "2026-10-14 17:01:45 UTC",
+  "totalExtensions": 33,
+  "totalInstalls": 148,
   "pendingCount": 0,
   "extensions": [
     {
@@ -110,6 +110,21 @@
       "ratingCount": 0
     },
     {
+      "name": "dockerfile-missing-user-companion",
+      "displayName": "Dockerfile Missing USER Companion",
+      "pitch": "Warns when a Dockerfile's final build stage never sets a non-root USER (containers run as root by default).",
+      "niche": "Docker / DevOps",
+      "repo": "vscode-dockerfile-missing-user-companion",
+      "githubUrl": "https://github.com/GapHunterLabs/vscode-dockerfile-missing-user-companion",
+      "marketplaceUrl": "https://marketplace.visualstudio.com/items?itemName=GapHunterLabs.dockerfile-missing-user-companion",
+      "version": "0.1.0",
+      "publishedDate": "2026-10-14T16:41:28.363Z",
+      "lastUpdated": "2026-10-14T16:47:44.297Z",
+      "installs": 0,
+      "rating": null,
+      "ratingCount": 0
+    },
+    {
       "name": "embedded-stack-usage-companion",
       "displayName": "Embedded Stack Usage Companion",
       "pitch": "Parses GCC .su stack-usage files (-fstack-usage) and flags any function over a configurable stack budget.",
@@ -192,9 +207,9 @@
       "repo": "vscode-mlflow-companion",
       "githubUrl": "https://github.com/GapHunterLabs/vscode-mlflow-companion",
       "marketplaceUrl": "https://marketplace.visualstudio.com/items?itemName=GapHunterLabs.mlflow-companion",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "publishedDate": "2026-09-09T02:12:50.447Z",
-      "lastUpdated": "2026-09-14T00:09:04.143Z",
+      "lastUpdated": "2026-10-14T16:47:24.54Z",
       "installs": 12,
       "rating": null,
       "ratingCount": 0
@@ -240,7 +255,7 @@
       "version": "0.1.1",
       "publishedDate": "2026-09-08T13:55:06.967Z",
       "lastUpdated": "2026-09-14T00:10:09.557Z",
-      "installs": 4,
+      "installs": 5,
       "rating": null,
       "ratingCount": 0
     },
@@ -405,6 +420,21 @@
       "version": "0.1.1",
       "publishedDate": "2026-09-08T13:56:11.337Z",
       "lastUpdated": "2026-09-14T00:15:27.577Z",
+      "installs": 0,
+      "rating": null,
+      "ratingCount": 0
+    },
+    {
+      "name": "undeclared-dependency-companion",
+      "displayName": "Undeclared Dependency Companion",
+      "pitch": "Flags a package imported in JS/TS but not declared in package.json -- a common slopsquatting / supply-chain risk.",
+      "niche": "Dependency / SCA Security",
+      "repo": "vscode-undeclared-dependency-companion",
+      "githubUrl": "https://github.com/GapHunterLabs/vscode-undeclared-dependency-companion",
+      "marketplaceUrl": "https://marketplace.visualstudio.com/items?itemName=GapHunterLabs.undeclared-dependency-companion",
+      "version": "0.1.0",
+      "publishedDate": "2026-10-14T16:26:56.15Z",
+      "lastUpdated": "2026-10-14T16:30:41.707Z",
       "installs": 0,
       "rating": null,
       "ratingCount": 0

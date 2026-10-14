@@ -187,6 +187,18 @@
       "pitch": "Validates wrangler.toml -- required fields (name/main/compatibility_date), and missing bindings.",
       "niche": "Cloudflare / DevOps",
       "repo": "vscode-wrangler-config-companion"
+    },
+    "undeclared-dependency-companion": {
+      "displayName": "Undeclared Dependency Companion",
+      "pitch": "Flags a package imported in JS/TS but not declared in package.json -- a common slopsquatting / supply-chain risk.",
+      "niche": "Dependency / SCA Security",
+      "repo": "vscode-undeclared-dependency-companion"
+    },
+    "dockerfile-missing-user-companion": {
+      "displayName": "Dockerfile Missing USER Companion",
+      "pitch": "Warns when a Dockerfile's final build stage never sets a non-root USER (containers run as root by default).",
+      "niche": "Docker / DevOps",
+      "repo": "vscode-dockerfile-missing-user-companion"
     }
   }
 }
