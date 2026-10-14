@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-13 12:16:55 UTC",
+  "generatedAt": "2026-10-14 00:49:53 UTC",
   "totalPlugins": 146,
   "totalDownloads": 10559,
   "pending": 0,
@@ -7,10 +7,6 @@
   "totalReviews": 0,
   "avgRating": null,
   "trend7d": [
-    {
-      "date": "2026-10-07",
-      "totalDownloads": 9244
-    },
     {
       "date": "2026-10-08",
       "totalDownloads": 9666
@@ -34,45 +30,13 @@
     {
       "date": "2026-10-13",
       "totalDownloads": 10559
+    },
+    {
+      "date": "2026-10-14",
+      "totalDownloads": 10559
     }
   ],
-  "recentChanges": [
-    {
-      "date": "2026-10-13",
-      "type": "growth",
-      "name": "Mermaid Companion",
-      "niche": "Diagrams",
-      "delta": 12
-    },
-    {
-      "date": "2026-10-13",
-      "type": "growth",
-      "name": "React Native Companion",
-      "niche": "React Native Tooling",
-      "delta": 5
-    },
-    {
-      "date": "2026-10-13",
-      "type": "growth",
-      "name": "Import Cost Companion",
-      "niche": "JS/TS Tooling",
-      "delta": 5
-    },
-    {
-      "date": "2026-10-13",
-      "type": "growth",
-      "name": "Feature Flag Reference Companion",
-      "niche": "Code Quality / Feature Flags",
-      "delta": 4
-    },
-    {
-      "date": "2026-10-13",
-      "type": "growth",
-      "name": "API Security Companion",
-      "niche": "API Security",
-      "delta": 4
-    }
-  ],
+  "recentChanges": [],
   "plugins": [
     {
       "xmlId": "dev.gaphunter.mermaidcompanion",
