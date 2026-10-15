@@ -6,7 +6,23 @@
 <atom:link href="https://gaphunterlabs.github.io/feed.xml" rel="self" type="application/rss+xml"/>
 <description>New JetBrains plugins and VS Code extensions from Gap Hunter Labs, each built for a documented gap in developer tooling.</description>
 <language>en</language>
-<lastBuildDate>Fri, 11 Sep 2026 00:00:00 +0000</lastBuildDate>
+<lastBuildDate>Wed, 14 Oct 2026 00:00:00 +0000</lastBuildDate>
+<item>
+<title>Undeclared Dependency Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/vscode/undeclared-dependency-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/vscode/undeclared-dependency-companion/</guid>
+<pubDate>Wed, 14 Oct 2026 00:00:00 +0000</pubDate>
+<category>VS Code extension · Dependency / SCA Security</category>
+<description>Flags a package imported in JS/TS but not declared in package.json -- a common slopsquatting / supply-chain risk.</description>
+</item>
+<item>
+<title>Dockerfile Missing USER Companion</title>
+<link>https://gaphunterlabs.github.io/catalog/vscode/dockerfile-missing-user-companion/</link>
+<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/vscode/dockerfile-missing-user-companion/</guid>
+<pubDate>Wed, 14 Oct 2026 00:00:00 +0000</pubDate>
+<category>VS Code extension · Docker / DevOps</category>
+<description>Warns when a Dockerfile's final build stage never sets a non-root USER (containers run as root by default).</description>
+</item>
 <item>
 <title>Postman OpenAPI Drift Companion</title>
 <link>https://gaphunterlabs.github.io/catalog/vscode/postman-openapi-drift-companion/</link>
@@ -310,22 +326,6 @@
 <pubDate>Wed, 02 Sep 2026 00:00:00 +0000</pubDate>
 <category>JetBrains plugin · Security</category>
 <description>Warning on a Pattern.compile("...")/"...".matches("...") call in Java whose literal regex argument has a structural catastrophic-backtracking pattern: a nested unbounded quantifier ((a+)+), or an unbounded-quantified alternation with overlapping branches ((a|a)*). A single crafted input against either pattern can hang a server thread indefinitely.</description>
-</item>
-<item>
-<title>PII via toString() Leak Companion</title>
-<link>https://gaphunterlabs.github.io/catalog/pii-tostring-leak-companion/</link>
-<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/pii-tostring-leak-companion/</guid>
-<pubDate>Wed, 02 Sep 2026 00:00:00 +0000</pubDate>
-<category>JetBrains plugin · Security</category>
-<description>Warning on a logging/print call passed an instance of a class whose toString() exposes a PII field (email, SSN, phone, date of birth, credit card...) -- toString() on a user object often serializes the whole model, unlike log.info(user.getEmail()) which explicitly picks only what should be logged.</description>
-</item>
-<item>
-<title>Module Boundary Leak Companion</title>
-<link>https://gaphunterlabs.github.io/catalog/module-boundary-leak-companion/</link>
-<guid isPermaLink="true">https://gaphunterlabs.github.io/catalog/module-boundary-leak-companion/</guid>
-<pubDate>Wed, 02 Sep 2026 00:00:00 +0000</pubDate>
-<category>JetBrains plugin · DevOps</category>
-<description>Warning on an import of an internal package (project convention: a .internal. segment in the package path) from a DIFFERENT Gradle/Maven module than the one that declares it -- hidden architecture coupling that, in large monorepos/microservices, precedes cascading-deployment incidents.</description>
 </item>
 </channel>
 </rss>

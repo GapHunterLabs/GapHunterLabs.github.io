@@ -6,7 +6,7 @@
   </url>
   <url>
     <loc>https://gaphunterlabs.github.io/catalog/</loc>
-    <lastmod>2026-10-14</lastmod>
+    <lastmod>2026-10-15</lastmod>
   </url>
   <url>
     <loc>https://gaphunterlabs.github.io/methodology/</loc>
@@ -734,7 +734,7 @@
   </url>
   <url>
     <loc>https://gaphunterlabs.github.io/es/catalogo/vscode/mlflow-companion/</loc>
-    <lastmod>2026-09-28</lastmod>
+    <lastmod>2026-10-15</lastmod>
   </url>
   <url>
     <loc>https://gaphunterlabs.github.io/es/catalogo/vscode/n-plus-one-query-companion/</loc>
@@ -1433,6 +1433,10 @@
     <lastmod>2026-09-28</lastmod>
   </url>
   <url>
+    <loc>https://gaphunterlabs.github.io/catalog/vscode/dockerfile-missing-user-companion/</loc>
+    <lastmod>2026-10-15</lastmod>
+  </url>
+  <url>
     <loc>https://gaphunterlabs.github.io/catalog/vscode/embedded-stack-usage-companion/</loc>
     <lastmod>2026-09-28</lastmod>
   </url>
@@ -1454,7 +1458,7 @@
   </url>
   <url>
     <loc>https://gaphunterlabs.github.io/catalog/vscode/mlflow-companion/</loc>
-    <lastmod>2026-09-28</lastmod>
+    <lastmod>2026-10-15</lastmod>
   </url>
   <url>
     <loc>https://gaphunterlabs.github.io/catalog/vscode/merge-conflict-leftover-companion/</loc>
@@ -1513,6 +1517,10 @@
     <lastmod>2026-09-28</lastmod>
   </url>
   <url>
+    <loc>https://gaphunterlabs.github.io/catalog/vscode/undeclared-dependency-companion/</loc>
+    <lastmod>2026-10-15</lastmod>
+  </url>
+  <url>
     <loc>https://gaphunterlabs.github.io/catalog/vscode/unleash-flag-usage-companion/</loc>
     <lastmod>2026-09-28</lastmod>
   </url>
@@ -1527,5 +1535,13 @@
   <url>
     <loc>https://gaphunterlabs.github.io/catalog/vscode/wrangler-config-companion/</loc>
     <lastmod>2026-09-28</lastmod>
+  </url>
+  <url>
+    <loc>https://gaphunterlabs.github.io/es/catalogo/vscode/dockerfile-missing-user-companion/</loc>
+    <lastmod>2026-10-15</lastmod>
+  </url>
+  <url>
+    <loc>https://gaphunterlabs.github.io/es/catalogo/vscode/undeclared-dependency-companion/</loc>
+    <lastmod>2026-10-15</lastmod>
   </url>
 </urlset>

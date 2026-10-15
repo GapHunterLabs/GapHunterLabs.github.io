@@ -599,6 +599,10 @@
     "fingerprint": "{\"displayName\": \"Dependency License Companion\", \"marketplaceUrl\": \"https://marketplace.visualstudio.com/items?itemName=GapHunterLabs.dependency-license-companion\", \"niche\": \"License Compliance\", \"pitch\": \"Reads each node_modules dependency's SPDX license locally and flags copyleft or missing licenses.\", \"version\": \"0.1.1\"}",
     "lastmod": "2026-09-28"
   },
+  "vscode/dockerfile-missing-user-companion": {
+    "fingerprint": "{\"displayName\": \"Dockerfile Missing USER Companion\", \"marketplaceUrl\": \"https://marketplace.visualstudio.com/items?itemName=GapHunterLabs.dockerfile-missing-user-companion\", \"niche\": \"Docker / DevOps\", \"pitch\": \"Warns when a Dockerfile's final build stage never sets a non-root USER (containers run as root by default).\", \"version\": \"0.1.0\"}",
+    "lastmod": "2026-10-15"
+  },
   "vscode/embedded-stack-usage-companion": {
     "fingerprint": "{\"displayName\": \"Embedded Stack Usage Companion\", \"marketplaceUrl\": \"https://marketplace.visualstudio.com/items?itemName=GapHunterLabs.embedded-stack-usage-companion\", \"niche\": \"Embedded / C Tooling\", \"pitch\": \"Parses GCC .su stack-usage files (-fstack-usage) and flags any function over a configurable stack budget.\", \"version\": \"0.1.1\"}",
     "lastmod": "2026-09-28"
@@ -624,8 +628,8 @@
     "lastmod": "2026-09-28"
   },
   "vscode/mlflow-companion": {
-    "fingerprint": "{\"displayName\": \"MLflow Companion\", \"marketplaceUrl\": \"https://marketplace.visualstudio.com/items?itemName=GapHunterLabs.mlflow-companion\", \"niche\": \"ML / Data Tooling\", \"pitch\": \"Browses local MLflow tracking-store runs (params, metrics, tags) in a sidebar tree, reading the store directly.\", \"version\": \"0.1.1\"}",
-    "lastmod": "2026-09-28"
+    "fingerprint": "{\"displayName\": \"MLflow Companion\", \"marketplaceUrl\": \"https://marketplace.visualstudio.com/items?itemName=GapHunterLabs.mlflow-companion\", \"niche\": \"ML / Data Tooling\", \"pitch\": \"Browses local MLflow tracking-store runs (params, metrics, tags) in a sidebar tree, reading the store directly.\", \"version\": \"0.1.2\"}",
+    "lastmod": "2026-10-15"
   },
   "vscode/n-plus-one-query-companion": {
     "fingerprint": "{\"displayName\": \"N+1 Query Companion\", \"marketplaceUrl\": \"https://marketplace.visualstudio.com/items?itemName=GapHunterLabs.n-plus-one-query-companion\", \"niche\": \"ORM / Query Tooling\", \"pitch\": \"Flags a TypeORM/Sequelize/Drizzle find/query call inside a loop -- the classic N+1 query pattern.\", \"version\": \"0.1.1\"}",
@@ -678,6 +682,10 @@
   "vscode/typosquat-dependency-companion": {
     "fingerprint": "{\"displayName\": \"Typosquat Dependency Companion\", \"marketplaceUrl\": \"https://marketplace.visualstudio.com/items?itemName=GapHunterLabs.typosquat-dependency-companion\", \"niche\": \"Supply Chain Security\", \"pitch\": \"Flags a package.json dependency whose name is a near-miss (edit distance 1-2) of a much more popular package.\", \"version\": \"0.1.1\"}",
     "lastmod": "2026-09-28"
+  },
+  "vscode/undeclared-dependency-companion": {
+    "fingerprint": "{\"displayName\": \"Undeclared Dependency Companion\", \"marketplaceUrl\": \"https://marketplace.visualstudio.com/items?itemName=GapHunterLabs.undeclared-dependency-companion\", \"niche\": \"Dependency / SCA Security\", \"pitch\": \"Flags a package imported in JS/TS but not declared in package.json -- a common slopsquatting / supply-chain risk.\", \"version\": \"0.1.0\"}",
+    "lastmod": "2026-10-15"
   },
   "vscode/unleash-flag-usage-companion": {
     "fingerprint": "{\"displayName\": \"Unleash Flag Usage Companion\", \"marketplaceUrl\": \"https://marketplace.visualstudio.com/items?itemName=GapHunterLabs.unleash-flag-usage-companion\", \"niche\": \"Feature Flag Tooling\", \"pitch\": \"Inventories Unleash feature flag usage across your codebase -- naming check, find-all-usages, stale-flag detection.\", \"version\": \"0.1.1\"}",

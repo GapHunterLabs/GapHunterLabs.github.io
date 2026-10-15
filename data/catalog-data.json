@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-14 09:50:26 UTC",
+  "generatedAt": "2026-10-15 00:16:04 UTC",
   "totalPlugins": 146,
   "totalDownloads": 10668,
   "pending": 0,
@@ -7,10 +7,6 @@
   "totalReviews": 0,
   "avgRating": null,
   "trend7d": [
-    {
-      "date": "2026-10-08",
-      "totalDownloads": 9666
-    },
     {
       "date": "2026-10-09",
       "totalDownloads": 9787
@@ -34,45 +30,13 @@
     {
       "date": "2026-10-14",
       "totalDownloads": 10668
+    },
+    {
+      "date": "2026-10-15",
+      "totalDownloads": 10668
     }
   ],
-  "recentChanges": [
-    {
-      "date": "2026-10-14",
-      "type": "growth",
-      "name": "Mermaid Companion",
-      "niche": "Diagrams",
-      "delta": 9
-    },
-    {
-      "date": "2026-10-14",
-      "type": "growth",
-      "name": "Terraform IAM Privesc Companion",
-      "niche": "IAM / Cloud Security",
-      "delta": 3
-    },
-    {
-      "date": "2026-10-14",
-      "type": "growth",
-      "name": "React Native Companion",
-      "niche": "React Native Tooling",
-      "delta": 3
-    },
-    {
-      "date": "2026-10-14",
-      "type": "growth",
-      "name": "JWT Companion",
-      "niche": "JWT / Auth Tooling",
-      "delta": 3
-    },
-    {
-      "date": "2026-10-14",
-      "type": "growth",
-      "name": "Feign Fallback Config Companion",
-      "niche": "Resilience Tooling",
-      "delta": 3
-    }
-  ],
+  "recentChanges": [],
   "plugins": [
     {
       "xmlId": "dev.gaphunter.mermaidcompanion",

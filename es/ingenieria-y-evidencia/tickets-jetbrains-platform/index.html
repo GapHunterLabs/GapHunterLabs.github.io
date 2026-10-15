@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="/js/theme-init.js?v=c436d752"></script>
-<script src="/js/site-chrome.js?v=64ce1ebd" defer></script>
+<script src="/js/site-chrome.js?v=17cb7e0d" defer></script>
 <script src="/js/site-reveal.js?v=ee52008b" defer></script>
 <meta name="description" content="Errores reportados en el YouTrack de JetBrains tras hallarlos un control del catálogo en el código de IntelliJ, más análisis de causa raíz en tickets de IntelliJ Platform.">
 <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -286,7 +286,7 @@
 
   <div class="lab-section-head">
     <h2>Arreglos aportados</h2>
-    <p>Pull requests enviados al repositorio <code>intellij-community</code> de JetBrains para errores reportados arriba.</p>
+    <p>Pull requests sent to JetBrains&rsquo; <code>intellij-community</code> repository &mdash; fixes for the bugs reported above, plus new and extended Java inspections contributed to the platform.</p>
   </div>
   <div class="lab-tickets">
     <article class="ticket-card">
@@ -304,6 +304,54 @@
         <span class="ticket-status is-open">Abierto</span>
       </div>
       <p>Arreglo para IJPL-257854. La revisión de errores corre en <code>ReadAction.nonBlocking(...)</code>, que se reinicia cuando hay una acción de escritura pendiente; <code>hasErrors()</code> no tiene efectos secundarios, así que reiniciarla es seguro. Los archivos cambiados se copian antes de la revisión, porque el conjunto se usa en la EDT. Medido con los jars de IntelliJ IDEA 2025.2 y una copia de la clase parcheada: la tecla que retoma la escritura en un archivo de 10,000 líneas tardó 134 ms con el código actual y 25 ms con el arreglo. El cambio no se compiló dentro del build completo de <code>intellij-community</code>.</p>
+    </article>
+    <article class="ticket-card">
+      <div class="ticket-head">
+        <a class="ticket-id" href="https://github.com/JetBrains/intellij-community/pull/3694" target="_blank" rel="noopener">PR #3694 &#8599;</a>
+        <h3>IJPL-257908 Live Templates: fast path in <code>TemplateContext.getDifference</code></h3>
+        <span class="ticket-status is-open">Abierto</span>
+      </div>
+      <p>Fix for IJPL-257908. Live Templates recomputed <code>isModified()</code> on the EDT after every click or keystroke (~165 ms on the measured setup). A one-line fast path in <code>TemplateContext.getDifference</code> brings that to ~0 ms. The equivalence is measured in a repro harness; the inspection test is run by JetBrains&rsquo; CI.</p>
+    </article>
+    <article class="ticket-card">
+      <div class="ticket-head">
+        <a class="ticket-id" href="https://github.com/JetBrains/intellij-community/pull/3696" target="_blank" rel="noopener">PR #3696 &#8599;</a>
+        <h3>IJPL-257919 Package File: keep the file I/O outside the read action</h3>
+        <span class="ticket-status is-open">Abierto</span>
+      </div>
+      <p>Fix for IJPL-257919. Build &rsaquo; Package File now resolves the target artifacts under a small <code>ReadAction.compute()</code>, but the file I/O (copying, opening and rewriting the ZIP, re-packing a nested archive) runs outside the read lock, so a write action no longer waits for it. The existing <code>PackageFileActionTest</code> covers the functional result; the timing measurement is attached to the ticket.</p>
+    </article>
+    <article class="ticket-card">
+      <div class="ticket-head">
+        <a class="ticket-id" href="https://github.com/JetBrains/intellij-community/pull/3701" target="_blank" rel="noopener">PR #3701 &#8599;</a>
+        <h3>IJPL-257909 Plugins settings: cache the essential-plugin requirement set</h3>
+        <span class="ticket-status is-open">Abierto</span>
+      </div>
+      <p>Fix for IJPL-257909. The Plugins settings page recomputed, for every plugin, whether it is required by an essential plugin (a <code>FIXME</code> in the source). The fix caches that set per <code>PluginSet</code> instance, invalidated structurally when the plugin set is replaced. Functional equivalence was reconfirmed across the catalog of descriptors (158/158).</p>
+    </article>
+    <article class="ticket-card">
+      <div class="ticket-head">
+        <a class="ticket-id" href="https://github.com/JetBrains/intellij-community/pull/3697" target="_blank" rel="noopener">PR #3697 &#8599;</a>
+        <h3>IDEA-266545 New Java inspection: magnitude comparison of <code>System.nanoTime()</code></h3>
+        <span class="ticket-status is-open">Abierto</span>
+      </div>
+      <p>For IDEA-266545. A new Java inspection (Probable bugs, off by default) flags <code>&lt;</code> <code>&gt;</code> <code>&lt;=</code> <code>&gt;=</code> comparisons where an operand is a direct <code>System.nanoTime()</code> call; the correct subtraction idiom is not flagged. Detection logic verified locally against 2026.2.3; the inspection test runs in JetBrains&rsquo; CI.</p>
+    </article>
+    <article class="ticket-card">
+      <div class="ticket-head">
+        <a class="ticket-id" href="https://github.com/JetBrains/intellij-community/pull/3698" target="_blank" rel="noopener">PR #3698 &#8599;</a>
+        <h3>IDEA-279282 Simplifiable Map operations: suggest <code>map.remove(key, value)</code></h3>
+        <span class="ticket-status is-open">Abierto</span>
+      </div>
+      <p>For IDEA-279282, an extension of the existing &lsquo;Simplifiable Map operations&rsquo; inspection, where a JetBrains maintainer asked for it. It detects <code>if (value.equals(map.get(key))) map.remove(key)</code> (both operand orders) and offers <code>map.remove(key, value)</code>, guarding against a null value and side-effecting key/value expressions.</p>
+    </article>
+    <article class="ticket-card">
+      <div class="ticket-head">
+        <a class="ticket-id" href="https://github.com/JetBrains/intellij-community/pull/3699" target="_blank" rel="noopener">PR #3699 &#8599;</a>
+        <h3>IDEA-279659 New Java inspection: <code>String.compareTo()</code> used for equality</h3>
+        <span class="ticket-status is-open">Abierto</span>
+      </div>
+      <p>For IDEA-279659. A new Java inspection (Verbose or redundant code, off by default) flags <code>compareTo(...) == 0</code> / <code>!= 0</code> on strings and offers <code>equals()</code> / <code>!equals()</code>, restricted to <code>String</code> and guarded against the null-argument difference (<code>compareTo(null)</code> throws, <code>equals(null)</code> is false). Detection and quick-fix verified locally.</p>
     </article>
   </div>
 
