@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-15 09:31:54 UTC",
+  "generatedAt": "2026-10-16 00:02:09 UTC",
   "totalPlugins": 146,
   "totalDownloads": 10730,
   "pending": 0,
@@ -7,10 +7,6 @@
   "totalReviews": 0,
   "avgRating": null,
   "trend7d": [
-    {
-      "date": "2026-10-09",
-      "totalDownloads": 9787
-    },
     {
       "date": "2026-10-10",
       "totalDownloads": 10012
@@ -34,45 +30,13 @@
     {
       "date": "2026-10-15",
       "totalDownloads": 10730
+    },
+    {
+      "date": "2026-10-16",
+      "totalDownloads": 10730
     }
   ],
-  "recentChanges": [
-    {
-      "date": "2026-10-15",
-      "type": "growth",
-      "name": "Mermaid Companion",
-      "niche": "Diagrams",
-      "delta": 9
-    },
-    {
-      "date": "2026-10-15",
-      "type": "growth",
-      "name": "Dependency Vulnerability Companion",
-      "niche": "Dependency / SCA Security",
-      "delta": 5
-    },
-    {
-      "date": "2026-10-15",
-      "type": "growth",
-      "name": "Cert Companion",
-      "niche": "Certificates / X.509",
-      "delta": 4
-    },
-    {
-      "date": "2026-10-15",
-      "type": "growth",
-      "name": "SQL String Concatenation Companion",
-      "niche": "SQL Injection Detection",
-      "delta": 3
-    },
-    {
-      "date": "2026-10-15",
-      "type": "growth",
-      "name": "Import Cost Companion",
-      "niche": "JS/TS Tooling",
-      "delta": 3
-    }
-  ],
+  "recentChanges": [],
   "plugins": [
     {
       "xmlId": "dev.gaphunter.mermaidcompanion",
