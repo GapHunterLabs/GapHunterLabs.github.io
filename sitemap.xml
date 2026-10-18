@@ -6,7 +6,7 @@
   </url>
   <url>
     <loc>https://gaphunterlabs.github.io/catalog/</loc>
-    <lastmod>2026-10-17</lastmod>
+    <lastmod>2026-10-18</lastmod>
   </url>
   <url>
     <loc>https://gaphunterlabs.github.io/methodology/</loc>
@@ -921,12 +921,12 @@
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
-    <loc>https://gaphunterlabs.github.io/catalog/spreadsheet-companion/</loc>
-    <lastmod>2026-09-22</lastmod>
-  </url>
-  <url>
     <loc>https://gaphunterlabs.github.io/catalog/cmake-companion/</loc>
     <lastmod>2026-09-28</lastmod>
+  </url>
+  <url>
+    <loc>https://gaphunterlabs.github.io/catalog/spreadsheet-companion/</loc>
+    <lastmod>2026-09-22</lastmod>
   </url>
   <url>
     <loc>https://gaphunterlabs.github.io/catalog/format-converter-companion/</loc>
@@ -961,12 +961,12 @@
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
-    <loc>https://gaphunterlabs.github.io/catalog/test-scaffold-companion/</loc>
-    <lastmod>2026-09-28</lastmod>
-  </url>
-  <url>
     <loc>https://gaphunterlabs.github.io/catalog/feature-flag-reference-companion/</loc>
     <lastmod>2026-09-22</lastmod>
+  </url>
+  <url>
+    <loc>https://gaphunterlabs.github.io/catalog/test-scaffold-companion/</loc>
+    <lastmod>2026-09-28</lastmod>
   </url>
   <url>
     <loc>https://gaphunterlabs.github.io/catalog/n-plus-one-query-companion/</loc>
@@ -985,6 +985,10 @@
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
+    <loc>https://gaphunterlabs.github.io/catalog/aws-sdk-client-reuse-companion/</loc>
+    <lastmod>2026-09-22</lastmod>
+  </url>
+  <url>
     <loc>https://gaphunterlabs.github.io/catalog/git-hygiene-companion/</loc>
     <lastmod>2026-09-28</lastmod>
   </url>
@@ -997,10 +1001,6 @@
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
-    <loc>https://gaphunterlabs.github.io/catalog/aws-sdk-client-reuse-companion/</loc>
-    <lastmod>2026-09-22</lastmod>
-  </url>
-  <url>
     <loc>https://gaphunterlabs.github.io/catalog/regex-preview-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
@@ -1009,11 +1009,11 @@
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
-    <loc>https://gaphunterlabs.github.io/catalog/idempotency-key-companion/</loc>
+    <loc>https://gaphunterlabs.github.io/catalog/aws-s3-public-acl-sdk-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
-    <loc>https://gaphunterlabs.github.io/catalog/aws-s3-public-acl-sdk-companion/</loc>
+    <loc>https://gaphunterlabs.github.io/catalog/idempotency-key-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
@@ -1045,11 +1045,11 @@
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
-    <loc>https://gaphunterlabs.github.io/catalog/circular-dependency-companion/</loc>
+    <loc>https://gaphunterlabs.github.io/catalog/terraform-iam-wildcard-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
-    <loc>https://gaphunterlabs.github.io/catalog/terraform-iam-wildcard-companion/</loc>
+    <loc>https://gaphunterlabs.github.io/catalog/circular-dependency-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
@@ -1145,11 +1145,11 @@
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
-    <loc>https://gaphunterlabs.github.io/catalog/jwt-webhook-timing-safe-companion/</loc>
+    <loc>https://gaphunterlabs.github.io/catalog/php-sql-injection-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
-    <loc>https://gaphunterlabs.github.io/catalog/php-sql-injection-companion/</loc>
+    <loc>https://gaphunterlabs.github.io/catalog/jwt-webhook-timing-safe-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
@@ -1189,6 +1189,10 @@
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
+    <loc>https://gaphunterlabs.github.io/catalog/environment-specific-constant-companion/</loc>
+    <lastmod>2026-09-22</lastmod>
+  </url>
+  <url>
     <loc>https://gaphunterlabs.github.io/catalog/grpc-missing-deadline-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
@@ -1210,10 +1214,6 @@
   </url>
   <url>
     <loc>https://gaphunterlabs.github.io/catalog/correlation-id-propagation-companion/</loc>
-    <lastmod>2026-09-22</lastmod>
-  </url>
-  <url>
-    <loc>https://gaphunterlabs.github.io/catalog/environment-specific-constant-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
@@ -1257,6 +1257,10 @@
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
+    <loc>https://gaphunterlabs.github.io/catalog/lucene-query-injection-companion/</loc>
+    <lastmod>2026-09-22</lastmod>
+  </url>
+  <url>
     <loc>https://gaphunterlabs.github.io/catalog/micrometer-timer-sample-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
@@ -1270,10 +1274,6 @@
   </url>
   <url>
     <loc>https://gaphunterlabs.github.io/catalog/ktor-httpclient-reuse-companion/</loc>
-    <lastmod>2026-09-22</lastmod>
-  </url>
-  <url>
-    <loc>https://gaphunterlabs.github.io/catalog/lucene-query-injection-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
@@ -1321,6 +1321,10 @@
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
+    <loc>https://gaphunterlabs.github.io/catalog/mongo-client-reuse-companion/</loc>
+    <lastmod>2026-09-22</lastmod>
+  </url>
+  <url>
     <loc>https://gaphunterlabs.github.io/catalog/ssrf-unsanitized-url-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
@@ -1329,11 +1333,11 @@
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
-    <loc>https://gaphunterlabs.github.io/catalog/mongo-client-reuse-companion/</loc>
+    <loc>https://gaphunterlabs.github.io/catalog/object-mapper-reuse-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
-    <loc>https://gaphunterlabs.github.io/catalog/object-mapper-reuse-companion/</loc>
+    <loc>https://gaphunterlabs.github.io/catalog/otel-span-naming-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
@@ -1342,10 +1346,6 @@
   </url>
   <url>
     <loc>https://gaphunterlabs.github.io/catalog/ssrf-allowlist-bypass-companion/</loc>
-    <lastmod>2026-09-22</lastmod>
-  </url>
-  <url>
-    <loc>https://gaphunterlabs.github.io/catalog/otel-span-naming-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>

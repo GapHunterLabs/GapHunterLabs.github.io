@@ -1,16 +1,12 @@
 {
-  "generatedAt": "2026-10-17 23:43:35 UTC",
+  "generatedAt": "2026-10-18 09:13:40 UTC",
   "totalPlugins": 146,
-  "totalDownloads": 11103,
+  "totalDownloads": 11119,
   "pending": 0,
   "totalStars": 0,
   "totalReviews": 0,
   "avgRating": null,
   "trend7d": [
-    {
-      "date": "2026-10-11",
-      "totalDownloads": 10169
-    },
     {
       "date": "2026-10-12",
       "totalDownloads": 10434
@@ -34,43 +30,47 @@
     {
       "date": "2026-10-17",
       "totalDownloads": 11103
+    },
+    {
+      "date": "2026-10-18",
+      "totalDownloads": 11119
     }
   ],
   "recentChanges": [
     {
-      "date": "2026-10-17",
+      "date": "2026-10-18",
       "type": "growth",
-      "name": "Mermaid Companion",
-      "niche": "Diagrams",
-      "delta": 8
-    },
-    {
-      "date": "2026-10-17",
-      "type": "growth",
-      "name": "React Native Companion",
-      "niche": "React Native Tooling",
-      "delta": 3
-    },
-    {
-      "date": "2026-10-17",
-      "type": "growth",
-      "name": "Env Var Missing Companion",
-      "niche": "Env Config Tooling",
-      "delta": 3
-    },
-    {
-      "date": "2026-10-17",
-      "type": "growth",
-      "name": "JWT Companion",
-      "niche": "JWT / Auth Tooling",
+      "name": "AWS S3 Public ACL via SDK Companion",
+      "niche": "AWS Security",
       "delta": 2
     },
     {
-      "date": "2026-10-17",
+      "date": "2026-10-18",
       "type": "growth",
-      "name": "Jenkinsfile Companion",
-      "niche": "Jenkins CI/CD",
-      "delta": 2
+      "name": "Terraform IAM Wildcard Companion",
+      "niche": "IAM / Cloud Security",
+      "delta": 1
+    },
+    {
+      "date": "2026-10-18",
+      "type": "growth",
+      "name": "PHP SQL Injection Companion",
+      "niche": "PHP Security",
+      "delta": 1
+    },
+    {
+      "date": "2026-10-18",
+      "type": "growth",
+      "name": "OTel Span Naming Companion",
+      "niche": "Distributed Tracing",
+      "delta": 1
+    },
+    {
+      "date": "2026-10-18",
+      "type": "growth",
+      "name": "MongoDB Client Reuse Companion",
+      "niche": "Database Client Reuse",
+      "delta": 1
     }
   ],
   "plugins": [
@@ -84,12 +84,12 @@
       "firstPublished": "2026-08-27",
       "repo": "mermaid-companion",
       "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33340-mermaid-companion",
-      "downloads": 734,
+      "downloads": 735,
       "pricing": "FREEMIUM",
       "reviews": 0,
       "rating": null,
       "stars": 0,
-      "growth": 919.4,
+      "growth": 920.8,
       "growthSince": "2026-08-18",
       "growthFrom": 72
     },
@@ -122,12 +122,12 @@
       "firstPublished": "2026-08-27",
       "repo": "ansible-companion",
       "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33082-ansible-companion",
-      "downloads": 302,
+      "downloads": 303,
       "pricing": "FREEMIUM",
       "reviews": 0,
       "rating": null,
       "stars": 0,
-      "growth": 149.6,
+      "growth": 150.4,
       "growthSince": "2026-08-18",
       "growthFrom": 121
     },
@@ -255,12 +255,12 @@
       "firstPublished": null,
       "repo": "dependency-vulnerability-companion",
       "marketplaceUrl": "https://plugins.jetbrains.com/plugin/34191-dependency-vulnerability-companion",
-      "downloads": 170,
+      "downloads": 171,
       "pricing": "FREE",
       "reviews": 0,
       "rating": null,
       "stars": 0,
-      "growth": 16900.0,
+      "growth": 17000.0,
       "growthSince": "2026-09-11",
       "growthFrom": 1
     },
@@ -293,12 +293,12 @@
       "firstPublished": "2026-08-27",
       "repo": "firestore-companion",
       "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33330-firestore-companion",
-      "downloads": 149,
+      "downloads": 150,
       "pricing": "FREEMIUM",
       "reviews": 0,
       "rating": null,
       "stars": 0,
-      "growth": 292.1,
+      "growth": 294.7,
       "growthSince": "2026-08-18",
       "growthFrom": 38
     },
@@ -464,7 +464,7 @@
       "firstPublished": "2026-08-14",
       "repo": "import-cost-companion",
       "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33552-import-cost-companion",
-      "downloads": 110,
+      "downloads": 111,
       "pricing": "FREE",
       "reviews": 0,
       "rating": null,
@@ -512,6 +512,25 @@
       "growthFrom": 0
     },
     {
+      "xmlId": "dev.gaphunter.cmakecompanion",
+      "name": "CMake Companion",
+      "pitch": "Syntax highlighting, known-command highlighting, and an unmatched-paren inspection for `CMakeLists.txt`/`*.cmake` files.",
+      "why": "**CMake Plus** (JetBrains Marketplace id 12869), 57,780 downloads, paid subscription, vendor Artsiom Chapialiou. The same vendor's free sibling plugin (\"CMake simple highlighter\", 254k downloads) had its command-argument highlighting moved behind the paid plugin, which drew complaints about the business model on top of real bugs. Verbatim reviewer complaints:\n\n- *\"The new version makes the IDE unresponsive and is really slow.\"* (Jacob Hatami, 2023-11)\n- Two separate reviews (2021-12, 2022-10) from the same user reporting **\"License not found\"** after repeated reactivation.\n- A real GitHub issue against the vendor's own repo: the plugin crashes on startup after purchasing a license, \"Access Denied\" -- *\"Plugin 'artsiomch.cmake.plus' failed to initialize and will be disabled\"*.\n- An upsell notification on every IDE boot, \"with the intent to annoy you/influence you psychologically.\"",
+      "niche": "CMake / Build Tooling",
+      "githubUrl": "https://github.com/GapHunterLabs/cmake-companion",
+      "firstPublished": "2026-08-27",
+      "repo": "cmake-companion",
+      "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33339-cmake-companion",
+      "downloads": 106,
+      "pricing": "FREE",
+      "reviews": 0,
+      "rating": null,
+      "stars": 0,
+      "growth": 488.9,
+      "growthSince": "2026-08-18",
+      "growthFrom": 18
+    },
+    {
       "xmlId": "dev.gaphunter.spreadsheetcompanion",
       "name": "Spreadsheet Companion",
       "pitch": "IntelliJ-family plugin. Edit CSV/TSV files in a real table and view XLSX workbooks — without leaving the IDE, and without the plugin taking over your files.",
@@ -529,25 +548,6 @@
       "growth": 100.0,
       "growthSince": "2026-08-18",
       "growthFrom": 53
-    },
-    {
-      "xmlId": "dev.gaphunter.cmakecompanion",
-      "name": "CMake Companion",
-      "pitch": "Syntax highlighting, known-command highlighting, and an unmatched-paren inspection for `CMakeLists.txt`/`*.cmake` files.",
-      "why": "**CMake Plus** (JetBrains Marketplace id 12869), 57,780 downloads, paid subscription, vendor Artsiom Chapialiou. The same vendor's free sibling plugin (\"CMake simple highlighter\", 254k downloads) had its command-argument highlighting moved behind the paid plugin, which drew complaints about the business model on top of real bugs. Verbatim reviewer complaints:\n\n- *\"The new version makes the IDE unresponsive and is really slow.\"* (Jacob Hatami, 2023-11)\n- Two separate reviews (2021-12, 2022-10) from the same user reporting **\"License not found\"** after repeated reactivation.\n- A real GitHub issue against the vendor's own repo: the plugin crashes on startup after purchasing a license, \"Access Denied\" -- *\"Plugin 'artsiomch.cmake.plus' failed to initialize and will be disabled\"*.\n- An upsell notification on every IDE boot, \"with the intent to annoy you/influence you psychologically.\"",
-      "niche": "CMake / Build Tooling",
-      "githubUrl": "https://github.com/GapHunterLabs/cmake-companion",
-      "firstPublished": "2026-08-27",
-      "repo": "cmake-companion",
-      "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33339-cmake-companion",
-      "downloads": 105,
-      "pricing": "FREE",
-      "reviews": 0,
-      "rating": null,
-      "stars": 0,
-      "growth": 483.3,
-      "growthSince": "2026-08-18",
-      "growthFrom": 18
     },
     {
       "xmlId": "dev.gaphunter.formatconvertercompanion",
@@ -702,6 +702,25 @@
       "growthFrom": 26
     },
     {
+      "xmlId": "dev.gaphunter.featureflagreferencecompanion",
+      "name": "Feature Flag Reference Companion",
+      "pitch": "IntelliJ-family plugin. Gutter icon next to every recognized feature-flag-check call's key literal in Java/Kotlin code (`isEnabled(\"checkout_v2\")`, `variation(\"checkout_v2\", false)`, and similar), showing how many times that exact key is referenced anywhere else in the open project — helps find orphaned flags (dead code left behind after a rollout completed) without connecting to any provider. 100",
+      "why": "An original idea, not a port of an existing competitor — validated against this catalog's own idea-validation discipline before being built. The 3 existing feature-flag plugins on JetBrains Marketplace are all clients that **connect to a provider's service** to check a flag's live state — this plugin is deliberately the opposite: 100% static analysis of references already in your code, no provider connection, complementary rather than competing. Same \"apuesta consciente sin ancla de mercado\" treatment as Refactor Simulator / Test Scaffold Companion / Circular Dependency Companion / Unused npm ",
+      "niche": "Code Quality / Feature Flags",
+      "githubUrl": "https://github.com/GapHunterLabs/feature-flag-reference-companion",
+      "firstPublished": "2026-08-31",
+      "repo": "feature-flag-reference-companion",
+      "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33679-feature-flag-reference-companion",
+      "downloads": 90,
+      "pricing": "FREE",
+      "reviews": 0,
+      "rating": null,
+      "stars": 0,
+      "growth": 8900.0,
+      "growthSince": "2026-08-21",
+      "growthFrom": 1
+    },
+    {
       "xmlId": "dev.gaphunter.testscaffoldcompanion",
       "name": "Test Scaffold Companion",
       "pitch": "IntelliJ-family plugin (IntelliJ IDEA, Android Studio, and any IntelliJ-based IDE that bundles the Java and Kotlin plugins). Generates a real, compiling JUnit test skeleton for a Java or Kotlin class — one empty test method per public method, with your project's own test framework detected and imported correctly.",
@@ -719,25 +738,6 @@
       "growth": 900.0,
       "growthSince": "2026-08-18",
       "growthFrom": 9
-    },
-    {
-      "xmlId": "dev.gaphunter.featureflagreferencecompanion",
-      "name": "Feature Flag Reference Companion",
-      "pitch": "IntelliJ-family plugin. Gutter icon next to every recognized feature-flag-check call's key literal in Java/Kotlin code (`isEnabled(\"checkout_v2\")`, `variation(\"checkout_v2\", false)`, and similar), showing how many times that exact key is referenced anywhere else in the open project — helps find orphaned flags (dead code left behind after a rollout completed) without connecting to any provider. 100",
-      "why": "An original idea, not a port of an existing competitor — validated against this catalog's own idea-validation discipline before being built. The 3 existing feature-flag plugins on JetBrains Marketplace are all clients that **connect to a provider's service** to check a flag's live state — this plugin is deliberately the opposite: 100% static analysis of references already in your code, no provider connection, complementary rather than competing. Same \"apuesta consciente sin ancla de mercado\" treatment as Refactor Simulator / Test Scaffold Companion / Circular Dependency Companion / Unused npm ",
-      "niche": "Code Quality / Feature Flags",
-      "githubUrl": "https://github.com/GapHunterLabs/feature-flag-reference-companion",
-      "firstPublished": "2026-08-31",
-      "repo": "feature-flag-reference-companion",
-      "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33679-feature-flag-reference-companion",
-      "downloads": 89,
-      "pricing": "FREE",
-      "reviews": 0,
-      "rating": null,
-      "stars": 0,
-      "growth": 8800.0,
-      "growthSince": "2026-08-21",
-      "growthFrom": 1
     },
     {
       "xmlId": "dev.gaphunter.nplusonequerycompanion",
@@ -816,6 +816,25 @@
       "growthFrom": 1
     },
     {
+      "xmlId": "dev.gaphunter.awssdkclientreusecompanion",
+      "name": "AWS SDK Client Reuse Companion",
+      "pitch": "Gutter warning icon on an AWS SDK for Java 2.x service client (`S3Client`, `DynamoDbClient`, `SqsClient`, `SnsClient`, `LambdaClient`, and similar) built via `XxxClient.builder().build()` inside a regular method body — AWS's own documentation states service clients are thread-safe and meant to be created once and reused; a client built inside a method means a brand new client (and its own connecti",
+      "why": "Building a client inside a request handler or a Lambda function body is an easy, natural-looking mistake — the code compiles fine and works correctly, it's just needlessly slow (every call pays connection-setup cost) and wastes resources. AWS documents the singleton-client pattern explicitly, but nothing in the IDE flags a client built the wrong way today.",
+      "niche": "Cloud SDK Client Reuse",
+      "githubUrl": "https://github.com/GapHunterLabs/aws-sdk-client-reuse-companion",
+      "firstPublished": "2026-08-25",
+      "repo": "aws-sdk-client-reuse-companion",
+      "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33806-aws-sdk-client-reuse-companion",
+      "downloads": 82,
+      "pricing": "FREE",
+      "reviews": 0,
+      "rating": null,
+      "stars": 0,
+      "growth": null,
+      "growthSince": "2026-08-26",
+      "growthFrom": 0
+    },
+    {
       "xmlId": "dev.gaphunter.githygienecompanion",
       "name": "Git Hygiene Companion",
       "pitch": "IntelliJ-family plugin. Lightweight inline git blame — author and date at the end of the current line — designed from the ground up to never block the editor.",
@@ -873,25 +892,6 @@
       "growthFrom": 0
     },
     {
-      "xmlId": "dev.gaphunter.awssdkclientreusecompanion",
-      "name": "AWS SDK Client Reuse Companion",
-      "pitch": "Gutter warning icon on an AWS SDK for Java 2.x service client (`S3Client`, `DynamoDbClient`, `SqsClient`, `SnsClient`, `LambdaClient`, and similar) built via `XxxClient.builder().build()` inside a regular method body — AWS's own documentation states service clients are thread-safe and meant to be created once and reused; a client built inside a method means a brand new client (and its own connecti",
-      "why": "Building a client inside a request handler or a Lambda function body is an easy, natural-looking mistake — the code compiles fine and works correctly, it's just needlessly slow (every call pays connection-setup cost) and wastes resources. AWS documents the singleton-client pattern explicitly, but nothing in the IDE flags a client built the wrong way today.",
-      "niche": "Cloud SDK Client Reuse",
-      "githubUrl": "https://github.com/GapHunterLabs/aws-sdk-client-reuse-companion",
-      "firstPublished": "2026-08-25",
-      "repo": "aws-sdk-client-reuse-companion",
-      "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33806-aws-sdk-client-reuse-companion",
-      "downloads": 81,
-      "pricing": "FREE",
-      "reviews": 0,
-      "rating": null,
-      "stars": 0,
-      "growth": null,
-      "growthSince": "2026-08-26",
-      "growthFrom": 0
-    },
-    {
       "xmlId": "dev.gaphunter.regexpreviewcompanion",
       "name": "Regex Preview Companion",
       "pitch": "IntelliJ-family plugin. A tool window with a pattern field and a sample-text area — type a regex, type or paste sample text, and every match is highlighted live as you type, with a real match count. Case insensitive, multiline, and dot-all flags are real checkboxes, not something you have to remember inline syntax for.",
@@ -930,6 +930,25 @@
       "growthFrom": 1
     },
     {
+      "xmlId": "dev.gaphunter.awss3publicaclsdkcompanion",
+      "name": "AWS S3 Public ACL via SDK Companion",
+      "pitch": "Warning on a real AWS SDK for Java call (application code, not infrastructure-as-code) that sets a PUBLIC ACL on an S3 bucket or object: SDK 1.x's `AmazonS3.setBucketAcl(bucket, CannedAccessControlList.PublicRead)`/`PutObjectRequest.withCannedAcl(...)`/ `.setCannedAcl(...)`, and SDK 2.x's fluent `.acl(ObjectCannedACL.PUBLIC_READ)`/`.acl(\"public-read\")`.",
+      "why": "Public exposure of data via application code, not just infrastructure configuration -- a category with its own dedicated detector in the AWS CodeGuru Detector Library (a real reference for the mechanism, not a competing IDE product). Different angle from IaC-level S3 misconfig, already covered by CLI tools like Checkov/tfsec; no dedicated Marketplace plugin found for this specific application-code category.",
+      "niche": "AWS Security",
+      "githubUrl": "https://github.com/GapHunterLabs/aws-s3-public-acl-sdk-companion",
+      "firstPublished": "2026-09-02",
+      "repo": "aws-s3-public-acl-sdk-companion",
+      "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33996-aws-s3-public-acl-sdk-companion",
+      "downloads": 72,
+      "pricing": "FREE",
+      "reviews": 0,
+      "rating": null,
+      "stars": 0,
+      "growth": null,
+      "growthSince": "2026-09-02",
+      "growthFrom": 0
+    },
+    {
       "xmlId": "dev.gaphunter.idempotencykeycompanion",
       "name": "Idempotency Key Companion",
       "pitch": "Gutter warning icon on any Java/Kotlin Spring MVC `@PostMapping`/ `@PutMapping` (or `@RequestMapping(method = ...)`) endpoint method with no `@RequestHeader` parameter for an idempotency key — the classic footgun where a retried or double-submitted POST/PUT creates a duplicate side effect (a duplicate order, a duplicate charge) because nothing in the handler recognizes \"I already saw this exact re",
@@ -946,25 +965,6 @@
       "stars": 0,
       "growth": null,
       "growthSince": "2026-08-26",
-      "growthFrom": 0
-    },
-    {
-      "xmlId": "dev.gaphunter.awss3publicaclsdkcompanion",
-      "name": "AWS S3 Public ACL via SDK Companion",
-      "pitch": "Warning on a real AWS SDK for Java call (application code, not infrastructure-as-code) that sets a PUBLIC ACL on an S3 bucket or object: SDK 1.x's `AmazonS3.setBucketAcl(bucket, CannedAccessControlList.PublicRead)`/`PutObjectRequest.withCannedAcl(...)`/ `.setCannedAcl(...)`, and SDK 2.x's fluent `.acl(ObjectCannedACL.PUBLIC_READ)`/`.acl(\"public-read\")`.",
-      "why": "Public exposure of data via application code, not just infrastructure configuration -- a category with its own dedicated detector in the AWS CodeGuru Detector Library (a real reference for the mechanism, not a competing IDE product). Different angle from IaC-level S3 misconfig, already covered by CLI tools like Checkov/tfsec; no dedicated Marketplace plugin found for this specific application-code category.",
-      "niche": "AWS Security",
-      "githubUrl": "https://github.com/GapHunterLabs/aws-s3-public-acl-sdk-companion",
-      "firstPublished": "2026-09-02",
-      "repo": "aws-s3-public-acl-sdk-companion",
-      "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33996-aws-s3-public-acl-sdk-companion",
-      "downloads": 70,
-      "pricing": "FREE",
-      "reviews": 0,
-      "rating": null,
-      "stars": 0,
-      "growth": null,
-      "growthSince": "2026-09-02",
       "growthFrom": 0
     },
     {
@@ -1101,6 +1101,25 @@
       "growthFrom": 0
     },
     {
+      "xmlId": "dev.gaphunter.terraformiamwildcardcompanion",
+      "name": "Terraform IAM Wildcard Companion",
+      "pitch": "Warning on an IAM policy statement (inside a Terraform `aws_iam_policy`/`aws_iam_role_policy` resource's `jsonencode({...})` block) whose `Action` or `Resource` is `\"*\"` with no `Condition` scoping it down.",
+      "why": "A direct violation of least-privilege, documented as a dedicated check by tfsec (`no-policy-wildcards`) and Tenable -- a real vector for privilege escalation in cloud incidents. tfsec/Policy Sentry are external CLI tools; no dedicated Marketplace plugin does this as an inline IDE inspection.",
+      "niche": "IAM / Cloud Security",
+      "githubUrl": "https://github.com/GapHunterLabs/terraform-iam-wildcard-companion",
+      "firstPublished": "2026-09-02",
+      "repo": "terraform-iam-wildcard-companion",
+      "marketplaceUrl": "https://plugins.jetbrains.com/plugin/34002-terraform-iam-wildcard-companion",
+      "downloads": 66,
+      "pricing": "FREE",
+      "reviews": 0,
+      "rating": null,
+      "stars": 0,
+      "growth": null,
+      "growthSince": "2026-09-02",
+      "growthFrom": 0
+    },
+    {
       "xmlId": "dev.gaphunter.circulardependencycompanion",
       "name": "Circular Dependency Companion",
       "pitch": "IntelliJ-family plugin. Visualizes the dependency graph between **modules** of a multi-module Gradle or Maven project, and highlights real circular dependencies when they exist — module/build-system level, not file/class-level \"circular import\" (already covered by several existing plugins). 100% static text/XML analysis of files already open in your project: no Gradle daemon, no Maven reactor buil",
@@ -1118,25 +1137,6 @@
       "growth": 6400.0,
       "growthSince": "2026-08-21",
       "growthFrom": 1
-    },
-    {
-      "xmlId": "dev.gaphunter.terraformiamwildcardcompanion",
-      "name": "Terraform IAM Wildcard Companion",
-      "pitch": "Warning on an IAM policy statement (inside a Terraform `aws_iam_policy`/`aws_iam_role_policy` resource's `jsonencode({...})` block) whose `Action` or `Resource` is `\"*\"` with no `Condition` scoping it down.",
-      "why": "A direct violation of least-privilege, documented as a dedicated check by tfsec (`no-policy-wildcards`) and Tenable -- a real vector for privilege escalation in cloud incidents. tfsec/Policy Sentry are external CLI tools; no dedicated Marketplace plugin does this as an inline IDE inspection.",
-      "niche": "IAM / Cloud Security",
-      "githubUrl": "https://github.com/GapHunterLabs/terraform-iam-wildcard-companion",
-      "firstPublished": "2026-09-02",
-      "repo": "terraform-iam-wildcard-companion",
-      "marketplaceUrl": "https://plugins.jetbrains.com/plugin/34002-terraform-iam-wildcard-companion",
-      "downloads": 65,
-      "pricing": "FREE",
-      "reviews": 0,
-      "rating": null,
-      "stars": 0,
-      "growth": null,
-      "growthSince": "2026-09-02",
-      "growthFrom": 0
     },
     {
       "xmlId": "dev.gaphunter.changecasecompanion",
@@ -1576,6 +1576,25 @@
       "growthFrom": 0
     },
     {
+      "xmlId": "dev.gaphunter.phpsqlinjectioncompanion",
+      "name": "PHP SQL Injection Companion",
+      "pitch": "Warning on `mysqli_query(`, `->query(`, or `->exec(` (the `mysqli`/`PDO` query methods) whose SQL string argument contains `$variable` interpolation or a concatenation with a variable, rather than a prepared-statement placeholder. This is the textbook SQL injection anti-pattern: prepared statements exist precisely so the SQL text and the data are sent to the database separately — string- building ",
+      "why": "```php mysqli_query($conn, \"SELECT * FROM users WHERE id = $id\"); ```",
+      "niche": "PHP Security",
+      "githubUrl": "https://github.com/GapHunterLabs/php-sql-injection-companion",
+      "firstPublished": "2026-08-27",
+      "repo": "php-sql-injection-companion",
+      "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33893-php-sql-injection-companion",
+      "downloads": 49,
+      "pricing": "FREE",
+      "reviews": 0,
+      "rating": null,
+      "stars": 0,
+      "growth": null,
+      "growthSince": "2026-08-29",
+      "growthFrom": 0
+    },
+    {
       "xmlId": "dev.gaphunter.jwtwebhooktimingsafecompanion",
       "name": "JWT Webhook Signature Timing-Safe Comparison Companion",
       "pitch": "Warning on a webhook/HMAC signature comparison that uses `.equals()`/ `Arrays.equals()` (short-circuits on the first differing byte) instead of `MessageDigest.isEqual(...)` (constant-time). An attacker can reconstruct a valid HMAC signature byte-by-byte by measuring response times, forging webhook events.",
@@ -1592,25 +1611,6 @@
       "stars": 0,
       "growth": null,
       "growthSince": "2026-09-02",
-      "growthFrom": 0
-    },
-    {
-      "xmlId": "dev.gaphunter.phpsqlinjectioncompanion",
-      "name": "PHP SQL Injection Companion",
-      "pitch": "Warning on `mysqli_query(`, `->query(`, or `->exec(` (the `mysqli`/`PDO` query methods) whose SQL string argument contains `$variable` interpolation or a concatenation with a variable, rather than a prepared-statement placeholder. This is the textbook SQL injection anti-pattern: prepared statements exist precisely so the SQL text and the data are sent to the database separately — string- building ",
-      "why": "```php mysqli_query($conn, \"SELECT * FROM users WHERE id = $id\"); ```",
-      "niche": "PHP Security",
-      "githubUrl": "https://github.com/GapHunterLabs/php-sql-injection-companion",
-      "firstPublished": "2026-08-27",
-      "repo": "php-sql-injection-companion",
-      "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33893-php-sql-injection-companion",
-      "downloads": 48,
-      "pricing": "FREE",
-      "reviews": 0,
-      "rating": null,
-      "stars": 0,
-      "growth": null,
-      "growthSince": "2026-08-29",
       "growthFrom": 0
     },
     {
@@ -1785,6 +1785,25 @@
       "growthFrom": 0
     },
     {
+      "xmlId": "dev.gaphunter.environmentspecificconstantcompanion",
+      "name": "Environment-Specific Constant Companion",
+      "pitch": "IntelliJ-family plugin that flags a hardcoded URL or `host:port` string literal in Java source that also appears, textually, as a value in one of the project's own config files (`.properties`/`.yml`/`.yaml`/`.env`) -- the value clearly belongs to config, and the code copy can now silently drift out of sync with it.",
+      "why": "Config drift is a real, recurring source of production incidents: a value that gets updated one day only in the config file (the \"correct\" place to change it) leaves a hardcoded copy in source code still pointing at the old endpoint, host, or port -- with no compile error, no test failure, and often no symptom until that specific code path runs against production. Adjacent to this catalog's own `config-secrets-file-companion` (which flags real secrets hardcoded in config files) and `env-diff-companion` (which diffs keys across `.env` files), but neither checks specifically for code-vs-config v",
+      "niche": "Env Config Tooling",
+      "githubUrl": "https://github.com/GapHunterLabs/environment-specific-constant-companion",
+      "firstPublished": "2026-09-02",
+      "repo": "environment-specific-constant-companion",
+      "marketplaceUrl": "https://plugins.jetbrains.com/plugin/34017-environment-specific-constant-companion",
+      "downloads": 44,
+      "pricing": "FREE",
+      "reviews": 0,
+      "rating": null,
+      "stars": 0,
+      "growth": null,
+      "growthSince": "2026-09-02",
+      "growthFrom": 0
+    },
+    {
       "xmlId": "dev.gaphunter.grpcmissingdeadlinecompanion",
       "name": "gRPC Missing Deadline Companion",
       "pitch": "Warning on an RPC call made through a generated gRPC blocking stub (`XxxGrpc.newBlockingStub(channel)....call(request)`) whose stub-construction chain never passes through `.withDeadline(...)`/`.withDeadlineAfter(...)`.",
@@ -1896,25 +1915,6 @@
       "stars": 0,
       "growth": null,
       "growthSince": "2026-08-26",
-      "growthFrom": 0
-    },
-    {
-      "xmlId": "dev.gaphunter.environmentspecificconstantcompanion",
-      "name": "Environment-Specific Constant Companion",
-      "pitch": "IntelliJ-family plugin that flags a hardcoded URL or `host:port` string literal in Java source that also appears, textually, as a value in one of the project's own config files (`.properties`/`.yml`/`.yaml`/`.env`) -- the value clearly belongs to config, and the code copy can now silently drift out of sync with it.",
-      "why": "Config drift is a real, recurring source of production incidents: a value that gets updated one day only in the config file (the \"correct\" place to change it) leaves a hardcoded copy in source code still pointing at the old endpoint, host, or port -- with no compile error, no test failure, and often no symptom until that specific code path runs against production. Adjacent to this catalog's own `config-secrets-file-companion` (which flags real secrets hardcoded in config files) and `env-diff-companion` (which diffs keys across `.env` files), but neither checks specifically for code-vs-config v",
-      "niche": "Env Config Tooling",
-      "githubUrl": "https://github.com/GapHunterLabs/environment-specific-constant-companion",
-      "firstPublished": "2026-09-02",
-      "repo": "environment-specific-constant-companion",
-      "marketplaceUrl": "https://plugins.jetbrains.com/plugin/34017-environment-specific-constant-companion",
-      "downloads": 43,
-      "pricing": "FREE",
-      "reviews": 0,
-      "rating": null,
-      "stars": 0,
-      "growth": null,
-      "growthSince": "2026-09-02",
       "growthFrom": 0
     },
     {
@@ -2108,6 +2108,25 @@
       "growthFrom": 1
     },
     {
+      "xmlId": "dev.gaphunter.lucenequeryinjectioncompanion",
+      "name": "Lucene Query Injection Companion",
+      "pitch": "Flags a `QueryBuilders.queryStringQuery(...)`/`.simpleQueryStringQuery(...)` call whose argument is built from an HTTP endpoint parameter.",
+      "why": "CWE-943 (an attacker's raw input becomes Lucene query SOURCE TEXT, enabling filter bypass) combined with CWE-400: CVE-2023-31419 confirms a real Denial of Service via a maliciously crafted query string against Elasticsearch's own `_search` API (Stack Overflow from deeply nested query syntax). Searched explicitly for a CodeQL/Datadog rule for this exact angle and found none (unlike SQL injection, which both cover extensively). No dedicated Marketplace plugin found.",
+      "niche": "Lucene Injection Detection",
+      "githubUrl": "https://github.com/GapHunterLabs/lucene-query-injection-companion",
+      "firstPublished": null,
+      "repo": "lucene-query-injection-companion",
+      "marketplaceUrl": "https://plugins.jetbrains.com/plugin/34078-lucene-query-injection-companion",
+      "downloads": 41,
+      "pricing": "FREE",
+      "reviews": 0,
+      "rating": null,
+      "stars": 0,
+      "growth": 4000.0,
+      "growthSince": "2026-09-05",
+      "growthFrom": 1
+    },
+    {
       "xmlId": "dev.gaphunter.micrometertimersamplecompanion",
       "name": "Micrometer Timer Sample Companion",
       "pitch": "Warning icon on a Micrometer `Timer.Sample sample = Timer.start(...)` whose declaring method never calls `.stop(...)` on that sample anywhere — Micrometer's own reference docs show the sample usage as exactly two steps, start then stop, with no mention of a try/finally guard. A sample that's started but never stopped never records its timing, and per a real upstream Micrometer issue, can leak in l",
@@ -2182,25 +2201,6 @@
       "growth": null,
       "growthSince": "2026-08-29",
       "growthFrom": 0
-    },
-    {
-      "xmlId": "dev.gaphunter.lucenequeryinjectioncompanion",
-      "name": "Lucene Query Injection Companion",
-      "pitch": "Flags a `QueryBuilders.queryStringQuery(...)`/`.simpleQueryStringQuery(...)` call whose argument is built from an HTTP endpoint parameter.",
-      "why": "CWE-943 (an attacker's raw input becomes Lucene query SOURCE TEXT, enabling filter bypass) combined with CWE-400: CVE-2023-31419 confirms a real Denial of Service via a maliciously crafted query string against Elasticsearch's own `_search` API (Stack Overflow from deeply nested query syntax). Searched explicitly for a CodeQL/Datadog rule for this exact angle and found none (unlike SQL injection, which both cover extensively). No dedicated Marketplace plugin found.",
-      "niche": "Lucene Injection Detection",
-      "githubUrl": "https://github.com/GapHunterLabs/lucene-query-injection-companion",
-      "firstPublished": null,
-      "repo": "lucene-query-injection-companion",
-      "marketplaceUrl": "https://plugins.jetbrains.com/plugin/34078-lucene-query-injection-companion",
-      "downloads": 40,
-      "pricing": "FREE",
-      "reviews": 0,
-      "rating": null,
-      "stars": 0,
-      "growth": 3900.0,
-      "growthSince": "2026-09-05",
-      "growthFrom": 1
     },
     {
       "xmlId": "dev.gaphunter.enumordinalpersistencecompanion",
@@ -2412,6 +2412,25 @@
       "growthFrom": 0
     },
     {
+      "xmlId": "dev.gaphunter.mongoclientreusecompanion",
+      "name": "MongoDB Client Reuse Companion",
+      "pitch": "Warning icon on a `new MongoClient(...)` (legacy driver) or `MongoClients.create(...)` (modern `com.mongodb.client` driver) construction written inside a regular method body — MongoDB's own documentation states \"you will only need one instance of class MongoClient even with multiple threads\", and that not following the singleton pattern \"may lead to too many open connections in MongoDB\". A MongoCl",
+      "why": "`new MongoClient(...)` compiles fine and returns a working client — call it once per request handler and each call quietly opens up to 100 new connections, exhausting the connection budget under load instead of reusing the one pool the application actually needs.",
+      "niche": "Database Client Reuse",
+      "githubUrl": "https://github.com/GapHunterLabs/mongo-client-reuse-companion",
+      "firstPublished": "2026-08-27",
+      "repo": "mongo-client-reuse-companion",
+      "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33877-mongo-client-reuse-companion",
+      "downloads": 36,
+      "pricing": "FREE",
+      "reviews": 0,
+      "rating": null,
+      "stars": 0,
+      "growth": null,
+      "growthSince": "2026-08-29",
+      "growthFrom": 0
+    },
+    {
       "xmlId": "dev.gaphunter.ssrfunsanitizedurlcompanion",
       "name": "SSRF via Unsanitized URL Companion",
       "pitch": "Warning on an HTTP call (`HttpRequest.newBuilder(...)`/Spring `RestTemplate`/OkHttp's `Request.Builder`) whose URL/host argument traces back (within the same method, one direct hop) to an untrusted Spring MVC/JAX-RS controller parameter, with no allowlist validation found in the same method -- CWE-918, Server-Side Request Forgery.",
@@ -2450,25 +2469,6 @@
       "growthFrom": 1
     },
     {
-      "xmlId": "dev.gaphunter.mongoclientreusecompanion",
-      "name": "MongoDB Client Reuse Companion",
-      "pitch": "Warning icon on a `new MongoClient(...)` (legacy driver) or `MongoClients.create(...)` (modern `com.mongodb.client` driver) construction written inside a regular method body — MongoDB's own documentation states \"you will only need one instance of class MongoClient even with multiple threads\", and that not following the singleton pattern \"may lead to too many open connections in MongoDB\". A MongoCl",
-      "why": "`new MongoClient(...)` compiles fine and returns a working client — call it once per request handler and each call quietly opens up to 100 new connections, exhausting the connection budget under load instead of reusing the one pool the application actually needs.",
-      "niche": "Database Client Reuse",
-      "githubUrl": "https://github.com/GapHunterLabs/mongo-client-reuse-companion",
-      "firstPublished": "2026-08-27",
-      "repo": "mongo-client-reuse-companion",
-      "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33877-mongo-client-reuse-companion",
-      "downloads": 35,
-      "pricing": "FREE",
-      "reviews": 0,
-      "rating": null,
-      "stars": 0,
-      "growth": null,
-      "growthSince": "2026-08-29",
-      "growthFrom": 0
-    },
-    {
       "xmlId": "dev.gaphunter.objectmapperreusecompanion",
       "name": "Object Mapper Reuse Companion",
       "pitch": "Gutter warning icon on a Jackson mapper (`ObjectMapper`, `XmlMapper`, `YAMLMapper`, `CBORMapper`, `CsvMapper`) built via `new` inside a regular method body — Jackson's own javadoc states `ObjectMapper` is \"meant to be used as singleton across the lifetime of the application... also very expensive to create\". Building one inside a method means the real construction/configuration cost is paid on eve",
@@ -2478,6 +2478,25 @@
       "firstPublished": "2026-08-25",
       "repo": "object-mapper-reuse-companion",
       "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33807-object-mapper-reuse-companion",
+      "downloads": 35,
+      "pricing": "FREE",
+      "reviews": 0,
+      "rating": null,
+      "stars": 0,
+      "growth": null,
+      "growthSince": "2026-08-26",
+      "growthFrom": 0
+    },
+    {
+      "xmlId": "dev.gaphunter.otelspannamingcompanion",
+      "name": "OTel Span Naming Companion",
+      "pitch": "Gutter warning icon on any Java/Kotlin `tracer.spanBuilder(...)`/ `tracer.startSpan(...)` call whose name argument is built from a dynamic value — string concatenation in Java, string template interpolation in Kotlin — instead of a static literal. Per OpenTelemetry's own documented naming guidance, each unique id/value becomes its own span name in the tracing backend instead of a low-cardinality a",
+      "why": "It's an easy, natural-looking mistake: `tracer.spanBuilder(\"order \" + orderId)` reads like a helpful, descriptive span name in the source, but every distinct order id creates a brand-new span name in the tracing backend — the opposite of what OpenTelemetry's naming convention recommends (low-cardinality names, with the dynamic value as a separate attribute instead). Nothing in the IDE flags this today.",
+      "niche": "Distributed Tracing",
+      "githubUrl": "https://github.com/GapHunterLabs/otel-span-naming-companion",
+      "firstPublished": "2026-08-25",
+      "repo": "otel-span-naming-companion",
+      "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33797-otel-span-naming-companion",
       "downloads": 35,
       "pricing": "FREE",
       "reviews": 0,
@@ -2524,25 +2543,6 @@
       "growth": 3400.0,
       "growthSince": "2026-09-05",
       "growthFrom": 1
-    },
-    {
-      "xmlId": "dev.gaphunter.otelspannamingcompanion",
-      "name": "OTel Span Naming Companion",
-      "pitch": "Gutter warning icon on any Java/Kotlin `tracer.spanBuilder(...)`/ `tracer.startSpan(...)` call whose name argument is built from a dynamic value — string concatenation in Java, string template interpolation in Kotlin — instead of a static literal. Per OpenTelemetry's own documented naming guidance, each unique id/value becomes its own span name in the tracing backend instead of a low-cardinality a",
-      "why": "It's an easy, natural-looking mistake: `tracer.spanBuilder(\"order \" + orderId)` reads like a helpful, descriptive span name in the source, but every distinct order id creates a brand-new span name in the tracing backend — the opposite of what OpenTelemetry's naming convention recommends (low-cardinality names, with the dynamic value as a separate attribute instead). Nothing in the IDE flags this today.",
-      "niche": "Distributed Tracing",
-      "githubUrl": "https://github.com/GapHunterLabs/otel-span-naming-companion",
-      "firstPublished": "2026-08-25",
-      "repo": "otel-span-naming-companion",
-      "marketplaceUrl": "https://plugins.jetbrains.com/plugin/33797-otel-span-naming-companion",
-      "downloads": 34,
-      "pricing": "FREE",
-      "reviews": 0,
-      "rating": null,
-      "stars": 0,
-      "growth": null,
-      "growthSince": "2026-08-26",
-      "growthFrom": 0
     },
     {
       "xmlId": "dev.gaphunter.xpathinjectionsinkcompanion",
