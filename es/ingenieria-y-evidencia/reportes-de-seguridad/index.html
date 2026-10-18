@@ -230,7 +230,7 @@
 
   <div class="lab-section-head">
     <h2>Corregidos por los mantenedores</h2>
-    <p>Reportes cerrados después de que los mantenedores actualizaron la dependencia.</p>
+    <p>Reportes cerrados después de que los mantenedores actualizaron las dependencias afectadas.</p>
   </div>
   <div class="lab-tickets">
     <article class="ticket-card">
@@ -241,6 +241,15 @@
       </div>
       <p><code>reactive-commons-go</code> es una librería Go de código abierto de Bancolombia con abstracciones comunes para patrones de mensajería entre microservicios. Su <code>go.mod</code> fijaba <code>github.com/rabbitmq/amqp091-go</code> en v1.10.0, que cae en el rango afectado de 10 avisos publicados en septiembre de 2026: 3 críticos (falta una versión mínima de TLS en el parser de URI, inyección de tramas por un desbordamiento de enteros y truncamiento silencioso de cadenas cortas) y 7 altos. Los 10 se corrigen en v1.13.0.</p>
       <p>Reportado el 4 de octubre de 2026, con la lista de avisos y el arreglo. Los mantenedores actualizaron a v1.15.0, que no tiene avisos en OSV a octubre de 2026, en el <a href="https://github.com/bancolombia/reactive-commons-go/pull/6" target="_blank" rel="noopener">pull request #6</a>, y cerraron el reporte como completado el 7 de octubre de 2026.</p>
+    </article>
+    <article class="ticket-card">
+      <div class="ticket-head">
+        <a class="ticket-id" href="https://github.com/bancolombia/async-dataflow/issues/148" target="_blank" rel="noopener">async-dataflow#148 &#8599;</a>
+        <h3>cowboy, cowlib, plug_cowboy y plug, dependencias directas, estaban afectadas por avisos publicados de gravedad alta</h3>
+        <span class="ticket-status is-fixed">Corregido</span>
+      </div>
+      <p><code>async-dataflow</code> es un proyecto Elixir de código abierto de Bancolombia que entrega respuestas asíncronas a aplicaciones cliente en tiempo real. Su servicio <code>channel-sender</code> fijaba versiones de <code>cowboy</code>, <code>cowlib</code>, <code>plug_cowboy</code> y <code>plug</code> que caen en el rango afectado de avisos de gravedad alta: CVE-2026-8466 y EEF-CVE-2026-65624 (cowboy), CVE-2026-7790 (cowlib), CVE-2026-32688 (plug_cowboy), y CVE-2026-54892 y CVE-2026-8468 (plug). Las dependencias de prueba <code>gun</code> y <code>hackney</code> también tenían avisos.</p>
+      <p>Reportado el 4 de octubre de 2026. Los mantenedores verificaron cada hallazgo contra su lockfile y OSV, corrigieron varios puntos del reporte (entre ellos la versión que corrige <code>gun</code> y que <code>gun</code> y <code>hackney</code> son solo de prueba) y agregaron <code>plug_cowboy</code>, que el reporte había omitido. Actualizaron las dependencias y quitaron <code>hackney</code>, que no se usaba, en el <a href="https://github.com/bancolombia/async-dataflow/pull/149" target="_blank" rel="noopener">pull request #149</a>, fusionado el 16 de octubre de 2026, que cerró el reporte.</p>
     </article>
   </div>
 
