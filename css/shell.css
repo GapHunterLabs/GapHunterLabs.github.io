@@ -127,7 +127,6 @@
     background-color: var(--bg);
     background-repeat: no-repeat;
     background-image:
-      radial-gradient(ellipse 1200px 640px at 50% 0%, color-mix(in srgb, var(--accent) 7%, transparent), transparent 60%),
       linear-gradient(to right, var(--surface) 0, var(--surface) var(--sidebar-w), transparent var(--sidebar-w));
   }
 }
@@ -654,11 +653,10 @@
 .hdr-stat { display: flex; flex-direction: column; gap: 4px; padding: 16px 20px; background: color-mix(in srgb, var(--surface) 88%, transparent); }
 .hdr-stat-num { color: var(--text); font: 700 26px / 1.1 var(--sans); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
 .hdr-stat-label { color: var(--text-dim); font-size: 13px; }
-.price-badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: var(--radius);
-  font: 700 12px / 1.4 var(--sans); letter-spacing: .02em; white-space: nowrap; }
-.price-free { background: var(--good-bg); color: var(--good); }
-.price-freemium { background: var(--accent-soft); color: var(--accent); }
-.price-paid { background: var(--pending-bg); color: var(--brand-navy, var(--text)); }
+/* Price labels are neutral (2026-10-19): green means a verified fix on this site, not "free". */
+.price-badge { display: inline-flex; align-items: center; padding: 2px 8px; border: 1px solid var(--border-strong); border-radius: var(--radius);
+  font: 600 12px / 1.4 var(--sans); letter-spacing: .02em; white-space: nowrap; }
+.price-free, .price-freemium, .price-paid { background: transparent; color: var(--text); }
 .price-pending { background: var(--surface-3); color: var(--text-dim); }
 
 /* =====================================================================
@@ -836,3 +834,13 @@ td.num-cell { font-family: var(--sans); font-variant-numeric: tabular-nums; }
 tr.row td[data-label]::before { font-family: var(--sans); font-size: 11px; letter-spacing: 0; text-transform: none; }
 /* Botones dentro del encabezado de una pagina interna (p. ej. la auditoria de rendimiento). */
 .gh-page-header:not(.hero) .hero-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+
+/* Catalog spec sheet (2026-10-19): the catalog header states its scope as data rows, not as big numbers. */
+.spec-sheet { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 32px; margin: 28px 0 0; border-top: 1px solid var(--text); }
+.spec-sheet .spec-row { display: grid; grid-template-columns: 128px minmax(0, 1fr); gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+.spec-sheet dt { font: 600 12px/1.6 var(--mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-dim); }
+.spec-sheet dd { margin: 0; font-size: 14px; line-height: 1.55; color: var(--text); font-variant-numeric: tabular-nums; }
+@media (max-width: 700px) {
+  .spec-sheet { grid-template-columns: 1fr; }
+  .spec-sheet .spec-row { grid-template-columns: 112px minmax(0, 1fr); }
+}

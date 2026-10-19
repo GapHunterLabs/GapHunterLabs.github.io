@@ -202,12 +202,19 @@ def build(dry_run: bool = False) -> None:
     cat_count = len([c for c in src.categories if c["key"] != "other"])
     vsx_path = ROOT / "data" / "vscode-catalog-data.json"
     vsx = json.loads(vsx_path.read_text(encoding="utf-8")).get("extensions", []) if vsx_path.exists() else []
-    n_paid = sum(1 for p in src.plugins if p.get("pricing") in ("FREEMIUM", "PAID"))
-    stats_html = "".join(
-        '<div class="hdr-stat"><span class="hdr-stat-num">%s</span><span class="hdr-stat-label">%s</span></div>' % (num, label)
-        for num, label in ((len(src.plugins), "JetBrains plugins"), (len(vsx), "VS Code extensions"),
-                           (thousands(total_downloads), "JetBrains downloads"), (n_paid, "Paid &amp; Pro plugins")))
-    _ = cat_count
+    # 2026-10-19: spec sheet instead of four big numbers (no download totals in the header).
+    by_price = {k: sum(1 for p in src.plugins if p.get("pricing") == k) for k in ("FREE", "FREEMIUM", "PAID")}
+    snapshot = (src.data.get("generatedAt") or "")[:10]
+    spec_rows = (
+        ("JetBrains IDEs", "%d plugins" % len(src.plugins)),
+        ("VS Code", "%d extensions" % len(vsx)),
+        ("Pricing", "%d free &middot; %d freemium &middot; %d paid" % (by_price["FREE"], by_price["FREEMIUM"], by_price["PAID"])),
+        ("Categories", "%d, each with its own filter below" % cat_count),
+        ("Source code", "A public GitHub repository for every plugin and extension"),
+        ("Data", "Synced twice a day from public JetBrains Marketplace and GitHub data; last snapshot %s" % snapshot),
+    )
+    stats_html = "".join('<div class="spec-row"><dt>%s</dt><dd>%s</dd></div>' % row for row in spec_rows)
+    _ = total_downloads
 
     counts = {c["key"]: 0 for c in src.categories}
     for p in src.plugins:

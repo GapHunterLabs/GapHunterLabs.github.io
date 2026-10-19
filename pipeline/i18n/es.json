@@ -994,5 +994,11 @@
  "What you see: the symptom, the error or the report": "Lo que ves: el síntoma, el error o el reporte",
  "Written deliverables: a report, and a pull request when there is code to change.": "Entregables por escrito: un informe, y un pull request cuando hay código que cambiar.",
  "Your code and data stay confidential. Signing your NDA is fine.": "Tu código y tus datos son confidenciales. Firmar tu NDA no es problema.",
- "{n}% when the work starts and {n}% on delivery.": "{n}% al empezar el trabajo y {n}% al entregar."
+ "{n}% when the work starts and {n}% on delivery.": "{n}% al empezar el trabajo y {n}% al entregar.",
+ "A public GitHub repository for every plugin and extension": "Un repositorio público en GitHub para cada plugin y extensión",
+ "Catalog specification": "Ficha técnica del catálogo",
+ "Source code": "Código fuente",
+ "Synced twice a day from public JetBrains Marketplace and GitHub data; last snapshot {n}-{n}-{n}": "Sincronizado dos veces al día con datos públicos de JetBrains Marketplace y GitHub; última instantánea {n}-{n}-{n}",
+ "{n} free &middot; {n} freemium &middot; {n} paid": "{n} gratis &middot; {n} freemium &middot; {n} de pago",
+ "{n}, each with its own filter below": "{n}, cada una con su filtro más abajo"
 }

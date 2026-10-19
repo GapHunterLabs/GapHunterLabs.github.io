@@ -41,15 +41,15 @@
     return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
   }
   var CATEGORIES = [
-    { key: 'api', label: 'API', colorToken: '--accent' },
-    { key: 'devops', label: 'DevOps', colorToken: '--good' },
-    { key: 'security', label: 'Security', colorToken: '--bad' },
-    { key: 'data', label: 'Data', colorToken: '--purple' },
-    { key: 'quality', label: 'Code Quality', colorToken: '--amber' },
-    { key: 'codegen', label: 'Codegen', colorToken: '--cyan' },
-    { key: 'testing', label: 'Testing', colorToken: '--teal' },
-    { key: 'editor', label: 'Editor', colorToken: '--pending' },
-    { key: 'other', label: 'Other', colorToken: '--text-faint' }
+    { key: 'api', label: 'API', colorToken: '--text-dim' },
+    { key: 'devops', label: 'DevOps', colorToken: '--text-dim' },
+    { key: 'security', label: 'Security', colorToken: '--text-dim' },
+    { key: 'data', label: 'Data', colorToken: '--text-dim' },
+    { key: 'quality', label: 'Code Quality', colorToken: '--text-dim' },
+    { key: 'codegen', label: 'Codegen', colorToken: '--text-dim' },
+    { key: 'testing', label: 'Testing', colorToken: '--text-dim' },
+    { key: 'editor', label: 'Editor', colorToken: '--text-dim' },
+    { key: 'other', label: 'Other', colorToken: '--text-dim' }
   ];
   CATEGORIES.forEach(function (c) {
     c.color = tokenColor(c.colorToken);

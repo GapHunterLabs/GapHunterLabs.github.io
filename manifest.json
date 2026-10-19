@@ -1,11 +1,11 @@
 {
-  "name": "Gap Hunter Labs — Plugin Intelligence",
+  "name": "Gap Hunter Labs",
   "short_name": "Gap Hunter Labs",
-  "description": "Real, evidence-based gaps in developer tooling — every plugin exists because of a documented gap, not a guess.",
+  "description": "Engineering practice of Joel Díaz: performance bottlenecks, security vulnerabilities and structural failures traced to their root cause and fixed.",
   "start_url": "/",
   "display": "browser",
-  "background_color": "#F7F9FC",
-  "theme_color": "#0B1B34",
+  "background_color": "#F6F8FA",
+  "theme_color": "#F6F8FA",
   "icons": [
     {
       "src": "/apple-touch-icon.png",

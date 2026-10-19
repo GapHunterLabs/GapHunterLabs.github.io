@@ -571,7 +571,7 @@ body .site-footer.gh-footer { margin-top: 24px; }
 h2.ib-title, h2.similar-title { margin: 0; font: inherit; font-weight: 700; color: inherit; }
 .hire-band { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px;
   margin-top: 24px; padding: 20px 22px; border: 1px solid var(--accent); border-radius: var(--radius);
-  background: linear-gradient(180deg, var(--accent-soft), var(--surface) 80%); }
+  background: var(--surface); }
 .hire-band > div { display: flex; flex-direction: column; gap: 4px; }
 .hire-band strong { color: var(--text); font-size: 16px; }
 .hire-band span { color: var(--text-dim); }
