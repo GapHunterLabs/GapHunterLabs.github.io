@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="/js/theme-init.js?v=c436d752"></script>
-<script src="/js/site-chrome.js?v=3995ffd1" defer></script>
+<script src="/js/site-chrome.js?v=ad29bc8d" defer></script>
 <script src="/js/site-reveal.js?v=ee52008b" defer></script>
 <script src="/js/slug-shim.js?v=edba12cc" defer></script>
 <!-- Trimmed 2026-08-23 (indexing audit): was 218 chars, well past
@@ -437,9 +437,9 @@
       <h3 class="nb-label">También documentado</h3>
       <ul>
         <li><span class="inv-status is-fixed">Corregido</span> <a href="https://github.com/bancolombia/async-dataflow/issues/148" target="_blank" rel="noopener">async-dataflow#148</a>: avisos de severidad alta en dependencias directas de un servicio de entrega en tiempo real, <code>cowboy</code>, <code>cowlib</code> y <code>plug</code>. Los mantenedores encontraron además <code>plug_cowboy</code>, que el reporte había pasado por alto, y actualizaron todas en el pull request #149, fusionado el 16 de octubre de 2026.</li>
-        <li><span class="inv-status is-open">Abierto</span> <a href="https://youtrack.jetbrains.com/issue/IJPL-257908" target="_blank" rel="noopener">IJPL-257908</a>: la configuración de Live Templates comparaba 1,295 plantillas con 336 tipos de contexto en el hilo de interfaz después de cada tecla. Un atajo de una línea, enviado como pull request #3694, lleva la comparación de 157 ms a 0 ms.</li>
+        <li><span class="inv-status is-open">Abierto</span> <a href="https://youtrack.jetbrains.com/issue/IJPL-257908" target="_blank" rel="noopener">IJPL-257908</a>: la configuración de Live Templates comparaba 1.295 plantillas con 336 tipos de contexto en el hilo de interfaz después de cada tecla. Un atajo de una línea, enviado como pull request #3694, lleva la comparación de 157 ms a 0 ms.</li>
         <li><span class="inv-status is-open">Abierto</span> Análisis de causa raíz en tickets existentes de IntelliJ Platform: una fuga de memoria a través de <code>ProjectRootManagerImpl</code> (<a href="https://youtrack.jetbrains.com/issue/IJPL-196254" target="_blank" rel="noopener">IJPL-196254</a>) y un desbordamiento de pila que vacía Git Log sin aviso (<a href="https://youtrack.jetbrains.com/issue/IJPL-76141" target="_blank" rel="noopener">IJPL-76141</a>).</li>
-        <li><span class="inv-status is-open">Abierto</span> <a href="https://youtrack.jetbrains.com/issue/IJPL-223452#focus=Comments-27-14501015.0-0" target="_blank" rel="noopener">IJPL-223452</a>: una reproducción headless de escritura lenta en un archivo Java grande con la vista Structure abierta, con una mediana de 1,080 ms por tecla frente a 33 ms sin ella.</li>
+        <li><span class="inv-status is-open">Abierto</span> <a href="https://youtrack.jetbrains.com/issue/IJPL-223452#focus=Comments-27-14501015.0-0" target="_blank" rel="noopener">IJPL-223452</a>: una reproducción headless de escritura lenta en un archivo Java grande con la vista Structure abierta, con una mediana de 1.080 ms por tecla frente a 33 ms sin ella.</li>
         <li><span class="inv-status is-open">Abierto</span> Tres cambios de inspecciones Java enviados como pull requests (#3697, #3698 y #3699): dos inspecciones nuevas y la extensión de una existente que había pedido un mantenedor de JetBrains.</li>
       </ul>
       <p class="nb-more"><a href="/es/ingenieria-y-evidencia/tickets-jetbrains-platform/">Todos los tickets de JetBrains Platform</a><a href="/es/ingenieria-y-evidencia/reportes-de-seguridad/">Reportes de seguridad en código abierto</a><a href="/es/ingenieria-y-evidencia/casos-de-estudio/">Casos de estudio de plugins</a></p>
@@ -486,22 +486,22 @@
         <tr>
           <th scope="row"><a href="/es/auditoria-de-rendimiento/">Auditoría de rendimiento de plugins</a></th>
           <td>Para plugins con quejas de congelamientos, demoras al escribir o CPU alta: reproducción en cada versión de IDE que soportas, mediciones en el hilo de interfaz, revisión del código en busca de patrones de congelamiento y parches con mediciones de antes y después.</td>
-          <td class="nb-terms">USD 10,500 &middot; un plugin, hasta 3 versiones del IDE &middot; 10 días hábiles<br>Ampliada: USD 15,000 &middot; 15 días hábiles</td>
+          <td class="nb-terms">USD 10.500 &middot; un plugin, hasta 3 versiones del IDE &middot; 10 días hábiles<br>Ampliada: USD 15.000 &middot; 15 días hábiles</td>
         </tr>
         <tr>
           <th scope="row">Actualización de plugins para versiones nuevas del IDE</th>
           <td>Tu plugin compilado y verificado contra las versiones de IntelliJ que necesitas soportar: API eliminadas u obsoletas, el modo K2 de Kotlin, IntelliJ Platform Gradle Plugin 2.x y los fallos de Plugin Verifier.</td>
-          <td class="nb-terms">Menor: USD 4,500 &middot; 5 días hábiles<br>Mayor: USD 9,000 &middot; 10 días hábiles</td>
+          <td class="nb-terms">Menor: USD 4.500 &middot; 5 días hábiles<br>Mayor: USD 9.000 &middot; 10 días hábiles</td>
         </tr>
         <tr>
           <th scope="row">Plugins e inspecciones a medida</th>
           <td>Inspecciones adaptadas a tu código, como API internas, formatos de secretos y patrones de seguridad, entregadas como un plugin que tu equipo instala. Los mismos controles pueden correr en GitHub Actions o GitLab CI.</td>
-          <td class="nb-terms">Hasta 3 inspecciones: USD 7,500 &middot; 10 días hábiles<br>Plugin completo con CI: desde USD 15,000</td>
+          <td class="nb-terms">Hasta 3 inspecciones: USD 7.500 &middot; 10 días hábiles<br>Plugin completo con CI: desde USD 15.000</td>
         </tr>
         <tr>
           <th scope="row">Revisión de seguridad de dependencias y CI/CD</th>
           <td>Una revisión de solo lectura de los repositorios que elijas: vulnerabilidades conocidas en dependencias de producción, riesgos de dependency confusion y permisos de los workflows de CI/CD. Opcional: preparación para la Ley de Ciberresiliencia de la UE (CRA).</td>
-          <td class="nb-terms">Un repositorio: USD 4,800 &middot; 5 días hábiles<br>Hasta 5 repositorios: USD 12,000 &middot; 10 días hábiles<br>Preparación para la CRA: + USD 1,500 &middot; + 2 días hábiles</td>
+          <td class="nb-terms">Un repositorio: USD 4.800 &middot; 5 días hábiles<br>Hasta 5 repositorios: USD 12.000 &middot; 10 días hábiles<br>Preparación para la CRA: + USD 1.500 &middot; + 2 días hábiles</td>
         </tr>
       </tbody>
     </table>

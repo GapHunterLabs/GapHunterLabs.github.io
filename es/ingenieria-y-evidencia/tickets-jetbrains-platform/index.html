@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="/js/theme-init.js?v=c436d752"></script>
-<script src="/js/site-chrome.js?v=3995ffd1" defer></script>
+<script src="/js/site-chrome.js?v=ad29bc8d" defer></script>
 <script src="/js/site-reveal.js?v=ee52008b" defer></script>
 <meta name="description" content="Errores reportados en el YouTrack de JetBrains tras hallarlos un control del catálogo en el código de IntelliJ, más análisis de causa raíz en tickets de IntelliJ Platform.">
 <meta name="referrer" content="strict-origin-when-cross-origin">
@@ -249,7 +249,7 @@
         <h3>DependenciesUsagesPanel.findUsages runs the whole dependency usage search in one non-cancellable read action</h3>
         <span class="ticket-status is-open">Abierto</span>
       </div>
-      <p>Encontrado por el mismo control que <a href="/es/catalogo/background-readaction-freeze-companion/">Background ReadAction Freeze Companion</a>, aplicado como escaneo sobre el propio <code>master</code> de IntelliJ. Al seleccionar un nodo en el Dependency Viewer (Code &rsaquo; Analyze Code &rsaquo; Dependencies), <code>DependenciesUsagesPanel.findUsages()</code> analiza todos los archivos del alcance seleccionado dentro de un único <code>ReadAction.runBlocking()</code> de nivel superior, en un hilo del pool. Una acción de escritura pendiente, como escribir en un editor, espera a que termine toda la búsqueda. El ticket propone la forma de arreglo que JetBrains usó en IJPL-236316 (<code>FindUsagesHelper</code>): una acción de lectura no bloqueante que deje de tragarse <code>ProcessCanceledException</code>, con la actualización de la interfaz fuera de la acción de lectura. El soporte de JetBrains pidió pasos para reproducirlo. Un test sin interfaz sobre un proyecto sintético lo reprodujo: con 2,000 archivos, una acción de escritura esperó 4.8 s a la búsqueda, y 1 ms con una acción de lectura no bloqueante. El test está adjunto al ticket, y el arreglo se propone en el <a href="https://github.com/JetBrains/intellij-community/pull/3684" target="_blank" rel="noopener">pull request #3684</a>.</p>
+      <p>Encontrado por el mismo control que <a href="/es/catalogo/background-readaction-freeze-companion/">Background ReadAction Freeze Companion</a>, aplicado como escaneo sobre el propio <code>master</code> de IntelliJ. Al seleccionar un nodo en el Dependency Viewer (Code &rsaquo; Analyze Code &rsaquo; Dependencies), <code>DependenciesUsagesPanel.findUsages()</code> analiza todos los archivos del alcance seleccionado dentro de un único <code>ReadAction.runBlocking()</code> de nivel superior, en un hilo del pool. Una acción de escritura pendiente, como escribir en un editor, espera a que termine toda la búsqueda. El ticket propone la forma de arreglo que JetBrains usó en IJPL-236316 (<code>FindUsagesHelper</code>): una acción de lectura no bloqueante que deje de tragarse <code>ProcessCanceledException</code>, con la actualización de la interfaz fuera de la acción de lectura. El soporte de JetBrains pidió pasos para reproducirlo. Un test sin interfaz sobre un proyecto sintético lo reprodujo: con 2.000 archivos, una acción de escritura esperó 4.8 s a la búsqueda, y 1 ms con una acción de lectura no bloqueante. El test está adjunto al ticket, y el arreglo se propone en el <a href="https://github.com/JetBrains/intellij-community/pull/3684" target="_blank" rel="noopener">pull request #3684</a>.</p>
     </article>
     <article class="ticket-card">
       <div class="ticket-head">
@@ -257,7 +257,7 @@
         <h3>Auto-test: the error check of DelayedDocumentWatcher blocks typing until the whole check ends</h3>
         <span class="ticket-status is-open">Abierto</span>
       </div>
-      <p>Encontrado con el mismo control, durante una auditoría de componentes que trabajan en segundo plano después de cada edición. Con auto-test activado, <code>DelayedDocumentWatcher</code> espera una pausa de tipeo y luego revisa si cada archivo cambiado tiene errores de sintaxis (<code>PsiErrorElementUtil.hasErrors()</code>) en una sola acción de lectura bloqueante, en un hilo del pool. La tecla que retoma la escritura espera toda la revisión. Medido con el framework de tests de la plataforma sobre IntelliJ IDEA 2025.2: en un archivo de 50,000 líneas, esa tecla tardó 436 ms con el código actual, 48 ms sin auto-test y 73 ms con la revisión en una acción de lectura no bloqueante. El test de medición está adjunto al ticket, y el arreglo se propone en el <a href="https://github.com/JetBrains/intellij-community/pull/3685" target="_blank" rel="noopener">pull request #3685</a>.</p>
+      <p>Encontrado con el mismo control, durante una auditoría de componentes que trabajan en segundo plano después de cada edición. Con auto-test activado, <code>DelayedDocumentWatcher</code> espera una pausa de tipeo y luego revisa si cada archivo cambiado tiene errores de sintaxis (<code>PsiErrorElementUtil.hasErrors()</code>) en una sola acción de lectura bloqueante, en un hilo del pool. La tecla que retoma la escritura espera toda la revisión. Medido con el framework de tests de la plataforma sobre IntelliJ IDEA 2025.2: en un archivo de 50.000 líneas, esa tecla tardó 436 ms con el código actual, 48 ms sin auto-test y 73 ms con la revisión en una acción de lectura no bloqueante. El test de medición está adjunto al ticket, y el arreglo se propone en el <a href="https://github.com/JetBrains/intellij-community/pull/3685" target="_blank" rel="noopener">pull request #3685</a>.</p>
     </article>
     <article class="ticket-card">
       <div class="ticket-head">
@@ -265,7 +265,7 @@
         <h3>Live Templates settings: isModified() checks every template against every context type on the EDT after each click or key press</h3>
         <span class="ticket-status is-open">Abierto</span>
       </div>
-      <p>Encontrado al medir cada página de Settings en el hilo de interfaz de IntelliJ IDEA 2026.2.3 con el framework de tests de la plataforma. El diálogo de Settings llama a <code>isModified()</code> de la página abierta alrededor de un segundo después de cada clic o tecla. En la página Live Templates, esa llamada compara las 1,295 plantillas con los 336 tipos de contexto (<code>TemplateContext.getDifference()</code>), y el hilo de interfaz se detiene unos 165 ms cada vez. El ticket propone una verificación de una línea: dos plantillas con la misma configuración propia de contextos no pueden diferir en ningún tipo de contexto. En el mismo test, esa verificación lleva la comparación de 157 ms a 0 ms con el mismo resultado. El test de medición está adjunto al ticket.</p>
+      <p>Encontrado al medir cada página de Settings en el hilo de interfaz de IntelliJ IDEA 2026.2.3 con el framework de tests de la plataforma. El diálogo de Settings llama a <code>isModified()</code> de la página abierta alrededor de un segundo después de cada clic o tecla. En la página Live Templates, esa llamada compara las 1.295 plantillas con los 336 tipos de contexto (<code>TemplateContext.getDifference()</code>), y el hilo de interfaz se detiene unos 165 ms cada vez. El ticket propone una verificación de una línea: dos plantillas con la misma configuración propia de contextos no pueden diferir en ningún tipo de contexto. En el mismo test, esa verificación lleva la comparación de 157 ms a 0 ms con el mismo resultado. El test de medición está adjunto al ticket.</p>
     </article>
     <article class="ticket-card">
       <div class="ticket-head">
@@ -281,7 +281,7 @@
         <h3>Package File: PackageFileWorker does all the file I/O inside one blocking read action, so write actions wait for it</h3>
         <span class="ticket-status is-submitted">Enviado</span>
       </div>
-      <p>Encontrado por un escaneo del propio <code>master</code> de IntelliJ en busca de trabajo lento dentro de acciones de lectura, y después medido. Build &rsaquo; Package File copia un archivo a los artefactos que lo contienen. <code>PackageFileWorker</code> busca esos artefactos y después hace toda la E/S de archivos dentro del mismo <code>ReadAction.run()</code> bloqueante: la copia, la apertura del archivo comprimido y el reempaquetado de un archivo comprimido anidado. Una acción de escritura pedida mientras tanto, como una tecla, espera a que termine la E/S. Medido con el framework de tests de la plataforma en IntelliJ IDEA 2026.2.3, con un WAR que contiene un JAR de 40 MB: la acción de escritura esperó 2,219&ndash;2,508 ms. Con solo la búsqueda de artefactos dentro de la acción de lectura y la E/S fuera, esperó 0 ms en 4 de 4 corridas. El test de medición está adjunto al ticket.</p>
+      <p>Encontrado por un escaneo del propio <code>master</code> de IntelliJ en busca de trabajo lento dentro de acciones de lectura, y después medido. Build &rsaquo; Package File copia un archivo a los artefactos que lo contienen. <code>PackageFileWorker</code> busca esos artefactos y después hace toda la E/S de archivos dentro del mismo <code>ReadAction.run()</code> bloqueante: la copia, la apertura del archivo comprimido y el reempaquetado de un archivo comprimido anidado. Una acción de escritura pedida mientras tanto, como una tecla, espera a que termine la E/S. Medido con el framework de tests de la plataforma en IntelliJ IDEA 2026.2.3, con un WAR que contiene un JAR de 40 MB: la acción de escritura esperó 2.219&ndash;2.508 ms. Con solo la búsqueda de artefactos dentro de la acción de lectura y la E/S fuera, esperó 0 ms en 4 de 4 corridas. El test de medición está adjunto al ticket.</p>
     </article>
   </div>
 
@@ -296,7 +296,7 @@
         <h3>IJPL-257836 Dependency Viewer: run the usage search in a non-blocking read action</h3>
         <span class="ticket-status is-open">Abierto</span>
       </div>
-      <p>Arreglo para IJPL-257836. La búsqueda de usos corre en <code>ReadAction.nonBlocking(...)</code>, que se reinicia cuando hay una acción de escritura pendiente, la misma forma de arreglo que JetBrains usó en IJPL-236316. La búsqueda no tiene efectos secundarios, así que reiniciarla es seguro, y la vista de usos se arma después de la acción de lectura. Un test nuevo retiene la búsqueda dentro de su acción de lectura y comprueba que una acción de escritura no la espera. Con los jars de IntelliJ IDEA 2025.2, la acción de escritura esperó 10,021 ms con el código actual y 3 ms con el arreglo. El test no se corrió dentro del build completo de <code>intellij-community</code>.</p>
+      <p>Arreglo para IJPL-257836. La búsqueda de usos corre en <code>ReadAction.nonBlocking(...)</code>, que se reinicia cuando hay una acción de escritura pendiente, la misma forma de arreglo que JetBrains usó en IJPL-236316. La búsqueda no tiene efectos secundarios, así que reiniciarla es seguro, y la vista de usos se arma después de la acción de lectura. Un test nuevo retiene la búsqueda dentro de su acción de lectura y comprueba que una acción de escritura no la espera. Con los jars de IntelliJ IDEA 2025.2, la acción de escritura esperó 10.021 ms con el código actual y 3 ms con el arreglo. El test no se corrió dentro del build completo de <code>intellij-community</code>.</p>
     </article>
     <article class="ticket-card">
       <div class="ticket-head">
@@ -304,7 +304,7 @@
         <h3>IJPL-257854 Auto-test: check changed files for errors in a non-blocking read action</h3>
         <span class="ticket-status is-open">Abierto</span>
       </div>
-      <p>Arreglo para IJPL-257854. La revisión de errores corre en <code>ReadAction.nonBlocking(...)</code>, que se reinicia cuando hay una acción de escritura pendiente; <code>hasErrors()</code> no tiene efectos secundarios, así que reiniciarla es seguro. Los archivos cambiados se copian antes de la revisión, porque el conjunto se usa en la EDT. Medido con los jars de IntelliJ IDEA 2025.2 y una copia de la clase parcheada: la tecla que retoma la escritura en un archivo de 10,000 líneas tardó 134 ms con el código actual y 25 ms con el arreglo. El cambio no se compiló dentro del build completo de <code>intellij-community</code>.</p>
+      <p>Arreglo para IJPL-257854. La revisión de errores corre en <code>ReadAction.nonBlocking(...)</code>, que se reinicia cuando hay una acción de escritura pendiente; <code>hasErrors()</code> no tiene efectos secundarios, así que reiniciarla es seguro. Los archivos cambiados se copian antes de la revisión, porque el conjunto se usa en la EDT. Medido con los jars de IntelliJ IDEA 2025.2 y una copia de la clase parcheada: la tecla que retoma la escritura en un archivo de 10.000 líneas tardó 134 ms con el código actual y 25 ms con el arreglo. El cambio no se compiló dentro del build completo de <code>intellij-community</code>.</p>
     </article>
     <article class="ticket-card">
       <div class="ticket-head">
@@ -407,7 +407,7 @@
         <h3>PsiSmartPointer improvements</h3>
         <span class="ticket-status is-open">Abierto</span>
       </div>
-      <p>Un comentario con una reproducción sin interfaz de la escritura lenta en archivos grandes. Con la ventana Structure armada para un archivo Java de 10,000 métodos, el archivo tiene 10,001 smart pointers, uno por nodo del árbol (<code>PsiTreeAnchorizer</code>). Después de cada tecla, el IDE restaura todos los punteros: en IntelliJ IDEA 2026.2.3, una tecla tardó una mediana de 1,080 ms, contra 33 ms sin la vista de estructura, con el 98% del tiempo en <code>SmartPsiElementPointerImpl.doRestoreElement()</code>. Coincide con los eventos de escritura lenta reportados en IJPL-173280. El test está adjunto al comentario.</p>
+      <p>Un comentario con una reproducción sin interfaz de la escritura lenta en archivos grandes. Con la ventana Structure armada para un archivo Java de 10.000 métodos, el archivo tiene 10.001 smart pointers, uno por nodo del árbol (<code>PsiTreeAnchorizer</code>). Después de cada tecla, el IDE restaura todos los punteros: en IntelliJ IDEA 2026.2.3, una tecla tardó una mediana de 1.080 ms, contra 33 ms sin la vista de estructura, con el 98% del tiempo en <code>SmartPsiElementPointerImpl.doRestoreElement()</code>. Coincide con los eventos de escritura lenta reportados en IJPL-173280. El test está adjunto al comentario.</p>
     </article>
   </div>
 

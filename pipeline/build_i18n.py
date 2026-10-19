@@ -148,11 +148,23 @@ def normalize(fragment):
     return key, vals
 
 
+# 2026-10-19: separador de miles en espanol. "10,500" -> "10.500" y "1,234.5" -> "1.234,5".
+# Solo cambian las cifras agrupadas por miles: una version como "2026.3" no tiene coma y queda igual.
+# Aplica a lo que se traduce; los datos que se dejan en ingles (descripciones, evidencias) no pasan por aca.
+GROUPED_RE = re.compile(r"\d{1,3}(?:,\d{3})+(?:\.\d+)?")
+
+
+def es_number(value):
+    if not GROUPED_RE.fullmatch(value):
+        return value
+    return value.replace(",", "\0").replace(".", ",").replace("\0", ".")
+
+
 def restore(template, vals):
     it = {k: iter(v) for k, v in vals.items()}
     out = re.sub(r"\{svg\}", lambda m: next(it["svg"], ""), template)
     out = re.sub(r"\?v=\{v\}", lambda m: "?v=" + next(it["v"], ""), out)
-    return re.sub(r"\{n\}", lambda m: next(it["n"], ""), out)
+    return re.sub(r"\{n\}", lambda m: es_number(next(it["n"], "")), out)
 
 
 # Patrones para textos que llevan un nombre propio adentro (evita 146 entradas).
