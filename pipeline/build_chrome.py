@@ -37,6 +37,7 @@ PAGES = (
     ("engineering-evidence/case-studies/index.html", "/engineering-evidence/case-studies/", None),
     ("engineering-evidence/jetbrains-platform-tickets/index.html", "/engineering-evidence/jetbrains-platform-tickets/", None),
     ("engineering-evidence/open-source-security-reports/index.html", "/engineering-evidence/open-source-security-reports/", None),
+    ("engineering-evidence/third-party-plugin-audits/index.html", "/engineering-evidence/third-party-plugin-audits/", None),
     ("contact/index.html", "/contact/", None),
     ("security/index.html", None, "/security/"),
     ("privacy/index.html", None, "/privacy/"),
@@ -54,6 +55,7 @@ ENG_ITEMS = (("/methodology/", "Methodology", "How problems are investigated and
              (EE, "Evidence overview", "Everything that backs the work"),
              (EE + "jetbrains-platform-tickets/", "JetBrains Platform tickets", "Root-cause reports and fixes in the IntelliJ Platform"),
              (EE + "open-source-security-reports/", "Open-source security reports", "Vulnerable dependencies fixed by maintainers"),
+             (EE + "third-party-plugin-audits/", "Third-party plugin audits", "Findings in other vendors&rsquo; plugins, fixed by them"),
              (EE + "case-studies/", "Plugin case studies", "Plugins with the strongest evidence"))
 NAV = (("/#work", "Work"), ("Engineering", ENG_ITEMS), ("/catalog/", "Tools"),
        ("/services/", "Services"), ("/contact/", "Contact"))
@@ -91,6 +93,7 @@ ES_PATHS = {
     "/engineering-evidence/case-studies/": "/es/ingenieria-y-evidencia/casos-de-estudio/",
     "/engineering-evidence/jetbrains-platform-tickets/": "/es/ingenieria-y-evidencia/tickets-jetbrains-platform/",
     "/engineering-evidence/open-source-security-reports/": "/es/ingenieria-y-evidencia/reportes-de-seguridad/",
+    "/engineering-evidence/third-party-plugin-audits/": "/es/ingenieria-y-evidencia/auditorias-de-plugins-de-terceros/",
     "/contact/": "/es/contacto/",
     "/security/": "/es/seguridad/",
     "/privacy/": "/es/privacidad/",
@@ -205,6 +208,7 @@ def footer_html(active):
         ("Work", [link("/#work", "Selected investigations"),
                   link(EE + "jetbrains-platform-tickets/", "JetBrains Platform tickets"),
                   link(EE + "open-source-security-reports/", "Open-source security reports"),
+                  link(EE + "third-party-plugin-audits/", "Third-party plugin audits"),
                   link(EE + "case-studies/", "Plugin case studies")]),
         ("Engineering", [link("/methodology/", "Methodology"), link(EE, "Evidence overview")]),
         ("Tools", [link("/catalog/", "Plugin catalog"), link("/catalog/?pricing=paid", "Paid &amp; Pro plugins"),

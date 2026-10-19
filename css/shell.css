@@ -680,6 +680,12 @@
 .lab-cases .eyebrow, .identity-case .eyebrow { font-family: var(--sans); font-size: 12px; letter-spacing: .08em; }
 .ticket-status { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: var(--radius);
   font: 700 12px / 1.4 var(--sans); letter-spacing: .02em; text-transform: none; }
+/* Status colors on the evidence pages (2026-10-19). The pages carry older inline rules that mix the
+   text color into its own background (below 4.5:1 in light mode); these use the validated token pairs
+   and the site's meaning: green = fixed, amber = the gap is still there. */
+.ticket-head .ticket-status.is-fixed { color: var(--valid); background: var(--valid-bg); }
+.ticket-head .ticket-status.is-open { color: var(--inspect); background: var(--inspect-bg); }
+.ticket-head .ticket-status.is-submitted { color: var(--text); background: var(--surface-3); }
 
 /* Segunda pasada: mismos ajustes con la especificidad de las reglas viejas. */
 .category-links .cat-cell-count, .category-links .cat-cell-arrow,
