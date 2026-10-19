@@ -50,19 +50,21 @@
     hire: {
       label: 'hire',
       mail: true,
-      title: t('Work with Joel', 'Trabaja con Joel'),
-      sub: t('Performance audits, plugin updates, security reviews, custom plugins or team licenses. Joel replies personally by email.',
-             'Auditorías de rendimiento, actualización de plugins, revisiones de seguridad, plugins a medida o licencias de equipo. Joel responde personalmente por correo.'),
+      title: t('Start an engagement', 'Iniciar un encargo'),
+      sub: t('Describe the problem or the work. You get the scope, delivery date and price in writing before any work starts. Joel replies personally by email.',
+             'Describe el problema o el trabajo. Recibes el alcance, la fecha de entrega y el precio por escrito antes de empezar cualquier trabajo. Joel responde personalmente por correo.'),
       submitLabel: t('Email Joel', 'Escribir a Joel'),
       fields: [
-        { name: 'org', label: t('Company', 'Empresa'), type: 'text', required: true, placeholder: t('Your company or team', 'Tu empresa o equipo') },
+        { name: 'org', label: t('Company or project', 'Empresa o proyecto'), type: 'text', required: true, placeholder: t('Your company, team or project', 'Tu empresa, equipo o proyecto') },
         { name: 'service', label: t('What do you need?', '¿Qué necesitas?'), prompt: t('Select one', 'Elige una opción'), type: 'select', required: true,
-          options: [t('Plugin performance audit', 'Auditoría de rendimiento de un plugin'),
+          options: [t('Investigation of a specific problem (performance, security or reliability)', 'Investigación de un problema concreto (rendimiento, seguridad o fiabilidad)'),
+                    t('Plugin performance audit', 'Auditoría de rendimiento de un plugin'),
                     t('Plugin update for new IDE versions', 'Actualización de un plugin para versiones nuevas del IDE'),
                     t('Dependency and CI/CD security review', 'Revisión de seguridad de dependencias y CI/CD'),
                     t('Custom static-analysis rules', 'Reglas de análisis estático a medida'), t('CI/CD integration', 'Integración en CI/CD'),
                     t('Private plugin distribution', 'Distribución privada de plugins'), TEAM_OPTION, t('Something else', 'Otra cosa')] },
-        { name: 'message', label: t('Details', 'Detalles'), type: 'textarea', max: 1500, required: true, placeholder: t('Your stack, what the tool should catch or do, and any timeline…', 'Tu stack, qué debe detectar o hacer la herramienta y los plazos…') }
+        { name: 'target', label: t('Plugin, repository or system', 'Plugin, repositorio o sistema'), type: 'text', required: false, placeholder: t('A name or a URL', 'Un nombre o una URL') },
+        { name: 'message', label: t('What you are seeing', 'Qué estás viendo'), type: 'textarea', max: 1500, required: true, placeholder: t('Symptoms, versions, links to tickets or reports, and any deadline…', 'Síntomas, versiones, enlaces a tickets o reportes, y cualquier fecha límite…') }
       ]
     },
     partnership: {
@@ -233,7 +235,7 @@
   // busqueda sin resultados del catalogo).
   var params = new URLSearchParams(window.location.search);
   var intent = params.get('intent');
-  activate(CONFIGS[intent] ? intent : 'gap');
+  activate(CONFIGS[intent] ? intent : 'hire');
   var prefill = params.get('plugin') ? t('About the plugin: ', 'Sobre el plugin: ') + params.get('plugin') + '\n\n'
     : params.get('need') ? t('I searched the catalog for "', 'Busqué en el catálogo "') + params.get('need').slice(0, 120) + t('" and found nothing.\n\n', '" y no encontré nada.\n\n') : '';
   if (prefill) {

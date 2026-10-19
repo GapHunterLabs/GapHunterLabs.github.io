@@ -103,7 +103,7 @@
   }
 
 </style>
-<link rel="stylesheet" href="/css/shell.css?v=bf37af3f">
+<link rel="stylesheet" href="/css/shell.css?v=5d85e716">
 </head>
 <body>
 <div class="app-shell">
@@ -180,21 +180,29 @@
     </section>
   </div>
 </main>
-<aside class="page-insights" id="pageInsights" aria-label="Datos de la plataforma" hidden>
+<aside class="page-insights" aria-label="Datos de los encargos">
   <div class="pi-card">
-    <p class="pi-eyebrow">El catálogo en cifras</p>
-    <div class="pi-stats">
-      <div><span class="pi-stat-num" id="piPlugins">&mdash;</span><span class="pi-stat-label">Plugins activos</span></div>
-      <div><span class="pi-stat-num" id="piDownloads">&mdash;</span><span class="pi-stat-label">Descargas totales</span></div>
-    </div>
+    <p class="pi-eyebrow">Cómo funcionan los encargos</p>
+    <ul class="pi-list">
+      <li>Alcance fijo y precio fijo, acordados por escrito antes de empezar cualquier trabajo.</li>
+      <li>Entregables por escrito: un informe, y un pull request cuando hay código que cambiar.</li>
+      <li>Asíncrono por defecto, por correo, con una llamada si la prefieres.</li>
+      <li>Pago por transferencia bancaria internacional en USD, con factura.</li>
+      <li>Tu código y tus datos son confidenciales. Firmar tu NDA no es problema.</li>
+    </ul>
   </div>
   <div class="pi-card">
-    <p class="pi-eyebrow">Categorías</p>
-    <div class="pi-categories" id="piCategories"></div>
+    <p class="pi-eyebrow">Resultados recientes</p>
+    <ul class="pi-results">
+      <li class="is-open"><a href="https://youtrack.jetbrains.com/issue/IJPL-257909" target="_blank" rel="noopener">IJPL-257909</a>Settings &rsaquo; Plugins tardaba 689–931 ms en abrir; con el arreglo, la verificación toma 8–22 ms. Pull request abierto.</li>
+      <li><a href="https://github.com/bancolombia/reactive-commons-go/issues/5" target="_blank" rel="noopener">reactive-commons-go#5</a>De 10 avisos a 0, corregido por los mantenedores 3 días después del reporte.</li>
+      <li><a href="https://github.com/redhat-developer/lsp4ij/issues/1540" target="_blank" rel="noopener">lsp4ij#1540</a>Una violación del hilo de interfaz en LSP4IJ de Red Hat, corregida por el mantenedor el mismo día.</li>
+    </ul>
+    <p class="pi-cta"><a href="/es/ingenieria-y-evidencia/">Toda la evidencia de ingeniería</a></p>
   </div>
-  <div class="pi-card" id="piFeaturedCard" hidden>
-    <p class="pi-eyebrow">Plugin destacado</p>
-    <a class="pi-featured" id="piFeatured"></a>
+  <div class="pi-card">
+    <p class="pi-eyebrow">Empezar</p>
+    <p class="pi-note">Escribe a <a href="mailto:gaphunterlabs@gmail.com">gaphunterlabs@gmail.com</a> o usa la <a href="/es/contacto/?intent=hire">página de contacto</a>.</p>
   </div>
 </aside>
 </div>
@@ -219,8 +227,6 @@
   </div>
 </footer>
 <!-- CHROME:FOOTER:END -->
-<script src="/js/catalog-shared.js?v=c1e41587"></script>
-<script src="/js/security-rail.js?v=962edda8" defer></script>
 <script src="/js/shell.js?v=9e040297" defer></script>
 <script data-goatcounter="https://gaphunterlabs.goatcounter.com/count"
         async src="https://gc.zgo.at/count.js"></script>

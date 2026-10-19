@@ -297,6 +297,23 @@
   gap: 6px;
 }
 .pi-stats { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-3); }
+/* Rail content (2026-10-19): notes, lists, results with their status rule, and section links. */
+.pi-note { margin: 0 0 var(--space-2); font-size: 13px; color: var(--text-dim); line-height: 1.55; }
+.pi-note:last-child { margin-bottom: 0; }
+.pi-list { margin: 0; padding-left: 1.1em; display: flex; flex-direction: column; gap: 8px; }
+.pi-list li { font-size: 13px; color: var(--text-dim); line-height: 1.5; }
+.pi-results { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.pi-results li { padding-left: 10px; border-left: 3px solid var(--valid-line); font-size: 13px; line-height: 1.5; color: var(--text-dim); }
+.pi-results li.is-open { border-left-color: var(--inspect-line); }
+.pi-results a { display: block; margin-bottom: 2px; font: 600 13px/1.4 var(--mono); color: var(--text);
+  text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+.pi-links { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+.pi-links a { display: block; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13.5px; color: var(--text); text-decoration: none; }
+.pi-links li:last-child a { border-bottom: 0; }
+.pi-links a:hover { text-decoration: underline; text-underline-offset: 0.2em; }
+.pi-links a[aria-current="page"] { padding-left: 8px; border-left: 3px solid var(--text); font-weight: 600; }
+.pi-cta { margin: var(--space-3) 0 0; font-size: 13.5px; }
+.pi-card .pi-cta:first-of-type:last-child { margin-top: 0; }
 .pi-stat-num { display: block; font-family: var(--mono); font-size: 20px; font-weight: 700; color: var(--text); }
 .pi-stat-label { display: block; font-size: 11px; color: var(--text-faint); margin-top: 2px; }
 .pi-categories { display: flex; flex-direction: column; gap: 2px; }
@@ -582,28 +599,19 @@
    mismo eje y el mismo borde.
    ===================================================================== */
 .page-hero.gh-page-header {
+  /* 2026-10-19: page headers sit on the page itself, closed by a thin rule,
+     like the home hero. The navy panel (#0F2346) and the logo watermark were
+     removed: with the neutral .band-dark they left dark text on navy. */
   position: relative;
-  isolation: isolate;
-  overflow: hidden;
   max-width: none;
-  padding: clamp(28px, 4vw, 56px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius);
-  background: #0F2346;
+  padding: clamp(28px, 4vw, 48px) 0 clamp(24px, 3vw, 36px);
+  border: 0;
+  border-bottom: 1px solid var(--border);
+  border-radius: 0;
+  background: transparent;
   box-shadow: none;
 }
-.page-hero.gh-page-header:not(.hero)::after {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  right: -48px;
-  bottom: -72px;
-  width: 300px;
-  height: 300px;
-  opacity: 0.09;
-  pointer-events: none;
-  background: no-repeat center / contain url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1024 1024'%3E%3Cpath fill='%23ffffff' d='M511 81L847 283L725 351L508 223L296 348L296 588L463 691L342 765L173 665L172 281Z'/%3E%3Cpath fill='%23ffffff' d='M846 412L844 668L518 863L393 795L724 589L721 540L567 538L568 412Z'/%3E%3Cpath fill='%23ffffff' d='M569 413H695V539H569Z'/%3E%3C/svg%3E");
-}
+.page-hero.gh-page-header:not(.hero)::after { content: none; }
 
 /* Eyebrow: texto en caja normal, sin icono. */
 .gh-page-header .contact-kicker,
@@ -635,8 +643,6 @@
 .gh-page-header.method-intro { max-width: none; }
 
 @media (max-width: 640px) {
-  .page-hero.gh-page-header { border-radius: var(--radius); }
-  .page-hero.gh-page-header:not(.hero)::after { width: 190px; height: 190px; right: -40px; bottom: -50px; }
   .gh-page-header .contact-lead, .gh-page-header .ch-copy > p:not(.eyebrow) { font-size: 16px; }
 }
 

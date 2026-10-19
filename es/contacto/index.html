@@ -82,48 +82,6 @@
     align-items: start;
     margin-bottom: var(--space-8);
   }
-  .contact-badges { display: flex; flex-wrap: wrap; gap: var(--space-5); margin-top: var(--space-6); }
-  .contact-badge { display: flex; align-items: center; gap: 10px; max-width: 190px; }
-  .contact-badge-icon {
-    width: 34px; height: 34px; border-radius: 50%; flex: none;
-    background: var(--surface-2); border: 1px solid var(--border);
-    display: flex; align-items: center; justify-content: center; color: var(--accent);
-  }
-  .contact-badge-icon svg { width: 16px; height: 16px; }
-  .contact-badge span { font-size: 12.5px; color: var(--text-dim); line-height: 1.35; }
-
-  .contact-hero-art { position: relative; }
-  .code-window {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius-lg); box-shadow: var(--shadow); overflow: hidden;
-  }
-  .code-window-bar {
-    display: flex; align-items: center; gap: 6px;
-    padding: 9px 12px; background: var(--surface-2); border-bottom: 1px solid var(--border);
-  }
-  .code-window-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--border); }
-  .code-window-title { margin-left: 6px; font-family: var(--mono); font-size: 11px; color: var(--text-faint); }
-  .code-window pre {
-    margin: 0; padding: 16px; font-family: var(--mono); font-size: 12px; line-height: 1.7;
-    color: var(--text-dim); overflow-x: auto;
-  }
-  .code-window .tok-kw { color: var(--accent); }
-  .code-window .tok-str { color: var(--good); }
-  .code-window .tok-cm { color: var(--text-faint); font-style: italic; }
-  .code-window .tok-fn { color: var(--cyan); }
-  .feedback-card {
-    position: absolute; right: -14px; bottom: -18px;
-    display: flex; align-items: center; gap: 10px;
-    background: var(--surface-2); border: 1px solid var(--border);
-    border-radius: var(--radius); box-shadow: var(--shadow);
-    padding: 12px 14px; max-width: 210px;
-  }
-  .feedback-card-icon {
-    width: 30px; height: 30px; border-radius: 50%; flex: none;
-    background: var(--accent); display: flex; align-items: center; justify-content: center; color: #fff;
-  }
-  .feedback-card-icon svg { width: 15px; height: 15px; }
-  .feedback-card span { font-size: 12.5px; font-weight: 600; line-height: 1.35; }
 
   /* ---- Quick actions + form ---- */
   .contact-desk {
@@ -133,32 +91,20 @@
     align-items: start;
     margin-bottom: var(--space-8);
   }
-  .quick-actions { display: flex; flex-direction: column; gap: 8px; }
+  /* Ruled list, not icon cards (2026-10-19): the active item gets an ink rule on the left. */
+  .quick-actions { display: flex; flex-direction: column; border-top: 1px solid var(--text); }
   .qa-item {
-    display: flex; align-items: flex-start; gap: 10px; text-align: left;
-    padding: 12px; border-radius: var(--radius); border: 1px solid var(--border);
-    background: var(--surface); cursor: pointer; font-family: var(--sans);
-    color: inherit; text-decoration: none; width: 100%;
+    display: block; text-align: left; width: 100%;
+    padding: 14px 12px 14px 14px; border: 0; border-bottom: 1px solid var(--border);
+    border-left: 3px solid transparent; border-radius: 0; background: none;
+    cursor: pointer; font-family: var(--sans); color: inherit; text-decoration: none;
   }
-  .qa-item:hover { border-color: var(--accent); }
-  .qa-item:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-  .qa-item-icon {
-    width: 30px; height: 30px; border-radius: var(--radius-md); flex: none;
-    background: var(--surface-2); display: flex; align-items: center; justify-content: center;
-    color: var(--text-dim);
-  }
-  .qa-item-icon svg { width: 15px; height: 15px; }
-  .qa-item-title { display: block; font-size: 13.5px; font-weight: 650; color: var(--text); }
-  .qa-item-desc { display: block; font-size: 12px; color: var(--text-faint); margin-top: 2px; line-height: 1.4; }
-  /* Acento lateral + tinte, no relleno sólido -- mismo lenguaje que
-     .sidebar-link[aria-current] pero sin el bloque de color a pleno,
-     que en una card grande se sentía demasiado "chillón" (feedback
-     real 2026-09-10) frente al resto del sitio, mucho más contenido
-     con el color saturado. */
-  .qa-item.is-active { background: var(--surface); border-color: var(--accent); box-shadow: -2px 0 0 0 var(--accent); }
-  .qa-item.is-active .qa-item-icon { background: color-mix(in srgb, var(--accent) 16%, var(--surface-2)); color: var(--accent); }
-  .qa-item.is-active .qa-item-title { color: var(--accent); }
-  .qa-item.is-active .qa-item-desc { color: var(--text-dim); }
+  .qa-item:hover { background: var(--surface-2); }
+  .qa-item:focus-visible { outline: none; box-shadow: var(--focus-ring); }
+  .qa-item-icon { display: none; }
+  .qa-item-title { display: block; font-size: 15px; font-weight: 600; color: var(--text); }
+  .qa-item-desc { display: block; font-size: 13px; color: var(--text-dim); margin-top: 2px; line-height: 1.45; }
+  .qa-item.is-active { border-left-color: var(--text); background: var(--surface); }
 
   /* .btn -- misma convención ya establecida en index.html (identity
      section), reusada acá tal cual en vez de inventar un estilo de
@@ -177,11 +123,10 @@
   @media (prefers-reduced-motion: reduce) { .btn:active { transform: none; } }
 
   .contact-form-panel {
-    background: var(--surface); border: 1px solid var(--border);
-    border-radius: var(--radius-lg); box-shadow: var(--shadow);
-    padding: var(--space-6);
+    background: var(--surface); border: 1px solid var(--border); border-top: 2px solid var(--text);
+    border-radius: 0; padding: var(--space-6);
   }
-  .cf-title { margin: 0 0 4px; font-size: 19px; font-weight: 650; letter-spacing: -0.01em; }
+  .cf-title { margin: 0 0 4px; font: 600 22px/1.25 var(--serif); letter-spacing: -0.005em; }
   .cf-sub { margin: 0 0 var(--space-5); font-size: 13.5px; color: var(--text-dim); }
   .cf-row { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: var(--space-4); }
   .cf-field { display: flex; flex-direction: column; gap: 6px; margin-bottom: var(--space-4); }
@@ -265,7 +210,7 @@
   }
 
 </style>
-<link rel="stylesheet" href="/css/shell.css?v=bf37af3f">
+<link rel="stylesheet" href="/css/shell.css?v=5d85e716">
 </head>
 <body>
 <div class="app-shell">
@@ -303,7 +248,7 @@
     <nav class="quick-actions" aria-label="Opciones de contacto">
       <button type="button" class="qa-item" data-target="hire" aria-pressed="false">
         <span class="qa-item-icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="11" height="8" rx="1.2"/><path d="M6 5V3.8A1.3 1.3 0 0 1 7.3 2.5h1.4A1.3 1.3 0 0 1 10 3.8V5M2.5 8.5h11"/></svg></span>
-        <span><span class="qa-item-title">Trabaja con Joel</span><span class="qa-item-desc">Auditorías, actualización de plugins, revisiones de seguridad, plugins a medida o licencias de equipo.</span></span>
+        <span><span class="qa-item-title">Trabaja con Joel</span><span class="qa-item-desc">Investigaciones, auditorías, revisiones de seguridad, actualizaciones de plataforma y herramientas a medida.</span></span>
       </button>
       <button type="button" class="qa-item" data-target="gap" aria-pressed="false">
         <span class="qa-item-icon" aria-hidden="true"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3v10M3 8h10"/></svg></span>
@@ -324,13 +269,13 @@
     </nav>
 
     <div class="contact-form-panel">
-      <h2 class="cf-title" id="cfTitle">Proponer una brecha</h2>
-      <p class="cf-sub" id="cfSub">¿Qué te falta? Cuanto más detalle, mejor.</p>
+      <h2 class="cf-title" id="cfTitle">Iniciar un encargo</h2>
+      <p class="cf-sub" id="cfSub">Describe el problema o el trabajo. Recibes el alcance, la fecha de entrega y el precio por escrito antes de empezar cualquier trabajo. Joel responde personalmente por correo.</p>
       <form id="contactForm">
         <div id="cfFields"></div>
         <div class="cf-footer">
           <span class="cf-hint"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3"><rect x="3.5" y="7" width="9" height="6.5" rx="1"/><path d="M5.5 7V4.8a2.5 2.5 0 0 1 5 0V7"/></svg>No hace falta un pitch. Basta con describir el problema.</span>
-          <button type="submit" class="cf-submit" id="cfSubmit">Proponer una brecha <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
+          <button type="submit" class="cf-submit" id="cfSubmit">Escribir a Joel <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8h10M9 4l4 4-4 4"/></svg></button>
         </div>
       </form>
       <div class="cf-fallback" id="cfFallback" hidden></div>
@@ -340,9 +285,23 @@
 
   <p style="margin-top:var(--space-6)"><a class="btn" href="/es/"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M10 3 5 8l5 5"/></svg>Volver al inicio</a></p>
 </main>
-<aside class="page-insights" aria-label="Guía para reportar">
+<aside class="page-insights" aria-label="Guía de contacto">
   <div class="pi-card">
-    <p class="pi-eyebrow">Si reportas un problema de un plugin</p>
+    <p class="pi-eyebrow">Para un encargo, incluye</p>
+    <ul class="pi-checklist">
+      <li>El plugin, el repositorio o el sistema, con un enlace si es público</li>
+      <li>Versiones: IDE, plataforma, lenguaje o framework</li>
+      <li>Lo que ves: el síntoma, el error o el reporte</li>
+      <li>Lo que ya probaste</li>
+      <li>Cualquier fecha límite</li>
+    </ul>
+  </div>
+  <div class="pi-card">
+    <p class="pi-eyebrow">Qué pasa después</p>
+    <p class="pi-note">Joel responde personalmente por correo. Recibes el alcance, la fecha de entrega y el precio por escrito antes de empezar cualquier trabajo, y nada empieza sin ese acuerdo. No hay número de teléfono, ni formulario con backend, ni un tiempo de respuesta publicado.</p>
+  </div>
+  <div class="pi-card">
+    <p class="pi-eyebrow">Si vas a reportar un problema con un plugin</p>
     <p class="pi-note">Incluye lo necesario para reproducirlo:</p>
     <ul class="pi-checklist">
       <li>Nombre y versión del plugin (Settings → Plugins)</li>
@@ -351,20 +310,6 @@
       <li>Pasos para reproducirlo, en un proyecto nuevo o no</li>
       <li>Stack trace o fragmento de log que se pueda compartir</li>
     </ul>
-  </div>
-  <div class="pi-card">
-    <p class="pi-eyebrow">Qué esperar</p>
-    <p class="pi-note">No hay un SLA de tiempo de respuesta publicado. Los issues de GitHub se quedan en el repositorio del plugin, y el correo va a la dirección publicada en este sitio. No hay teléfono, dirección postal ni formulario con servidor.</p>
-  </div>
-  <div class="pi-card">
-    <p class="pi-eyebrow">Qué hace útil un reporte</p>
-    <ol class="pi-steps">
-      <li><span class="pi-step-num">1</span><span class="pi-step-body"><strong>El problema</strong>¿Qué fricción estás encontrando?</span></li>
-      <li><span class="pi-step-num">2</span><span class="pi-step-body"><strong>El entorno</strong>IDE, lenguaje, framework o flujo de trabajo.</span></li>
-      <li><span class="pi-step-num">3</span><span class="pi-step-body"><strong>Soluciones existentes</strong>¿Qué has probado?</span></li>
-      <li><span class="pi-step-num">4</span><span class="pi-step-body"><strong>Evidencia</strong>Enlaces, capturas o referencias.</span></li>
-      <li><span class="pi-step-num">5</span><span class="pi-step-body"><strong>Impacto</strong>¿Por qué importa este problema?</span></li>
-    </ol>
   </div>
 </aside>
 </div>
@@ -390,7 +335,7 @@
 </footer>
 <!-- CHROME:FOOTER:END -->
 <script src="/js/shell.js?v=9e040297" defer></script>
-<script src="/js/contact.js?v=3cabccf7" defer></script>
+<script src="/js/contact.js?v=2ddae040" defer></script>
 <script data-goatcounter="https://gaphunterlabs.goatcounter.com/count"
         async src="https://gc.zgo.at/count.js"></script>
 </body>

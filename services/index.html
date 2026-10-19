@@ -102,7 +102,7 @@
   }
 
 </style>
-<link rel="stylesheet" href="/css/shell.css?v=bf37af3f">
+<link rel="stylesheet" href="/css/shell.css?v=5d85e716">
 </head>
 <body>
 <div class="app-shell">
@@ -179,21 +179,29 @@
     </section>
   </div>
 </main>
-<aside class="page-insights" id="pageInsights" aria-label="Platform insights" hidden>
+<aside class="page-insights" aria-label="Engagement facts">
   <div class="pi-card">
-    <p class="pi-eyebrow">Catalog at a glance</p>
-    <div class="pi-stats">
-      <div><span class="pi-stat-num" id="piPlugins">&mdash;</span><span class="pi-stat-label">Plugins active</span></div>
-      <div><span class="pi-stat-num" id="piDownloads">&mdash;</span><span class="pi-stat-label">Total downloads</span></div>
-    </div>
+    <p class="pi-eyebrow">How engagements work</p>
+    <ul class="pi-list">
+      <li>Fixed scope and fixed price, agreed in writing before any work starts.</li>
+      <li>Written deliverables: a report, and a pull request when there is code to change.</li>
+      <li>Async by default, by email, with a call if you prefer one.</li>
+      <li>Paid by international bank transfer in USD, against an invoice.</li>
+      <li>Your code and data stay confidential. Signing your NDA is fine.</li>
+    </ul>
   </div>
   <div class="pi-card">
-    <p class="pi-eyebrow">Categories</p>
-    <div class="pi-categories" id="piCategories"></div>
+    <p class="pi-eyebrow">Recent results</p>
+    <ul class="pi-results">
+      <li class="is-open"><a href="https://youtrack.jetbrains.com/issue/IJPL-257909" target="_blank" rel="noopener">IJPL-257909</a>Settings &rsaquo; Plugins took 689–931 ms to open; with the fix the check takes 8–22 ms. Pull request open.</li>
+      <li><a href="https://github.com/bancolombia/reactive-commons-go/issues/5" target="_blank" rel="noopener">reactive-commons-go#5</a>From 10 advisories to 0, fixed by the maintainers 3 days after the report.</li>
+      <li><a href="https://github.com/redhat-developer/lsp4ij/issues/1540" target="_blank" rel="noopener">lsp4ij#1540</a>A UI-thread violation in Red Hat&rsquo;s LSP4IJ, fixed by the maintainer the same day.</li>
+    </ul>
+    <p class="pi-cta"><a href="/engineering-evidence/">All engineering evidence</a></p>
   </div>
-  <div class="pi-card" id="piFeaturedCard" hidden>
-    <p class="pi-eyebrow">Featured plugin</p>
-    <a class="pi-featured" id="piFeatured"></a>
+  <div class="pi-card">
+    <p class="pi-eyebrow">Start</p>
+    <p class="pi-note">Email <a href="mailto:gaphunterlabs@gmail.com">gaphunterlabs@gmail.com</a> or use the <a href="/contact/?intent=hire">contact page</a>.</p>
   </div>
 </aside>
 </div>
@@ -218,8 +226,6 @@
   </div>
 </footer>
 <!-- CHROME:FOOTER:END -->
-<script src="/js/catalog-shared.js?v=c1e41587"></script>
-<script src="/js/security-rail.js?v=962edda8" defer></script>
 <script src="/js/shell.js?v=9e040297" defer></script>
 <script data-goatcounter="https://gaphunterlabs.goatcounter.com/count"
         async src="https://gc.zgo.at/count.js"></script>

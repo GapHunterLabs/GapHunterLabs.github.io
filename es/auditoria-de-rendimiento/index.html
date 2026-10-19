@@ -125,7 +125,7 @@
   }
 
 </style>
-<link rel="stylesheet" href="/css/shell.css?v=bf37af3f">
+<link rel="stylesheet" href="/css/shell.css?v=5d85e716">
 </head>
 <body>
 <div class="app-shell">
@@ -236,21 +236,28 @@
     </section>
   </div>
 </main>
-<aside class="page-insights" id="pageInsights" aria-label="Datos de la plataforma" hidden>
+<aside class="page-insights" aria-label="Datos de la auditoría">
   <div class="pi-card">
-    <p class="pi-eyebrow">El catálogo en cifras</p>
-    <div class="pi-stats">
-      <div><span class="pi-stat-num" id="piPlugins">—</span><span class="pi-stat-label">Plugins activos</span></div>
-      <div><span class="pi-stat-num" id="piDownloads">—</span><span class="pi-stat-label">Descargas totales</span></div>
-    </div>
+    <p class="pi-eyebrow">La auditoría en breve</p>
+    <ul class="pi-list">
+      <li>USD 2,500, fijo, por un plugin y hasta 3 versiones del IDE.</li>
+      <li>El alcance por escrito en 2 días hábiles.</li>
+      <li>Entrega en 10 días hábiles desde el inicio.</li>
+      <li>50% al empezar el trabajo y 50% al entregar.</li>
+      <li>Un informe escrito, parches y mediciones de antes y después.</li>
+    </ul>
   </div>
   <div class="pi-card">
-    <p class="pi-eyebrow">Categorías</p>
-    <div class="pi-categories" id="piCategories"></div>
+    <p class="pi-eyebrow">El mismo método, en público</p>
+    <ul class="pi-results">
+      <li class="is-open"><a href="https://youtrack.jetbrains.com/issue/IJPL-257909" target="_blank" rel="noopener">IJPL-257909</a>Settings &rsaquo; Plugins tardaba 689–931 ms en abrir; con el arreglo, la verificación toma 8–22 ms. Pull request abierto.</li>
+      <li class="is-open"><a href="https://youtrack.jetbrains.com/issue/IJPL-257908" target="_blank" rel="noopener">IJPL-257908</a>Live Templates: la comparación en el hilo de interfaz pasa de 157 ms a 0 ms. Pull request abierto.</li>
+      <li><a href="https://github.com/redhat-developer/lsp4ij/issues/1540" target="_blank" rel="noopener">lsp4ij#1540</a>Una violación del hilo de interfaz en LSP4IJ de Red Hat, corregida por el mantenedor el mismo día.</li>
+    </ul>
   </div>
-  <div class="pi-card" id="piFeaturedCard" hidden>
-    <p class="pi-eyebrow">Plugin destacado</p>
-    <a class="pi-featured" id="piFeatured"></a>
+  <div class="pi-card">
+    <p class="pi-eyebrow">Empezar</p>
+    <p class="pi-cta"><a class="btn" href="/es/contacto/?intent=hire">Pide una cotización</a></p>
   </div>
 </aside>
 </div>
@@ -275,8 +282,6 @@
   </div>
 </footer>
 <!-- CHROME:FOOTER:END -->
-<script src="/js/catalog-shared.js?v=c1e41587"></script>
-<script src="/js/security-rail.js?v=962edda8" defer></script>
 <script src="/js/shell.js?v=9e040297" defer></script>
 <script data-goatcounter="https://gaphunterlabs.goatcounter.com/count"
         async src="https://gc.zgo.at/count.js"></script>

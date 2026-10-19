@@ -124,7 +124,7 @@
   }
 
 </style>
-<link rel="stylesheet" href="/css/shell.css?v=bf37af3f">
+<link rel="stylesheet" href="/css/shell.css?v=5d85e716">
 </head>
 <body>
 <div class="app-shell">
@@ -235,21 +235,28 @@
     </section>
   </div>
 </main>
-<aside class="page-insights" id="pageInsights" aria-label="Platform insights" hidden>
+<aside class="page-insights" aria-label="Audit facts">
   <div class="pi-card">
-    <p class="pi-eyebrow">Catalog at a glance</p>
-    <div class="pi-stats">
-      <div><span class="pi-stat-num" id="piPlugins">—</span><span class="pi-stat-label">Plugins active</span></div>
-      <div><span class="pi-stat-num" id="piDownloads">—</span><span class="pi-stat-label">Total downloads</span></div>
-    </div>
+    <p class="pi-eyebrow">The audit in short</p>
+    <ul class="pi-list">
+      <li>USD 2,500, fixed, for one plugin and up to 3 IDE versions.</li>
+      <li>The scope in writing within 2 business days.</li>
+      <li>Delivery within 10 business days of the start.</li>
+      <li>50% when the work starts and 50% on delivery.</li>
+      <li>A written report, patches, and measurements before and after.</li>
+    </ul>
   </div>
   <div class="pi-card">
-    <p class="pi-eyebrow">Categories</p>
-    <div class="pi-categories" id="piCategories"></div>
+    <p class="pi-eyebrow">The same method, in public</p>
+    <ul class="pi-results">
+      <li class="is-open"><a href="https://youtrack.jetbrains.com/issue/IJPL-257909" target="_blank" rel="noopener">IJPL-257909</a>Settings &rsaquo; Plugins took 689–931 ms to open; with the fix the check takes 8–22 ms. Pull request open.</li>
+      <li class="is-open"><a href="https://youtrack.jetbrains.com/issue/IJPL-257908" target="_blank" rel="noopener">IJPL-257908</a>Live Templates: the comparison on the UI thread goes from 157 ms to 0 ms. Pull request open.</li>
+      <li><a href="https://github.com/redhat-developer/lsp4ij/issues/1540" target="_blank" rel="noopener">lsp4ij#1540</a>A UI-thread violation in Red Hat&rsquo;s LSP4IJ, fixed by the maintainer the same day.</li>
+    </ul>
   </div>
-  <div class="pi-card" id="piFeaturedCard" hidden>
-    <p class="pi-eyebrow">Featured plugin</p>
-    <a class="pi-featured" id="piFeatured"></a>
+  <div class="pi-card">
+    <p class="pi-eyebrow">Start</p>
+    <p class="pi-cta"><a class="btn" href="/contact/?intent=hire">Ask for a quote</a></p>
   </div>
 </aside>
 </div>
@@ -274,8 +281,6 @@
   </div>
 </footer>
 <!-- CHROME:FOOTER:END -->
-<script src="/js/catalog-shared.js?v=c1e41587"></script>
-<script src="/js/security-rail.js?v=962edda8" defer></script>
 <script src="/js/shell.js?v=9e040297" defer></script>
 <script data-goatcounter="https://gaphunterlabs.goatcounter.com/count"
         async src="https://gc.zgo.at/count.js"></script>
