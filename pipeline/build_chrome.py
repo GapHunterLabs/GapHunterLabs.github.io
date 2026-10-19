@@ -47,13 +47,16 @@ PAGES = (
 )
 
 # Un item con submenu es (etiqueta, [(href, texto), ...]); el resto (href, texto).
+# 2026-10-19 (rediseno): Work / Engineering / Tools / Services / Contact. Las
+# rutas no cambian; Methodology y las paginas de evidencia van bajo Engineering.
 EE = "/engineering-evidence/"
-EE_ITEMS = ((EE, "Overview", "What this section covers"),
-            (EE + "case-studies/", "Case studies", "Plugins with the strongest evidence"),
-            (EE + "jetbrains-platform-tickets/", "JetBrains Platform tickets", "Root-cause reports in the IntelliJ Platform tracker"),
-            (EE + "open-source-security-reports/", "Open-source security reports", "Vulnerable dependencies reported to maintainers"))
-NAV = (("/catalog/", "Catalog"), ("/services/", "Services"), ("Engineering &amp; Evidence", EE_ITEMS),
-       ("/methodology/", "Methodology"), ("/contact/", "Contact"))
+ENG_ITEMS = (("/methodology/", "Methodology", "How problems are investigated and fixed"),
+             (EE, "Evidence overview", "Everything that backs the work"),
+             (EE + "jetbrains-platform-tickets/", "JetBrains Platform tickets", "Root-cause reports and fixes in the IntelliJ Platform"),
+             (EE + "open-source-security-reports/", "Open-source security reports", "Vulnerable dependencies fixed by maintainers"),
+             (EE + "case-studies/", "Plugin case studies", "Plugins with the strongest evidence"))
+NAV = (("/#work", "Work"), ("Engineering", ENG_ITEMS), ("/catalog/", "Tools"),
+       ("/services/", "Services"), ("/contact/", "Contact"))
 
 LOGO = ('<svg class="gh-logo" viewBox="0 0 1024 1024" aria-hidden="true">'
         '<path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#0151FC"/>'
@@ -199,13 +202,15 @@ def footer_html(active):
         return '<a href="%s"%s%s>%s</a>' % (href, cur, ext, label)
 
     cols = (
-        ("Product", [link("/catalog/", "Plugin catalog"), link("/catalog/?pricing=paid", "Paid &amp; Pro plugins"),
-                     link("/catalog/?platform=vscode", "VS Code extensions")]),
-        ("Engineering &amp; Evidence", [link(EE, "Overview"), link(EE + "case-studies/", "Case studies"),
-                                        link(EE + "jetbrains-platform-tickets/", "JetBrains Platform tickets"),
-                                        link(EE + "open-source-security-reports/", "Open-source security reports")]),
-        ("Company", [link("/services/", "Work with Joel"), link("/plugin-performance-audit/", "Performance audit"), link("/methodology/", "Methodology"),
-                     link("/contact/", "Contact")]),
+        ("Work", [link("/#work", "Selected investigations"),
+                  link(EE + "jetbrains-platform-tickets/", "JetBrains Platform tickets"),
+                  link(EE + "open-source-security-reports/", "Open-source security reports"),
+                  link(EE + "case-studies/", "Plugin case studies")]),
+        ("Engineering", [link("/methodology/", "Methodology"), link(EE, "Evidence overview")]),
+        ("Tools", [link("/catalog/", "Plugin catalog"), link("/catalog/?pricing=paid", "Paid &amp; Pro plugins"),
+                   link("/catalog/?platform=vscode", "VS Code extensions")]),
+        ("Services", [link("/services/", "Work with Joel"), link("/plugin-performance-audit/", "Performance audit"),
+                      link("/contact/", "Contact")]),
         ("Marketplaces", [link("https://plugins.jetbrains.com/vendor/gap-hunter-labs", "JetBrains Marketplace", True),
                           link("https://marketplace.visualstudio.com/publishers/GapHunterLabs", "VS Code Marketplace", True),
                           link("https://github.com/GapHunterLabs", "GitHub", True)]),
@@ -229,7 +234,8 @@ def footer_html(active):
         '    <div class="gh-footer-top">\n'
         '      <div class="gh-footer-brand">\n'
         '        <a class="gh-brand" href="/">%s<span class="gh-brand-name">Gap Hunter Labs</span></a>\n'
-        '        <p>Focused JetBrains and VS Code plugins for documented gaps in developer tooling, and custom tooling for teams.</p>\n'
+        '        <p>The engineering practice of Joel D&iacute;az: performance bottlenecks, security vulnerabilities and structural failures '
+        'in developer tools, enterprise platforms and open-source ecosystems, traced to their root cause and fixed.</p>\n'
         '        <a class="btn primary" href="/services/" data-goatcounter-click="cta-footer-hire">Work with Joel</a>\n'
         '      </div>\n'
         '      <nav class="gh-footer-cols" aria-label="Footer">%s</nav>\n'

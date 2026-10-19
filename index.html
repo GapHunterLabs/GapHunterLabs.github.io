@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <script src="/js/theme-init.js?v=c436d752"></script>
-<script src="/js/site-chrome.js?v=4597e75a" defer></script>
+<script src="/js/site-chrome.js?v=630ff9c6" defer></script>
 <script src="/js/site-reveal.js?v=ee52008b" defer></script>
 <script src="/js/slug-shim.js?v=edba12cc" defer></script>
 <!-- Trimmed 2026-08-23 (indexing audit): was 218 chars, well past
@@ -15,7 +15,7 @@
      (JetBrains/IntelliJ plugin) instead of leading with the brand
      name, since this domain has ~zero existing search equity to trade
      on a brand-first opener. -->
-<meta name="description" content="Focused JetBrains and VS Code plugins built for documented developer-tooling gaps, plus custom static-analysis rules and CI/CD work by founder Joel Diaz.">
+<meta name="description" content="Engineering practice of Joel Díaz: performance bottlenecks, security vulnerabilities and structural failures traced to their root cause and fixed.">
 <!-- Locked down deliberately, not a boilerplate copy-paste: this page is
      100% inline HTML/CSS/JS (no build step, no external script/style
      host; fonts are self-hosted under fonts/, SIL OFL) plus one live
@@ -118,7 +118,7 @@
      display budget. document.title still overrides this dynamically
      per-dossier (see updateDocumentTitle() in the script) -- this is
      only the base/fallback value a crawler or a fresh tab sees. -->
-<title>Gap Hunter Labs — JetBrains &amp; VS Code Plugins and Custom Tooling</title>
+<title>Gap Hunter Labs — Performance, Security and Reliability Engineering</title>
 <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1">
 
 <!-- Open Graph + Twitter Card, added 2026-08-21: this page had zero
@@ -134,8 +134,8 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Gap Hunter Labs">
 <meta property="og:url" content="https://gaphunterlabs.github.io/">
-<meta property="og:title" content="Gap Hunter Labs — JetBrains &amp; VS Code Plugins and Custom Tooling">
-<meta property="og:description" content="Focused JetBrains and VS Code plugins built for documented developer-tooling gaps, plus custom static-analysis rules and CI/CD work by founder Joel Diaz.">
+<meta property="og:title" content="Gap Hunter Labs — Performance, Security and Reliability Engineering">
+<meta property="og:description" content="Engineering practice of Joel Díaz: performance bottlenecks, security vulnerabilities and structural failures traced to their root cause and fixed.">
 <meta property="og:image" content="https://gaphunterlabs.github.io/og-image.png?v=2">
 <!-- og:image:secure_url + og:image:type added 2026-08-23: some
      crawlers (WhatsApp's included, per their own scraper docs) prefer
@@ -154,8 +154,8 @@
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@GapHunterLabs">
-<meta name="twitter:title" content="Gap Hunter Labs — JetBrains &amp; VS Code Plugins and Custom Tooling">
-<meta name="twitter:description" content="Focused JetBrains and VS Code plugins built for documented developer-tooling gaps, plus custom static-analysis rules and CI/CD work by founder Joel Diaz.">
+<meta name="twitter:title" content="Gap Hunter Labs — Performance, Security and Reliability Engineering">
+<meta name="twitter:description" content="Engineering practice of Joel Díaz: performance bottlenecks, security vulnerabilities and structural failures traced to their root cause and fixed.">
 <meta name="twitter:image" content="https://gaphunterlabs.github.io/og-image.png?v=2">
 <!-- twitter:image:alt added 2026-08-23 -- Twitter/X reads its own
      separate alt for the card image rather than falling back to
@@ -175,7 +175,7 @@
       "name": "Gap Hunter Labs",
       "url": "https://gaphunterlabs.github.io/",
       "email": "gaphunterlabs@gmail.com",
-      "description": "Gap Hunter Labs builds focused JetBrains and VS Code plugins for documented gaps in developer tooling, and offers plugin performance audits, plugin updates for new IDE versions, dependency and CI/CD security reviews, and custom plugins with CI/CD integration and private distribution.",
+      "description": "Gap Hunter Labs is the engineering practice of Joel Díaz. It investigates performance bottlenecks, security vulnerabilities and structural failures in developer tools, enterprise platforms and open-source ecosystems, and ships the fix: upstream reports and patches, specialized plugins for JetBrains IDEs and VS Code, and fixed-price audits.",
       "logo": "https://gaphunterlabs.github.io/icon-512.png",
       "founder": {
         "@id": "https://gaphunterlabs.github.io/#joel"
@@ -254,9 +254,9 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/css/theme.css?v=73412941">
-<link rel="stylesheet" href="/css/home.css?v=dd80b1b8">
-<link rel="stylesheet" href="/css/shell.css?v=12c9b263">
+<link rel="stylesheet" href="/css/theme.css?v=b1c31684">
+<link rel="stylesheet" href="/css/home.css?v=dea46f3e">
+<link rel="stylesheet" href="/css/shell.css?v=91cae257">
 </head>
 <body>
 <!-- Fase 2 (2026-09-22): sin loader -- hero, stats, categorias y
@@ -266,7 +266,7 @@
 <header class="gh-header" id="topbar">
   <div class="gh-header-inner">
     <a class="gh-brand" href="/" aria-label="Gap Hunter Labs home"><svg class="gh-logo" viewBox="0 0 1024 1024" aria-hidden="true"><path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#0151FC"/><path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z" fill="#01B3FD"/><polygon points="569,413 695,413 695,539 569,539" fill="#02F172"/></svg><span class="gh-brand-name">Gap Hunter Labs</span></a>
-    <nav class="gh-nav" id="siteNav" aria-label="Primary"><a class="gh-nav-link" href="/catalog/">Catalog</a><a class="gh-nav-link" href="/services/">Services</a><div class="gh-menu gh-nav-group"><button type="button" class="gh-nav-link gh-nav-toggle" data-menu-toggle aria-expanded="false">Engineering &amp; Evidence<svg class="gh-chevron" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 8l4 4 4-4"/></svg></button><div class="gh-pop gh-pop-wide" data-menu hidden><a class="gh-pop-link" href="/engineering-evidence/"><strong>Overview</strong><span>What this section covers</span></a><a class="gh-pop-link" href="/engineering-evidence/case-studies/"><strong>Case studies</strong><span>Plugins with the strongest evidence</span></a><a class="gh-pop-link" href="/engineering-evidence/jetbrains-platform-tickets/"><strong>JetBrains Platform tickets</strong><span>Root-cause reports in the IntelliJ Platform tracker</span></a><a class="gh-pop-link" href="/engineering-evidence/open-source-security-reports/"><strong>Open-source security reports</strong><span>Vulnerable dependencies reported to maintainers</span></a></div></div><a class="gh-nav-link" href="/methodology/">Methodology</a><a class="gh-nav-link" href="/contact/">Contact</a><a class="btn primary gh-nav-cta" href="/services/" data-goatcounter-click="cta-nav-hire-mobile">Work with Joel</a></nav>
+    <nav class="gh-nav" id="siteNav" aria-label="Primary"><a class="gh-nav-link" href="/#work">Work</a><div class="gh-menu gh-nav-group"><button type="button" class="gh-nav-link gh-nav-toggle" data-menu-toggle aria-expanded="false">Engineering<svg class="gh-chevron" viewBox="0 0 20 20" aria-hidden="true"><path d="M6 8l4 4 4-4"/></svg></button><div class="gh-pop gh-pop-wide" data-menu hidden><a class="gh-pop-link" href="/methodology/"><strong>Methodology</strong><span>How problems are investigated and fixed</span></a><a class="gh-pop-link" href="/engineering-evidence/"><strong>Evidence overview</strong><span>Everything that backs the work</span></a><a class="gh-pop-link" href="/engineering-evidence/jetbrains-platform-tickets/"><strong>JetBrains Platform tickets</strong><span>Root-cause reports and fixes in the IntelliJ Platform</span></a><a class="gh-pop-link" href="/engineering-evidence/open-source-security-reports/"><strong>Open-source security reports</strong><span>Vulnerable dependencies fixed by maintainers</span></a><a class="gh-pop-link" href="/engineering-evidence/case-studies/"><strong>Plugin case studies</strong><span>Plugins with the strongest evidence</span></a></div></div><a class="gh-nav-link" href="/catalog/">Tools</a><a class="gh-nav-link" href="/services/">Services</a><a class="gh-nav-link" href="/contact/">Contact</a><a class="btn primary gh-nav-cta" href="/services/" data-goatcounter-click="cta-nav-hire-mobile">Work with Joel</a></nav>
     <div class="gh-tools">
       <button type="button" class="gh-search-btn" data-search-open aria-haspopup="dialog" aria-expanded="false" aria-label="Search plugins and pages"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="8.5" cy="8.5" r="5.5"/><path d="M12.6 12.6 17 17"/></svg><span class="gh-search-label">Search</span><kbd class="gh-search-kbd">Ctrl K</kbd></button>
       <!-- LANG:START --><div class="gh-menu gh-lang"><button type="button" class="gh-icon-btn gh-lang-btn" data-menu-toggle aria-expanded="false" aria-label="Language"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.5"/><path d="M2.5 10h15M10 2.5c2.2 2.3 3.2 4.8 3.2 7.5s-1 5.2-3.2 7.5c-2.2-2.3-3.2-4.8-3.2-7.5s1-5.2 3.2-7.5z"/></svg><span class="gh-lang-code">EN</span></button><div class="gh-pop" data-menu hidden role="group" aria-label="Language"><a class="gh-pop-item" href="/" hreflang="en" lang="en" aria-current="true">English</a><a class="gh-pop-item" href="/es/" hreflang="es" lang="es">Espa&ntilde;ol</a></div></div><!-- LANG:END -->
@@ -291,180 +291,236 @@
      pattern, a <main> nested inside another <main> is valid HTML5 but
      semantically confusing for the same landmark-navigation use case
      this fix is for. -->
-<main class="wrap">
-  <div class="hero page-hero band-dark gh-page-header" id="top">
-    <div class="hero-brand">
-      <p class="contact-kicker">Gap Hunter Labs</p>
-      <h1 class="hero-title">Small, focused plugins for JetBrains IDEs and VS Code</h1>
-      <p class="hero-subtitle" id="heroSubtitle"><!-- PRERENDER:SUBTITLE:START -->Every plugin is built for a documented gap in developer tooling and has a clear price: free, freemium or paid. Figures are synced twice a day from public JetBrains Marketplace and GitHub data (last snapshot: 2026-10-18).<!-- PRERENDER:SUBTITLE:END --></p>
-      <div class="hdr-stats" id="stats" aria-label="Catalog metrics"><!-- PRERENDER:STATS:START --><div class="hdr-stat"><span class="hdr-stat-num">146</span><span class="hdr-stat-label">JetBrains plugins</span></div><div class="hdr-stat"><span class="hdr-stat-num">33</span><span class="hdr-stat-label">VS Code extensions</span></div><div class="hdr-stat"><span class="hdr-stat-num">11,119</span><span class="hdr-stat-label">JetBrains downloads</span></div><div class="hdr-stat"><span class="hdr-stat-num">6</span><span class="hdr-stat-label">Paid &amp; Pro plugins</span></div><!-- PRERENDER:STATS:END --></div>
-      <div class="hero-actions">
-        <a class="btn primary" href="#work-with-joel" data-goatcounter-click="cta-hero-hire">Work with Joel</a>
-        <a class="btn" href="/catalog/" data-goatcounter-click="cta-hero-catalog">Explore the catalog</a>
+<main class="wrap nb-home">
+  <section class="nb-hero" id="top" aria-labelledby="heroTitle">
+    <div class="nb-hero-copy">
+      <p class="nb-kicker">Gap Hunter Labs &middot; independent engineering practice</p>
+      <h1 class="nb-hero-title" id="heroTitle">I trace performance bottlenecks, security vulnerabilities and structural failures to their root cause, and I ship the fix.</h1>
+      <p class="nb-lede">Gap Hunter Labs is the engineering practice of Joel Díaz. I analyze complex systems, audit codebases and investigate performance bottlenecks, critical security vulnerabilities (CVEs) and structural failures in developer tools, enterprise platforms and open-source ecosystems. I follow each problem to its root cause and ship the precise fix that removes it: from upstream reports and patches to specialized tools and tailored audits. Every finding and fix published here is backed by verifiable technical evidence: tickets, pull requests, tests and a direct trail to the source.</p>
+      <div class="nb-actions">
+        <a class="btn primary" href="#work" data-goatcounter-click="cta-hero-work">Read the investigations</a>
+        <a class="btn" href="/contact/?intent=hire" data-goatcounter-click="cta-hero-hire">Discuss an engagement</a>
       </div>
     </div>
+    <aside class="nb-margin" aria-label="Method">
+      <ol class="nb-method-mini">
+        <li><span class="nb-step">01</span>Find the gap</li>
+        <li><span class="nb-step">02</span>Understand the cause</li>
+        <li><span class="nb-step">03</span>Build the fix</li>
+      </ol>
+      <p class="nb-margin-note">Performance &middot; security &middot; reliability &middot; static analysis. Across developer tools, enterprise platforms and open-source ecosystems.</p>
+    </aside>
+  </section>
 
-    <div class="hero-slider" id="heroSlider" aria-roledescription="carousel" aria-label="Featured plugins">
-      <div class="hs-viewport">
-        <div class="hs-track" id="heroSliderTrack"><!-- PRERENDER:SLIDES:START --><a class="hs-slide" href="/catalog/mermaid-companion/"><span class="hs-media"><video class="" poster="/media/mermaid-companion/poster.webp?v=ff03b541" muted loop playsinline autoplay preload="metadata"><source src="/media/mermaid-companion/demo.webm?v=11ff45da" type="video/webm"><source src="/media/mermaid-companion/demo.mp4?v=85d68eff" type="video/mp4"></video></span><span class="hs-copy"><span class="hs-kicker"><span class="price-badge price-freemium">Freemium</span>Featured plugin</span><span class="hs-name">Mermaid Companion</span><span class="hs-niche">Diagrams</span></span></a><a class="hs-slide" href="/catalog/react-native-companion/" tabindex="-1"><span class="hs-media"><video class="" poster="/media/react-native-companion/poster.webp?v=0f96f38c" muted loop playsinline autoplay preload="metadata"><source src="/media/react-native-companion/demo.webm?v=31ca08fe" type="video/webm"><source src="/media/react-native-companion/demo.mp4?v=3ce6ecd1" type="video/mp4"></video></span><span class="hs-copy"><span class="hs-kicker"><span class="price-badge price-free">Free</span>Featured plugin</span><span class="hs-name">React Native Companion</span><span class="hs-niche">React Native Tooling</span></span></a><a class="hs-slide" href="/catalog/ansible-companion/" tabindex="-1"><span class="hs-media"><video class="" poster="/media/ansible-companion/poster.webp?v=82e640d2" muted loop playsinline autoplay preload="metadata"><source src="/media/ansible-companion/demo.webm?v=961a1271" type="video/webm"><source src="/media/ansible-companion/demo.mp4?v=471180fb" type="video/mp4"></video></span><span class="hs-copy"><span class="hs-kicker"><span class="price-badge price-freemium">Freemium</span>Featured plugin</span><span class="hs-name">Ansible Companion</span><span class="hs-niche">Ansible / DevOps</span></span></a><a class="hs-slide" href="/catalog/api-security-companion/" tabindex="-1"><span class="hs-media"><video class="" poster="/media/api-security-companion/poster.webp?v=744ca2e4" muted loop playsinline autoplay preload="metadata"><source src="/media/api-security-companion/demo.webm?v=9ce805d0" type="video/webm"><source src="/media/api-security-companion/demo.mp4?v=c516b932" type="video/mp4"></video></span><span class="hs-copy"><span class="hs-kicker"><span class="price-badge price-freemium">Freemium</span>Featured plugin</span><span class="hs-name">API Security Companion</span><span class="hs-niche">API Security</span></span></a><a class="hs-slide" href="/catalog/gitlab-ci-companion/" tabindex="-1"><span class="hs-media"><video class="" poster="/media/gitlab-ci-companion/poster.webp?v=ba47de1b" muted loop playsinline autoplay preload="metadata"><source src="/media/gitlab-ci-companion/demo.webm?v=07e54a60" type="video/webm"><source src="/media/gitlab-ci-companion/demo.mp4?v=092fbc90" type="video/mp4"></video></span><span class="hs-copy"><span class="hs-kicker"><span class="price-badge price-free">Free</span>Featured plugin</span><span class="hs-name">GitLab CI Companion</span><span class="hs-niche">GitLab CI/CD</span></span></a><!-- PRERENDER:SLIDES:END --></div>
-      </div>
-      <div class="hs-bar">
-        <button type="button" class="hs-nav" id="heroSliderPrev" aria-label="Previous featured plugin">
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M10 3 5 8l5 5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-        <div class="hs-dots" id="heroSliderDots" role="group" aria-label="Featured plugin slides"><!-- PRERENDER:DOTS:START --><button type="button" class="hs-dot is-active" aria-label="Show Mermaid Companion"></button><button type="button" class="hs-dot" aria-label="Show React Native Companion"></button><button type="button" class="hs-dot" aria-label="Show Ansible Companion"></button><button type="button" class="hs-dot" aria-label="Show API Security Companion"></button><button type="button" class="hs-dot" aria-label="Show GitLab CI Companion"></button><!-- PRERENDER:DOTS:END --></div>
-        <button type="button" class="hs-nav" id="heroSliderNext" aria-label="Next featured plugin">
-          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M6 3l5 5-5 5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </button>
-      </div>
+  <section class="nb-section" id="work" aria-labelledby="workTitle">
+    <div class="nb-section-head">
+      <p class="nb-label">Work</p>
+      <h2 id="workTitle">Selected investigations</h2>
+      <p class="nb-section-lede">Performance, security, reliability and static analysis. Status as of October 19, 2026. Performance measurements were taken on IntelliJ IDEA 2026.2.3, with each test attached to its ticket; security findings were checked against OSV for the exact pinned version. The fixes sent to JetBrains are open pull requests awaiting review.</p>
     </div>
-  </div>
 
-  <section class="plat-bar" aria-label="Where to get Gap Hunter Labs plugins"><!-- PRERENDER:PLATFORMS:START --><p class="plat-label">Available on</p><div class="plat-logos"><a class="plat-item" href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" target="_blank" rel="noopener" data-goatcounter-click="out-vendor-jetbrains"><span class="plat-mark"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M2.345 23.997A2.347 2.347 0 0 1 0 21.652V10.988C0 9.665.535 8.37 1.473 7.433l5.965-5.961A5.01 5.01 0 0 1 10.989 0h10.666A2.347 2.347 0 0 1 24 2.345v10.664a5.056 5.056 0 0 1-1.473 3.554l-5.965 5.965A5.017 5.017 0 0 1 13.007 24v-.003H2.345Zm8.969-6.854H5.486v1.371h5.828v-1.371ZM3.963 6.514h13.523v13.519l4.257-4.257a3.936 3.936 0 0 0 1.146-2.767V2.345c0-.678-.552-1.234-1.234-1.234H10.989a3.897 3.897 0 0 0-2.767 1.145L3.963 6.514Zm-.192.192L2.256 8.22a3.944 3.944 0 0 0-1.145 2.768v10.664c0 .678.552 1.234 1.234 1.234h10.666a3.9 3.9 0 0 0 2.767-1.146l1.512-1.511H3.771V6.706Z"/></svg></span><span class="plat-text"><strong>JetBrains Marketplace</strong><span>146 plugins</span></span></a><a class="plat-item" href="https://marketplace.visualstudio.com/publishers/GapHunterLabs" target="_blank" rel="noopener" data-goatcounter-click="out-vendor-vscode"><span class="plat-mark"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z"/></svg></span><span class="plat-text"><strong>VS Code Marketplace</strong><span>33 extensions</span></span></a><a class="plat-item" href="https://github.com/GapHunterLabs" target="_blank" rel="noopener" data-goatcounter-click="out-vendor-github"><span class="plat-mark"><svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0016 8c0-4.42-3.58-8-8-8z"/></svg></span><span class="plat-text"><strong>GitHub</strong><span>Open source, Apache-2.0</span></span></a></div><!-- PRERENDER:PLATFORMS:END --></section>
+    <article class="inv" aria-labelledby="inv1Title">
+      <div class="inv-meta">
+        <p class="inv-no">No. 01 &middot; Performance</p>
+        <p class="inv-id"><a href="https://youtrack.jetbrains.com/issue/IJPL-257909" target="_blank" rel="noopener">IJPL-257909</a></p>
+        <p class="inv-scope">IntelliJ Platform &middot; Settings &rsaquo; Plugins &middot; UI thread</p>
+        <p class="inv-status is-open">Pull request #3701 &middot; open, awaiting review</p>
+      </div>
+      <div class="inv-body">
+        <h3 id="inv1Title">Opening Settings &rsaquo; Plugins took most of a second</h3>
+        <dl class="inv-facts">
+          <div><dt>Cause</dt><dd>For each installed plugin, the page rebuilt the plugin and module maps and walked the dependencies of every essential plugin, on the UI thread. The cost grows with the square of the number of installed plugins, and the source code already had a FIXME about it.</dd></div>
+          <div><dt>Intervention</dt><dd>Compute the set of plugins that essential plugins require once per plugin set, then look each plugin up in it. The cache is dropped when the plugin set is replaced.</dd></div>
+          <div><dt>Result</dt><dd>With 158 plugins loaded, the page took <span class="m-before">689–931 ms</span> to open. One walk plus a lookup per plugin takes <span class="m-after">8–22 ms</span> and gives the same answer for all 158.</dd></div>
+        </dl>
+        <p class="inv-links"><a href="https://youtrack.jetbrains.com/issue/IJPL-257909" target="_blank" rel="noopener">Ticket and measurement test</a><a href="https://github.com/JetBrains/intellij-community/pull/3701" target="_blank" rel="noopener">Pull request #3701</a></p>
+      </div>
+    </article>
 
-  <section class="path-section" aria-labelledby="pathTitle">
-    <div class="section-head"><div><p class="eyebrow">Start here</p><h2 id="pathTitle">Choose where to start</h2></div></div>
-    <div class="path-grid">
-      <a class="path-card" href="/catalog/" data-goatcounter-click="cta-path-developers">
-        <span class="path-kicker">Developers</span>
-        <strong>Find the plugin for your stack</strong>
-        <span>Focused tools across 8 categories, each with a clear price: free, freemium or paid.</span>
-        <span class="path-go">Browse the catalog</span>
-      </a>
-      <a class="path-card" href="#paid" data-goatcounter-click="cta-path-teams">
-        <span class="path-kicker">Teams</span>
-        <strong>Paid plans and team licenses</strong>
-        <span>Pro plugins come with a free trial, and organizations buy team licenses directly on JetBrains Marketplace.</span>
-        <span class="path-go">See paid plugins</span>
-      </a>
-      <a class="path-card path-card-strong" href="/services/" data-goatcounter-click="cta-path-companies">
-        <span class="path-kicker">Companies</span>
-        <strong>Audits, updates and custom tooling</strong>
-        <span>A fixed-price performance audit for your IntelliJ plugin, updates for new IDE versions, dependency and CI/CD security reviews, and custom plugins for your team.</span>
-        <span class="path-go">Work with Joel</span>
-      </a>
+    <article class="inv" aria-labelledby="inv2Title">
+      <div class="inv-meta">
+        <p class="inv-no">No. 02 &middot; Security</p>
+        <p class="inv-id"><a href="https://github.com/bancolombia/reactive-commons-go/issues/5" target="_blank" rel="noopener">reactive-commons-go#5</a></p>
+        <p class="inv-scope">Bancolombia &middot; Go messaging library &middot; dependencies</p>
+        <p class="inv-status is-fixed">Fixed by the maintainers &middot; October 7, 2026</p>
+      </div>
+      <div class="inv-body">
+        <h3 id="inv2Title">A messaging library pinned to a dependency with three critical advisories</h3>
+        <dl class="inv-facts">
+          <div><dt>Cause</dt><dd>The library&rsquo;s <code>go.mod</code> pinned <code>github.com/rabbitmq/amqp091-go</code> at v1.10.0, inside the affected range of 10 advisories published in September 2026: 3 critical (a missing TLS minimum version in the URI parser, frame injection through an integer overflow, and silent truncation of short strings) and 7 high.</dd></div>
+          <div><dt>Intervention</dt><dd>A report to the maintainers with every advisory checked against OSV for the exact pinned version, and the version that fixes all of them (v1.13.0).</dd></div>
+          <div><dt>Result</dt><dd>From <span class="m-before">10 advisories</span> to <span class="m-after">0</span> in OSV: the maintainers upgraded to v1.15.0 in pull request #6 and closed the report 3 days after it was filed.</dd></div>
+        </dl>
+        <p class="inv-links"><a href="https://github.com/bancolombia/reactive-commons-go/issues/5" target="_blank" rel="noopener">Report</a><a href="https://github.com/bancolombia/reactive-commons-go/pull/6" target="_blank" rel="noopener">Pull request #6</a><a href="/engineering-evidence/open-source-security-reports/">All security reports</a></p>
+      </div>
+    </article>
+
+    <article class="inv" aria-labelledby="inv3Title">
+      <div class="inv-meta">
+        <p class="inv-no">No. 03 &middot; Reliability</p>
+        <p class="inv-id"><a href="https://youtrack.jetbrains.com/issue/IJPL-200871" target="_blank" rel="noopener">IJPL-200871</a></p>
+        <p class="inv-scope">IntelliJ Platform &middot; workspace model &middot; concurrency</p>
+        <p class="inv-status is-fixed">Fixed by JetBrains &middot; September 9, 2026</p>
+      </div>
+      <div class="inv-body">
+        <h3 id="inv3Title">A ConcurrentModificationException in the workspace model</h3>
+        <dl class="inv-facts">
+          <div><dt>Cause</dt><dd><code>WorkspaceFileIndexDataImpl.fillPackageFilesAndDirectories()</code> iterates an unsynchronized <code>LinkedHashMap</code> that can change in the middle of the iteration.</dd></div>
+          <div><dt>Intervention</dt><dd>Root-cause analysis posted on the ticket. It located that iteration and proposed a <code>ProgressManager.checkCanceled()</code> call.</dd></div>
+          <div><dt>Outcome</dt><dd>JetBrains fixed the ticket with a different change: the package-name queries now bring the index up to date before reading it.</dd></div>
+        </dl>
+        <p class="inv-links"><a href="https://youtrack.jetbrains.com/issue/IJPL-200871" target="_blank" rel="noopener">Ticket and analysis</a><a href="https://github.com/JetBrains/intellij-community/commit/e1d600df32849eb28169d7d497e012b239b02ec1" target="_blank" rel="noopener">Commit e1d600df</a></p>
+      </div>
+    </article>
+
+    <article class="inv" aria-labelledby="inv4Title">
+      <div class="inv-meta">
+        <p class="inv-no">No. 04 &middot; Performance</p>
+        <p class="inv-id"><a href="https://youtrack.jetbrains.com/issue/IJPL-257908" target="_blank" rel="noopener">IJPL-257908</a></p>
+        <p class="inv-scope">IntelliJ Platform &middot; Settings &rsaquo; Live Templates &middot; UI thread</p>
+        <p class="inv-status is-open">Pull request #3694 &middot; open, awaiting review</p>
+      </div>
+      <div class="inv-body">
+        <h3 id="inv4Title">Live Templates settings stopped the UI thread after every key press</h3>
+        <dl class="inv-facts">
+          <div><dt>Cause</dt><dd>About one second after each click or key press, the Settings dialog asks the open page whether it changed. On Live Templates, that compares all 1,295 templates against all 336 context types, and the UI thread stops for about 165 ms each time.</dd></div>
+          <div><dt>Intervention</dt><dd>A one-line fast path in <code>TemplateContext.getDifference()</code>: two templates whose own context settings are equal cannot differ in any context type.</dd></div>
+          <div><dt>Result</dt><dd>The comparison goes from <span class="m-before">157 ms</span> to <span class="m-after">0 ms</span>, with the same result.</dd></div>
+        </dl>
+        <p class="inv-links"><a href="https://youtrack.jetbrains.com/issue/IJPL-257908" target="_blank" rel="noopener">Ticket and measurement test</a><a href="https://github.com/JetBrains/intellij-community/pull/3694" target="_blank" rel="noopener">Pull request #3694</a></p>
+      </div>
+    </article>
+
+    <article class="inv" aria-labelledby="inv5Title">
+      <div class="inv-meta">
+        <p class="inv-no">No. 05 &middot; Static analysis</p>
+        <p class="inv-id"><a href="https://youtrack.jetbrains.com/issue/IDEA-393501" target="_blank" rel="noopener">IDEA-393501</a></p>
+        <p class="inv-scope">IntelliJ IDEA &middot; Java &rsaquo; Tests &middot; read actions</p>
+        <p class="inv-status is-open">Filed &middot; assigned to a JetBrains developer, open</p>
+      </div>
+      <div class="inv-body">
+        <h3 id="inv5Title">A freeze pattern inside IntelliJ&rsquo;s own test search</h3>
+        <dl class="inv-facts">
+          <div><dt>Cause</dt><dd><code>SearchForTestsTask</code> runs in the background but calls <code>onFound()</code> through the blocking <code>ReadAction.run()</code>, with no <code>checkCanceled()</code> anywhere in the class. JetBrains&rsquo; Platform Blog names this pattern as a recurring cause of UI freezes.</dd></div>
+          <div><dt>Intervention</dt><dd>Found by Background ReadAction Freeze Companion, a static check for this pattern. A follow-up showed why a plain switch to a non-blocking read action is not safe here: <code>onFound()</code> writes files, and a restarted read action would write them again.</dd></div>
+          <div><dt>Outcome</dt><dd>JetBrains moved the ticket to the IDEA project and assigned it to a developer. Both calls are still on master as of October 2026.</dd></div>
+        </dl>
+        <p class="inv-links"><a href="https://youtrack.jetbrains.com/issue/IDEA-393501" target="_blank" rel="noopener">Ticket and follow-up</a><a href="/catalog/background-readaction-freeze-companion/">The plugin that found it</a></p>
+      </div>
+    </article>
+
+    <div class="nb-record">
+      <h3 class="nb-label">Also on record</h3>
+      <ul>
+        <li><span class="inv-status is-fixed">Fixed</span> <a href="https://github.com/bancolombia/async-dataflow/issues/148" target="_blank" rel="noopener">async-dataflow#148</a>: high-severity advisories in direct dependencies of a real-time delivery service, <code>cowboy</code>, <code>cowlib</code> and <code>plug</code>. The maintainers also found <code>plug_cowboy</code>, which the report had missed, and upgraded all of them in pull request #149, merged on October 16, 2026.</li>
+        <li><span class="inv-status is-open">Open</span> Root-cause analysis on existing IntelliJ Platform tickets: a memory leak through <code>ProjectRootManagerImpl</code> (<a href="https://youtrack.jetbrains.com/issue/IJPL-196254" target="_blank" rel="noopener">IJPL-196254</a>) and a stack overflow that silently empties Git Log (<a href="https://youtrack.jetbrains.com/issue/IJPL-76141" target="_blank" rel="noopener">IJPL-76141</a>).</li>
+        <li><span class="inv-status is-open">Open</span> <a href="https://youtrack.jetbrains.com/issue/IJPL-223452#focus=Comments-27-14501015.0-0" target="_blank" rel="noopener">IJPL-223452</a>: a headless reproduction of slow typing in a large Java file with the Structure view open, a median of 1,080 ms per key press against 33 ms without it.</li>
+        <li><span class="inv-status is-open">Open</span> Three Java inspection changes sent as pull requests (#3697, #3698 and #3699): two new inspections, and an extension of an existing one that a JetBrains maintainer had asked for.</li>
+      </ul>
+      <p class="nb-more"><a href="/engineering-evidence/jetbrains-platform-tickets/">All JetBrains Platform tickets</a><a href="/engineering-evidence/open-source-security-reports/">Open-source security reports</a><a href="/engineering-evidence/case-studies/">Plugin case studies</a></p>
     </div>
   </section>
 
-  <section class="category-preview" aria-labelledby="categoryPreviewTitle">
-    <div class="section-head"><div><p class="eyebrow">Hunting field</p><h2 id="categoryPreviewTitle">Explore by category</h2></div><a class="btn" href="/catalog/">Explore the full catalog →</a></div>
-    <div class="cat-board category-links" id="categoryPreview"><!-- PRERENDER:CATPREVIEW:START --><a class="cat-cell" href="/catalog/?category=api" style="--cat:var(--accent)"><span class="cat-cell-icon"><svg viewBox="-8 -8 16 16" aria-hidden="true"><path d="M-4.5-6.5v3M-1.5-6.5v3M-6-3.5h7a2 2 0 0 1 2 2v1a2 2 0 0 0 2 2h1M6 6.5v-3M1.5 6.5v-3M6 3.5H-1a2 2 0 0 1-2-2v-1a2 2 0 0 0-2-2h-1" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="cat-cell-copy"><strong>API</strong><span class="cat-cell-count">12 plugins</span></span><span class="cat-cell-arrow" aria-hidden="true">→</span></a><a class="cat-cell" href="/catalog/?category=devops" style="--cat:var(--good)"><span class="cat-cell-icon"><svg viewBox="-8 -8 16 16" aria-hidden="true"><path d="M-6 0a3 3 0 1 0 6 0 3 3 0 1 1 6 0 3 3 0 1 1-6 0 3 3 0 1 0-6 0Z" stroke-linejoin="round"/></svg></span><span class="cat-cell-copy"><strong>DevOps</strong><span class="cat-cell-count">48 plugins</span></span><span class="cat-cell-arrow" aria-hidden="true">→</span></a><a class="cat-cell" href="/catalog/?category=security" style="--cat:var(--bad)"><span class="cat-cell-icon"><svg viewBox="-8 -8 16 16" aria-hidden="true"><path d="M0-6.5 5.5-4v4.2C5.5 3.8 2.8 6 0 6.5-2.8 6-5.5 3.8-5.5.2V-4Z" stroke-linejoin="round"/></svg></span><span class="cat-cell-copy"><strong>Security</strong><span class="cat-cell-count">37 plugins</span></span><span class="cat-cell-arrow" aria-hidden="true">→</span></a><a class="cat-cell" href="/catalog/?category=data" style="--cat:var(--purple)"><span class="cat-cell-icon"><svg viewBox="-8 -8 16 16" aria-hidden="true"><path d="M-5-3c0-1.4 2.2-2.5 5-2.5s5 1.1 5 2.5v6c0 1.4-2.2 2.5-5 2.5s-5-1.1-5-2.5Z"/><path d="M-5-3c0 1.4 2.2 2.5 5 2.5s5-1.1 5-2.5"/></svg></span><span class="cat-cell-copy"><strong>Data</strong><span class="cat-cell-count">4 plugins</span></span><span class="cat-cell-arrow" aria-hidden="true">→</span></a><a class="cat-cell" href="/catalog/?category=quality" style="--cat:var(--amber)"><span class="cat-cell-icon"><svg viewBox="-8 -8 16 16" aria-hidden="true"><path d="M0-6.5v13M-5.5-3.5h11M-5.5-3.5 -6.5 0M-5.5-3.5-4.5 0M5.5-3.5 4.5 0M5.5-3.5 6.5 0M-6.5 0a1.5 1.5 0 0 0 3 0M3.5 0a1.5 1.5 0 0 0 3 0M-2.5 6.5h5" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="cat-cell-copy"><strong>Code Quality</strong><span class="cat-cell-count">31 plugins</span></span><span class="cat-cell-arrow" aria-hidden="true">→</span></a><a class="cat-cell" href="/catalog/?category=codegen" style="--cat:var(--cyan)"><span class="cat-cell-icon"><svg viewBox="-8 -8 16 16" aria-hidden="true"><path d="M-6-2.5-3 0-6 2.5M6-2.5 3 0 6 2.5M.8-6 -1.3-.5h2.6L-.8 6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="cat-cell-copy"><strong>Codegen</strong><span class="cat-cell-count">3 plugins</span></span><span class="cat-cell-arrow" aria-hidden="true">→</span></a><a class="cat-cell" href="/catalog/?category=testing" style="--cat:var(--teal)"><span class="cat-cell-icon"><svg viewBox="-8 -8 16 16" aria-hidden="true"><path d="M-2-6.5v4.2l-3.3 6.6a1.6 1.6 0 0 0 1.4 2.2h7.8a1.6 1.6 0 0 0 1.4-2.2L1-2.3v-4.2M-3.3-6.5h6.6M-3-1.5h6" stroke-linecap="round" stroke-linejoin="round"/></svg></span><span class="cat-cell-copy"><strong>Testing</strong><span class="cat-cell-count">3 plugins</span></span><span class="cat-cell-arrow" aria-hidden="true">→</span></a><a class="cat-cell" href="/catalog/?category=editor" style="--cat:var(--pending)"><span class="cat-cell-icon"><svg viewBox="-8 -8 16 16" aria-hidden="true"><rect x="-6" y="-5" width="12" height="10" rx="1.5"/><path d="M-3.5-2h4M-3.5 0.5h2.5M2-2v2.5" stroke-linecap="round"/></svg></span><span class="cat-cell-copy"><strong>Editor</strong><span class="cat-cell-count">8 plugins</span></span><span class="cat-cell-arrow" aria-hidden="true">→</span></a><!-- PRERENDER:CATPREVIEW:END --></div>
+  <section class="nb-section" id="engineering" aria-labelledby="engTitle">
+    <div class="nb-section-head">
+      <p class="nb-label">Engineering</p>
+      <h2 id="engTitle">How an investigation runs</h2>
+      <p class="nb-section-lede">The same method applies to a slow IDE, a vulnerable dependency and a crash in a platform tracker.</p>
+    </div>
+    <ol class="nb-steps">
+      <li>
+        <span class="nb-step">01</span>
+        <h3>Find the gap</h3>
+        <p>Start from evidence someone can point to: a freeze report, a published advisory, a crash in a tracker, a check that no tool makes. Reproduce it on the exact version where it happens.</p>
+      </li>
+      <li>
+        <span class="nb-step">02</span>
+        <h3>Understand the cause</h3>
+        <p>Follow it to the code that causes it: the method that spends the time, the dependency version inside an advisory&rsquo;s affected range, the iteration that is not synchronized. Keep the reproduction as a test or a check that anyone can run again.</p>
+      </li>
+      <li>
+        <span class="nb-step">03</span>
+        <h3>Build the fix</h3>
+        <p>Ship the smallest change that removes the cause, with evidence before and after: a pull request upstream, a report to the maintainers, or a plugin when the fix belongs outside the platform.</p>
+      </li>
+    </ol>
+    <p class="nb-more"><a href="/methodology/">Read the methodology</a><a href="/engineering-evidence/">All engineering evidence</a></p>
   </section>
 
-  <section class="paid-section" id="paid" aria-labelledby="paidTitle">
-    <div class="section-head"><div><p class="eyebrow">Paid &amp; Pro</p><h2 id="paidTitle">Plugins with a paid plan</h2></div><a class="btn" href="/catalog/?pricing=paid">All paid plugins</a></div>
-    <p class="section-lead">Each one has a free trial on JetBrains Marketplace. JetBrains handles checkout, invoices and license keys, and organizations can buy team licenses there.</p>
-    <div class="paid-grid" id="paidGrid"><!-- PRERENDER:PAIDPLUGINS:START --><article class="paid-card"><header class="paid-card-head"><span class="price-badge price-freemium">Freemium</span><span class="paid-niche">Diagrams</span></header><h3 class="paid-card-title"><a href="/catalog/mermaid-companion/">Mermaid Companion</a></h3><p class="paid-card-desc">Syntax highlighting and real syntax validation for .mmd/.mermaid diagram source files (flowchart, sequence, and class diagrams).</p><div class="paid-actions"><a class="btn primary" href="https://plugins.jetbrains.com/plugin/33340-mermaid-companion" target="_blank" rel="noopener" data-goatcounter-click="out-trial-mermaid-companion">Start free trial &#8599;</a><a class="btn" href="/catalog/mermaid-companion/">Details</a></div></article><article class="paid-card"><header class="paid-card-head"><span class="price-badge price-freemium">Freemium</span><span class="paid-niche">Ansible / DevOps</span></header><h3 class="paid-card-title"><a href="/catalog/ansible-companion/">Ansible Companion</a></h3><p class="paid-card-desc">Encrypt and decrypt Ansible Vault (1.1/AES256 format) directly in the editor, without depending on ansible-vault being installed.</p><div class="paid-actions"><a class="btn primary" href="https://plugins.jetbrains.com/plugin/33082-ansible-companion" target="_blank" rel="noopener" data-goatcounter-click="out-trial-ansible-companion">Start free trial &#8599;</a><a class="btn" href="/catalog/ansible-companion/">Details</a></div></article><article class="paid-card"><header class="paid-card-head"><span class="price-badge price-freemium">Freemium</span><span class="paid-niche">API Security</span></header><h3 class="paid-card-title"><a href="/catalog/api-security-companion/">API Security Companion</a></h3><p class="paid-card-desc">Lightweight, 100% local API-security checks for Java and Kotlin: hardcoded secrets, plaintext HTTP, TLS misconfiguration, and OWASP API Security Top 10 patterns.</p><div class="paid-actions"><a class="btn primary" href="https://plugins.jetbrains.com/plugin/33195-api-security-companion" target="_blank" rel="noopener" data-goatcounter-click="out-trial-api-security-companion">Start free trial &#8599;</a><a class="btn" href="/catalog/api-security-companion/">Details</a></div></article><article class="paid-card"><header class="paid-card-head"><span class="price-badge price-paid">Paid</span><span class="paid-niche">OpenAPI/Swagger Tooling</span></header><h3 class="paid-card-title"><a href="/catalog/openapi-companion/">OpenAPI Companion</a></h3><p class="paid-card-desc">Reliable go-to-definition (Ctrl+Click / Ctrl+B) for $ref values in OpenAPI/Swagger specs written in JSON or YAML, resolved entirely against local files, plus a warning on any $ref that doesn't actually resolve.</p><div class="paid-actions"><a class="btn primary" href="https://plugins.jetbrains.com/plugin/33349-openapi-companion" target="_blank" rel="noopener" data-goatcounter-click="out-trial-openapi-companion">Start free trial &#8599;</a><a class="btn" href="/catalog/openapi-companion/">Details</a></div></article><article class="paid-card"><header class="paid-card-head"><span class="price-badge price-freemium">Freemium</span><span class="paid-niche">Refactoring Tools</span></header><h3 class="paid-card-title"><a href="/catalog/refactor-simulator/">Refactor Simulator</a></h3><p class="paid-card-desc">Preview every refactoring before committing it. Simulates a rename in an isolated, in-memory sandbox (using IntelliJ's own PSI, Find Usages, and refactoring processors, never a custom engine) and shows a full impact report, deterministic validation, and a native side-by-side diff before anything touches a real file.</p><div class="paid-actions"><a class="btn primary" href="https://plugins.jetbrains.com/plugin/33204-refactor-simulator" target="_blank" rel="noopener" data-goatcounter-click="out-trial-refactor-simulator">Start free trial &#8599;</a><a class="btn" href="/catalog/refactor-simulator/">Details</a></div></article><article class="paid-card"><header class="paid-card-head"><span class="price-badge price-freemium">Freemium</span><span class="paid-niche">Firestore / Database</span></header><h3 class="paid-card-title"><a href="/catalog/firestore-companion/">Firestore Companion</a></h3><p class="paid-card-desc">Browse and edit Firestore collections, documents, and subcollections in a tool window, authenticating with a GCP service account key via simple REST calls.</p><div class="paid-actions"><a class="btn primary" href="https://plugins.jetbrains.com/plugin/33330-firestore-companion" target="_blank" rel="noopener" data-goatcounter-click="out-trial-firestore-companion">Start free trial &#8599;</a><a class="btn" href="/catalog/firestore-companion/">Details</a></div></article><!-- PRERENDER:PAIDPLUGINS:END --></div>
-  </section>
-
-  <!-- PRERENDER:HUBS:START --><!-- PRERENDER:HUBS:END -->
-
-  <section class="identity-section" id="identity" aria-labelledby="identityTitle">
-    <div class="identity-lead">
-      <p class="eyebrow">How it works</p>
-      <h2 id="identityTitle">Every plugin starts with evidence</h2>
-      <p>Each product exists because of a documented gap in developer tooling: a complaint, a ticket or a missing capability, never a guess.</p>
+  <section class="nb-section" id="services" aria-labelledby="servicesTitle">
+    <div class="nb-section-head">
+      <p class="nb-label">Services</p>
+      <h2 id="servicesTitle">Engagements</h2>
+      <p class="nb-section-lede">Fixed scope and fixed price, agreed in writing before any work starts. Written deliverables, async by default.</p>
     </div>
-    <div class="identity-process" aria-label="How it works">
-      <svg class="roadmap-svg" viewBox="0 0 100 185" preserveAspectRatio="none" aria-hidden="true">
-        <defs>
-          <path id="flowPath" d="M2,11.5 C14,11.5 18,81.5 27,81.5 S39,11.5 52,11.5 S64,81.5 76,81.5"/>
-          <linearGradient id="roadmapGrad" x1="0" y1="0" x2="1" y2="0">
-            <stop offset="0%" stop-color="var(--accent)"/>
-            <stop offset="35%" stop-color="var(--good)"/>
-            <stop offset="65%" stop-color="var(--purple)"/>
-            <stop offset="100%" stop-color="var(--amber)"/>
-          </linearGradient>
-        </defs>
-        <use class="flow-line flow-line-3" href="#flowPath" transform="translate(2,12)"/>
-        <use class="flow-line flow-line-2" href="#flowPath" transform="translate(-2,-10)"/>
-        <use class="flow-line flow-line-1" href="#flowPath"/>
-      </svg>
-      <!-- Versión mobile del mismo campo de streamlines, solo visible
-           debajo de 900px (ver CSS .roadmap-svg-v) -- mismo mecanismo
-           (1 curva base + 2 copias <use>/translate + dash-flow
-           animado) que el de escritorio. viewBox abstracto 0-100 (los
-           pasos vuelven a flujo normal, su alto real ya no se puede
-           calcular a mano) -- preserveAspectRatio="none" lo estira al
-           alto real que el flex column termine ocupando, ondulando
-           aproximado cerca de donde cae cada punto (izquierda/derecha
-           alternado vía align-self) sin necesitar coincidir exacto.
-           Gradiente propio (roadmapGradV) en vertical para que los 4
-           colores se lean de arriba a abajo. -->
-      <svg class="roadmap-svg-v" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-        <defs>
-          <path id="flowPathV" d="M15,5 C35,5 35,32 55,32 S35,60 15,60 S35,92 55,92"/>
-          <linearGradient id="roadmapGradV" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="var(--accent)"/>
-            <stop offset="35%" stop-color="var(--good)"/>
-            <stop offset="65%" stop-color="var(--purple)"/>
-            <stop offset="100%" stop-color="var(--amber)"/>
-          </linearGradient>
-        </defs>
-        <use class="flow-line flow-line-3" href="#flowPathV" transform="translate(2,12)"/>
-        <use class="flow-line flow-line-2" href="#flowPathV" transform="translate(-2,-10)"/>
-        <use class="flow-line flow-line-1" href="#flowPathV" style="stroke:url(#roadmapGradV)"/>
-      </svg>
-      <article class="identity-step"><span class="rm-dot" aria-hidden="true"></span><h3>Observe</h3><p>Identify friction</p></article>
-      <article class="identity-step"><span class="rm-dot" aria-hidden="true"></span><h3>Detect</h3><p>Find the gap</p></article>
-      <article class="identity-step"><span class="rm-dot" aria-hidden="true"></span><h3>Validate</h3><p>Evidence &amp; impact</p></article>
-      <article class="identity-step"><span class="rm-dot" aria-hidden="true"></span><h3>Build</h3><p>Ship the missing tool</p></article>
-    </div>
-    <div class="identity-grid">
-      <article class="identity-card">
-        <div class="ic-head">
-          <span class="ic-icon" style="color:var(--cyan)"><svg viewBox="0 0 20 20" aria-hidden="true"><path d="M8 2.5h4M8.5 2.5v4.3l-3.7 7a1.8 1.8 0 0 0 1.6 2.6h7.2a1.8 1.8 0 0 0 1.6-2.6l-3.7-7V2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          <p class="eyebrow">Case studies</p>
+    <table class="nb-table">
+      <thead>
+        <tr><th scope="col">Engagement</th><th scope="col">What you get</th><th scope="col">Terms</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row"><a href="/plugin-performance-audit/">Plugin performance audit</a></th>
+          <td>For plugins with reports of UI freezes, typing lag or high CPU: reproduction on each IDE version you support, measurements on the UI thread, a code review for freeze patterns, and patches with before-and-after measurements.</td>
+          <td class="nb-terms">USD 2,500 &middot; one plugin &middot; 10 business days</td>
+        </tr>
+        <tr>
+          <th scope="row">Plugin updates for new IDE versions</th>
+          <td>Your plugin built and verified against the IntelliJ versions you need to support: removed or deprecated APIs, Kotlin K2 mode, IntelliJ Platform Gradle Plugin 2.x and Plugin Verifier failures.</td>
+          <td class="nb-terms">Fixed price, quoted after a first look</td>
+        </tr>
+        <tr>
+          <th scope="row">Custom plugins and inspections</th>
+          <td>Inspections tailored to your codebase, such as internal APIs, secret formats and security patterns, delivered as a plugin your team installs. The same checks can run in GitHub Actions or GitLab CI.</td>
+          <td class="nb-terms">Fixed price per scope</td>
+        </tr>
+        <tr>
+          <th scope="row">Dependency and CI/CD security review</th>
+          <td>A read-only review of the repositories you choose: known vulnerabilities in production dependencies, dependency-confusion risks and CI/CD workflow permissions.</td>
+          <td class="nb-terms">Written report, fixed price per scope</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="nb-engage" id="work-with-joel">
+      <div class="nb-start">
+        <h3>How to start</h3>
+        <ol>
+          <li>Email <a href="mailto:gaphunterlabs@gmail.com">gaphunterlabs@gmail.com</a> or use the <a href="/contact/?intent=hire">contact page</a>. Tell me the plugin or repository and what you need.</li>
+          <li>You get the scope, delivery date and price in writing before any work starts.</li>
+          <li>The work arrives in writing: a report, and a pull request when there is code to change.</li>
+        </ol>
+        <div class="nb-actions">
+          <a class="btn primary" href="/contact/?intent=hire" data-goatcounter-click="cta-founder-hire">Start a conversation</a>
+          <a class="btn" href="/services/" data-goatcounter-click="cta-founder-services">See all services</a>
         </div>
-        <h3>Proof you can check</h3>
-        <p>The plugins with the strongest evidence behind them, including a freeze pattern that JetBrains itself named on its Platform Blog.</p>
-        <p class="ic-stat">5 plugin case studies &middot; 6 JetBrains Platform tickets</p>
-        <a class="btn" href="/engineering-evidence/case-studies/" data-goatcounter-click="cta-proof-cases">Read the case studies</a>
-      </article>
-      <article class="identity-card">
-        <div class="ic-head">
-          <span class="ic-icon" style="color:var(--good)"><svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7"/><circle cx="10" cy="10" r="3.7"/><circle cx="10" cy="10" r="0.7" fill="currentColor" stroke="none"/></svg></span>
-          <p class="eyebrow">Standards</p>
-        </div>
-        <h3>What every plugin follows</h3>
-        <ul class="ic-checklist"><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.2 12 13 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Built from documented evidence</li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.2 12 13 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Small tools that each do one job</li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.2 12 13 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Transparent methodology</li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.2 12 13 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>Clear pricing per plugin: free, freemium or paid</li><li><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 6.2 12 13 4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>No telemetry: plugins run in your IDE and never phone home; the few that use the network only call the public service named in their listing</li></ul>
-        <div class="identity-links">
-          <a class="btn" href="/methodology/" data-goatcounter-click="cta-proof-method">Read the methodology</a>
-        </div>
-      </article>
-    </div>
-    <div class="method-facts" id="methodFacts"><!-- PRERENDER:METHODFACTS:START --><!-- PRERENDER:METHODFACTS:END --></div>
-  </section>
-
-  <section class="founder-section" id="work-with-joel" aria-labelledby="founderTitle">
-    <div class="founder-lead">
-      <p class="eyebrow">Work with Joel</p>
-      <h2 id="founderTitle">A fixed-price performance audit for your IntelliJ plugin</h2>
-      <p class="founder-bio"><strong>Joel Díaz, Founder.</strong> Trained in systems engineering, with a background in industrial operations and logistics. Today I build software under a strict operating principle: rigorous quality control, full traceability, and validation based on real-world data.</p>
-      <p class="founder-meta">Fixed scope &middot; written deliverables &middot; async by default &middot; UTC&minus;5<br>Open to consulting engagements and select opportunities.</p>
-      <div class="hero-actions">
-        <a class="btn primary" href="/contact/?intent=hire" data-goatcounter-click="cta-founder-hire">Start a conversation</a>
-        <a class="btn" href="/services/" data-goatcounter-click="cta-founder-services">See all services</a>
-        <a class="btn" href="https://www.linkedin.com/in/joel-diaz-82687b428/?locale=en" target="_blank" rel="noopener" data-goatcounter-click="out-founder-linkedin">Connect on LinkedIn</a>
+      </div>
+      <div class="nb-about" id="about">
+        <h3>About</h3>
+        <p class="founder-bio"><strong>Joel Díaz, Founder.</strong> Trained in systems engineering, with a background in industrial operations and logistics. Today I build software under a strict operating principle: rigorous quality control, full traceability, and validation based on real-world data.</p>
+        <p class="founder-meta">Fixed scope &middot; written deliverables &middot; async by default &middot; UTC&minus;5<br>Open to consulting engagements and select opportunities.</p>
+        <p class="nb-more"><a href="https://www.linkedin.com/in/joel-diaz-82687b428/?locale=en" target="_blank" rel="noopener" data-goatcounter-click="out-founder-linkedin">LinkedIn</a><a href="https://github.com/GapHunterLabs" target="_blank" rel="noopener" data-goatcounter-click="out-loop-github">GitHub</a><a href="https://x.com/GapHunterLabs" target="_blank" rel="noopener" data-goatcounter-click="out-loop-x">X</a><a href="/feed.xml" data-goatcounter-click="out-loop-rss">RSS</a></p>
       </div>
     </div>
-    <div class="offer-grid">
-      <article class="offer-card offer-card-main">
-        <h3>Plugin performance audit</h3>
-        <p>For plugins with reports of UI freezes, typing lag or high CPU: reproduction on each IDE version you support, measurements on the UI thread, a review of the code for freeze patterns, and patches. One plugin, USD 2,500, delivered in 10 business days.</p>
-        <p>The same method found and reported freeze bugs in the IntelliJ Platform itself &mdash; see the <a href="/engineering-evidence/jetbrains-platform-tickets/">JetBrains Platform tickets</a>.</p>
-        <a class="btn primary" href="/plugin-performance-audit/" data-goatcounter-click="cta-founder-audit">See what the audit covers</a>
-      </article>
-    </div>
   </section>
 
-  <section class="loop-section" aria-labelledby="loopTitle">
-    <div><p class="eyebrow">Stay in the loop</p><h2 id="loopTitle">Follow new releases</h2></div>
-    <div class="loop-links">
-      <a class="btn" href="https://x.com/GapHunterLabs" target="_blank" rel="noopener" data-goatcounter-click="out-loop-x">X</a>
-      <a class="btn" href="https://github.com/GapHunterLabs" target="_blank" rel="noopener" data-goatcounter-click="out-loop-github">GitHub</a>
-      <a class="btn" href="https://www.linkedin.com/in/joel-diaz-82687b428/?locale=en" target="_blank" rel="noopener" data-goatcounter-click="out-loop-linkedin">LinkedIn</a>
-      <a class="btn" href="/feed.xml" data-goatcounter-click="out-loop-rss">RSS</a>
+  <section class="nb-section" id="tools" aria-labelledby="toolsTitle">
+    <div class="nb-section-head">
+      <p class="nb-label">Tools</p>
+      <h2 id="toolsTitle">Selected tools</h2>
+      <p class="nb-section-lede">Some gaps are better closed outside the platform. Each of these plugins started from one documented gap.</p>
+    </div>
+    <div class="nb-tools"><!-- PRERENDER:TOOLS:START --><article class="tool"><div class="tool-head"><h3 class="tool-name"><a href="/catalog/background-readaction-freeze-companion/">Background ReadAction Freeze Companion</a></h3><p class="tool-meta">JetBrains IDEs &middot; Free</p></div><dl class="tool-facts"><div><dt class="is-gap">Gap</dt><dd>The freeze pattern that JetBrains&rsquo; Platform Blog names, a background task that reaches a blocking, non-cancellable read action, had no static check.</dd></div><div><dt class="is-fix">Fix</dt><dd>An inspection for your plugin&rsquo;s own code. The same check found IDEA-393501 in IntelliJ itself.</dd></div></dl></article><article class="tool"><div class="tool-head"><h3 class="tool-name"><a href="/catalog/openapi-companion/">OpenAPI Companion</a></h3><p class="tool-meta">JetBrains IDEs &middot; Paid</p></div><dl class="tool-facts"><div><dt class="is-gap">Gap</dt><dd>Reviews of existing OpenAPI plugins report external <code>$ref</code> values that do not resolve, or editors that freeze the IDE on large specs.</dd></div><div><dt class="is-fix">Fix</dt><dd><code>$ref</code> navigation resolved entirely against local files, and a warning on every <code>$ref</code> that does not resolve.</dd></div></dl></article><article class="tool"><div class="tool-head"><h3 class="tool-name"><a href="/catalog/ansible-companion/">Ansible Companion</a></h3><p class="tool-meta">JetBrains IDEs &middot; Freemium</p></div><dl class="tool-facts"><div><dt class="is-gap">Gap</dt><dd>Working with Ansible Vault files in the IDE depended on the <code>ansible-vault</code> command being installed.</dd></div><div><dt class="is-fix">Fix</dt><dd>Encrypt and decrypt Ansible Vault (1.1, AES256) directly in the editor.</dd></div></dl></article><article class="tool"><div class="tool-head"><h3 class="tool-name"><a href="/catalog/mermaid-companion/">Mermaid Companion</a></h3><p class="tool-meta">JetBrains IDEs &middot; Freemium</p></div><dl class="tool-facts"><div><dt class="is-gap">Gap</dt><dd>Reviews of existing Mermaid tooling for JetBrains IDEs report false warnings and errors on valid diagrams, such as identifiers with non-ASCII characters.</dd></div><div><dt class="is-fix">Fix</dt><dd>Syntax highlighting and syntax validation for <code>.mmd</code> and <code>.mermaid</code> files: flowchart, sequence and class diagrams.</dd></div></dl></article><!-- PRERENDER:TOOLS:END --></div>
+  </section>
+
+  <section class="nb-catalog" id="catalog" aria-labelledby="catalogTitle">
+    <div>
+      <p class="nb-label">Catalog</p>
+      <h2 id="catalogTitle">The full catalog</h2>
+      <p class="nb-catalog-line"><!-- PRERENDER:CATALOG:START -->146 JetBrains plugins and 33 VS Code extensions, each with its own page and a clear price: free, freemium or paid. Figures are synced twice a day from public JetBrains Marketplace and GitHub data (last snapshot: 2026-10-18).<!-- PRERENDER:CATALOG:END --></p>
+    </div>
+    <div class="nb-actions">
+      <a class="btn" href="/catalog/" data-goatcounter-click="cta-home-catalog">Open the catalog</a>
+      <a class="btn" href="/catalog/?pricing=paid" data-goatcounter-click="cta-home-paid">Paid and Pro plugins</a>
     </div>
   </section>
 </main>
@@ -476,10 +532,10 @@
     <div class="gh-footer-top">
       <div class="gh-footer-brand">
         <a class="gh-brand" href="/"><svg class="gh-logo" viewBox="0 0 1024 1024" aria-hidden="true"><path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#0151FC"/><path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z" fill="#01B3FD"/><polygon points="569,413 695,413 695,539 569,539" fill="#02F172"/></svg><span class="gh-brand-name">Gap Hunter Labs</span></a>
-        <p>Focused JetBrains and VS Code plugins for documented gaps in developer tooling, and custom tooling for teams.</p>
+        <p>The engineering practice of Joel D&iacute;az: performance bottlenecks, security vulnerabilities and structural failures in developer tools, enterprise platforms and open-source ecosystems, traced to their root cause and fixed.</p>
         <a class="btn primary" href="/services/" data-goatcounter-click="cta-footer-hire">Work with Joel</a>
       </div>
-      <nav class="gh-footer-cols" aria-label="Footer"><div class="gh-footer-col"><p class="gh-footer-title">Product</p><a href="/catalog/">Plugin catalog</a><a href="/catalog/?pricing=paid">Paid &amp; Pro plugins</a><a href="/catalog/?platform=vscode">VS Code extensions</a></div><div class="gh-footer-col"><p class="gh-footer-title">Engineering &amp; Evidence</p><a href="/engineering-evidence/">Overview</a><a href="/engineering-evidence/case-studies/">Case studies</a><a href="/engineering-evidence/jetbrains-platform-tickets/">JetBrains Platform tickets</a><a href="/engineering-evidence/open-source-security-reports/">Open-source security reports</a></div><div class="gh-footer-col"><p class="gh-footer-title">Company</p><a href="/services/">Work with Joel</a><a href="/plugin-performance-audit/">Performance audit</a><a href="/methodology/">Methodology</a><a href="/contact/">Contact</a></div><div class="gh-footer-col"><p class="gh-footer-title">Marketplaces</p><a href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" target="_blank" rel="noopener">JetBrains Marketplace</a><a href="https://marketplace.visualstudio.com/publishers/GapHunterLabs" target="_blank" rel="noopener">VS Code Marketplace</a><a href="https://github.com/GapHunterLabs" target="_blank" rel="noopener">GitHub</a></div><div class="gh-footer-col"><p class="gh-footer-title">Legal</p><a href="/security/">Security</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/eula/">EULA</a></div></nav>
+      <nav class="gh-footer-cols" aria-label="Footer"><div class="gh-footer-col"><p class="gh-footer-title">Work</p><a href="/#work">Selected investigations</a><a href="/engineering-evidence/jetbrains-platform-tickets/">JetBrains Platform tickets</a><a href="/engineering-evidence/open-source-security-reports/">Open-source security reports</a><a href="/engineering-evidence/case-studies/">Plugin case studies</a></div><div class="gh-footer-col"><p class="gh-footer-title">Engineering</p><a href="/methodology/">Methodology</a><a href="/engineering-evidence/">Evidence overview</a></div><div class="gh-footer-col"><p class="gh-footer-title">Tools</p><a href="/catalog/">Plugin catalog</a><a href="/catalog/?pricing=paid">Paid &amp; Pro plugins</a><a href="/catalog/?platform=vscode">VS Code extensions</a></div><div class="gh-footer-col"><p class="gh-footer-title">Services</p><a href="/services/">Work with Joel</a><a href="/plugin-performance-audit/">Performance audit</a><a href="/contact/">Contact</a></div><div class="gh-footer-col"><p class="gh-footer-title">Marketplaces</p><a href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" target="_blank" rel="noopener">JetBrains Marketplace</a><a href="https://marketplace.visualstudio.com/publishers/GapHunterLabs" target="_blank" rel="noopener">VS Code Marketplace</a><a href="https://github.com/GapHunterLabs" target="_blank" rel="noopener">GitHub</a></div><div class="gh-footer-col"><p class="gh-footer-title">Legal</p><a href="/security/">Security</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/eula/">EULA</a></div></nav>
     </div>
     <div class="gh-footer-bottom">
       <p class="gh-footer-legal">&copy; 2026 Gap Hunter Labs. Download data is synced twice daily from the public JetBrains Marketplace and GitHub APIs.</p>
