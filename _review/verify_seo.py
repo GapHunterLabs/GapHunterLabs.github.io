@@ -276,9 +276,10 @@ def main() -> int:
              % (len(missing_hrefs), sorted(missing_hrefs)[:5]))
 
     # ---- 6. index.html pre-renderizado (Fase 2) -----------------------------
-    # Mismo contrato que catalog/index.html: el hero/stats/categorias/slider
-    # ya son HTML real, no un fetch -- estos chequeos fallan si esa garantia
-    # se rompe.
+    # Mismo contrato que catalog/index.html: lo que depende del catalogo ya es
+    # HTML real, no un fetch -- estos chequeos fallan si esa garantia se rompe.
+    # El rediseno 2026-10-18 (01db39bb) retiro el slider, las metricas y las
+    # categorias: build_home.py solo pre-renderiza TOOLS y CATALOG.
     home_text = (ROOT / "index.html").read_text(encoding="utf-8")
     if re.search(r"""fetch\(\s*['"]/data/catalog-data\.json""", home_text):
         fail("index.html", "vuelve a hacer fetch de catalog-data.json; el hero/stats/categorias deberian venir pre-renderizados")
@@ -286,12 +287,13 @@ def main() -> int:
         fail("index.html", "todavia carga catalog-shared.js (nada en esta pagina lo necesita ya)")
     if re.search(r'id="siteLoader"|<html[^>]*\bclass="boot"', home_text):
         fail("index.html", "volvio el loader (markup real, no solo la CSS muerta que queda)")
-    n_slides = len(re.findall(r'class="hs-slide"', home_text))
-    if n_slides == 0:
-        fail("index.html", "el slider de destacados no tiene diapositivas pre-renderizadas")
-    for slide_href in re.findall(r'<a class="hs-slide" href="([^"]+)"', home_text):
-        if not re.match(r"^/catalog/[a-z0-9-]+/$", slide_href):
-            fail("index.html", "diapositiva del hero con href no canonico: %s" % slide_href)
+    for marker in ("TOOLS", "CATALOG"):
+        block = re.search(r"<!-- PRERENDER:%s:START -->(.*?)<!-- PRERENDER:%s:END -->" % (marker, marker), home_text, re.S)
+        if not block or not block.group(1).strip():
+            fail("index.html", "el bloque %s no viene pre-renderizado" % marker)
+    for tool_href in re.findall(r'<h3 class="tool-name"><a href="([^"]+)"', home_text):
+        if not re.match(r"^/catalog/[a-z0-9-]+/$", tool_href):
+            fail("index.html", "herramienta destacada con href no canonico: %s" % tool_href)
 
     # ---- 7. demos re-alojadas en /media/ (Fase 3) --------------------------
     # Las 34 demos migraron de raw.githubusercontent.com a media/<slug>/ en
