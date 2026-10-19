@@ -8,6 +8,10 @@
   var DATA_URL = /*DATA_URL*/'/js/search-data.js?v=fde06dd3'/*ENDDATA_URL*/;
   var ES = document.documentElement.lang === 'es';
   var LOCALE = ES ? 'es-ES' : 'en-US';
+  // 2026-10-19: 'es-ES' leaves 4-digit numbers ungrouped ("1234") while the /es/ pages group them ("1.295").
+  // Browsers without useGrouping: 'always' read it as true and keep their default grouping.
+  var NUM_OPTS = ES ? { useGrouping: 'always' } : undefined;
+  function num(v) { return v.toLocaleString(LOCALE, NUM_OPTS); }
   var T = ES ? {
     dialog: 'Buscar en el sitio', placeholder: 'Busca plugins, extensiones y páginas…', close: 'Cerrar el buscador',
     results: 'Resultados', popular: 'Más usados', pages: 'Páginas', none: 'Sin resultados para «%s».',
@@ -243,7 +247,7 @@
       var r = search(q);
       results = r.items;
       terms = r.terms;
-      status.textContent = r.total === 1 ? T.one : fmt(T.count, r.total.toLocaleString(LOCALE));
+      status.textContent = r.total === 1 ? T.one : fmt(T.count, num(r.total));
     }
     if (!results.length) {
       list.innerHTML = '<li class="ghs-empty" role="presentation"><p>' + esc(fmt(T.none, q)) + '</p><p>' + esc(T.noneHint) +
@@ -278,7 +282,7 @@
       h.push('<p class="ghs-p-chips"><span>' + esc(d.cat) + '</span>' + (it.pr ? '<span class="ghs-price ghs-price-' + it.pr.toLowerCase() + '">' +
         esc(T.price[it.pr]) + '</span>' : '') + '</p>');
       if (it.k) h.push('<p class="ghs-p-niche">' + esc(it.k) + '</p>');
-      h.push('<p class="ghs-p-stat">' + esc(fmt(it.t === 'v' ? T.installs : T.downloads, (it.dl || 0).toLocaleString(LOCALE))) + '</p>');
+      h.push('<p class="ghs-p-stat">' + esc(fmt(it.t === 'v' ? T.installs : T.downloads, num(it.dl || 0))) + '</p>');
     }
     h.push('<p class="ghs-p-desc">' + esc(d.desc) + '</p>');
     h.push('<p class="ghs-p-actions"><a class="ghs-btn ghs-btn-primary" href="' + esc(d.url) + '">' + esc(T.open) + '</a>' +
