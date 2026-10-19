@@ -76,7 +76,7 @@ a:focus-visible, .btn:focus-visible { outline: none; box-shadow: var(--focus-rin
 /* ---- Hero: statement + margin note, on the page itself -------------------- */
 .nb-hero {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 280px;
+  grid-template-columns: minmax(0, 1fr) 400px;
   gap: 32px 56px;
   padding: 72px 0 56px;
   border-bottom: 1px solid var(--border);
@@ -90,6 +90,42 @@ a:focus-visible, .btn:focus-visible { outline: none; box-shadow: var(--focus-rin
 }
 .nb-lede { margin-top: 22px; max-width: 64ch; font-size: 18px; line-height: 1.65; color: var(--text-dim); }
 .nb-hero .nb-actions { margin-top: 32px; }
+
+.nb-hero-side { align-self: start; display: grid; gap: 32px; min-width: 0; }
+
+/* Portrait: the side column's left rule turns brand blue along the photo. */
+.nb-portrait { margin: 0; max-width: 420px; padding-left: 20px; }
+.nb-portrait-photo { position: relative; }
+.nb-portrait-photo::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -20px;
+  width: 2px;
+  background: var(--brand-blue);
+}
+.nb-portrait img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 800 / 816;
+  object-fit: cover;
+  border-radius: var(--radius-sm);
+  background: var(--surface-2);
+}
+.nb-portrait figcaption {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 12px;
+  font: 600 12px/1.4 var(--mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+.nb-portrait figcaption span { flex: none; }
+.nb-portrait figcaption .nb-portrait-rule { flex: 1 1 auto; min-width: 24px; height: 1px; background: var(--border-strong); }
 
 .nb-margin {
   align-self: end;
@@ -225,6 +261,7 @@ a:focus-visible, .btn:focus-visible { outline: none; box-shadow: var(--focus-rin
 @media (max-width: 960px) {
   .nb-hero { grid-template-columns: 1fr; padding-top: 48px; }
   .nb-margin { align-self: start; }
+  .nb-hero-side { gap: 28px; }
   .inv, .tool { grid-template-columns: 1fr; }
   .inv-meta { grid-template-columns: auto auto; justify-content: start; column-gap: 20px; }
   .inv-meta .inv-scope, .inv-meta .inv-status { grid-column: 1 / -1; }

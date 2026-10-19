@@ -1041,5 +1041,8 @@
  "From USD {n}": "Desde USD {n}",
  "The inspections also run in GitHub Actions or GitLab CI, and the plugin is served from a private plugin repository. The delivery date is set in the scope.": "Las inspecciones también corren en GitHub Actions o GitLab CI, y el plugin se sirve desde un repositorio privado de plugins. La fecha de entrega se fija en el alcance.",
  "Plugin performance audit, USD {n} fixed — Gap Hunter Labs": "Auditoría de rendimiento de plugins, USD {n} fijo — Gap Hunter Labs",
- "Engineering services with published fixed prices — Gap Hunter Labs": "Servicios de ingeniería con precios fijos publicados — Gap Hunter Labs"
+ "Engineering services with published fixed prices — Gap Hunter Labs": "Servicios de ingeniería con precios fijos publicados — Gap Hunter Labs",
+ "Joel Díaz": "Joel Díaz",
+ "Independent engineering": "Ingeniería independiente",
+ "Joel Díaz, founder of Gap Hunter Labs": "Joel Díaz, fundador de Gap Hunter Labs"
 }

@@ -9,7 +9,9 @@
      --inspect (amber)  a gap, a bottleneck, an open measurement
      --valid   (green)  a verified fix, a passing check, a measured result
    Links are ink with an underline; the primary button is solid ink. The
-   brand blues live only in the logo.
+   brand blues live in the logo; --brand-blue (the logo's main blue) is
+   also the thin rule beside the home portrait. It is never text: as a
+   graphic it is 5.5:1 on paper and 3.2:1 on graphite.
 
    WCAG contrast checked by script against bg/surface/surface-2/surface-3:
    text >= 4.5:1, UI borders >= 3:1. Note that the pure amber #F59E0B and
@@ -77,6 +79,7 @@
     --accent-ink: #FFFFFF;
     --accent-soft: #EAEEF2;
     --brand-navy: #1F2328;
+    --brand-blue: #0151FC;
     --inspect: #9A4A08;
     --inspect-bg: #FBF0DF;
     --inspect-line: #F59E0B;
