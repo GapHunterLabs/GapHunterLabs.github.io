@@ -137,7 +137,7 @@
 <meta property="og:url" content="https://gaphunterlabs.github.io/">
 <meta property="og:title" content="Gap Hunter Labs — Performance, Security and Reliability Engineering">
 <meta property="og:description" content="Engineering practice of Joel Díaz: performance bottlenecks, security vulnerabilities and structural failures traced to their root cause and fixed.">
-<meta property="og:image" content="https://gaphunterlabs.github.io/og-image.png?v=2">
+<meta property="og:image" content="https://gaphunterlabs.github.io/og-image.png?v=3">
 <!-- og:image:secure_url + og:image:type added 2026-08-23: some
      crawlers (WhatsApp's included, per their own scraper docs) prefer
      an explicit secure_url alongside og:image even when they're
@@ -147,21 +147,21 @@
      that can silently fail on a stricter client. og:locale declares
      the page's real language explicitly rather than leaving it
      unstated. -->
-<meta property="og:image:secure_url" content="https://gaphunterlabs.github.io/og-image.png?v=2">
+<meta property="og:image:secure_url" content="https://gaphunterlabs.github.io/og-image.png?v=3">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Fixed-price IntelliJ plugin performance audit — Gap Hunter Labs">
+<meta property="og:image:alt" content="Gap Hunter Labs — find the gap, understand the cause, build the fix">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@GapHunterLabs">
 <meta name="twitter:title" content="Gap Hunter Labs — Performance, Security and Reliability Engineering">
 <meta name="twitter:description" content="Engineering practice of Joel Díaz: performance bottlenecks, security vulnerabilities and structural failures traced to their root cause and fixed.">
-<meta name="twitter:image" content="https://gaphunterlabs.github.io/og-image.png?v=2">
+<meta name="twitter:image" content="https://gaphunterlabs.github.io/og-image.png?v=3">
 <!-- twitter:image:alt added 2026-08-23 -- Twitter/X reads its own
      separate alt for the card image rather than falling back to
      og:image:alt, which had no Twitter-specific equivalent before this. -->
-<meta name="twitter:image:alt" content="Fixed-price IntelliJ plugin performance audit — Gap Hunter Labs">
+<meta name="twitter:image:alt" content="Gap Hunter Labs — find the gap, understand the cause, build the fix">
 
 <!-- Home-page organization and website metadata. The full generated
      plugin listing and its structured data live on catalog.html. -->
@@ -193,8 +193,12 @@
         "itemListElement": [
           {
             "@type": "Offer",
-            "price": "2500",
-            "priceCurrency": "USD",
+            "priceSpecification": {
+              "@type": "PriceSpecification",
+              "minPrice": "10500",
+              "maxPrice": "15000",
+              "priceCurrency": "USD"
+            },
             "url": "https://gaphunterlabs.github.io/plugin-performance-audit/",
             "itemOffered": {
               "@type": "Service",
@@ -203,6 +207,12 @@
           },
           {
             "@type": "Offer",
+            "priceSpecification": {
+              "@type": "PriceSpecification",
+              "minPrice": "4500",
+              "maxPrice": "9000",
+              "priceCurrency": "USD"
+            },
             "itemOffered": {
               "@type": "Service",
               "name": "Plugin update for new IntelliJ Platform versions"
@@ -210,6 +220,12 @@
           },
           {
             "@type": "Offer",
+            "priceSpecification": {
+              "@type": "PriceSpecification",
+              "minPrice": "4800",
+              "maxPrice": "13500",
+              "priceCurrency": "USD"
+            },
             "itemOffered": {
               "@type": "Service",
               "name": "Dependency and CI/CD security review"
@@ -217,6 +233,11 @@
           },
           {
             "@type": "Offer",
+            "priceSpecification": {
+              "@type": "PriceSpecification",
+              "minPrice": "7500",
+              "priceCurrency": "USD"
+            },
             "itemOffered": {
               "@type": "Service",
               "name": "Custom static-analysis rules"
@@ -255,9 +276,9 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/css/theme.css?v=b1c31684">
-<link rel="stylesheet" href="/css/home.css?v=dea46f3e">
-<link rel="stylesheet" href="/css/shell.css?v=ecab5e00">
+<link rel="stylesheet" href="/css/theme.css?v=6aefffb1">
+<link rel="stylesheet" href="/css/home.css?v=78307caf">
+<link rel="stylesheet" href="/css/shell.css?v=5239dfda">
 </head>
 <body>
 <!-- Fase 2 (2026-09-22): sin loader -- hero, stats, categorias y
@@ -454,7 +475,7 @@
     <div class="nb-section-head">
       <p class="nb-label">Services</p>
       <h2 id="servicesTitle">Engagements</h2>
-      <p class="nb-section-lede">Fixed scope and fixed price, agreed in writing before any work starts. Written deliverables, async by default.</p>
+      <p class="nb-section-lede">Published prices in USD, per engagement. The written scope, agreed before any work starts, confirms which level applies. Written deliverables, async by default.</p>
     </div>
     <table class="nb-table">
       <thead>
@@ -464,22 +485,22 @@
         <tr>
           <th scope="row"><a href="/plugin-performance-audit/">Plugin performance audit</a></th>
           <td>For plugins with reports of UI freezes, typing lag or high CPU: reproduction on each IDE version you support, measurements on the UI thread, a code review for freeze patterns, and patches with before-and-after measurements.</td>
-          <td class="nb-terms">USD 2,500 &middot; one plugin &middot; 10 business days</td>
+          <td class="nb-terms">USD 10,500 &middot; one plugin, up to 3 IDE versions &middot; 10 business days<br>Extended: USD 15,000 &middot; 15 business days</td>
         </tr>
         <tr>
           <th scope="row">Plugin updates for new IDE versions</th>
           <td>Your plugin built and verified against the IntelliJ versions you need to support: removed or deprecated APIs, Kotlin K2 mode, IntelliJ Platform Gradle Plugin 2.x and Plugin Verifier failures.</td>
-          <td class="nb-terms">Fixed price, quoted after a first look</td>
+          <td class="nb-terms">Minor: USD 4,500 &middot; 5 business days<br>Major: USD 9,000 &middot; 10 business days</td>
         </tr>
         <tr>
           <th scope="row">Custom plugins and inspections</th>
           <td>Inspections tailored to your codebase, such as internal APIs, secret formats and security patterns, delivered as a plugin your team installs. The same checks can run in GitHub Actions or GitLab CI.</td>
-          <td class="nb-terms">Fixed price per scope</td>
+          <td class="nb-terms">Up to 3 inspections: USD 7,500 &middot; 10 business days<br>Full plugin with CI: from USD 15,000</td>
         </tr>
         <tr>
           <th scope="row">Dependency and CI/CD security review</th>
-          <td>A read-only review of the repositories you choose: known vulnerabilities in production dependencies, dependency-confusion risks and CI/CD workflow permissions.</td>
-          <td class="nb-terms">Written report, fixed price per scope</td>
+          <td>A read-only review of the repositories you choose: known vulnerabilities in production dependencies, dependency-confusion risks and CI/CD workflow permissions. Optional EU Cyber Resilience Act readiness check.</td>
+          <td class="nb-terms">One repository: USD 4,800 &middot; 5 business days<br>Up to 5 repositories: USD 12,000 &middot; 10 business days<br>CRA readiness: + USD 1,500 &middot; + 2 business days</td>
         </tr>
       </tbody>
     </table>

@@ -5,88 +5,52 @@
 <meta name="robots" content="noindex">
 <title>Gap Hunter Labs — social share preview (home)</title>
 <style>
-  @font-face { font-family:"IBM Plex Sans"; src:url("fonts/IBMPlexSans-Latin.woff2") format("woff2"); font-weight:100 700; font-style:normal; font-display:block; }
-  @font-face { font-family:"JetBrains Mono"; src:url("fonts/JetBrainsMono-Latin.woff2") format("woff2"); font-weight:100 800; font-style:normal; font-display:block; }
+  @font-face { font-family:"IBM Plex Sans"; src:url("fonts/IBMPlexSans-Latin.woff2") format("woff2"); font-weight:100 700; font-display:block; }
+  @font-face { font-family:"IBM Plex Serif"; src:url("fonts/IBMPlexSerif-SemiBold-Latin.woff2") format("woff2"); font-weight:600; font-display:block; }
+  @font-face { font-family:"JetBrains Mono"; src:url("fonts/JetBrainsMono-Latin.woff2") format("woff2"); font-weight:100 800; font-display:block; }
   * { margin:0; padding:0; box-sizing:border-box; }
-  html, body { width:1200px; height:630px; background:#090D16; font-family:"IBM Plex Sans",sans-serif; overflow:hidden; position:relative; color:#E9EDF8; }
-  body::before { content:""; position:absolute; inset:0; background-image:radial-gradient(circle,#29334A 1px,transparent 1px); background-size:22px 22px; opacity:0.35; }
-  .wash { position:absolute; inset:0; background:radial-gradient(ellipse 820px 520px at 24% -8%, rgba(63,162,255,0.13), transparent 58%); pointer-events:none; }
-  .corner { position:absolute; width:40px; height:40px; border:2px solid #3FA2FF; opacity:0.6; }
-  .corner.tl { top:28px; left:28px; border-right:none; border-bottom:none; }
-  .corner.br { bottom:28px; right:28px; border-left:none; border-top:none; }
+  html, body { width:1200px; height:630px; overflow:hidden; background:#F6F8FA; color:#1F2328; font-family:"IBM Plex Sans",sans-serif; }
+  .page { position:absolute; inset:28px; background:#FFFFFF; border:1px solid #D0D7DE; border-radius:2px; padding:40px 48px 30px; display:flex; flex-direction:column; }
+  .top { display:flex; align-items:center; justify-content:space-between; padding-bottom:18px; border-bottom:1px solid #1F2328; }
+  .brand { display:flex; align-items:center; gap:12px; font-size:22px; font-weight:600; letter-spacing:-0.01em; }
+  .brand svg { width:30px; height:35px; display:block; }
+  .label { font:600 13px/1 "JetBrains Mono",monospace; letter-spacing:0.12em; text-transform:uppercase; color:#57606A; }
+  h1 { font-family:"IBM Plex Serif",serif; font-weight:600; letter-spacing:-0.015em; color:#1F2328; }
+  .mono { font-family:"JetBrains Mono",monospace; font-variant-numeric:tabular-nums; }
+  .foot { margin-top:auto; display:flex; justify-content:space-between; align-items:baseline; padding-top:16px; border-top:1px solid #D0D7DE; font:500 15px/1 "JetBrains Mono",monospace; color:#57606A; }
+  .foot b { font-weight:600; color:#1F2328; }
+  .tag { display:inline-block; width:52px; padding:5px 0 4px; text-align:center; font:700 12px/1 "JetBrains Mono",monospace; letter-spacing:0.1em; border-left:3px solid; }
+  .tag.gap { color:#9A4A08; background:#FBF0DF; border-color:#F59E0B; }
+  .tag.fix { color:#047857; background:#E3F3EC; border-color:#10B981; }
+  
+  .record { margin-top:22px; display:grid; grid-template-columns:52px 230px minmax(0,1fr); gap:10px 16px; align-items:center; font-size:19px; line-height:1.3; }
+  .record .ref { font:500 15px/1.3 "JetBrains Mono",monospace; color:#57606A; }
 
-  .frame { position:relative; height:630px; padding:58px 60px 52px; display:grid; grid-template-columns:minmax(0,1.12fr) minmax(0,0.88fr); column-gap:44px; align-items:stretch; }
-  .copy { display:flex; flex-direction:column; min-width:0; }
-  .brand-row { display:flex; align-items:center; gap:15px; }
-  .brand-logo { width:54px; height:62px; display:block; flex:none; }
-  .brand-name { font-size:31px; font-weight:700; letter-spacing:-0.02em; background:linear-gradient(90deg,#FFFFFF 0%,#FFFFFF 42%,#3FA2FF 100%); -webkit-background-clip:text; background-clip:text; color:transparent; }
+  h1 { margin-top:34px; font-size:60px; line-height:1.08; }
+  .lede { margin-top:18px; max-width:900px; font-size:21px; line-height:1.45; color:#57606A; }
 
-  .kicker { margin-top:32px; font-family:"JetBrains Mono",ui-monospace,monospace; font-size:14px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:#34D5C7; }
-  .headline { margin-top:12px; font-size:62px; font-weight:700; line-height:1.05; letter-spacing:-0.035em; }
-  .headline .line2 { background:linear-gradient(90deg,#3FA2FF,#01B3FD); -webkit-background-clip:text; background-clip:text; color:transparent; }
-  .subhead { margin-top:20px; max-width:500px; font-size:20px; line-height:1.45; color:#9AA6C4; }
-
-  .proof { margin-top:auto; display:flex; flex-wrap:wrap; gap:14px 22px; align-items:center; }
-  .proof .b { display:flex; align-items:center; gap:9px; font-family:"JetBrains Mono",ui-monospace,monospace; font-size:13.5px; font-weight:700; letter-spacing:0.05em; text-transform:uppercase; color:#FFFFFF; }
-  .proof .b .dot { width:9px; height:9px; border-radius:50%; background:#34D5C7; }
-  .proof .b svg { width:18px; height:18px; flex:none; }
-  .jb-icon { border-radius:3px; background:linear-gradient(135deg,#FF318C,#FF6E00); }
-
-  .offer { align-self:center; background:linear-gradient(180deg,#121A2B,#0C1220); border:1px solid #2A3550; border-radius:18px; padding:26px 26px 22px; box-shadow:0 1px 2px rgba(0,0,0,.4),0 18px 46px rgba(0,0,0,.5); position:relative; overflow:hidden; }
-  .offer::before { content:""; position:absolute; left:0; right:0; top:0; height:3px; background:linear-gradient(90deg,#3FA2FF,#34D5C7); }
-  .offer-tag { font-family:"JetBrains Mono",ui-monospace,monospace; font-size:12px; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:#8CA0C6; }
-  .price { margin-top:10px; font-family:"JetBrains Mono",ui-monospace,monospace; font-size:56px; font-weight:800; letter-spacing:-0.02em; color:#FFFFFF; line-height:1; }
-  .price .cur { font-size:24px; font-weight:700; color:#34D5C7; margin-right:8px; vertical-align:0.18em; }
-  .per { margin-top:10px; font-size:15px; color:#9AA6C4; }
-  .incl { list-style:none; margin-top:16px; display:flex; flex-direction:column; gap:9px; }
-  .incl li { position:relative; padding-left:24px; font-size:15.5px; color:#D4DBEA; line-height:1.25; }
-  .incl li::before { content:""; position:absolute; left:2px; top:7px; width:9px; height:9px; border-radius:50%; background:#02F172; box-shadow:0 0 0 3px rgba(2,241,114,.15); }
-  .cta { margin-top:20px; display:inline-flex; align-items:center; gap:8px; font-family:"JetBrains Mono",ui-monospace,monospace; font-size:14px; font-weight:700; letter-spacing:0.02em; color:#071018; background:linear-gradient(90deg,#3FA2FF,#34D5C7); padding:11px 16px; border-radius:9px; }
 </style>
 </head>
 <body>
-  <div class="wash"></div>
-  <div class="corner tl"></div>
-  <div class="corner br"></div>
-
-  <div class="frame">
-    <div class="copy">
-      <div class="brand-row">
-        <svg class="brand-logo" viewBox="172 81 675 782" aria-hidden="true">
-          <path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#0151FC"/>
-          <path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z" fill="#01B3FD"/>
-          <polygon points="569,413 695,413 695,539 569,539" fill="#02F172"/>
-        </svg>
-        <div class="brand-name">Gap Hunter Labs</div>
-      </div>
-
-      <div class="kicker">IntelliJ plugin performance audit</div>
-      <div class="headline">
-        <div>Your plugin freezes.</div>
-        <div class="line2">I fix that.</div>
-      </div>
-      <p class="subhead">A fixed-price audit for IntelliJ plugins: reproduction, UI-thread measurements and patches.</p>
-
-      <div class="proof">
-        <div class="b"><span class="dot"></span>140+ plugins shipped</div>
-        <div class="b">
-          <svg class="jb-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M3.43 3.43h9.14v9.14H3.43z"/><g fill="#fff"><path d="M4.42 10.86h3.43v.57H4.42z"/><path d="M4.28 5.79l.25-.24a.29.29 0 00.23.13c.1 0 .16-.07.16-.2V4.57h.39v.91a.53.53 0 01-.13.4.54.54 0 01-.39.14.59.59 0 01-.51-.23z"/><path d="M5.49 4.57h1.15v.33h-.76v.22h.68v.3h-.67v.23h.77v.33H5.49z"/><path d="M7.21 4.92h-.43v-.35h1.25v.35h-.43v1.08h-.4z"/><path d="M4.44 6.51h.67a.54.54 0 01.39.13.32.32 0 01.09.23.33.33 0 01-.22.32.35.35 0 01.28.35c0 .25-.2.39-.54.39h-.68zm.76.44c0-.08-.06-.12-.18-.12h-.2v.25h.19c.12 0 .19-.04.19-.12zm-.14.4h-.24v.27h.25c.12 0 .19-.05.19-.13s-.06-.14-.19-.14z"/><path d="M5.79 6.51h.62a.64.64 0 01.46.16.44.44 0 01.13.33.46.46 0 01-.29.44l.34.5h-.45l-.29-.43h-.13v.43h-.4zm.61.68c.13 0 .21-.07.21-.17s-.08-.17-.21-.17h-.22v.34z"/><path d="M7.5 6.5h.38l.61 1.44h-.42l-.1-.26h-.55l-.1.26h-.42zm.35.87l-.16-.4-.16.4z"/><path d="M8.5 6.51h.4v1.42h-.4z"/><path d="M9.05 6.51h.37l.51.76v-.76h.39v1.42h-.34l-.54-.78v.78h-.39z"/><path d="M10.35 7.7l.22-.26a.74.74 0 00.46.17c.11 0 .16-.04.16-.1s-.05-.09-.24-.14c-.31-.07-.54-.15-.54-.44s.21-.46.55-.46a.89.89 0 01.59.19l-.19.28a.7.7 0 00-.4-.14c-.1 0-.14.04-.14.09s.05.09.25.14c.33.07.53.18.53.44 0 .29-.23.45-.58.45a1 1 0 01-.67-.22z"/></g></svg>
-          Freeze bugs reported to JetBrains
-        </div>
-      </div>
+<div class="page">
+  <div class="top">
+    <div class="brand">
+      <svg viewBox="172 81 675 782" aria-hidden="true">
+        <path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#0151FC"/>
+        <path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z" fill="#01B3FD"/>
+        <polygon points="569,413 695,413 695,539 569,539" fill="#02F172"/>
+      </svg>
+      Gap Hunter Labs
     </div>
-
-    <div class="offer" aria-hidden="true">
-      <div class="offer-tag">Fixed-price audit</div>
-      <div class="price"><span class="cur">USD</span>2,500</div>
-      <div class="per">one plugin &middot; delivered in 10 business days</div>
-      <ul class="incl">
-        <li>Reproduction on every IDE version you support</li>
-        <li>UI-thread (EDT) measurements</li>
-        <li>Freeze-pattern review + patches</li>
-      </ul>
-      <div class="cta">gaphunterlabs.github.io &rarr;</div>
-    </div>
+    <div class="label">Engineering practice of Joel D&iacute;az</div>
   </div>
+  <h1>Find the gap.<br>Understand the cause.<br>Build the fix.</h1>
+  <p class="lede">Performance bottlenecks, security vulnerabilities and structural failures in developer tools and open-source software, traced to their root cause and fixed.</p>
+  <div class="record">
+    <span class="tag gap">GAP</span><span class="ref">lsp4ij#1540</span><span>A UI-thread violation in Red Hat&rsquo;s LSP4IJ</span>
+    <span class="tag fix">FIX</span><span class="ref">commit f38259550e</span><span>Fixed by the maintainer after the report</span>
+  </div>
+  <div class="foot"><span>Performance &middot; Security &middot; Reliability</span><span><b>Fixed-scope engagements from USD 4,500</b></span><span>gaphunterlabs.github.io</span></div>
+</div>
 </body>
 </html>

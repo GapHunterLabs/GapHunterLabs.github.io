@@ -844,3 +844,15 @@ tr.row td[data-label]::before { font-family: var(--sans); font-size: 11px; lette
   .spec-sheet { grid-template-columns: 1fr; }
   .spec-sheet .spec-row { grid-template-columns: 112px minmax(0, 1fr); }
 }
+
+/* Service price levels (2026-10-19): one ruled row per level -- name, what decides it, price and delivery. */
+.tier-list { margin: 16px 0 4px; border-top: 1px solid var(--text); }
+.tier-list .tier { display: grid; grid-template-columns: 168px minmax(0, 1fr) auto; gap: 4px 20px; align-items: baseline; padding: 12px 0; border-bottom: 1px solid var(--border); }
+.tier-list dt { font-weight: 600; color: var(--text); }
+.tier-list dd { margin: 0; }
+.tier-list .tier-scope { font-size: 14.5px; line-height: 1.55; color: var(--text-dim); }
+.tier-list .tier-terms { font: 400 13px/1.55 var(--mono); color: var(--text); font-variant-numeric: tabular-nums; white-space: nowrap; text-align: right; }
+@media (max-width: 760px) {
+  .tier-list .tier { grid-template-columns: minmax(0, 1fr); }
+  .tier-list .tier-terms { white-space: normal; text-align: left; }
+}

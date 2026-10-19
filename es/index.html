@@ -137,7 +137,7 @@
 <meta property="og:url" content="https://gaphunterlabs.github.io/es/">
 <meta property="og:title" content="Gap Hunter Labs — Ingeniería de rendimiento, seguridad y fiabilidad">
 <meta property="og:description" content="Estudio de ingeniería de Joel Díaz: cuellos de botella de rendimiento, vulnerabilidades de seguridad y fallas estructurales rastreados hasta su causa raíz y corregidos.">
-<meta property="og:image" content="https://gaphunterlabs.github.io/og-image.png?v=2">
+<meta property="og:image" content="https://gaphunterlabs.github.io/og-image.png?v=3">
 <!-- og:image:secure_url + og:image:type added 2026-08-23: some
      crawlers (WhatsApp's included, per their own scraper docs) prefer
      an explicit secure_url alongside og:image even when they're
@@ -147,22 +147,22 @@
      that can silently fail on a stricter client. og:locale declares
      the page's real language explicitly rather than leaving it
      unstated. -->
-<meta property="og:image:secure_url" content="https://gaphunterlabs.github.io/og-image.png?v=2">
+<meta property="og:image:secure_url" content="https://gaphunterlabs.github.io/og-image.png?v=3">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Fixed-price IntelliJ plugin performance audit — Gap Hunter Labs">
+<meta property="og:image:alt" content="Gap Hunter Labs — encontrar la brecha, entender la causa, construir la corrección">
 <meta property="og:locale" content="es_ES">
 <meta property="og:locale:alternate" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@GapHunterLabs">
 <meta name="twitter:title" content="Gap Hunter Labs — Ingeniería de rendimiento, seguridad y fiabilidad">
 <meta name="twitter:description" content="Estudio de ingeniería de Joel Díaz: cuellos de botella de rendimiento, vulnerabilidades de seguridad y fallas estructurales rastreados hasta su causa raíz y corregidos.">
-<meta name="twitter:image" content="https://gaphunterlabs.github.io/og-image.png?v=2">
+<meta name="twitter:image" content="https://gaphunterlabs.github.io/og-image.png?v=3">
 <!-- twitter:image:alt added 2026-08-23 -- Twitter/X reads its own
      separate alt for the card image rather than falling back to
      og:image:alt, which had no Twitter-specific equivalent before this. -->
-<meta name="twitter:image:alt" content="Fixed-price IntelliJ plugin performance audit — Gap Hunter Labs">
+<meta name="twitter:image:alt" content="Gap Hunter Labs — encontrar la brecha, entender la causa, construir la corrección">
 
 <!-- Home-page organization and website metadata. The full generated
      plugin listing and its structured data live on catalog.html. -->
@@ -194,8 +194,12 @@
         "itemListElement": [
           {
             "@type": "Offer",
-            "price": "2500",
-            "priceCurrency": "USD",
+            "priceSpecification": {
+              "@type": "PriceSpecification",
+              "minPrice": "10500",
+              "maxPrice": "15000",
+              "priceCurrency": "USD"
+            },
             "url": "https://gaphunterlabs.github.io/plugin-performance-audit/",
             "itemOffered": {
               "@type": "Service",
@@ -204,6 +208,12 @@
           },
           {
             "@type": "Offer",
+            "priceSpecification": {
+              "@type": "PriceSpecification",
+              "minPrice": "4500",
+              "maxPrice": "9000",
+              "priceCurrency": "USD"
+            },
             "itemOffered": {
               "@type": "Service",
               "name": "Plugin update for new IntelliJ Platform versions"
@@ -211,6 +221,12 @@
           },
           {
             "@type": "Offer",
+            "priceSpecification": {
+              "@type": "PriceSpecification",
+              "minPrice": "4800",
+              "maxPrice": "13500",
+              "priceCurrency": "USD"
+            },
             "itemOffered": {
               "@type": "Service",
               "name": "Dependency and CI/CD security review"
@@ -218,6 +234,11 @@
           },
           {
             "@type": "Offer",
+            "priceSpecification": {
+              "@type": "PriceSpecification",
+              "minPrice": "7500",
+              "priceCurrency": "USD"
+            },
             "itemOffered": {
               "@type": "Service",
               "name": "Custom static-analysis rules"
@@ -256,9 +277,9 @@
   ]
 }
 </script>
-<link rel="stylesheet" href="/css/theme.css?v=b1c31684">
-<link rel="stylesheet" href="/css/home.css?v=dea46f3e">
-<link rel="stylesheet" href="/css/shell.css?v=ecab5e00">
+<link rel="stylesheet" href="/css/theme.css?v=6aefffb1">
+<link rel="stylesheet" href="/css/home.css?v=78307caf">
+<link rel="stylesheet" href="/css/shell.css?v=5239dfda">
 </head>
 <body>
 <!-- Fase 2 (2026-09-22): sin loader -- hero, stats, categorias y
@@ -455,7 +476,7 @@
     <div class="nb-section-head">
       <p class="nb-label">Servicios</p>
       <h2 id="servicesTitle">Encargos</h2>
-      <p class="nb-section-lede">Alcance fijo y precio fijo, acordados por escrito antes de empezar cualquier trabajo. Entregables por escrito, asíncrono por defecto.</p>
+      <p class="nb-section-lede">Precios publicados en USD, por encargo. El alcance por escrito, acordado antes de empezar cualquier trabajo, confirma qué nivel aplica. Entregables por escrito, asíncrono por defecto.</p>
     </div>
     <table class="nb-table">
       <thead>
@@ -465,22 +486,22 @@
         <tr>
           <th scope="row"><a href="/es/auditoria-de-rendimiento/">Auditoría de rendimiento de plugins</a></th>
           <td>Para plugins con quejas de congelamientos, demoras al escribir o CPU alta: reproducción en cada versión de IDE que soportas, mediciones en el hilo de interfaz, revisión del código en busca de patrones de congelamiento y parches con mediciones de antes y después.</td>
-          <td class="nb-terms">USD 2,500 &middot; un plugin &middot; 10 días hábiles</td>
+          <td class="nb-terms">USD 10,500 &middot; un plugin, hasta 3 versiones del IDE &middot; 10 días hábiles<br>Ampliada: USD 15,000 &middot; 15 días hábiles</td>
         </tr>
         <tr>
           <th scope="row">Actualización de plugins para versiones nuevas del IDE</th>
           <td>Tu plugin compilado y verificado contra las versiones de IntelliJ que necesitas soportar: API eliminadas u obsoletas, el modo K2 de Kotlin, IntelliJ Platform Gradle Plugin 2.x y los fallos de Plugin Verifier.</td>
-          <td class="nb-terms">Precio fijo, cotizado tras una primera revisión</td>
+          <td class="nb-terms">Menor: USD 4,500 &middot; 5 días hábiles<br>Mayor: USD 9,000 &middot; 10 días hábiles</td>
         </tr>
         <tr>
           <th scope="row">Plugins e inspecciones a medida</th>
           <td>Inspecciones adaptadas a tu código, como API internas, formatos de secretos y patrones de seguridad, entregadas como un plugin que tu equipo instala. Los mismos controles pueden correr en GitHub Actions o GitLab CI.</td>
-          <td class="nb-terms">Precio fijo según el alcance</td>
+          <td class="nb-terms">Hasta 3 inspecciones: USD 7,500 &middot; 10 días hábiles<br>Plugin completo con CI: desde USD 15,000</td>
         </tr>
         <tr>
           <th scope="row">Revisión de seguridad de dependencias y CI/CD</th>
-          <td>Una revisión de solo lectura de los repositorios que elijas: vulnerabilidades conocidas en dependencias de producción, riesgos de dependency confusion y permisos de los workflows de CI/CD.</td>
-          <td class="nb-terms">Informe escrito, precio fijo según el alcance</td>
+          <td>Una revisión de solo lectura de los repositorios que elijas: vulnerabilidades conocidas en dependencias de producción, riesgos de dependency confusion y permisos de los workflows de CI/CD. Opcional: preparación para la Ley de Ciberresiliencia de la UE (CRA).</td>
+          <td class="nb-terms">Un repositorio: USD 4,800 &middot; 5 días hábiles<br>Hasta 5 repositorios: USD 12,000 &middot; 10 días hábiles<br>Preparación para la CRA: + USD 1,500 &middot; + 2 días hábiles</td>
         </tr>
       </tbody>
     </table>

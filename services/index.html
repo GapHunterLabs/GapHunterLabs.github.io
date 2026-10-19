@@ -33,20 +33,20 @@
 <meta property="og:url" content="https://gaphunterlabs.github.io/services/">
 <meta property="og:title" content="Services — Gap Hunter Labs">
 <meta property="og:description" content="Fixed-scope, fixed-price engineering: performance audits, dependency and CI/CD security reviews, IDE platform updates, and custom plugins and inspections.">
-<meta property="og:image" content="https://gaphunterlabs.github.io/og-services.png">
-<meta property="og:image:secure_url" content="https://gaphunterlabs.github.io/og-services.png">
+<meta property="og:image" content="https://gaphunterlabs.github.io/og-services.png?v=3">
+<meta property="og:image:secure_url" content="https://gaphunterlabs.github.io/og-services.png?v=3">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="IntelliJ plugin freeze &amp; performance diagnosis — Gap Hunter Labs">
+<meta property="og:image:alt" content="Engineering services with published fixed prices — Gap Hunter Labs">
 <meta property="og:locale" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@GapHunterLabs">
 <meta name="twitter:title" content="Services — Gap Hunter Labs">
 <meta name="twitter:description" content="Fixed-scope, fixed-price engineering: performance audits, dependency and CI/CD security reviews, IDE platform updates, and custom plugins and inspections.">
-<meta name="twitter:image" content="https://gaphunterlabs.github.io/og-services.png">
-<meta name="twitter:image:alt" content="IntelliJ plugin freeze &amp; performance diagnosis — Gap Hunter Labs">
-<link rel="stylesheet" href="/css/theme.css?v=b1c31684">
+<meta name="twitter:image" content="https://gaphunterlabs.github.io/og-services.png?v=3">
+<meta name="twitter:image:alt" content="Engineering services with published fixed prices — Gap Hunter Labs">
+<link rel="stylesheet" href="/css/theme.css?v=6aefffb1">
 <link rel="stylesheet" href="/css/base.css?v=3b2dc0b4">
 <style>
   @font-face {
@@ -103,7 +103,7 @@
   }
 
 </style>
-<link rel="stylesheet" href="/css/shell.css?v=ecab5e00">
+<link rel="stylesheet" href="/css/shell.css?v=5239dfda">
 </head>
 <body>
 <div class="app-shell">
@@ -143,31 +143,50 @@
 
     <section class="disclosure" aria-labelledby="svc-audit">
       <h2 id="svc-audit">Plugin performance audit</h2>
-      <p>For JetBrains plugins with reports of UI freezes, typing lag or high CPU: reproduction on each IDE version you support, measurements on the UI thread, a review of the code for freeze patterns, and patches with before-and-after measurements. <strong>One plugin, USD 2,500, delivered in 10 business days.</strong></p>
+      <p>For JetBrains plugins with reports of UI freezes, typing lag or high CPU: reproduction on each IDE version you support, measurements on the UI thread, a review of the code for freeze patterns, and patches with before-and-after measurements.</p>
+      <dl class="tier-list">
+        <div class="tier"><dt>Base</dt><dd class="tier-scope">One plugin, up to 3 IDE versions.</dd><dd class="tier-terms">USD 10,500 &middot; 10 business days</dd></div>
+        <div class="tier"><dt>Extended</dt><dd class="tier-scope">More than 3 IDE versions, or a plugin with several background subsystems, language servers or external processes.</dd><dd class="tier-terms">USD 15,000 &middot; 15 business days</dd></div>
+      </dl>
       <p>The same method found and reported freeze bugs in the IntelliJ Platform itself &mdash; see the <a href="/engineering-evidence/jetbrains-platform-tickets/">JetBrains Platform tickets</a>.</p>
       <p><a class="btn primary" href="/plugin-performance-audit/" data-goatcounter-click="cta-services-audit">See what the audit covers</a></p>
     </section>
 
     <section class="disclosure" aria-labelledby="svc-updates">
       <h2 id="svc-updates">Plugin updates for new IDE versions</h2>
-      <p>Your plugin built and verified against the IntelliJ versions you need to support: removed or deprecated APIs, Kotlin K2 mode, IntelliJ Platform Gradle Plugin 2.x and Plugin Verifier failures. It is the process that keeps our own catalog compatible with each new release. Fixed price, quoted after a first look at your plugin.</p>
+      <p>Your plugin built and verified against the IntelliJ versions you need to support: removed or deprecated APIs, Kotlin K2 mode, IntelliJ Platform Gradle Plugin 2.x and Plugin Verifier failures. It is the process that keeps our own catalog compatible with each new release. You receive the changes as a pull request, the Plugin Verifier report for each target version and a written list of the API changes that were resolved.</p>
+      <dl class="tier-list">
+        <div class="tier"><dt>Minor</dt><dd class="tier-scope">Deprecated APIs, IntelliJ Platform Gradle Plugin 2.x and Plugin Verifier warnings.</dd><dd class="tier-terms">USD 4,500 &middot; 5 business days</dd></div>
+        <div class="tier"><dt>Major</dt><dd class="tier-scope">Removed APIs, Kotlin K2 mode, or a plugin with several modules.</dd><dd class="tier-terms">USD 9,000 &middot; 10 business days</dd></div>
+      </dl>
     </section>
 
     <section class="disclosure" aria-labelledby="svc-security">
       <h2 id="svc-security">Dependency and CI/CD security review</h2>
-      <p>A read-only review of the repositories you choose: known vulnerabilities in production dependencies, dependency-confusion risks in manifests and lockfiles, and CI/CD workflow permissions, checked with OSV-Scanner and OpenSSF Scorecard. Optional EU Cyber Resilience Act readiness check: security policy, security.txt, SBOM and the vulnerability-reporting workflow (technical, not legal advice). Written report, fixed price per scope. Anything exploitable is reported first through your security channel.</p>
+      <p>A read-only review of the repositories you choose: known vulnerabilities in production dependencies, dependency-confusion risks in manifests and lockfiles, and CI/CD workflow permissions, checked with OSV-Scanner and OpenSSF Scorecard. Optional EU Cyber Resilience Act readiness check: security policy, security.txt, SBOM and the vulnerability-reporting workflow (technical, not legal advice). The written report gives each finding with its source and the version that fixes it, when one exists. Anything exploitable is reported first through your security channel.</p>
+      <dl class="tier-list">
+        <div class="tier"><dt>One repository</dt><dd class="tier-scope">One repository and its CI/CD workflows.</dd><dd class="tier-terms">USD 4,800 &middot; 5 business days</dd></div>
+        <div class="tier"><dt>Up to 5 repositories</dt><dd class="tier-scope">Up to 5 repositories of the same system.</dd><dd class="tier-terms">USD 12,000 &middot; 10 business days</dd></div>
+        <div class="tier"><dt>CRA readiness</dt><dd class="tier-scope">Optional, added to either level: security policy, security.txt, SBOM and the vulnerability-reporting workflow.</dd><dd class="tier-terms">+ USD 1,500 &middot; + 2 business days</dd></div>
+      </dl>
       <p><a class="btn" href="/engineering-evidence/open-source-security-reports/" data-goatcounter-click="cta-services-security">See the security reports</a></p>
     </section>
 
     <section class="disclosure" aria-labelledby="svc-custom">
       <h2 id="svc-custom">Custom plugins and inspections</h2>
       <p>Inspections tailored to your codebase, such as internal APIs, secret formats and security patterns, delivered as a plugin your team installs. The same checks can run in GitHub Actions or GitLab CI, and the plugin can be served from a private plugin repository.</p>
+      <dl class="tier-list">
+        <div class="tier"><dt>Up to 3 inspections</dt><dd class="tier-scope">Packaged as a plugin your team installs, with tests for each inspection.</dd><dd class="tier-terms">USD 7,500 &middot; 10 business days</dd></div>
+        <div class="tier"><dt>Full plugin with CI</dt><dd class="tier-scope">The inspections also run in GitHub Actions or GitLab CI, and the plugin is served from a private plugin repository. The delivery date is set in the scope.</dd><dd class="tier-terms">From USD 15,000</dd></div>
+      </dl>
     </section>
 
     <section class="disclosure" aria-labelledby="svc-how">
       <h2 id="svc-how">How engagements work</h2>
       <ul>
         <li>Fixed scope and fixed price, agreed in writing before any work starts.</li>
+        <li>Prices are published in USD, per engagement. The written scope confirms which level applies, within 2 business days.</li>
+        <li>50% when the work starts and 50% on delivery.</li>
         <li>Written deliverables; async by default (email and a pull request), with a call if you prefer one.</li>
         <li>Paid by international bank transfer in USD, against an invoice.</li>
         <li>Your code and data stay confidential; signing your NDA is fine.</li>
@@ -187,6 +206,7 @@
       <li>Fixed scope and fixed price, agreed in writing before any work starts.</li>
       <li>Written deliverables: a report, and a pull request when there is code to change.</li>
       <li>Async by default, by email, with a call if you prefer one.</li>
+      <li>50% when the work starts and 50% on delivery.</li>
       <li>Paid by international bank transfer in USD, against an invoice.</li>
       <li>Your code and data stay confidential. Signing your NDA is fine.</li>
     </ul>

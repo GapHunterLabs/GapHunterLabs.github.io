@@ -1,4 +1,4 @@
-"""Render the social share images (1200x630): home + services.
+"""Render the social share images (1200x630): home, services and the audit page.
 
 Each *-source.html is a standalone, noindex HTML page that loads the same
 fonts/ and brand mark as the live site; Chromium (via Playwright) screenshots
@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parents[1]
 PAIRS = [
     (ROOT / "og-image-source.html", ROOT / "og-image.png"),          # home
     (ROOT / "og-services-source.html", ROOT / "og-services.png"),    # /services/
+    (ROOT / "og-audit-source.html", ROOT / "og-audit.png"),          # /plugin-performance-audit/
 ]
 
 

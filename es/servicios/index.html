@@ -33,21 +33,21 @@
 <meta property="og:url" content="https://gaphunterlabs.github.io/es/servicios/">
 <meta property="og:title" content="Services — Gap Hunter Labs">
 <meta property="og:description" content="Ingeniería de alcance y precio fijos: auditorías de rendimiento, revisiones de seguridad de dependencias y CI/CD, actualizaciones de plataforma del IDE, y plugins e inspecciones a medida.">
-<meta property="og:image" content="https://gaphunterlabs.github.io/og-services.png">
-<meta property="og:image:secure_url" content="https://gaphunterlabs.github.io/og-services.png">
+<meta property="og:image" content="https://gaphunterlabs.github.io/og-services.png?v=3">
+<meta property="og:image:secure_url" content="https://gaphunterlabs.github.io/og-services.png?v=3">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="IntelliJ plugin freeze &amp; performance diagnosis — Gap Hunter Labs">
+<meta property="og:image:alt" content="Engineering services with published fixed prices — Gap Hunter Labs">
 <meta property="og:locale" content="es_ES">
 <meta property="og:locale:alternate" content="en_US">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@GapHunterLabs">
 <meta name="twitter:title" content="Services — Gap Hunter Labs">
 <meta name="twitter:description" content="Ingeniería de alcance y precio fijos: auditorías de rendimiento, revisiones de seguridad de dependencias y CI/CD, actualizaciones de plataforma del IDE, y plugins e inspecciones a medida.">
-<meta name="twitter:image" content="https://gaphunterlabs.github.io/og-services.png">
-<meta name="twitter:image:alt" content="IntelliJ plugin freeze &amp; performance diagnosis — Gap Hunter Labs">
-<link rel="stylesheet" href="/css/theme.css?v=b1c31684">
+<meta name="twitter:image" content="https://gaphunterlabs.github.io/og-services.png?v=3">
+<meta name="twitter:image:alt" content="Engineering services with published fixed prices — Gap Hunter Labs">
+<link rel="stylesheet" href="/css/theme.css?v=6aefffb1">
 <link rel="stylesheet" href="/css/base.css?v=3b2dc0b4">
 <style>
   @font-face {
@@ -104,7 +104,7 @@
   }
 
 </style>
-<link rel="stylesheet" href="/css/shell.css?v=ecab5e00">
+<link rel="stylesheet" href="/css/shell.css?v=5239dfda">
 </head>
 <body>
 <div class="app-shell">
@@ -144,31 +144,50 @@
 
     <section class="disclosure" aria-labelledby="svc-audit">
       <h2 id="svc-audit">Auditoría de rendimiento de plugins</h2>
-      <p>Para plugins de JetBrains con reportes de congelamientos de la interfaz, lentitud al escribir o CPU alta: reproducción en cada versión del IDE que soportas, mediciones en el hilo de la interfaz, una revisión del código en busca de patrones de congelamiento, y parches con mediciones de antes y después. <strong>Un plugin, USD 2,500, entregado en 10 días hábiles.</strong></p>
+      <p>Para plugins de JetBrains con reportes de congelamientos de la interfaz, lentitud al escribir o CPU alta: reproducción en cada versión del IDE que soportas, mediciones en el hilo de la interfaz, una revisión del código en busca de patrones de congelamiento, y parches con mediciones de antes y después.</p>
+      <dl class="tier-list">
+        <div class="tier"><dt>Base</dt><dd class="tier-scope">Un plugin, hasta 3 versiones del IDE.</dd><dd class="tier-terms">USD 10,500 &middot; 10 días hábiles</dd></div>
+        <div class="tier"><dt>Ampliada</dt><dd class="tier-scope">Más de 3 versiones del IDE, o un plugin con varios subsistemas en segundo plano, servidores de lenguaje o procesos externos.</dd><dd class="tier-terms">USD 15,000 &middot; 15 días hábiles</dd></div>
+      </dl>
       <p>El mismo método encontró y reportó errores de congelamiento en la propia plataforma IntelliJ &mdash; ver los <a href="/es/ingenieria-y-evidencia/tickets-jetbrains-platform/">Tickets de JetBrains Platform</a>.</p>
       <p><a class="btn primary" href="/es/auditoria-de-rendimiento/" data-goatcounter-click="cta-services-audit">Ver qué cubre la auditoría</a></p>
     </section>
 
     <section class="disclosure" aria-labelledby="svc-updates">
       <h2 id="svc-updates">Actualización de plugins para versiones nuevas del IDE</h2>
-      <p>Tu plugin compilado y verificado contra las versiones de IntelliJ que necesitas soportar: API eliminadas u obsoletas, el modo K2 de Kotlin, el IntelliJ Platform Gradle Plugin 2.x y los fallos de Plugin Verifier. Es el proceso que mantiene nuestro propio catálogo compatible con cada versión nueva. Precio fijo, cotizado tras una primera revisión de tu plugin.</p>
+      <p>Tu plugin compilado y verificado contra las versiones de IntelliJ que necesitas soportar: API eliminadas u obsoletas, el modo K2 de Kotlin, el IntelliJ Platform Gradle Plugin 2.x y los fallos de Plugin Verifier. Es el proceso que mantiene nuestro propio catálogo compatible con cada versión nueva. Recibes los cambios como un pull request, el informe de Plugin Verifier de cada versión objetivo y una lista escrita de los cambios de API resueltos.</p>
+      <dl class="tier-list">
+        <div class="tier"><dt>Menor</dt><dd class="tier-scope">API obsoletas, IntelliJ Platform Gradle Plugin 2.x y avisos de Plugin Verifier.</dd><dd class="tier-terms">USD 4,500 &middot; 5 días hábiles</dd></div>
+        <div class="tier"><dt>Mayor</dt><dd class="tier-scope">API eliminadas, el modo K2 de Kotlin, o un plugin con varios módulos.</dd><dd class="tier-terms">USD 9,000 &middot; 10 días hábiles</dd></div>
+      </dl>
     </section>
 
     <section class="disclosure" aria-labelledby="svc-security">
       <h2 id="svc-security">Revisión de seguridad de dependencias y CI/CD</h2>
-      <p>Una revisión de solo lectura de los repositorios que elijas: vulnerabilidades conocidas en las dependencias de producción, riesgos de dependency confusion en manifiestos y lockfiles, y permisos de los workflows de CI/CD, con OSV-Scanner y OpenSSF Scorecard. Opcional: preparación para la Ley de Ciberresiliencia de la UE (CRA): política de seguridad, security.txt, SBOM y el flujo de notificación de vulnerabilidades (técnica, no asesoría legal). Informe escrito, precio fijo según el alcance. Lo explotable se reporta primero por tu canal de seguridad.</p>
+      <p>Una revisión de solo lectura de los repositorios que elijas: vulnerabilidades conocidas en las dependencias de producción, riesgos de dependency confusion en manifiestos y lockfiles, y permisos de los workflows de CI/CD, con OSV-Scanner y OpenSSF Scorecard. Opcional: preparación para la Ley de Ciberresiliencia de la UE (CRA): política de seguridad, security.txt, SBOM y el flujo de notificación de vulnerabilidades (técnica, no asesoría legal). El informe escrito da cada hallazgo con su fuente y la versión que lo corrige, cuando existe. Lo explotable se reporta primero por tu canal de seguridad.</p>
+      <dl class="tier-list">
+        <div class="tier"><dt>Un repositorio</dt><dd class="tier-scope">Un repositorio y sus workflows de CI/CD.</dd><dd class="tier-terms">USD 4,800 &middot; 5 días hábiles</dd></div>
+        <div class="tier"><dt>Hasta 5 repositorios</dt><dd class="tier-scope">Hasta 5 repositorios del mismo sistema.</dd><dd class="tier-terms">USD 12,000 &middot; 10 días hábiles</dd></div>
+        <div class="tier"><dt>Preparación para la CRA</dt><dd class="tier-scope">Opcional, se suma a cualquiera de los dos niveles: política de seguridad, security.txt, SBOM y el flujo de notificación de vulnerabilidades.</dd><dd class="tier-terms">+ USD 1,500 &middot; + 2 días hábiles</dd></div>
+      </dl>
       <p><a class="btn" href="/es/ingenieria-y-evidencia/reportes-de-seguridad/" data-goatcounter-click="cta-services-security">Ver los reportes de seguridad</a></p>
     </section>
 
     <section class="disclosure" aria-labelledby="svc-custom">
       <h2 id="svc-custom">Plugins e inspecciones a medida</h2>
       <p>Inspecciones adaptadas a tu código, como API internas, formatos de secretos y patrones de seguridad, entregadas como un plugin que tu equipo instala. Las mismas comprobaciones pueden ejecutarse en GitHub Actions o GitLab CI, y el plugin puede servirse desde un repositorio privado de plugins.</p>
+      <dl class="tier-list">
+        <div class="tier"><dt>Hasta 3 inspecciones</dt><dd class="tier-scope">Empaquetadas como un plugin que tu equipo instala, con tests para cada inspección.</dd><dd class="tier-terms">USD 7,500 &middot; 10 días hábiles</dd></div>
+        <div class="tier"><dt>Plugin completo con CI</dt><dd class="tier-scope">Las inspecciones también corren en GitHub Actions o GitLab CI, y el plugin se sirve desde un repositorio privado de plugins. La fecha de entrega se fija en el alcance.</dd><dd class="tier-terms">Desde USD 15,000</dd></div>
+      </dl>
     </section>
 
     <section class="disclosure" aria-labelledby="svc-how">
       <h2 id="svc-how">Cómo funcionan los encargos</h2>
       <ul>
         <li>Alcance fijo y precio fijo, acordados por escrito antes de empezar cualquier trabajo.</li>
+        <li>Los precios se publican en USD, por encargo. El alcance por escrito confirma qué nivel aplica, en 2 días hábiles.</li>
+        <li>50% al empezar el trabajo y 50% al entregar.</li>
         <li>Entregables escritos; asíncrono por defecto (correo y un pull request), con una llamada si la prefieres.</li>
         <li>Pago por transferencia bancaria internacional en USD, con factura.</li>
         <li>Tu código y tus datos quedan confidenciales; firmar tu NDA no es problema.</li>
@@ -188,6 +207,7 @@
       <li>Alcance fijo y precio fijo, acordados por escrito antes de empezar cualquier trabajo.</li>
       <li>Entregables por escrito: un informe, y un pull request cuando hay código que cambiar.</li>
       <li>Asíncrono por defecto, por correo, con una llamada si la prefieres.</li>
+      <li>50% al empezar el trabajo y 50% al entregar.</li>
       <li>Pago por transferencia bancaria internacional en USD, con factura.</li>
       <li>Tu código y tus datos son confidenciales. Firmar tu NDA no es problema.</li>
     </ul>
