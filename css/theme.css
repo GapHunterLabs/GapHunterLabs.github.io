@@ -195,13 +195,15 @@ h1, h2 {
 }
 
 /* Links in running text: ink with an underline, so they never depend on
-   color alone. Components that style their own links override this. */
-:where(p, li, dd, td, figcaption, blockquote) a:not(.btn) {
+   color alone. Components that style their own links override this; the
+   search dialog buttons (.ghs-btn) are excluded because their class-only
+   rules lose to this selector (0,1,1). */
+:where(p, li, dd, td, figcaption, blockquote) a:not(.btn, .ghs-btn) {
     color: inherit;
     text-decoration: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 0.18em;
 }
-:where(p, li, dd, td, figcaption, blockquote) a:not(.btn):hover {
+:where(p, li, dd, td, figcaption, blockquote) a:not(.btn, .ghs-btn):hover {
     text-decoration-thickness: 2px;
 }
