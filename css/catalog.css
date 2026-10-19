@@ -114,22 +114,28 @@
      bit of motion the user asked for, nothing louder. The thumb's
      position is driven declaratively by :has(), reading whichever
      button switchMode() already marked .active -- no extra JS. */
+  /* 2026-10-19: two equal grid columns as wide as the longest label.
+     With flex: 1 1 0 the halves were equal but the toggle was sized to
+     the sum of both labels, so "Cuadrícula" (ES) overflowed its half.
+     --vt-pad keeps the thumb aligned when the padding changes on mobile. */
   .view-toggle {
+    --vt-pad: 3px;
     position: relative;
-    display: inline-flex;
+    display: inline-grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     align-items: stretch;
     background: var(--surface);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
-    padding: 3px;
+    padding: var(--vt-pad);
     flex: none;
     height: var(--control-h);
   }
 
   .view-toggle .vt-thumb {
     position: absolute;
-    top: 3px; bottom: 3px; left: 3px;
-    width: calc(50% - 3px);
+    top: var(--vt-pad); bottom: var(--vt-pad); left: var(--vt-pad);
+    width: calc(50% - var(--vt-pad));
     background: var(--accent);
     border-radius: var(--radius-md);
     box-shadow: none;
@@ -144,8 +150,8 @@
   .view-toggle button {
     position: relative;
     z-index: 1;
-    flex: 1 1 0;
     min-width: 0;
+    white-space: nowrap;
     font-family: var(--mono);
     font-size: 11px;
     letter-spacing: 0.06em;
@@ -509,7 +515,7 @@
       overflow: hidden; transition: max-width var(--duration-slow) var(--ease-standard), opacity var(--duration-base) ease;
     }
     .controls.is-searching .ctl-rest { max-width: 0; opacity: 0; pointer-events: none; }
-    .view-toggle { flex: 1 1 auto; min-width: 0; height: 32px; padding: 2px; }
+    .view-toggle { --vt-pad: 2px; flex: 1 1 auto; min-width: 0; height: 32px; }
     .view-toggle button { padding: 0 8px; font-size: 9.5px; }
     .ctl-filters-btn {
       display: inline-flex; align-items: center; gap: 4px; flex: none;
