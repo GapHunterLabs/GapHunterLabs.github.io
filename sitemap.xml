@@ -865,12 +865,12 @@
     <lastmod>2026-09-28</lastmod>
   </url>
   <url>
-    <loc>https://gaphunterlabs.github.io/catalog/cert-companion/</loc>
-    <lastmod>2026-09-28</lastmod>
-  </url>
-  <url>
     <loc>https://gaphunterlabs.github.io/catalog/refactor-simulator/</loc>
     <lastmod>2026-09-22</lastmod>
+  </url>
+  <url>
+    <loc>https://gaphunterlabs.github.io/catalog/cert-companion/</loc>
+    <lastmod>2026-09-28</lastmod>
   </url>
   <url>
     <loc>https://gaphunterlabs.github.io/catalog/dependency-vulnerability-companion/</loc>
@@ -897,16 +897,20 @@
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
-    <loc>https://gaphunterlabs.github.io/catalog/php-composer-script-companion/</loc>
-    <lastmod>2026-09-22</lastmod>
-  </url>
-  <url>
     <loc>https://gaphunterlabs.github.io/catalog/json-schema-companion/</loc>
     <lastmod>2026-09-28</lastmod>
   </url>
   <url>
+    <loc>https://gaphunterlabs.github.io/catalog/php-composer-script-companion/</loc>
+    <lastmod>2026-09-22</lastmod>
+  </url>
+  <url>
     <loc>https://gaphunterlabs.github.io/catalog/highlight-companion/</loc>
     <lastmod>2026-09-28</lastmod>
+  </url>
+  <url>
+    <loc>https://gaphunterlabs.github.io/catalog/import-cost-companion/</loc>
+    <lastmod>2026-09-22</lastmod>
   </url>
   <url>
     <loc>https://gaphunterlabs.github.io/catalog/jenkinsfile-companion/</loc>
@@ -917,20 +921,16 @@
     <lastmod>2026-09-28</lastmod>
   </url>
   <url>
-    <loc>https://gaphunterlabs.github.io/catalog/import-cost-companion/</loc>
-    <lastmod>2026-09-22</lastmod>
-  </url>
-  <url>
     <loc>https://gaphunterlabs.github.io/catalog/dockerfile-layer-size-companion/</loc>
-    <lastmod>2026-09-22</lastmod>
-  </url>
-  <url>
-    <loc>https://gaphunterlabs.github.io/catalog/prometheus-metric-naming-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
     <loc>https://gaphunterlabs.github.io/catalog/cmake-companion/</loc>
     <lastmod>2026-09-28</lastmod>
+  </url>
+  <url>
+    <loc>https://gaphunterlabs.github.io/catalog/prometheus-metric-naming-companion/</loc>
+    <lastmod>2026-09-22</lastmod>
   </url>
   <url>
     <loc>https://gaphunterlabs.github.io/catalog/format-converter-companion/</loc>
@@ -977,11 +977,11 @@
     <lastmod>2026-09-28</lastmod>
   </url>
   <url>
-    <loc>https://gaphunterlabs.github.io/catalog/n-plus-one-query-companion/</loc>
+    <loc>https://gaphunterlabs.github.io/catalog/aws-sdk-client-reuse-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
-    <loc>https://gaphunterlabs.github.io/catalog/aws-sdk-client-reuse-companion/</loc>
+    <loc>https://gaphunterlabs.github.io/catalog/n-plus-one-query-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
@@ -989,16 +989,12 @@
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
-    <loc>https://gaphunterlabs.github.io/catalog/log-format-string-companion/</loc>
-    <lastmod>2026-09-22</lastmod>
-  </url>
-  <url>
     <loc>https://gaphunterlabs.github.io/catalog/graphql-companion/</loc>
     <lastmod>2026-09-28</lastmod>
   </url>
   <url>
-    <loc>https://gaphunterlabs.github.io/catalog/git-hygiene-companion/</loc>
-    <lastmod>2026-09-28</lastmod>
+    <loc>https://gaphunterlabs.github.io/catalog/log-format-string-companion/</loc>
+    <lastmod>2026-09-22</lastmod>
   </url>
   <url>
     <loc>https://gaphunterlabs.github.io/catalog/review-companion/</loc>
@@ -1009,11 +1005,15 @@
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
-    <loc>https://gaphunterlabs.github.io/catalog/regex-preview-companion/</loc>
-    <lastmod>2026-09-22</lastmod>
+    <loc>https://gaphunterlabs.github.io/catalog/git-hygiene-companion/</loc>
+    <lastmod>2026-09-28</lastmod>
   </url>
   <url>
     <loc>https://gaphunterlabs.github.io/catalog/aws-s3-public-acl-sdk-companion/</loc>
+    <lastmod>2026-09-22</lastmod>
+  </url>
+  <url>
+    <loc>https://gaphunterlabs.github.io/catalog/regex-preview-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
@@ -1041,11 +1041,15 @@
     <lastmod>2026-10-04</lastmod>
   </url>
   <url>
-    <loc>https://gaphunterlabs.github.io/catalog/dockerfile-missing-user-companion/</loc>
+    <loc>https://gaphunterlabs.github.io/catalog/env-diff-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
-    <loc>https://gaphunterlabs.github.io/catalog/env-diff-companion/</loc>
+    <loc>https://gaphunterlabs.github.io/catalog/circular-dependency-companion/</loc>
+    <lastmod>2026-09-22</lastmod>
+  </url>
+  <url>
+    <loc>https://gaphunterlabs.github.io/catalog/dockerfile-missing-user-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
@@ -1053,15 +1057,15 @@
     <lastmod>2026-09-28</lastmod>
   </url>
   <url>
-    <loc>https://gaphunterlabs.github.io/catalog/circular-dependency-companion/</loc>
-    <lastmod>2026-09-22</lastmod>
-  </url>
-  <url>
     <loc>https://gaphunterlabs.github.io/catalog/terraform-iam-wildcard-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
     <loc>https://gaphunterlabs.github.io/catalog/change-case-companion/</loc>
+    <lastmod>2026-09-22</lastmod>
+  </url>
+  <url>
+    <loc>https://gaphunterlabs.github.io/catalog/cassandra-cqlsession-reuse-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
@@ -1073,15 +1077,7 @@
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
-    <loc>https://gaphunterlabs.github.io/catalog/cassandra-cqlsession-reuse-companion/</loc>
-    <lastmod>2026-09-22</lastmod>
-  </url>
-  <url>
     <loc>https://gaphunterlabs.github.io/catalog/k8s-resource-limit-companion/</loc>
-    <lastmod>2026-09-22</lastmod>
-  </url>
-  <url>
-    <loc>https://gaphunterlabs.github.io/catalog/npm-peer-dependency-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
@@ -1090,6 +1086,10 @@
   </url>
   <url>
     <loc>https://gaphunterlabs.github.io/catalog/kafka-producer-reuse-companion/</loc>
+    <lastmod>2026-09-22</lastmod>
+  </url>
+  <url>
+    <loc>https://gaphunterlabs.github.io/catalog/npm-peer-dependency-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
@@ -1113,10 +1113,6 @@
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
-    <loc>https://gaphunterlabs.github.io/catalog/ruby-gemfile-group-companion/</loc>
-    <lastmod>2026-09-22</lastmod>
-  </url>
-  <url>
     <loc>https://gaphunterlabs.github.io/catalog/config-secrets-file-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
@@ -1125,7 +1121,7 @@
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
-    <loc>https://gaphunterlabs.github.io/catalog/rails-mass-assignment-companion/</loc>
+    <loc>https://gaphunterlabs.github.io/catalog/ruby-gemfile-group-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
@@ -1137,11 +1133,11 @@
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
-    <loc>https://gaphunterlabs.github.io/catalog/redisson-client-reuse-companion/</loc>
+    <loc>https://gaphunterlabs.github.io/catalog/rails-mass-assignment-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
-    <loc>https://gaphunterlabs.github.io/catalog/ruby-shell-injection-companion/</loc>
+    <loc>https://gaphunterlabs.github.io/catalog/redisson-client-reuse-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
@@ -1149,7 +1145,15 @@
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
+    <loc>https://gaphunterlabs.github.io/catalog/ruby-shell-injection-companion/</loc>
+    <lastmod>2026-09-22</lastmod>
+  </url>
+  <url>
     <loc>https://gaphunterlabs.github.io/catalog/jwt-webhook-timing-safe-companion/</loc>
+    <lastmod>2026-09-22</lastmod>
+  </url>
+  <url>
+    <loc>https://gaphunterlabs.github.io/catalog/feign-fallback-config-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
@@ -1158,10 +1162,6 @@
   </url>
   <url>
     <loc>https://gaphunterlabs.github.io/catalog/php-sql-injection-companion/</loc>
-    <lastmod>2026-09-22</lastmod>
-  </url>
-  <url>
-    <loc>https://gaphunterlabs.github.io/catalog/feign-fallback-config-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
@@ -1177,15 +1177,15 @@
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
-    <loc>https://gaphunterlabs.github.io/catalog/ruby-nethttp-reuse-companion/</loc>
-    <lastmod>2026-09-22</lastmod>
-  </url>
-  <url>
     <loc>https://gaphunterlabs.github.io/catalog/cache-invalidation-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
     <loc>https://gaphunterlabs.github.io/catalog/jdbc-double-close-companion/</loc>
+    <lastmod>2026-09-22</lastmod>
+  </url>
+  <url>
+    <loc>https://gaphunterlabs.github.io/catalog/ruby-nethttp-reuse-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
@@ -1205,23 +1205,11 @@
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
-    <loc>https://gaphunterlabs.github.io/catalog/php-file-inclusion-companion/</loc>
-    <lastmod>2026-09-22</lastmod>
-  </url>
-  <url>
     <loc>https://gaphunterlabs.github.io/catalog/correlation-id-propagation-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
-    <loc>https://gaphunterlabs.github.io/catalog/kubernetes-rbac-wildcard-companion/</loc>
-    <lastmod>2026-09-22</lastmod>
-  </url>
-  <url>
-    <loc>https://gaphunterlabs.github.io/catalog/php-open-redirect-companion/</loc>
-    <lastmod>2026-09-22</lastmod>
-  </url>
-  <url>
-    <loc>https://gaphunterlabs.github.io/catalog/unsafe-deserialization-sink-companion/</loc>
+    <loc>https://gaphunterlabs.github.io/catalog/php-file-inclusion-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
@@ -1237,7 +1225,19 @@
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
+    <loc>https://gaphunterlabs.github.io/catalog/kubernetes-rbac-wildcard-companion/</loc>
+    <lastmod>2026-09-22</lastmod>
+  </url>
+  <url>
+    <loc>https://gaphunterlabs.github.io/catalog/php-open-redirect-companion/</loc>
+    <lastmod>2026-09-22</lastmod>
+  </url>
+  <url>
     <loc>https://gaphunterlabs.github.io/catalog/rabbitmq-channel-reuse-companion/</loc>
+    <lastmod>2026-09-22</lastmod>
+  </url>
+  <url>
+    <loc>https://gaphunterlabs.github.io/catalog/unsafe-deserialization-sink-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
@@ -1261,23 +1261,15 @@
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
+    <loc>https://gaphunterlabs.github.io/catalog/api-deprecation-header-companion/</loc>
+    <lastmod>2026-09-22</lastmod>
+  </url>
+  <url>
     <loc>https://gaphunterlabs.github.io/catalog/php-function-injection-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
     <loc>https://gaphunterlabs.github.io/catalog/turbo-log-companion/</loc>
-    <lastmod>2026-09-22</lastmod>
-  </url>
-  <url>
-    <loc>https://gaphunterlabs.github.io/catalog/api-deprecation-header-companion/</loc>
-    <lastmod>2026-09-22</lastmod>
-  </url>
-  <url>
-    <loc>https://gaphunterlabs.github.io/catalog/lucene-query-injection-companion/</loc>
-    <lastmod>2026-09-22</lastmod>
-  </url>
-  <url>
-    <loc>https://gaphunterlabs.github.io/catalog/connection-pool-config-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
@@ -1289,7 +1281,11 @@
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
-    <loc>https://gaphunterlabs.github.io/catalog/ktor-httpclient-reuse-companion/</loc>
+    <loc>https://gaphunterlabs.github.io/catalog/lucene-query-injection-companion/</loc>
+    <lastmod>2026-09-22</lastmod>
+  </url>
+  <url>
+    <loc>https://gaphunterlabs.github.io/catalog/connection-pool-config-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
@@ -1298,6 +1294,10 @@
   </url>
   <url>
     <loc>https://gaphunterlabs.github.io/catalog/interface-sink-divergence-companion/</loc>
+    <lastmod>2026-09-22</lastmod>
+  </url>
+  <url>
+    <loc>https://gaphunterlabs.github.io/catalog/ktor-httpclient-reuse-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
@@ -1317,6 +1317,10 @@
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
+    <loc>https://gaphunterlabs.github.io/catalog/xpath-injection-sink-companion/</loc>
+    <lastmod>2026-09-22</lastmod>
+  </url>
+  <url>
     <loc>https://gaphunterlabs.github.io/catalog/prometheus-metric-registration-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
@@ -1326,10 +1330,6 @@
   </url>
   <url>
     <loc>https://gaphunterlabs.github.io/catalog/trycatch-consistency-companion/</loc>
-    <lastmod>2026-09-22</lastmod>
-  </url>
-  <url>
-    <loc>https://gaphunterlabs.github.io/catalog/xpath-injection-sink-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
@@ -1381,6 +1381,10 @@
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
+    <loc>https://gaphunterlabs.github.io/catalog/okhttp-client-reuse-companion/</loc>
+    <lastmod>2026-09-22</lastmod>
+  </url>
+  <url>
     <loc>https://gaphunterlabs.github.io/catalog/pii-tostring-leak-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
@@ -1394,10 +1398,6 @@
   </url>
   <url>
     <loc>https://gaphunterlabs.github.io/catalog/micronaut-httpclient-create-companion/</loc>
-    <lastmod>2026-09-22</lastmod>
-  </url>
-  <url>
-    <loc>https://gaphunterlabs.github.io/catalog/okhttp-client-reuse-companion/</loc>
     <lastmod>2026-09-22</lastmod>
   </url>
   <url>
