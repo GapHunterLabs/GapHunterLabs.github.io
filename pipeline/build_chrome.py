@@ -45,6 +45,7 @@ PAGES = (
     ("eula/index.html", None, "/eula/"),
     ("plugin-performance-audit/index.html", None, "/plugin-performance-audit/"),
     ("services/index.html", "/services/", None),
+    ("ghl-jail/index.html", None, None),
 )
 
 # Un item con submenu es (etiqueta, [(href, texto), ...]); el resto (href, texto).
@@ -101,6 +102,7 @@ ES_PATHS = {
     "/eula/": "/es/eula/",
     "/plugin-performance-audit/": "/es/auditoria-de-rendimiento/",
     "/services/": "/es/servicios/",
+    "/ghl-jail/": "/es/ghl-jail/",
 }
 PLUGIN_PATH_RE = re.compile(r"^/catalog/((?:vscode/)?[a-z0-9][a-z0-9-]*)/$")
 
@@ -212,7 +214,7 @@ def footer_html(active):
                   link(EE + "case-studies/", "Plugin case studies")]),
         ("Engineering", [link("/methodology/", "Methodology"), link(EE, "Evidence overview")]),
         ("Tools", [link("/catalog/", "Plugin catalog"), link("/catalog/?pricing=paid", "Paid &amp; Pro plugins"),
-                   link("/catalog/?platform=vscode", "VS Code extensions")]),
+                   link("/catalog/?platform=vscode", "VS Code extensions"), link("/ghl-jail/", "ghl-jail (Windows sandbox)")]),
         ("Services", [link("/services/", "Work with Joel"), link("/plugin-performance-audit/", "Performance audit"),
                       link("/contact/", "Contact")]),
         ("Marketplaces", [link("https://plugins.jetbrains.com/vendor/gap-hunter-labs", "JetBrains Marketplace", True),
