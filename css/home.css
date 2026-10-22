@@ -94,7 +94,7 @@ a:focus-visible, .btn:focus-visible { outline: none; box-shadow: var(--focus-rin
 .nb-hero-side { align-self: start; display: grid; gap: 32px; min-width: 0; }
 
 /* Portrait: the side column's left rule turns brand blue along the photo. */
-.nb-portrait { margin: 0; max-width: 420px; padding-left: 20px; }
+.nb-portrait { margin: 0; max-width: 315px; padding-left: 20px; }
 .nb-portrait-photo { position: relative; }
 .nb-portrait-photo::before {
   content: "";
@@ -224,6 +224,10 @@ a:focus-visible, .btn:focus-visible { outline: none; box-shadow: var(--focus-rin
 .nb-about { padding-left: 32px; border-left: 1px solid var(--border); }
 .founder-bio { line-height: 1.65; }
 .founder-meta { margin: 14px 0 16px; font: 400 13px/1.6 var(--mono); color: var(--text-dim); }
+.nb-badges { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px; }
+.nb-badge { display: inline-flex; border-radius: 8px; }
+.nb-badge img { display: block; width: 80px; height: 80px; border-radius: 8px; }
+.nb-badge:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
 
 /* ---- Tools ---------------------------------------------------------------- */
 .nb-tools { display: grid; border-top: 1px solid var(--border); }
