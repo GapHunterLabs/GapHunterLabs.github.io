@@ -186,6 +186,7 @@
   .ticket-status { flex: none; font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; padding: 2px 8px; border-radius: var(--radius-sm); }
   .ticket-status.is-fixed { color: var(--good); background: color-mix(in srgb, var(--good) 16%, transparent); }
   .ticket-status.is-submitted { color: var(--accent); background: color-mix(in srgb, var(--accent) 16%, transparent); }
+  .ticket-status.is-progress { color: var(--accent); background: color-mix(in srgb, var(--accent) 16%, transparent); }
   .ticket-status.is-open { color: var(--text-faint); background: var(--surface-2); }
   .ticket-card p { margin: 0; color: var(--text-dim); font-size: 13px; line-height: 1.6; overflow-wrap: anywhere; }
   .ticket-card p + p { margin-top: 8px; }
@@ -237,7 +238,7 @@
       <div class="ticket-head">
         <a class="ticket-id" href="https://youtrack.jetbrains.com/issue/IDEA-393501" target="_blank" rel="noopener">IDEA-393501 &#8599;</a>
         <h3>SearchForTestsTask: non-cancellable ReadAction.run() in a background task</h3>
-        <span class="ticket-status is-open">Open</span>
+        <span class="ticket-status is-progress">In Progress</span>
       </div>
       <p>Found by <a href="/catalog/background-readaction-freeze-companion/">Background ReadAction Freeze Companion</a>. <code>SearchForTestsTask</code> is a <code>Task.Backgroundable</code> whose <code>run()</code> wraps <code>search()</code> in the cancellable <code>ReadAction.nonBlocking()</code>, then calls the sibling <code>onFound()</code> through the blocking <code>ReadAction.run()</code> a few lines later, with no <code>checkCanceled()</code> anywhere in the class. JetBrains&rsquo; Platform Blog names this pattern as a recurring cause of UI freezes. Filed as IJPL-254654; JetBrains moved it to the IDEA project (Java &rsaquo; Tests) and assigned it to a developer.</p>
       <p>A <a href="https://youtrack.jetbrains.com/issue/IDEA-393501#focus=Comments-27-14497295.0-0" target="_blank" rel="noopener">follow-up comment</a> (October 2026) added two points. The default smart-mode branch also blocks: it calls the deprecated <code>DumbService.runReadActionInSmartMode()</code>, which uses <code>ReadAction.computeBlocking()</code> internally. And a plain switch to <code>ReadAction.nonBlocking()</code> is not safe, because <code>onFound()</code> writes files and a restarted read action would write them again. Both calls are still on <code>master</code> as of October 2026.</p>

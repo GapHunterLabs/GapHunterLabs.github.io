@@ -252,6 +252,15 @@
       <p><code>async-dataflow</code> es un proyecto Elixir de código abierto de Bancolombia que entrega respuestas asíncronas a aplicaciones cliente en tiempo real. Su servicio <code>channel-sender</code> fijaba versiones de <code>cowboy</code>, <code>cowlib</code>, <code>plug_cowboy</code> y <code>plug</code> que caen en el rango afectado de avisos de gravedad alta: CVE-2026-8466 y EEF-CVE-2026-65624 (cowboy), CVE-2026-7790 (cowlib), CVE-2026-32688 (plug_cowboy), y CVE-2026-54892 y CVE-2026-8468 (plug). Las dependencias de prueba <code>gun</code> y <code>hackney</code> también tenían avisos.</p>
       <p>Reportado el 4 de octubre de 2026. Los mantenedores verificaron cada hallazgo contra su lockfile y OSV, corrigieron varios puntos del reporte (entre ellos la versión que corrige <code>gun</code> y que <code>gun</code> y <code>hackney</code> son solo de prueba) y agregaron <code>plug_cowboy</code>, que el reporte había omitido. Actualizaron las dependencias y quitaron <code>hackney</code>, que no se usaba, en el <a href="https://github.com/bancolombia/async-dataflow/pull/149" target="_blank" rel="noopener">pull request #149</a>, fusionado el 16 de octubre de 2026, que cerró el reporte.</p>
     </article>
+    <article class="ticket-card">
+      <div class="ticket-head">
+        <a class="ticket-id" href="https://github.com/bancolombia/data-mask/issues/86" target="_blank" rel="noopener">data-mask#86 &#8599;</a>
+        <h3>jackson-databind 3.2.2, una dependencia directa, estaba afectada por dos avisos publicados de gravedad alta</h3>
+        <span class="ticket-status is-fixed">Corregido</span>
+      </div>
+      <p><code>data-mask</code> es una biblioteca Java de código abierto de Bancolombia que se usa junto con Jackson-Databind para enmascarar datos sensibles en la serialización JSON mediante cifrado. Su módulo core fijaba <code>jackson-databind</code> (Jackson 3) en 3.2.2, que cae en el rango afectado de dos avisos publicados de gravedad alta: CVE-2026-91777 (GHSA-cxp5-3px4-pw24, completado cuadrático de referencias adelantadas, denegación de servicio) y CVE-2026-91776 (GHSA-wv8q-qhhj-9h54, retención sin límite de ids de tipo desconocidos, agotamiento de memoria), ambos corregidos en 3.2.3.</p>
+      <p>Reportado el 4 de octubre de 2026, sugiriendo la versión de parche 3.2.3 de la misma línea. Los mantenedores en cambio quitaron el pineo directo de la versión y actualizaron a Spring Boot 4.1.2, cuya gestión de dependencias fija <code>jackson-databind</code> (Jackson 3) en 3.1.7 — fuera del rango afectado — en el <a href="https://github.com/bancolombia/data-mask/pull/91" target="_blank" rel="noopener">pull request #91</a>, fusionado el 23 de octubre de 2026, que cerró el reporte.</p>
+    </article>
   </div>
 
   <p class="ee-next">Ver también: <a href="/es/ingenieria-y-evidencia/tickets-jetbrains-platform/">Tickets de JetBrains Platform</a></p>

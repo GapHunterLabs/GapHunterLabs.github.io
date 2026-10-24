@@ -251,6 +251,15 @@
       <p><code>async-dataflow</code> is an open-source Elixir project from Bancolombia that delivers asynchronous responses to client applications in real time. Its <code>channel-sender</code> service pinned versions of <code>cowboy</code>, <code>cowlib</code>, <code>plug_cowboy</code> and <code>plug</code> that fall in the affected range of high-severity advisories: CVE-2026-8466 and EEF-CVE-2026-65624 (cowboy), CVE-2026-7790 (cowlib), CVE-2026-32688 (plug_cowboy), and CVE-2026-54892 and CVE-2026-8468 (plug). The test-only dependencies <code>gun</code> and <code>hackney</code> also had advisories.</p>
       <p>Reported on October 4, 2026. The maintainers checked each finding against their lockfile and OSV, corrected several points of the report (among them the fixed version for <code>gun</code> and the test-only scope of <code>gun</code> and <code>hackney</code>) and added <code>plug_cowboy</code>, which the report had missed. They upgraded the dependencies and removed the unused <code>hackney</code> in <a href="https://github.com/bancolombia/async-dataflow/pull/149" target="_blank" rel="noopener">pull request #149</a>, merged on October 16, 2026, which closed the report.</p>
     </article>
+    <article class="ticket-card">
+      <div class="ticket-head">
+        <a class="ticket-id" href="https://github.com/bancolombia/data-mask/issues/86" target="_blank" rel="noopener">data-mask#86 &#8599;</a>
+        <h3>jackson-databind 3.2.2, a direct dependency, was affected by two published high-severity advisories</h3>
+        <span class="ticket-status is-fixed">Fixed</span>
+      </div>
+      <p><code>data-mask</code> is an open-source Java library from Bancolombia used with Jackson-Databind to mask sensitive data in JSON serialization through encryption. Its core module pinned <code>jackson-databind</code> (Jackson 3) at 3.2.2, which falls in the affected range of two published high-severity advisories: CVE-2026-91777 (GHSA-cxp5-3px4-pw24, quadratic forward-reference completion, denial of service) and CVE-2026-91776 (GHSA-wv8q-qhhj-9h54, unbounded retention of unknown type ids, memory exhaustion), both fixed in 3.2.3.</p>
+      <p>Reported on October 4, 2026, suggesting the patch release 3.2.3 on the same branch. The maintainers instead removed the direct version pin and upgraded to Spring Boot 4.1.2, whose dependency management fixes <code>jackson-databind</code> (Jackson 3) at 3.1.7 — outside the affected range — in <a href="https://github.com/bancolombia/data-mask/pull/91" target="_blank" rel="noopener">pull request #91</a>, merged on October 23, 2026, which closed the report.</p>
+    </article>
   </div>
 
   <p class="ee-next">See also: <a href="/engineering-evidence/jetbrains-platform-tickets/">JetBrains Platform tickets</a></p>
