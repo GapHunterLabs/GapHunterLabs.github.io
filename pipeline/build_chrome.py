@@ -178,7 +178,7 @@ def header_html(active, en_path="/"):
         '  <div class="gh-header-inner">\n'
         '    <a class="gh-brand" href="/" aria-label="Gap Hunter Labs home">%s<span class="gh-brand-name">Gap Hunter Labs</span></a>\n'
         '    <nav class="gh-nav" id="siteNav" aria-label="Primary">%s'
-        '<a class="btn primary gh-nav-cta" href="/services/" data-goatcounter-click="cta-nav-hire-mobile">Work with Joel</a></nav>\n'
+        '<a class="btn primary gh-nav-cta" href="/services/" data-goatcounter-click="cta-nav-hire-mobile">Work with me</a></nav>\n'
         '    <div class="gh-tools">\n'
         # 2026-10-05: buscador del sitio (js/site-search.js, se carga al abrirlo)
         '      <button type="button" class="gh-search-btn" data-search-open aria-haspopup="dialog" aria-expanded="false"'
@@ -191,7 +191,7 @@ def header_html(active, en_path="/"):
         '<span class="gh-ico gh-ico-system">%s</span><span class="gh-ico gh-ico-light">%s</span><span class="gh-ico gh-ico-dark">%s</span></button>\n'
         '        <div class="gh-pop" data-menu hidden role="group" aria-label="Color theme">%s</div>\n'
         '      </div>\n'
-        '      <a class="btn primary gh-cta" href="/services/" data-goatcounter-click="cta-nav-hire">Work with Joel</a>\n'
+        '      <a class="btn primary gh-cta" href="/services/" data-goatcounter-click="cta-nav-hire">Work with me</a>\n'
         '      <button type="button" class="gh-burger" id="topbarBurger" aria-label="Toggle navigation" aria-expanded="false" aria-controls="siteNav"><span></span></button>\n'
         '    </div>\n'
         '  </div>\n'
@@ -215,7 +215,7 @@ def footer_html(active):
         ("Engineering", [link("/methodology/", "Methodology"), link(EE, "Evidence overview")]),
         ("Tools", [link("/catalog/", "Plugin catalog"), link("/catalog/?pricing=paid", "Paid &amp; Pro plugins"),
                    link("/catalog/?platform=vscode", "VS Code extensions"), link("/ghl-jail/", "ghl-jail (Windows sandbox)")]),
-        ("Services", [link("/services/", "Work with Joel"), link("/plugin-performance-audit/", "Performance audit"),
+        ("Services", [link("/services/", "Work with me"), link("/plugin-performance-audit/", "Performance audit"),
                       link("/contact/", "Contact")]),
         ("Marketplaces", [link("https://plugins.jetbrains.com/vendor/gap-hunter-labs", "JetBrains Marketplace", True),
                           link("https://marketplace.visualstudio.com/publishers/GapHunterLabs", "VS Code Marketplace", True),
@@ -240,9 +240,9 @@ def footer_html(active):
         '    <div class="gh-footer-top">\n'
         '      <div class="gh-footer-brand">\n'
         '        <a class="gh-brand" href="/">%s<span class="gh-brand-name">Gap Hunter Labs</span></a>\n'
-        '        <p>The engineering practice of Joel D&iacute;az: performance bottlenecks, security vulnerabilities and structural failures '
-        'in developer tools, enterprise platforms and open-source ecosystems, traced to their root cause and fixed.</p>\n'
-        '        <a class="btn primary" href="/services/" data-goatcounter-click="cta-footer-hire">Work with Joel</a>\n'
+        '        <p>My engineering practice: I trace performance bottlenecks, security vulnerabilities and structural failures '
+        'in developer tools, enterprise platforms and open-source ecosystems to their root cause, and ship the fix.</p>\n'
+        '        <a class="btn primary" href="/services/" data-goatcounter-click="cta-footer-hire">Work with me</a>\n'
         '      </div>\n'
         '      <nav class="gh-footer-cols" aria-label="Footer">%s</nav>\n'
         '    </div>\n'

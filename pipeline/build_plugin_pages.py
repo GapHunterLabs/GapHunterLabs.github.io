@@ -821,7 +821,7 @@ class PluginRenderer:
         h.append('<div class="hire-band"><div><strong>Need a tool like this built for your codebase?</strong>'
                  '<span>Custom static-analysis rules, CI/CD integration, private plugin distribution and performance audits for IntelliJ plugins.</span></div>'
                  '<a class="btn primary" href="/contact/?intent=hire&amp;plugin=%s" data-goatcounter-click="cta-plugin-hire-%s">'
-                 'Work with Joel</a></div>' % (esc(p["repo"]), esc(p["repo"])))
+                 'Work with me</a></div>' % (esc(p["repo"]), esc(p["repo"])))
         h.append('<p class="plugin-asof">Download and star counts as of %s, refreshed twice daily '
                  'from the JetBrains Marketplace and GitHub APIs.</p>'
                  % esc((self.src.data.get("generatedAt") or "")[:10]))
@@ -936,7 +936,7 @@ class PluginRenderer:
         h.append('<div class="hire-band"><div><strong>Need a tool like this built for your codebase?</strong>'
                  '<span>Custom static-analysis rules, CI/CD integration and private plugin distribution.</span></div>'
                  '<a class="btn primary" href="/contact/?intent=hire&amp;plugin=%s" data-goatcounter-click="cta-vsx-hire-%s">'
-                 'Work with Joel</a></div>' % (esc(e["name"]), esc(e["name"])))
+                 'Work with me</a></div>' % (esc(e["name"]), esc(e["name"])))
         h.append('<p class="plugin-asof">Install counts as of %s, refreshed daily from the VS Code Marketplace API.</p>'
                  % esc((self.src.data.get("generatedAt") or "")[:10]))
         return "".join(h)
