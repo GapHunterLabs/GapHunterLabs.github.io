@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-23 09:40:43 UTC",
+  "generatedAt": "2026-10-24 00:11:55 UTC",
   "totalPlugins": 146,
   "totalDownloads": 12100,
   "pending": 0,
@@ -7,10 +7,6 @@
   "totalReviews": 0,
   "avgRating": null,
   "trend7d": [
-    {
-      "date": "2026-10-16",
-      "totalDownloads": 11002
-    },
     {
       "date": "2026-10-17",
       "totalDownloads": 11103
@@ -34,45 +30,13 @@
     {
       "date": "2026-10-23",
       "totalDownloads": 12100
+    },
+    {
+      "date": "2026-10-24",
+      "totalDownloads": 12100
     }
   ],
-  "recentChanges": [
-    {
-      "date": "2026-10-23",
-      "type": "growth",
-      "name": "Mermaid Companion",
-      "niche": "Diagrams",
-      "delta": 35
-    },
-    {
-      "date": "2026-10-23",
-      "type": "growth",
-      "name": "CORS Policy Companion",
-      "niche": "API Security",
-      "delta": 7
-    },
-    {
-      "date": "2026-10-23",
-      "type": "growth",
-      "name": "Ansible Companion",
-      "niche": "Ansible / DevOps",
-      "delta": 7
-    },
-    {
-      "date": "2026-10-23",
-      "type": "growth",
-      "name": "GitLab CI Companion",
-      "niche": "GitLab CI/CD",
-      "delta": 6
-    },
-    {
-      "date": "2026-10-23",
-      "type": "growth",
-      "name": "React Native Companion",
-      "niche": "React Native Tooling",
-      "delta": 5
-    }
-  ],
+  "recentChanges": [],
   "plugins": [
     {
       "xmlId": "dev.gaphunter.mermaidcompanion",
