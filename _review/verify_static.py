@@ -171,15 +171,18 @@ for slug in ("catalog", "methodology", "contact", "security", "engineering-evide
 # (pipeline/build_chrome.py). "Laboratorie" paso a "Engineering & Evidence",
 # un submenu con Overview + 2 subpaginas (pedido explicito del usuario).
 # Security/Privacy/Terms viven en el pie: su enlace activo se marca ahi.
+# 2026-10-19 (rediseno): Work / Engineering / Tools / Services / Contact.
+# Methodology y las paginas de evidencia pasan al submenu de Engineering
+# (6 items); las rutas no cambian. Ver pipeline/build_chrome.py.
 import html as _html
-TOP_LABELS = ["Catalog", "Services", "Engineering & Evidence", "Methodology", "Contact"]
-SUB_LABELS = ["Overview", "Case studies", "JetBrains Platform tickets", "Open-source security reports"]
+TOP_LABELS = ["Work", "Engineering", "Tools", "Services", "Contact"]
+SUB_LABELS = ["Methodology", "Evidence overview", "JetBrains Platform tickets", "Open-source security reports", "Third-party plugin audits", "Plugin case studies"]
 for display_name, rel_path, active, footer_active in (
     ("index.html", "index.html", None, None),
-    ("catalog.html", "catalog/index.html", "Catalog", None),
+    ("catalog.html", "catalog/index.html", "Tools", None),
     ("methodology.html", "methodology/index.html", "Methodology", None),
-    ("engineering-evidence", "engineering-evidence/index.html", "Overview", None),
-    ("case-studies", "engineering-evidence/case-studies/index.html", "Case studies", None),
+    ("engineering-evidence", "engineering-evidence/index.html", "Evidence overview", None),
+    ("case-studies", "engineering-evidence/case-studies/index.html", "Plugin case studies", None),
     ("jetbrains-platform-tickets", "engineering-evidence/jetbrains-platform-tickets/index.html", "JetBrains Platform tickets", None),
     ("security.html", "security/index.html", None, "Security"),
     ("contact.html", "contact/index.html", "Contact", None),
