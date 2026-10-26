@@ -6,4 +6,4 @@ canonical, og:url, JSON-LD, sitemap, hreflang y fichas salen de esta
 constante al volver a correr los generadores.
 """
 
-SITE_URL = "https://gaphunterlabs.github.io"
+SITE_URL = "https://gaphunterlabs.com"

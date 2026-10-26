@@ -145,7 +145,7 @@ sitemap_text = (ROOT / "sitemap.xml").read_text(encoding="utf-8")
 ElementTree.parse(ROOT / "sitemap.xml")
 for slug in ("catalog", "methodology", "contact", "security", "engineering-evidence",
              "engineering-evidence/case-studies", "engineering-evidence/jetbrains-platform-tickets", "privacy", "terms"):
-    assert f"https://gaphunterlabs.github.io/{slug}/</loc>" in sitemap_text, (
+    assert f"https://gaphunterlabs.com/{slug}/</loc>" in sitemap_text, (
         "sitemap.xml missing clean-URL entry for", slug
     )
     assert f"{slug}.html" not in sitemap_text, ("sitemap.xml still has an old .html URL for", slug)
@@ -223,7 +223,7 @@ for stub_name, target in REDIRECT_STUBS:
         closes = len(re.findall(rf"</{tag}>", stub_text, re.I))
         assert opens == closes == 1, (stub_name, tag, opens, closes)
     assert f'content="0; url={target}"' in stub_text, (stub_name, "missing meta refresh")
-    assert f'href="https://gaphunterlabs.github.io{target}"' in stub_text, (stub_name, "missing canonical")
+    assert f'href="https://gaphunterlabs.com{target}"' in stub_text, (stub_name, "missing canonical")
     # Fase 0/4 del SuperPlan de SEO (2026-09-23): noindex removido a
     # proposito -- un meta refresh de 0s ya se procesa como redireccion
     # permanente, y noindex junto a canonical en el mismo documento son

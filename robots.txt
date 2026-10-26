@@ -20,4 +20,4 @@ Disallow: /og-image-source.html
 Disallow: /_review/
 Disallow: /DOCUMENTATION.md
 
-Sitemap: https://gaphunterlabs.github.io/sitemap.xml
+Sitemap: https://gaphunterlabs.com/sitemap.xml

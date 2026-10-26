@@ -24,7 +24,7 @@ from pathlib import Path
 from xml.etree import ElementTree
 
 ROOT = Path(__file__).resolve().parents[1]
-SITE = "https://gaphunterlabs.github.io"
+SITE = "https://gaphunterlabs.com"
 MIN_WORDS = 110          # contenido real en el HTML crudo, sin JS
 TITLE_MAX = 70
 DESC_MAX = 160
