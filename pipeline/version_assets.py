@@ -33,8 +33,6 @@ def html_files():
         rel = path.relative_to(ROOT)
         if rel.parts and rel.parts[0] in SKIP_DIRS:
             continue
-        if rel.name == "og-image-source.html":
-            continue
         yield path
 
 

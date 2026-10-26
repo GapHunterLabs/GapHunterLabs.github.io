@@ -353,6 +353,11 @@ def structural(text, en_path, es_path):
     text = text.replace('<meta property="og:url" content="%s">' % en_url, '<meta property="og:url" content="%s">' % es_url, 1)
     text = text.replace('<meta property="og:locale" content="en_US">',
                         '<meta property="og:locale" content="es_ES">\n<meta property="og:locale:alternate" content="en_US">', 1)
+    # Imagen social propia en espanol: og-X.png -> og-X.es.png (og:image,
+    # og:image:secure_url y twitter:image). Las genera pipeline/build_page_og.py.
+    # Las fichas de plugin usan /media/<slug>/og.png (sin el prefijo "og-"),
+    # asi que este patron no las toca.
+    text = re.sub(r'(/og-[a-z0-9-]+)\.png', r'\1.es.png', text)
     text = localize_links(text)
     text = re.sub(re.escape(LANG_START) + r".*?" + re.escape(LANG_END),
                   lambda _m: lang_switch_html("es", en_path, es_path), text, count=1, flags=re.S)
