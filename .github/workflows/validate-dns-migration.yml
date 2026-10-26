@@ -1,0 +1,89 @@
+name: Validate DNS Migration to Cloudflare
+
+# Solo manual hasta que el DNS este migrado (si no, fallaria y abriria un
+# issue en cada corrida). Al terminar la migracion, descomentar el schedule:
+# cada 6 h las primeras 72 h y luego semanal ("0 0 * * 0").
+on:
+  # schedule:
+  #   - cron: "0 */6 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  validate-dns:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Verify DNS propagation (CNAME record)
+        run: |
+          # La raiz tiene registros A directos a GitHub Pages (DNS only en Cloudflare).
+          # Deben ser las IP de GitHub Pages (185.199.108-111.153).
+          A_RECORDS=$(dig +short gaphunterlabs.com A)
+          if echo "$A_RECORDS" | grep -Eq '^185\.199\.(108|109|110|111)\.153$'; then
+            echo "✓ DNS OK: gaphunterlabs.com resuelve a GitHub Pages"
+          else
+            echo "✗ DNS FAILED. Esperado 185.199.108-111.153, obtenido: $A_RECORDS"
+            exit 1
+          fi
+
+      - name: Verify Cloudflare nameservers
+        run: |
+          # Verificar que los nameservers apuntan a Cloudflare
+          NS_RECORDS=$(dig gaphunterlabs.com NS +short)
+          if echo "$NS_RECORDS" | grep -q "cloudflare.com"; then
+            echo "✓ Nameservers OK: using Cloudflare"
+            echo "$NS_RECORDS"
+          else
+            echo "✗ Nameservers FAILED: not using Cloudflare"
+            echo "Got: $NS_RECORDS"
+            exit 1
+          fi
+
+      - name: Test HTTPS connectivity
+        run: |
+          # Verificar que el sitio es accesible via HTTPS con status 200
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://gaphunterlabs.com)
+          if [ "$STATUS" = "200" ]; then
+            echo "✓ HTTPS OK: https://gaphunterlabs.com returns HTTP 200"
+          else
+            echo "✗ HTTPS FAILED: got HTTP $STATUS instead of 200"
+            exit 1
+          fi
+
+      - name: Verify SSL certificate (Let's Encrypt)
+        run: |
+          # Verificar que el certificado SSL es valido y emitido por Let's Encrypt
+          CERT_ISSUER=$(echo | openssl s_client -servername gaphunterlabs.com \
+            -connect gaphunterlabs.com:443 2>/dev/null | openssl x509 -noout -issuer)
+          if echo "$CERT_ISSUER" | grep -q "Let's Encrypt"; then
+            echo "✓ SSL Certificate OK: issued by Let's Encrypt"
+            echo "$CERT_ISSUER"
+          else
+            echo "⚠ SSL Certificate: $CERT_ISSUER"
+            # No abortamos aqui porque otros certificados (p. ej. Cloudflare) son validos
+          fi
+
+      - name: Check www redirect
+        run: |
+          # Verificar que www.gaphunterlabs.com redirige correctamente
+          STATUS=$(curl -s -o /dev/null -w "%{http_code}" -L https://www.gaphunterlabs.com)
+          if [ "$STATUS" = "200" ]; then
+            echo "✓ WWW redirect OK: https://www.gaphunterlabs.com works"
+          else
+            echo "✗ WWW redirect FAILED: got HTTP $STATUS"
+            exit 1
+          fi
+
+      - name: Create GitHub issue if validation fails
+        if: failure()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh issue create \
+            --title "DNS migration validation failed" \
+            --body "Validation failed: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
