@@ -47,7 +47,7 @@
 <meta name="twitter:description" content="Cómo se investigan y corrigen los problemas de rendimiento, seguridad y fiabilidad, cómo se evalúan las ideas de plugins y cómo se reportan los datos del catálogo.">
 <meta name="twitter:image" content="https://gaphunterlabs.com/og-methodology.es.png?v=3">
 <meta name="twitter:image:alt" content="De la brecha a la solución — metodología de Gap Hunter Labs">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","@id":"https://gaphunterlabs.com/methodology/#article","mainEntityOfPage":"https://gaphunterlabs.com/methodology/","headline":"Metodología","description":"Cómo se investigan y corrigen los problemas de rendimiento, seguridad y fiabilidad, cómo se evalúan las ideas de plugins y cómo se reportan los datos del catálogo.","author":{"@type":"Person","@id":"https://gaphunterlabs.com/#joel","name":"Joel Diaz","url":"https://gaphunterlabs.com/"},"publisher":{"@type":"Organization","@id":"https://gaphunterlabs.com/#org","name":"Gap Hunter Labs","logo":{"@type":"ImageObject","url":"https://gaphunterlabs.com/apple-touch-icon.png"}},"datePublished":"2026-09-02","dateModified":"2026-09-24","url":"https://gaphunterlabs.com/methodology/"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","@id":"https://gaphunterlabs.com/methodology/#article","mainEntityOfPage":"https://gaphunterlabs.com/methodology/","headline":"Metodología","description":"Cómo se investigan y corrigen los problemas de rendimiento, seguridad y fiabilidad, cómo se evalúan las ideas de plugins y cómo se reportan los datos del catálogo.","author":{"@type":"Person","@id":"https://gaphunterlabs.com/#joel","name":"Joel Diaz","url":"https://gaphunterlabs.com/"},"publisher":{"@type":"Organization","@id":"https://gaphunterlabs.com/#org","name":"Gap Hunter Labs","logo":{"@type":"ImageObject","url":"https://gaphunterlabs.com/apple-touch-icon.png"}},"datePublished":"2026-09-02","dateModified":"2026-10-27","url":"https://gaphunterlabs.com/methodology/"}</script>
 <link rel="stylesheet" href="/css/theme.css?v=6c7f204f">
 <link rel="stylesheet" href="/css/base.css?v=3b2dc0b4">
 <style>
@@ -269,7 +269,7 @@
   <div class="page-hero method-intro band-dark gh-page-header">
     <p class="contact-kicker">Gap Hunter Labs</p>
     <h1>Metodología</h1>
-    <p class="contact-lead" style="margin-bottom:0">Cómo se investigan y corrigen los problemas, cómo se evalúan las ideas de plugins, qué significan las cifras del catálogo y qué deja fuera este sitio a propósito.</p>
+    <p class="contact-lead" style="margin-bottom:0">Cómo se encuentran, verifican y corrigen los problemas de seguridad, rendimiento y confiabilidad: rastreados hasta su causa raíz, respaldados con evidencia que cualquiera puede reproducir y reportados con su estado real. El mismo método está detrás de cada proyecto y de cada plugin del catálogo.</p>
   </div>
 
   <section class="method-investigation" aria-labelledby="method-investigation">
@@ -281,6 +281,18 @@
       <li><strong>Construir la corrección.</strong> Enviar el cambio más pequeño que elimina la causa, con evidencia de antes y después: un pull request upstream, un reporte a los mantenedores o un plugin cuando la corrección corresponde fuera de la plataforma.</li>
     </ol>
     <p>Los resultados se publican con su fuente (el ticket, el pull request, el reporte o el test) y con su estado real: un pull request abierto figura como abierto, y una corrección que los mantenedores hicieron de otra forma se presenta como suya. Consulta la <a href="/es/ingenieria-y-evidencia/">evidencia de ingeniería</a>.</p>
+  </section>
+
+  <section class="disclosure" aria-labelledby="method-assurance">
+    <h2 id="method-assurance">Garantías, confidencialidad y límites</h2>
+    <p>Para un responsable de seguridad o de ingeniería que evalúa si puede confiar en este trabajo, el método mantiene cinco compromisos en cada proyecto.</p>
+    <ul>
+      <li><strong>Causa raíz, no síntomas.</strong> Cada hallazgo se rastrea hasta el código, la versión de la dependencia o la configuración exacta que lo causa, y se reproduce en la versión donde ocurre.</li>
+      <li><strong>Evidencia que puedes reproducir.</strong> Cada hallazgo viene con una medición, una traza de pila o una prueba, y un antes y después para todo lo que recibe una corrección.</li>
+      <li><strong>Ordenado por exposición real.</strong> Los hallazgos se ordenan por exposición real, no por el puntaje CVSS en bruto, y todo lo explotable se reporta primero y en privado por tu canal de seguridad.</li>
+      <li><strong>Sin hallazgos inflados.</strong> Los resultados llevan su estado real; el trabajo reporta lo que encuentra y no afirma que no exista otro problema.</li>
+      <li><strong>De solo lectura y confidencial.</strong> Una revisión es de solo lectura, así que no se sube nada a tu código; tu código y tus datos quedan confidenciales, y firmar tu NDA no es problema.</li>
+    </ul>
   </section>
 
   <figure class="decision-figure" aria-labelledby="greenlit-title">
