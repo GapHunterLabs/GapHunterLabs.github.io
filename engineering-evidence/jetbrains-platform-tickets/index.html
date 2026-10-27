@@ -47,7 +47,7 @@
 <meta name="twitter:description" content="Bugs filed in JetBrains&#x27; YouTrack after a catalog check found them in IntelliJ&#x27;s source, plus root-cause analysis on existing IntelliJ Platform tickets.">
 <meta name="twitter:image" content="https://gaphunterlabs.com/og-evidence-jetbrains-tickets.png?v=3">
 <meta name="twitter:image:alt" content="Root-cause reports in the IntelliJ Platform — Gap Hunter Labs">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","@id":"https://gaphunterlabs.com/engineering-evidence/jetbrains-platform-tickets/#article","mainEntityOfPage":"https://gaphunterlabs.com/engineering-evidence/jetbrains-platform-tickets/","headline":"JetBrains Platform tickets","description":"Bugs filed in JetBrains&#x27; YouTrack after a catalog check found them in IntelliJ&#x27;s source, plus root-cause analysis on existing IntelliJ Platform tickets.","author":{"@type":"Person","@id":"https://gaphunterlabs.com/#joel","name":"Joel Diaz","url":"https://gaphunterlabs.com/"},"publisher":{"@type":"Organization","@id":"https://gaphunterlabs.com/#org","name":"Gap Hunter Labs","logo":{"@type":"ImageObject","url":"https://gaphunterlabs.com/apple-touch-icon.png"}},"datePublished":"2026-09-28","dateModified":"2026-10-23","url":"https://gaphunterlabs.com/engineering-evidence/jetbrains-platform-tickets/"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","@id":"https://gaphunterlabs.com/engineering-evidence/jetbrains-platform-tickets/#article","mainEntityOfPage":"https://gaphunterlabs.com/engineering-evidence/jetbrains-platform-tickets/","headline":"JetBrains Platform tickets","description":"Bugs filed in JetBrains&#x27; YouTrack after a catalog check found them in IntelliJ&#x27;s source, plus root-cause analysis on existing IntelliJ Platform tickets.","author":{"@type":"Person","@id":"https://gaphunterlabs.com/#joel","name":"Joel Diaz","url":"https://gaphunterlabs.com/"},"publisher":{"@type":"Organization","@id":"https://gaphunterlabs.com/#org","name":"Gap Hunter Labs","logo":{"@type":"ImageObject","url":"https://gaphunterlabs.com/apple-touch-icon.png"}},"datePublished":"2026-09-28","dateModified":"2026-10-27","url":"https://gaphunterlabs.com/engineering-evidence/jetbrains-platform-tickets/"}</script>
 <link rel="stylesheet" href="/css/theme.css?v=6c7f204f">
 <link rel="stylesheet" href="/css/base.css?v=3b2dc0b4">
 <style>
@@ -186,6 +186,7 @@
   .ticket-head h3 { margin: 0; font-size: 14.5px; font-weight: 650; color: var(--text); flex: 1 1 220px; min-width: 0; overflow-wrap: anywhere; }
   .ticket-status { flex: none; font-family: var(--mono); font-size: 10px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; padding: 2px 8px; border-radius: var(--radius-sm); }
   .ticket-status.is-fixed { color: var(--good); background: color-mix(in srgb, var(--good) 16%, transparent); }
+  .ticket-status.is-merged { color: var(--good); background: color-mix(in srgb, var(--good) 16%, transparent); }
   .ticket-status.is-submitted { color: var(--accent); background: color-mix(in srgb, var(--accent) 16%, transparent); }
   .ticket-status.is-progress { color: var(--accent); background: color-mix(in srgb, var(--accent) 16%, transparent); }
   .ticket-status.is-open { color: var(--text-faint); background: var(--surface-2); }
@@ -227,7 +228,7 @@
   <div class="page-hero method-intro band-dark gh-page-header">
     <p class="contact-kicker">Engineering &amp; Evidence</p>
     <h1>JetBrains Platform tickets</h1>
-    <p class="contact-lead" style="margin-bottom:0">Bugs in JetBrains&rsquo; own code, documented publicly in JetBrains&rsquo; YouTrack tracker: six filed directly, four found in IntelliJ&rsquo;s source by a check from this catalog or a related scan and two by measuring the Settings pages on the UI thread, plus root-cause analysis posted on existing IntelliJ Platform (IJPL) tickets, and two fixes sent as pull requests.</p>
+    <p class="contact-lead" style="margin-bottom:0">Bugs in JetBrains&rsquo; own code, documented publicly in JetBrains&rsquo; YouTrack tracker: six filed directly, four found in IntelliJ&rsquo;s source by a check from this catalog or a related scan and two by measuring the Settings pages on the UI thread, plus root-cause analysis posted on existing IntelliJ Platform (IJPL) tickets, and eight pull requests to intellij-community, one already merged into master.</p>
   </div>
 
   <div class="lab-section-head">
@@ -280,7 +281,7 @@
       <div class="ticket-head">
         <a class="ticket-id" href="https://youtrack.jetbrains.com/issue/IJPL-257919" target="_blank" rel="noopener">IJPL-257919 &#8599;</a>
         <h3>Package File: PackageFileWorker does all the file I/O inside one blocking read action, so write actions wait for it</h3>
-        <span class="ticket-status is-submitted">Submitted</span>
+        <span class="ticket-status is-fixed">Fixed</span>
       </div>
       <p>Found by a scan of IntelliJ&rsquo;s own <code>master</code> for slow work inside read actions, then measured. Build &rsaquo; Package File copies a file into the artifacts that contain it. <code>PackageFileWorker</code> finds those artifacts and then does all the file I/O inside the same blocking <code>ReadAction.run()</code>: the copy, opening the archive, and repacking a nested archive. A write action requested meanwhile, such as a key press, waits until the I/O ends. Measured with the platform test framework on IntelliJ IDEA 2026.2.3, with a WAR that contains a 40 MB JAR: the write action waited 2,219&ndash;2,508 ms. With only the artifact lookup in the read action and the I/O outside it, it waited 0 ms in 4 of 4 runs. The measurement test is attached to the ticket.</p>
     </article>
@@ -319,9 +320,9 @@
       <div class="ticket-head">
         <a class="ticket-id" href="https://github.com/JetBrains/intellij-community/pull/3696" target="_blank" rel="noopener">PR #3696 &#8599;</a>
         <h3>IJPL-257919 Package File: keep the file I/O outside the read action</h3>
-        <span class="ticket-status is-open">Open</span>
+        <span class="ticket-status is-merged">Merged</span>
       </div>
-      <p>Fix for IJPL-257919. Build &rsaquo; Package File now resolves the target artifacts under a small <code>ReadAction.compute()</code>, but the file I/O (copying, opening and rewriting the ZIP, re-packing a nested archive) runs outside the read lock, so a write action no longer waits for it. The existing <code>PackageFileActionTest</code> covers the functional result; the timing measurement is attached to the ticket.</p>
+      <p>Fix for IJPL-257919. Build &rsaquo; Package File now resolves the target artifacts under a small <code>ReadAction.compute()</code>, but the file I/O (copying, opening and rewriting the ZIP, re-packing a nested archive) runs outside the read lock, so a write action no longer waits for it. The existing <code>PackageFileActionTest</code> covers the functional result; the timing measurement is attached to the ticket. JetBrains merged the change into <code>master</code>, with a follow-up that removed a deprecated-method call.</p>
     </article>
     <article class="ticket-card">
       <div class="ticket-head">
