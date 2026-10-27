@@ -5,7 +5,7 @@
    accesibilidad: dialogo modal + combobox con listbox (aria-activedescendant). */
 (function () {
   'use strict';
-  var DATA_URL = /*DATA_URL*/'/js/search-data.js?v=74fa9aaf'/*ENDDATA_URL*/;
+  var DATA_URL = /*DATA_URL*/'/js/search-data.js?v=cd0daa1d'/*ENDDATA_URL*/;
   var ES = document.documentElement.lang === 'es';
   var LOCALE = ES ? 'es-ES' : 'en-US';
   // 2026-10-19: 'es-ES' leaves 4-digit numbers ungrouped ("1234") while the /es/ pages group them ("1.295").
@@ -239,7 +239,8 @@
     var meta = it.t === 'p' || it.t === 'v'
       ? esc(it.k) + (it.pr ? ' · ' + esc(T.price[it.pr]) : '')
       : esc(String(pick(it.d) == null ? '' : pick(it.d)).slice(0, 110));   // recortar ANTES de escapar: no parte una entidad
-    return '<li class="ghs-item ghs-t-' + it.t + '" id="ghs-opt-' + i + '" role="option" aria-selected="false" data-i="' + i + '">' +
+    var idx = Number(i) || 0;
+    return '<li class="ghs-item ghs-t-' + esc(it.t) + '" id="ghs-opt-' + idx + '" role="option" aria-selected="false" data-i="' + idx + '">' +
       '<span class="ghs-kind">' + esc(T.type[it.t]) + '</span>' +
       '<span class="ghs-name">' + highlight(d.name, terms) + '</span>' +
       '<span class="ghs-meta">' + meta + '</span></li>';
@@ -287,7 +288,7 @@
     h.push('<p class="ghs-p-kind">' + esc(T.type[it.t]) + (it.t === 'k' && pick(it.st) ? ' · ' + esc(pick(it.st)) : '') + '</p>');
     h.push('<h3 class="ghs-p-name">' + esc(d.name) + '</h3>');
     if (it.t === 'p' || it.t === 'v') {
-      h.push('<p class="ghs-p-chips"><span>' + esc(d.cat) + '</span>' + (it.pr ? '<span class="ghs-price ghs-price-' + it.pr.toLowerCase() + '">' +
+      h.push('<p class="ghs-p-chips"><span>' + esc(d.cat) + '</span>' + (it.pr ? '<span class="ghs-price ghs-price-' + esc(it.pr.toLowerCase()) + '">' +
         esc(T.price[it.pr]) + '</span>' : '') + '</p>');
       if (it.k) h.push('<p class="ghs-p-niche">' + esc(it.k) + '</p>');
       h.push('<p class="ghs-p-stat">' + esc(fmt(it.t === 'v' ? T.installs : T.downloads, num(it.dl || 0))) + '</p>');

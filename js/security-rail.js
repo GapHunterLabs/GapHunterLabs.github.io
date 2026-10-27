@@ -21,7 +21,7 @@
     var counts = {};
     plugins.forEach(function (p) { counts[p.categoryKey] = (counts[p.categoryKey] || 0) + 1; });
     document.getElementById('piCategories').innerHTML = CATEGORIES.filter(function (c) { return c.key !== 'other'; }).map(function (c) {
-      return '<a class="pi-cat" href="' + (document.documentElement.lang === 'es' ? '/es/catalogo/' : '/catalog/') + '?category=' + c.key + '" style="--cat:' + c.color + '">' + catIconHtml(c.key) + '<span>' + esc(c.label) + '</span><b>' + (counts[c.key] || 0) + '</b></a>';
+      return '<a class="pi-cat" href="' + (document.documentElement.lang === 'es' ? '/es/catalogo/' : '/catalog/') + '?category=' + encodeURIComponent(c.key) + '" style="--cat:' + esc(c.color) + '">' + catIconHtml(c.key) + '<span>' + esc(c.label) + '</span><b>' + (counts[c.key] || 0) + '</b></a>';
     }).join('');
     var featured = plugins.filter(function (p) { return DEMO_MEDIA[p.repo]; }).sort(function (a, b) { return (b.downloads || 0) - (a.downloads || 0); })[0];
     if (featured) {

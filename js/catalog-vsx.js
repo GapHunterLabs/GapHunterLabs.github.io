@@ -36,7 +36,7 @@
     // 2026-09-27: cada extension tiene su ficha propia en /catalog/vscode/<name>/
     // (la instalacion sigue en VS Code Marketplace, desde esa ficha).
     function cardHtml(e) {
-      var n = e.installs || 0;
+      var n = Number(e.installs) || 0;
       return '<a class="vsx-card" href="' + (ES ? '/es/catalogo/vscode/' : '/catalog/vscode/') + esc(e.name) + '/" aria-label="' + esc(e.displayName) + (ES ? ' — detalles' : ' details') + '">' +
         '<div class="card-header"><span class="card-cat vsx-mark" aria-hidden="true">' + VS_ICON + '</span>' +
         '<span class="price-badge price-free">' + (ES ? 'Gratis' : 'Free') + '</span></div>' +

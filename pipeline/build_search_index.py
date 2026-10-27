@@ -146,7 +146,9 @@ def main() -> int:
             path.write_text(new, encoding="utf-8")
 
     inject(SEARCH_JS, "DATA_URL", "/js/search-data.js?v=" + data_hash)
-    search_hash = hashlib.sha256(SEARCH_JS.read_bytes()).hexdigest()[:8]
+    # CRLF -> LF antes de hashear (igual que version_assets.py): en Windows, con autocrlf, el disco tiene CRLF pero el
+    # repo y el cron (Linux) ven LF, y el hash tiene que ser el mismo en los dos.
+    search_hash = hashlib.sha256(SEARCH_JS.read_bytes().replace(b"\r\n", b"\n")).hexdigest()[:8]
     inject(CHROME_JS, "SEARCH_SRC", "/js/site-search.js?v=" + search_hash)
     counts = {}
     for it in items:
