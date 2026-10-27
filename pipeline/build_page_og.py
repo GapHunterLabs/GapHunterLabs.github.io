@@ -60,10 +60,10 @@ BASE_CSS = """
   .top { display:flex; align-items:center; justify-content:space-between; padding-bottom:18px; border-bottom:1px solid #1F2328; }
   .brand { display:flex; align-items:center; gap:12px; font-size:22px; font-weight:600; letter-spacing:-0.01em; }
   .brand svg { width:30px; height:35px; display:block; }
-  .label { font:600 13px/1 "JetBrains Mono",monospace; letter-spacing:0.12em; text-transform:uppercase; color:#57606A; }
+  .label { font:600 16px/1 "JetBrains Mono",monospace; letter-spacing:0.1em; text-transform:uppercase; color:#57606A; }
   h1 { font-family:"IBM Plex Serif",serif; font-weight:600; letter-spacing:-0.015em; color:#1F2328; }
   .mono { font-family:"JetBrains Mono",monospace; font-variant-numeric:tabular-nums; }
-  .foot { margin-top:auto; display:flex; justify-content:space-between; align-items:baseline; gap:24px; padding-top:16px; border-top:1px solid #D0D7DE; font:500 15px/1 "JetBrains Mono",monospace; color:#57606A; }
+  .foot { margin-top:auto; display:flex; justify-content:space-between; align-items:baseline; gap:20px; padding-top:16px; border-top:1px solid #D0D7DE; font:500 18px/1 "JetBrains Mono",monospace; color:#57606A; }
   .foot b { font-weight:600; color:#1F2328; }
   .tag { display:inline-block; width:52px; padding:5px 0 4px; text-align:center; font:700 12px/1 "JetBrains Mono",monospace; letter-spacing:0.1em; border-left:3px solid; }
   .tag.gap { color:#9A4A08; background:#FBF0DF; border-color:#F59E0B; }
@@ -72,39 +72,39 @@ BASE_CSS = """
 
 # ---- layout-specific CSS ----------------------------------------------------
 CSS_HOME = """
-  .record { margin-top:22px; display:grid; grid-template-columns:52px 230px minmax(0,1fr); gap:10px 16px; align-items:center; font-size:19px; line-height:1.3; }
-  .record .ref { font:500 15px/1.3 "JetBrains Mono",monospace; color:#57606A; }
-  h1 { margin-top:34px; font-size:60px; line-height:1.08; }
-  .lede { margin-top:18px; max-width:900px; font-size:21px; line-height:1.45; color:#57606A; }
+  .record { margin-top:24px; display:grid; grid-template-columns:60px 260px minmax(0,1fr); gap:12px 18px; align-items:center; font-size:24px; line-height:1.3; }
+  .record .ref { font:500 19px/1.3 "JetBrains Mono",monospace; color:#57606A; }
+  h1 { margin-top:30px; font-size:60px; line-height:1.08; }
+  .lede { margin-top:20px; max-width:960px; font-size:26px; line-height:1.45; color:#57606A; }
 """
 CSS_SERVICES = """
   h1 { margin-top:30px; font-size:52px; line-height:1.1; }
   table { margin-top:26px; width:100%; border-collapse:collapse; }
-  td { padding:17px 0; border-bottom:1px solid #D0D7DE; font-size:21px; vertical-align:baseline; }
+  td { padding:17px 0; border-bottom:1px solid #D0D7DE; font-size:26px; vertical-align:baseline; }
   tr:first-child td { border-top:1px solid #1F2328; }
-  td.p { text-align:right; font:500 18px/1 "JetBrains Mono",monospace; font-variant-numeric:tabular-nums; white-space:nowrap; }
-  td.p small { font-size:15px; color:#57606A; }
+  td.p { text-align:right; font:500 22px/1 "JetBrains Mono",monospace; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  td.p small { font-size:18px; color:#57606A; }
 """
 CSS_AUDIT = """
   .cols { margin-top:32px; display:grid; grid-template-columns:minmax(0,1fr) 380px; gap:40px; }
   h1 { font-size:54px; line-height:1.1; }
   ul { margin-top:20px; list-style:none; border-top:1px solid #D0D7DE; }
-  li { padding:9px 0; border-bottom:1px solid #D0D7DE; font-size:19px; color:#1F2328; }
+  li { padding:11px 0; border-bottom:1px solid #D0D7DE; font-size:24px; color:#1F2328; }
   .price { border-top:1px solid #1F2328; padding-top:16px; }
   .price .amt { font:600 54px/1 "JetBrains Mono",monospace; letter-spacing:-0.02em; font-variant-numeric:tabular-nums; }
-  .price .amt small { font-size:24px; font-weight:500; color:#57606A; margin-right:8px; }
-  .price p { margin-top:12px; font-size:18px; line-height:1.45; color:#57606A; }
-  .price p.ext { margin-top:14px; padding-top:12px; border-top:1px solid #D0D7DE; font:500 15px/1.4 "JetBrains Mono",monospace; color:#1F2328; }
+  .price .amt small { font-size:30px; font-weight:500; color:#57606A; margin-right:8px; }
+  .price p { margin-top:14px; font-size:22px; line-height:1.45; color:#57606A; }
+  .price p.ext { margin-top:16px; padding-top:14px; border-top:1px solid #D0D7DE; font:500 19px/1.4 "JetBrains Mono",monospace; color:#1F2328; }
 """
 # Generic page: a serif headline, a grey lede, and an accent rule that carries
 # the page's category colour -- enough to make every static page read as its
 # own card without baking in any number that would go stale.
 CSS_HERO = """
-  .hero { margin-top:40px; }
-  .accent { width:64px; height:5px; border-radius:3px; background:#0151FC; }
-  h1 { margin-top:26px; font-size:52px; line-height:1.12; max-width:1000px; }
-  h1.sm { font-size:46px; }
-  .lede { margin-top:20px; max-width:940px; font-size:22px; line-height:1.45; color:#57606A; }
+  .hero { flex:1 1 auto; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; }
+  .accent { width:80px; height:6px; border-radius:3px; background:#0151FC; }
+  h1 { margin-top:28px; font-size:54px; line-height:1.14; max-width:1000px; }
+  h1.sm { font-size:48px; }
+  .lede { margin-top:24px; max-width:980px; font-size:27px; line-height:1.5; color:#57606A; }
 """
 
 PAGE_TPL = """<!doctype html>
@@ -203,7 +203,7 @@ def pages():
             ("Dependency and CI/CD security review", "from USD 4,800", "5 business days"),
         ]),
         "Engineering services",
-        ["Written deliverables &middot; 50% on start, 50% on delivery", SITE + "/services"]))
+        ["Written deliverables &middot; 50% on start, 50% on delivery", SITE]))
     P.append(("og-services.es", "es", CSS_SERVICES, services_body(
         "Alcance fijo. Precios publicados.", [
             ("Auditor&iacute;a de rendimiento de plugins", "USD 10.500", "10 d&iacute;as h&aacute;biles"),
@@ -212,7 +212,7 @@ def pages():
             ("Revisi&oacute;n de seguridad de dependencias y CI/CD", "desde USD 4.800", "5 d&iacute;as h&aacute;biles"),
         ]),
         "Servicios de ingenier&iacute;a",
-        ["Entregables por escrito &middot; 50% al iniciar, 50% al entregar", SITE + "/es/servicios"]))
+        ["Entregables por escrito &middot; 50% al iniciar, 50% al entregar", SITE]))
 
     # ---------- PLUGIN PERFORMANCE AUDIT ----------
     P.append(("og-audit", "en", CSS_AUDIT, audit_body(
@@ -224,7 +224,7 @@ def pages():
         "Fixed price. One plugin, up to 3 IDE versions, delivered in 10 business days.",
         "Extended: USD 15,000 &middot; 15 business days"),
         "Plugin performance audit",
-        ["The same method found freeze bugs in the IntelliJ Platform", SITE + "/plugin-performance-audit"]))
+        ["The same method found freeze bugs in the IntelliJ Platform", SITE]))
     P.append(("og-audit.es", "es", CSS_AUDIT, audit_body(
         "Tu plugin se congela.<br>Encuentro la causa y lo parcheo.",
         ["Reproducci&oacute;n en cada versi&oacute;n del IDE que soportas",
@@ -234,7 +234,7 @@ def pages():
         "Precio fijo. Un plugin, hasta 3 versiones del IDE, entregado en 10 d&iacute;as h&aacute;biles.",
         "Extendida: USD 15.000 &middot; 15 d&iacute;as h&aacute;biles"),
         "Auditor&iacute;a de rendimiento de plugins",
-        ["El mismo m&eacute;todo hall&oacute; congelamientos en IntelliJ Platform", SITE + "/es/auditoria-de-rendimiento"]))
+        ["El mismo m&eacute;todo hall&oacute; congelamientos en IntelliJ Platform", SITE]))
 
     # ---------- CATALOG ----------
     P.append(("og-catalog", "en", CSS_HERO, hero_body(
@@ -242,13 +242,13 @@ def pages():
         "Browse every Gap Hunter Labs plugin for JetBrains IDEs and VS Code: filter by category and price, and see the gap each one fixes.",
         "#0151FC"),
         "Plugin catalog",
-        ["Filter by category, platform and price", SITE + "/catalog"]))
+        ["Filter by category, platform and price", SITE]))
     P.append(("og-catalog.es", "es", CSS_HERO, hero_body(
         "Plugins para JetBrains y VS Code<br>que resuelven brechas reales",
         "Explora todos los plugins de Gap Hunter Labs para IDE de JetBrains y VS Code: filtra por categor&iacute;a y precio, y mira la brecha que resuelve cada uno.",
         "#0151FC"),
         "Cat&aacute;logo de plugins",
-        ["Filtra por categor&iacute;a, plataforma y precio", SITE + "/es/catalogo"]))
+        ["Filtra por categor&iacute;a, plataforma y precio", SITE]))
 
     # ---------- METHODOLOGY ----------
     P.append(("og-methodology", "en", CSS_HERO, hero_body(
@@ -256,13 +256,13 @@ def pages():
         "How performance, security and reliability problems are investigated and fixed, how plugin ideas are evaluated, and how catalog data is reported.",
         "#B98CFF"),
         "Methodology",
-        ["Investigate &middot; Reproduce &middot; Fix &middot; Report", SITE + "/methodology"]))
+        ["Investigate &middot; Reproduce &middot; Fix &middot; Report", SITE]))
     P.append(("og-methodology.es", "es", CSS_HERO, hero_body(
         "De la brecha a la soluci&oacute;n",
         "C&oacute;mo se investigan y corrigen los problemas de rendimiento, seguridad y fiabilidad, c&oacute;mo se eval&uacute;an las ideas de plugins y c&oacute;mo se reportan los datos del cat&aacute;logo.",
         "#B98CFF"),
         "Metodolog&iacute;a",
-        ["Investigar &middot; Reproducir &middot; Corregir &middot; Reportar", SITE + "/es/metodologia"]))
+        ["Investigar &middot; Reproducir &middot; Corregir &middot; Reportar", SITE]))
 
     # ---------- ENGINEERING & EVIDENCE (overview) ----------
     P.append(("og-evidence", "en", CSS_HERO, hero_body(
@@ -270,13 +270,13 @@ def pages():
         "Root-cause analysis and fixes in the IntelliJ Platform, security reports fixed by open-source maintainers, and plugin case studies &mdash; each with a public source.",
         "#34D5C7"),
         "Engineering &amp; Evidence",
-        ["Tickets &middot; Security reports &middot; Audits &middot; Case studies", SITE + "/engineering-evidence"]))
+        ["Tickets &middot; Security reports &middot; Audits &middot; Case studies", SITE]))
     P.append(("og-evidence.es", "es", CSS_HERO, hero_body(
         "Todo lo que respalda el trabajo",
         "An&aacute;lisis de causa ra&iacute;z y correcciones en IntelliJ Platform, reportes de seguridad corregidos por mantenedores de c&oacute;digo abierto y casos de estudio de plugins &mdash; cada uno con una fuente p&uacute;blica.",
         "#34D5C7"),
         "Ingenier&iacute;a y evidencia",
-        ["Tickets &middot; Reportes &middot; Auditor&iacute;as &middot; Casos", SITE + "/es/ingenieria-y-evidencia"]))
+        ["Tickets &middot; Reportes &middot; Auditor&iacute;as &middot; Casos", SITE]))
 
     # ---------- CASE STUDIES ----------
     P.append(("og-evidence-case-studies", "en", CSS_HERO, hero_body(
@@ -284,13 +284,13 @@ def pages():
         "A freeze pattern JetBrains named itself, a compliance gap cloud tools cannot clear, and injection sinks behind real CVEs.",
         "#FFB020"),
         "Case studies",
-        ["Engineering &amp; Evidence", SITE + "/engineering-evidence/case-studies"]))
+        ["Engineering &amp; Evidence", SITE]))
     P.append(("og-evidence-case-studies.es", "es", CSS_HERO, hero_body(
         "Plugins con la evidencia m&aacute;s s&oacute;lida",
         "Un congelamiento que nombr&oacute; JetBrains, una brecha de cumplimiento que la nube no cubre y sinks de inyecci&oacute;n con CVE reales.",
         "#FFB020"),
         "Casos de estudio",
-        ["Ingenier&iacute;a y evidencia", SITE + "/es/ingenieria-y-evidencia/casos-de-estudio"]))
+        ["Ingenier&iacute;a y evidencia", SITE]))
 
     # ---------- JETBRAINS PLATFORM TICKETS ----------
     P.append(("og-evidence-jetbrains-tickets", "en", CSS_HERO, hero_body(
@@ -298,13 +298,13 @@ def pages():
         "Bugs filed in JetBrains&rsquo; YouTrack after a catalog check found them in IntelliJ&rsquo;s source, plus root-cause analysis on existing Platform tickets.",
         "#0151FC"),
         "JetBrains Platform tickets",
-        ["Engineering &amp; Evidence", SITE + "/engineering-evidence/jetbrains-platform-tickets"]))
+        ["Engineering &amp; Evidence", SITE]))
     P.append(("og-evidence-jetbrains-tickets.es", "es", CSS_HERO, hero_body(
         "Reportes de causa ra&iacute;z en<br>IntelliJ Platform",
         "Errores reportados en el YouTrack de JetBrains tras hallarlos un control del cat&aacute;logo en el c&oacute;digo de IntelliJ, m&aacute;s an&aacute;lisis de causa ra&iacute;z en tickets existentes.",
         "#0151FC"),
         "Tickets de JetBrains Platform",
-        ["Ingenier&iacute;a y evidencia", SITE + "/es/ingenieria-y-evidencia/tickets-jetbrains-platform"]))
+        ["Ingenier&iacute;a y evidencia", SITE]))
 
     # ---------- OPEN-SOURCE SECURITY REPORTS ----------
     P.append(("og-evidence-security-reports", "en", CSS_HERO, hero_body(
@@ -312,13 +312,13 @@ def pages():
         "Vulnerable dependencies reported to open-source maintainers, each advisory checked against the exact pinned version in OSV, listed once they fixed them.",
         "#10B981"),
         "Open-source security reports",
-        ["Engineering &amp; Evidence", SITE + "/engineering-evidence/open-source-security-reports"]))
+        ["Engineering &amp; Evidence", SITE]))
     P.append(("og-evidence-security-reports.es", "es", CSS_HERO, hero_body(
         "Dependencias vulnerables,<br>corregidas por sus mantenedores",
         "Dependencias vulnerables reportadas a mantenedores de c&oacute;digo abierto, cada aviso verificado contra la versi&oacute;n exacta fijada en OSV, publicadas cuando las corrigieron.",
         "#10B981"),
         "Reportes de seguridad",
-        ["Ingenier&iacute;a y evidencia", SITE + "/es/ingenieria-y-evidencia/reportes-de-seguridad"]))
+        ["Ingenier&iacute;a y evidencia", SITE]))
 
     # ---------- THIRD-PARTY PLUGIN AUDITS ----------
     P.append(("og-evidence-third-party-audits", "en", CSS_HERO, hero_body(
@@ -326,13 +326,13 @@ def pages():
         "Performance findings in third-party IntelliJ Platform plugins, reported to their maintainers with the root cause and a suggested fix, listed once the fix is public.",
         "#B98CFF"),
         "Third-party plugin audits",
-        ["Engineering &amp; Evidence", SITE + "/engineering-evidence/third-party-plugin-audits"]))
+        ["Engineering &amp; Evidence", SITE]))
     P.append(("og-evidence-third-party-audits.es", "es", CSS_HERO, hero_body(
         "Hallazgos en plugins de otros<br>proveedores, corregidos por ellos",
         "Hallazgos de rendimiento en plugins de terceros para IntelliJ Platform, reportados a sus mantenedores con la causa ra&iacute;z y un arreglo sugerido, publicados cuando la correcci&oacute;n es p&uacute;blica.",
         "#B98CFF"),
         "Auditor&iacute;as de plugins de terceros",
-        ["Ingenier&iacute;a y evidencia", SITE + "/es/ingenieria-y-evidencia/auditorias-de-plugins-de-terceros"]))
+        ["Ingenier&iacute;a y evidencia", SITE]))
 
     # ---------- CONTACT ----------
     P.append(("og-contact", "en", CSS_HERO, hero_body(
@@ -340,13 +340,13 @@ def pages():
         "Contact Gap Hunter Labs about audits and engineering work, plugin support or partnerships &mdash; by email, GitHub, JetBrains Marketplace or LinkedIn.",
         "#34D5C7"),
         "Contact",
-        ["Email &middot; GitHub &middot; JetBrains &middot; LinkedIn", SITE + "/contact"]))
+        ["Email &middot; GitHub &middot; JetBrains &middot; LinkedIn", SITE]))
     P.append(("og-contact.es", "es", CSS_HERO, hero_body(
         "Ponte en contacto",
         "Contacta a Gap Hunter Labs por auditor&iacute;as y trabajo de ingenier&iacute;a, soporte de plugins o alianzas &mdash; por correo, GitHub, JetBrains Marketplace o LinkedIn.",
         "#34D5C7"),
         "Contacto",
-        ["Correo &middot; GitHub &middot; JetBrains &middot; LinkedIn", SITE + "/es/contacto"]))
+        ["Correo &middot; GitHub &middot; JetBrains &middot; LinkedIn", SITE]))
 
     # ---------- SECURITY ----------
     P.append(("og-security", "en", CSS_HERO, hero_body(
@@ -354,13 +354,13 @@ def pages():
         "What Gap Hunter Labs plugins do and don&rsquo;t do with your code, how vulnerabilities are reported, and why there&rsquo;s no formal SOC 2 / ISO certification yet.",
         "#10B981"),
         "Security",
-        ["Responsible disclosure &middot; No telemetry", SITE + "/security"]))
+        ["Responsible disclosure &middot; No telemetry", SITE]))
     P.append(("og-security.es", "es", CSS_HERO, hero_body(
         "Qu&eacute; hacen los plugins con tu<br>c&oacute;digo &mdash; y qu&eacute; no",
         "Qu&eacute; hacen y qu&eacute; no hacen los plugins de Gap Hunter Labs con tu c&oacute;digo, c&oacute;mo se reportan vulnerabilidades y por qu&eacute; todav&iacute;a no hay certificaci&oacute;n formal SOC 2 / ISO.",
         "#10B981"),
         "Seguridad",
-        ["Divulgaci&oacute;n responsable &middot; Sin telemetr&iacute;a", SITE + "/es/seguridad"]))
+        ["Divulgaci&oacute;n responsable &middot; Sin telemetr&iacute;a", SITE]))
 
     # ---------- PRIVACY ----------
     P.append(("og-privacy", "en", CSS_HERO, hero_body(
@@ -368,13 +368,13 @@ def pages():
         "What this site collects, what it doesn&rsquo;t, and why &mdash; a short privacy policy, because the site&rsquo;s actual data footprint is short.",
         "#8DACE0"),
         "Privacy",
-        ["No accounts &middot; No ad tracking", SITE + "/privacy"]))
+        ["No accounts &middot; No ad tracking", SITE]))
     P.append(("og-privacy.es", "es", CSS_HERO, hero_body(
         "Una pol&iacute;tica de privacidad corta",
         "Qu&eacute; recoge este sitio, qu&eacute; no y por qu&eacute; &mdash; una pol&iacute;tica de privacidad corta, porque la huella de datos real del sitio es corta.",
         "#8DACE0"),
         "Privacidad",
-        ["Sin cuentas &middot; Sin rastreo publicitario", SITE + "/es/privacidad"]))
+        ["Sin cuentas &middot; Sin rastreo publicitario", SITE]))
 
     # ---------- TERMS ----------
     P.append(("og-terms", "en", CSS_HERO, hero_body(
@@ -382,13 +382,13 @@ def pages():
         "What this catalog is, what it isn&rsquo;t, and who&rsquo;s responsible for what.",
         "#57606A", small=True),
         "Terms",
-        ["Gap Hunter Labs", SITE + "/terms"]))
+        ["Gap Hunter Labs", SITE]))
     P.append(("og-terms.es", "es", CSS_HERO, hero_body(
         "T&eacute;rminos de servicio",
         "Qu&eacute; es este cat&aacute;logo, qu&eacute; no es y qui&eacute;n responde por qu&eacute;.",
         "#57606A", small=True),
         "T&eacute;rminos",
-        ["Gap Hunter Labs", SITE + "/es/terminos"]))
+        ["Gap Hunter Labs", SITE]))
 
     # ---------- EULA ----------
     P.append(("og-eula", "en", CSS_HERO, hero_body(
@@ -396,13 +396,13 @@ def pages():
         "License terms for the Gap Hunter Labs paid plugins on JetBrains Marketplace: the license, the Apache-2.0 source code, warranty, liability and support.",
         "#FFB020", small=True),
         "License (EULA)",
-        ["Paid plugins &middot; Apache-2.0 source", SITE + "/eula"]))
+        ["Paid plugins &middot; Apache-2.0 source", SITE]))
     P.append(("og-eula.es", "es", CSS_HERO, hero_body(
         "Acuerdo de Licencia de Usuario Final",
         "T&eacute;rminos de licencia de los plugins de pago de Gap Hunter Labs en JetBrains Marketplace: la licencia, el c&oacute;digo fuente Apache-2.0, la garant&iacute;a, la responsabilidad y el soporte.",
         "#FFB020", small=True),
         "Licencia (EULA)",
-        ["Plugins de pago &middot; C&oacute;digo Apache-2.0", SITE + "/es/eula"]))
+        ["Plugins de pago &middot; C&oacute;digo Apache-2.0", SITE]))
 
     # ---------- GHL-JAIL ----------
     P.append(("og-ghl-jail", "en", CSS_HERO, hero_body(
@@ -410,13 +410,13 @@ def pages():
         "Run a command-line tool so it can only touch one project folder &mdash; not your SSH keys, cloud tokens or .env. No admin, no driver: just Python and Windows.",
         "#02F172"),
         "Open-source tool",
-        ["No admin &middot; No driver &middot; Just Python", SITE + "/ghl-jail"]))
+        ["No admin &middot; No driver &middot; Just Python", SITE]))
     P.append(("og-ghl-jail.es", "es", CSS_HERO, hero_body(
         "Un sandbox de Windows de una<br>l&iacute;nea para CLIs no confiables",
         "Ejecuta una herramienta de l&iacute;nea de comandos para que solo toque una carpeta de proyecto &mdash; no tus claves SSH, tokens de la nube ni tu .env. Sin administrador, sin controlador: solo Python y Windows.",
         "#02F172"),
         "Herramienta de c&oacute;digo abierto",
-        ["Sin admin &middot; Sin controlador &middot; Solo Python", SITE + "/es/ghl-jail"]))
+        ["Sin admin &middot; Sin controlador &middot; Solo Python", SITE]))
 
     return P
 
