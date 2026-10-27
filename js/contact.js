@@ -8,7 +8,7 @@
 // que este form nunca debe generar uno). Sin backend: el submit arma
 // un link de "crear issue" en el repo del sitio con los campos
 // prellenados en título/cuerpo -- llega por notificación default de
-// GitHub a la cuenta que ya opera el repo (gaphunterlabs@gmail.com).
+// GitHub a la cuenta que ya opera el repo (contact@gaphunterlabs.com).
 (function () {
   var REPO_ISSUES = 'https://github.com/GapHunterLabs/GapHunterLabs.github.io/issues/new';
   // 2026-09-27: bilingue -- la version en espanol (/es/contacto/) usa este
@@ -80,7 +80,7 @@
       ]
     }
   };
-  var CONTACT_EMAIL = 'gaphunterlabs@gmail.com';
+  var CONTACT_EMAIL = 'contact@gaphunterlabs.com';
 
   var fieldsHost = document.getElementById('cfFields');
   var titleEl = document.getElementById('cfTitle');
