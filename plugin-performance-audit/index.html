@@ -46,6 +46,7 @@
 <meta name="twitter:description" content="A fixed-price performance audit for IntelliJ Platform plugins: UI freezes, typing lag and high CPU, reproduced, measured and patched.">
 <meta name="twitter:image" content="https://gaphunterlabs.com/og-audit.png?v=3">
 <meta name="twitter:image:alt" content="Plugin performance audit, USD 10,500 fixed — Gap Hunter Labs">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do you diagnose a performance bottleneck in an IntelliJ IDEA plugin?","acceptedAnswer":{"@type":"Answer","text":"You reproduce the plugin in a clean IDE for each version it supports, with freeze detection on and thread dumps captured on every freeze, then measure the time spent on the UI thread when settings pages, actions and tool windows open, cold and warm. A code review looks for the freeze patterns behind most reports in the JetBrains tracker: blocking read actions in background tasks without cancellation, file or network access on the UI thread, and waits on other threads while holding the read lock. Every finding is traced to the exact code that caused it; the audit reports what it finds and cannot prove no other freeze exists."}},{"@type":"Question","name":"How do you prove a performance fix actually works?","acceptedAnswer":{"@type":"Answer","text":"Each proposed patch comes with a before and after measurement of the same action on the same IDE version, so the improvement is a number you can check, not a claim. Patches ship as a pull request or a diff with tests where the fix allows them, and it is the same method used on freezes in IntelliJ's own code reported to JetBrains with a root cause and a measurement."}}]}</script>
 <link rel="stylesheet" href="/css/theme.css?v=6c7f204f">
 <link rel="stylesheet" href="/css/base.css?v=3b2dc0b4">
 <style>
@@ -162,6 +163,16 @@
   </div>
 
   <div class="disclosure-list">
+
+    <section class="disclosure" aria-labelledby="audit-faq1">
+      <h2 id="audit-faq1">How do you diagnose a performance bottleneck in an IntelliJ IDEA plugin?</h2>
+      <p>You reproduce the plugin in a clean IDE for each version it supports, with freeze detection on and thread dumps captured on every freeze, then measure the time spent on the UI thread when settings pages, actions and tool windows open, cold and warm. A code review looks for the freeze patterns behind most reports in the JetBrains tracker: blocking read actions in background tasks without cancellation, file or network access on the UI thread, and waits on other threads while holding the read lock. Every finding is traced to the exact code that caused it; the audit reports what it finds and cannot prove no other freeze exists.</p>
+    </section>
+
+    <section class="disclosure" aria-labelledby="audit-faq2">
+      <h2 id="audit-faq2">How do you prove a performance fix actually works?</h2>
+      <p>Each proposed patch comes with a before and after measurement of the same action on the same IDE version, so the improvement is a number you can check, not a claim. Patches ship as a pull request or a diff with tests where the fix allows them, and it is the same method used on freezes in IntelliJ's own code reported to JetBrains with a root cause and a measurement.</p>
+    </section>
 
     <section class="disclosure" aria-labelledby="audit-1">
       <h2 id="audit-1">Who it is for</h2>

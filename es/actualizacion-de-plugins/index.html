@@ -47,6 +47,7 @@
 <meta name="twitter:description" content="Tu plugin de JetBrains compilado y verificado contra las versiones del IDE que soportas: API removidas y obsoletas, Kotlin K2, Gradle plugin 2.x y fallos del Plugin Verifier.">
 <meta name="twitter:image" content="https://gaphunterlabs.com/og-plugin-updates.es.png?v=3">
 <meta name="twitter:image:alt" content="Plugin updates for new IDE versions, from USD 4.500 — Gap Hunter Labs">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"¿Cómo se actualiza un plugin de JetBrains a una nueva versión de la IntelliJ Platform sin romperlo?","acceptedAnswer":{"@type":"Answer","text":"Las llamadas a APIs eliminadas o deprecadas en las versiones objetivo se reemplazan por su equivalente soportado, el build de Gradle se migra al IntelliJ Platform Gradle Plugin actual y su nueva configuración, y el plugin se compila y prueba bajo el nuevo modo del compilador de Kotlin donde las versiones objetivo lo requieren. Cada error y advertencia del Plugin Verifier para cada versión objetivo se resuelve o se explica, y los cambios se entregan como un pull request que compila en verde contra cada versión del IDE en alcance."}},{"@type":"Question","name":"¿Cuál es la diferencia entre una actualización menor y una mayor de un plugin?","acceptedAnswer":{"@type":"Answer","text":"Una actualización menor cubre las APIs deprecadas, el cambio al plugin de Gradle actual y las advertencias del Plugin Verifier. Una actualización mayor cubre las APIs eliminadas, el nuevo modo del compilador de Kotlin, o un plugin con varios módulos. Ambas se entregan como un pull request con el reporte del Plugin Verifier para cada versión que soportas."}}]}</script>
 <link rel="stylesheet" href="/css/theme.css?v=6c7f204f">
 <link rel="stylesheet" href="/css/base.css?v=3b2dc0b4">
 <style>
@@ -157,12 +158,22 @@
     <h1>Actualización de plugins para versiones nuevas del IDE</h1>
     <p class="contact-lead">Para equipos que mantienen un plugin de JetBrains y lo necesitan compatible con cada nueva versión de IntelliJ Platform. Alcance fijo y precio fijo, entregado como un pull request con el informe del Plugin Verifier por cada versión que soportas.</p>
     <div class="hero-actions">
-      <a class="btn primary" href="mailto:gaphunterlabs@gmail.com?subject=Plugin%20update" data-goatcounter-click="cta-updates-email">Pide una cotización</a>
+      <a class="btn primary" href="mailto:contact@gaphunterlabs.com?subject=Plugin%20update" data-goatcounter-click="cta-updates-email">Pide una cotización</a>
       <a class="btn" href="/es/contacto/?intent=hire" data-goatcounter-click="cta-updates-contact">Usa la página de contacto</a>
     </div>
   </div>
 
   <div class="disclosure-list">
+
+    <section class="disclosure" aria-labelledby="pu-faq1">
+      <h2 id="pu-faq1">¿Cómo se actualiza un plugin de JetBrains a una nueva versión de la IntelliJ Platform sin romperlo?</h2>
+      <p>Las llamadas a APIs eliminadas o deprecadas en las versiones objetivo se reemplazan por su equivalente soportado, el build de Gradle se migra al IntelliJ Platform Gradle Plugin actual y su nueva configuración, y el plugin se compila y prueba bajo el nuevo modo del compilador de Kotlin donde las versiones objetivo lo requieren. Cada error y advertencia del Plugin Verifier para cada versión objetivo se resuelve o se explica, y los cambios se entregan como un pull request que compila en verde contra cada versión del IDE en alcance.</p>
+    </section>
+
+    <section class="disclosure" aria-labelledby="pu-faq2">
+      <h2 id="pu-faq2">¿Cuál es la diferencia entre una actualización menor y una mayor de un plugin?</h2>
+      <p>Una actualización menor cubre las APIs deprecadas, el cambio al plugin de Gradle actual y las advertencias del Plugin Verifier. Una actualización mayor cubre las APIs eliminadas, el nuevo modo del compilador de Kotlin, o un plugin con varios módulos. Ambas se entregan como un pull request con el reporte del Plugin Verifier para cada versión que soportas.</p>
+    </section>
 
     <section class="disclosure" aria-labelledby="pu-1">
       <h2 id="pu-1">Para quién es</h2>
@@ -232,7 +243,7 @@
     <section class="disclosure" aria-labelledby="pu-8">
       <h2 id="pu-8">Empezar</h2>
       <ul>
-        <li>Escribe a <a href="mailto:gaphunterlabs@gmail.com">gaphunterlabs@gmail.com</a> con &ldquo;Plugin update&rdquo; en el asunto, o usa la <a href="/es/contacto/?intent=hire">página de contacto</a>. Incluye el repositorio y las versiones del IDE que necesitas soportar.</li>
+        <li>Escribe a <a href="mailto:contact@gaphunterlabs.com">contact@gaphunterlabs.com</a> con &ldquo;Plugin update&rdquo; en el asunto, o usa la <a href="/es/contacto/?intent=hire">página de contacto</a>. Incluye el repositorio y las versiones del IDE que necesitas soportar.</li>
       </ul>
     </section>
   </div>

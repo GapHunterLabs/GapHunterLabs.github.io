@@ -47,6 +47,7 @@
 <meta name="twitter:description" content="Una revisión de solo lectura y precio fijo de tus dependencias y flujos de CI/CD: CVE conocidos, riesgos de confusión de dependencias y permisos de workflows, con la corrección de cada uno.">
 <meta name="twitter:image" content="https://gaphunterlabs.com/og-dependency-security.es.png?v=3">
 <meta name="twitter:image:alt" content="Dependency and CI/CD security review, from USD 4.800 — Gap Hunter Labs">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"¿Cómo se determina si la vulnerabilidad de una dependencia es realmente explotable?","acceptedAnswer":{"@type":"Answer","text":"Cada aviso se verifica contra la versión exacta fijada en tus manifiestos y lockfiles, no contra un rango de versiones, así un aviso que no aplica a tu versión fijada no se reporta como riesgo. Luego los hallazgos se ordenan por exposición real y no por el puntaje CVSS en bruto, y todo lo explotable se reporta primero y en privado por tu canal de seguridad. La revisión es de solo lectura y reporta lo que encuentra; no puede garantizar que no exista otra vulnerabilidad."}},{"@type":"Question","name":"¿Qué incluye una revisión de seguridad de CI/CD?","acceptedAnswer":{"@type":"Answer","text":"La revisión examina los permisos, los tokens y las acciones de terceros de tus flujos de CI y CD con OpenSSF Scorecard, revisa los manifiestos y lockfiles en busca de nombres de paquetes internos que un registro público podría suplantar (confusión de dependencias) y puede añadir una verificación opcional de conformidad con el Reglamento de Ciberresiliencia de la UE que cubre la política de seguridad, el security.txt, el SBOM y el flujo de reporte de vulnerabilidades. Es de solo lectura: tú eliges los repositorios y no se sube nada a tu código."}}]}</script>
 <link rel="stylesheet" href="/css/theme.css?v=6c7f204f">
 <link rel="stylesheet" href="/css/base.css?v=3b2dc0b4">
 <style>
@@ -157,12 +158,22 @@
     <h1>Revisión de seguridad de dependencias y CI/CD</h1>
     <p class="contact-lead">Para equipos que lanzan software con dependencias de terceros y pipelines de CI/CD. Una revisión de solo lectura de los repositorios que elijas, con alcance fijo, precio fijo y un informe por escrito que le da a cada hallazgo su fuente y su corrección.</p>
     <div class="hero-actions">
-      <a class="btn primary" href="mailto:gaphunterlabs@gmail.com?subject=Dependency%20security%20review" data-goatcounter-click="cta-depsec-email">Pide una cotización</a>
+      <a class="btn primary" href="mailto:contact@gaphunterlabs.com?subject=Dependency%20security%20review" data-goatcounter-click="cta-depsec-email">Pide una cotización</a>
       <a class="btn" href="/es/contacto/?intent=hire" data-goatcounter-click="cta-depsec-contact">Usa la página de contacto</a>
     </div>
   </div>
 
   <div class="disclosure-list">
+
+    <section class="disclosure" aria-labelledby="dsr-faq1">
+      <h2 id="dsr-faq1">¿Cómo se determina si la vulnerabilidad de una dependencia es realmente explotable?</h2>
+      <p>Cada aviso se verifica contra la versión exacta fijada en tus manifiestos y lockfiles, no contra un rango de versiones, así un aviso que no aplica a tu versión fijada no se reporta como riesgo. Luego los hallazgos se ordenan por exposición real y no por el puntaje CVSS en bruto, y todo lo explotable se reporta primero y en privado por tu canal de seguridad. La revisión es de solo lectura y reporta lo que encuentra; no puede garantizar que no exista otra vulnerabilidad.</p>
+    </section>
+
+    <section class="disclosure" aria-labelledby="dsr-faq2">
+      <h2 id="dsr-faq2">¿Qué incluye una revisión de seguridad de CI/CD?</h2>
+      <p>La revisión examina los permisos, los tokens y las acciones de terceros de tus flujos de CI y CD con OpenSSF Scorecard, revisa los manifiestos y lockfiles en busca de nombres de paquetes internos que un registro público podría suplantar (confusión de dependencias) y puede añadir una verificación opcional de conformidad con el Reglamento de Ciberresiliencia de la UE que cubre la política de seguridad, el security.txt, el SBOM y el flujo de reporte de vulnerabilidades. Es de solo lectura: tú eliges los repositorios y no se sube nada a tu código.</p>
+    </section>
 
     <section class="disclosure" aria-labelledby="dsr-1">
       <h2 id="dsr-1">Para quién es</h2>
@@ -233,7 +244,7 @@
     <section class="disclosure" aria-labelledby="dsr-8">
       <h2 id="dsr-8">Empezar</h2>
       <ul>
-        <li>Escribe a <a href="mailto:gaphunterlabs@gmail.com">gaphunterlabs@gmail.com</a> con &ldquo;Dependency security review&rdquo; en el asunto, o usa la <a href="/es/contacto/?intent=hire">página de contacto</a>. Dime los repositorios y si necesitas la verificación de conformidad con el CRA.</li>
+        <li>Escribe a <a href="mailto:contact@gaphunterlabs.com">contact@gaphunterlabs.com</a> con &ldquo;Dependency security review&rdquo; en el asunto, o usa la <a href="/es/contacto/?intent=hire">página de contacto</a>. Dime los repositorios y si necesitas la verificación de conformidad con el CRA.</li>
       </ul>
     </section>
   </div>

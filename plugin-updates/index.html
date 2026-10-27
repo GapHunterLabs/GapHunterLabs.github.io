@@ -46,6 +46,7 @@
 <meta name="twitter:description" content="Your JetBrains plugin built and verified against the IDE versions you support: removed and deprecated APIs, Kotlin K2, Gradle plugin 2.x and Plugin Verifier failures.">
 <meta name="twitter:image" content="https://gaphunterlabs.com/og-plugin-updates.png?v=3">
 <meta name="twitter:image:alt" content="Plugin updates for new IDE versions, from USD 4,500 — Gap Hunter Labs">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do you update a JetBrains plugin for a new IntelliJ Platform version without breaking it?","acceptedAnswer":{"@type":"Answer","text":"Calls to APIs removed or deprecated in the target versions are replaced with their supported equivalent, the Gradle build is migrated to the current IntelliJ Platform Gradle Plugin and its new configuration, and the plugin is built and tested under the new Kotlin compiler mode where the target versions require it. Every Plugin Verifier error and warning for each target version is resolved or explained, and the changes ship as a pull request that builds green against each IDE version in scope."}},{"@type":"Question","name":"What is the difference between a minor and a major plugin update?","acceptedAnswer":{"@type":"Answer","text":"A minor update covers deprecated APIs, the move to the current Gradle plugin and Plugin Verifier warnings. A major update covers removed APIs, the new Kotlin compiler mode, or a plugin with several modules. Both are delivered as a pull request with the Plugin Verifier report for every version you support."}}]}</script>
 <link rel="stylesheet" href="/css/theme.css?v=6c7f204f">
 <link rel="stylesheet" href="/css/base.css?v=3b2dc0b4">
 <style>
@@ -156,12 +157,22 @@
     <h1>Plugin updates for new IDE versions</h1>
     <p class="contact-lead">For teams that maintain a JetBrains plugin and need it compatible with each new IntelliJ Platform release. A fixed scope and a fixed price, delivered as a pull request with the Plugin Verifier report for every version you support.</p>
     <div class="hero-actions">
-      <a class="btn primary" href="mailto:gaphunterlabs@gmail.com?subject=Plugin%20update" data-goatcounter-click="cta-updates-email">Ask for a quote</a>
+      <a class="btn primary" href="mailto:contact@gaphunterlabs.com?subject=Plugin%20update" data-goatcounter-click="cta-updates-email">Ask for a quote</a>
       <a class="btn" href="/contact/?intent=hire" data-goatcounter-click="cta-updates-contact">Use the contact page</a>
     </div>
   </div>
 
   <div class="disclosure-list">
+
+    <section class="disclosure" aria-labelledby="pu-faq1">
+      <h2 id="pu-faq1">How do you update a JetBrains plugin for a new IntelliJ Platform version without breaking it?</h2>
+      <p>Calls to APIs removed or deprecated in the target versions are replaced with their supported equivalent, the Gradle build is migrated to the current IntelliJ Platform Gradle Plugin and its new configuration, and the plugin is built and tested under the new Kotlin compiler mode where the target versions require it. Every Plugin Verifier error and warning for each target version is resolved or explained, and the changes ship as a pull request that builds green against each IDE version in scope.</p>
+    </section>
+
+    <section class="disclosure" aria-labelledby="pu-faq2">
+      <h2 id="pu-faq2">What is the difference between a minor and a major plugin update?</h2>
+      <p>A minor update covers deprecated APIs, the move to the current Gradle plugin and Plugin Verifier warnings. A major update covers removed APIs, the new Kotlin compiler mode, or a plugin with several modules. Both are delivered as a pull request with the Plugin Verifier report for every version you support.</p>
+    </section>
 
     <section class="disclosure" aria-labelledby="pu-1">
       <h2 id="pu-1">Who it is for</h2>
@@ -231,7 +242,7 @@
     <section class="disclosure" aria-labelledby="pu-8">
       <h2 id="pu-8">Start</h2>
       <ul>
-        <li>Email <a href="mailto:gaphunterlabs@gmail.com">gaphunterlabs@gmail.com</a> with &ldquo;Plugin update&rdquo; in the subject, or use the <a href="/contact/?intent=hire">contact page</a>. Include the repository and the IDE versions you need to support.</li>
+        <li>Email <a href="mailto:contact@gaphunterlabs.com">contact@gaphunterlabs.com</a> with &ldquo;Plugin update&rdquo; in the subject, or use the <a href="/contact/?intent=hire">contact page</a>. Include the repository and the IDE versions you need to support.</li>
       </ul>
     </section>
   </div>

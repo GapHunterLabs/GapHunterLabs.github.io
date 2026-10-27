@@ -46,6 +46,7 @@
 <meta name="twitter:description" content="A fixed-price, read-only review of your dependencies and CI/CD workflows: known CVEs, dependency-confusion risks and workflow permissions, with the fix for each.">
 <meta name="twitter:image" content="https://gaphunterlabs.com/og-dependency-security.png?v=3">
 <meta name="twitter:image:alt" content="Dependency and CI/CD security review, from USD 4,800 — Gap Hunter Labs">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do you tell whether a dependency vulnerability is actually exploitable?","acceptedAnswer":{"@type":"Answer","text":"Each advisory is verified against the exact version pinned in your manifests and lockfiles, not against a version range, so an advisory that does not apply to your pinned version is not reported as a risk. Findings are then ordered by real exposure rather than by raw CVSS score, and anything exploitable is reported first and privately through your security channel. The review is read-only and reports what it finds; it cannot promise that no other vulnerability exists."}},{"@type":"Question","name":"What does a CI/CD security review include?","acceptedAnswer":{"@type":"Answer","text":"The review checks your CI and CD workflow permissions, tokens and third-party actions with OpenSSF Scorecard, looks at manifests and lockfiles for internal package names that a public registry could shadow (dependency confusion), and can add an optional EU Cyber Resilience Act readiness check covering the security policy, security.txt, SBOM and the vulnerability-reporting workflow. It is read-only: you choose the repositories and nothing is pushed to your code."}}]}</script>
 <link rel="stylesheet" href="/css/theme.css?v=6c7f204f">
 <link rel="stylesheet" href="/css/base.css?v=3b2dc0b4">
 <style>
@@ -156,12 +157,22 @@
     <h1>Dependency and CI/CD security review</h1>
     <p class="contact-lead">For teams that ship software with third-party dependencies and CI/CD pipelines. A read-only review of the repositories you choose, with a fixed scope, a fixed price, and a written report that gives every finding its source and its fix.</p>
     <div class="hero-actions">
-      <a class="btn primary" href="mailto:gaphunterlabs@gmail.com?subject=Dependency%20security%20review" data-goatcounter-click="cta-depsec-email">Ask for a quote</a>
+      <a class="btn primary" href="mailto:contact@gaphunterlabs.com?subject=Dependency%20security%20review" data-goatcounter-click="cta-depsec-email">Ask for a quote</a>
       <a class="btn" href="/contact/?intent=hire" data-goatcounter-click="cta-depsec-contact">Use the contact page</a>
     </div>
   </div>
 
   <div class="disclosure-list">
+
+    <section class="disclosure" aria-labelledby="dsr-faq1">
+      <h2 id="dsr-faq1">How do you tell whether a dependency vulnerability is actually exploitable?</h2>
+      <p>Each advisory is verified against the exact version pinned in your manifests and lockfiles, not against a version range, so an advisory that does not apply to your pinned version is not reported as a risk. Findings are then ordered by real exposure rather than by raw CVSS score, and anything exploitable is reported first and privately through your security channel. The review is read-only and reports what it finds; it cannot promise that no other vulnerability exists.</p>
+    </section>
+
+    <section class="disclosure" aria-labelledby="dsr-faq2">
+      <h2 id="dsr-faq2">What does a CI/CD security review include?</h2>
+      <p>The review checks your CI and CD workflow permissions, tokens and third-party actions with OpenSSF Scorecard, looks at manifests and lockfiles for internal package names that a public registry could shadow (dependency confusion), and can add an optional EU Cyber Resilience Act readiness check covering the security policy, security.txt, SBOM and the vulnerability-reporting workflow. It is read-only: you choose the repositories and nothing is pushed to your code.</p>
+    </section>
 
     <section class="disclosure" aria-labelledby="dsr-1">
       <h2 id="dsr-1">Who it is for</h2>
@@ -232,7 +243,7 @@
     <section class="disclosure" aria-labelledby="dsr-8">
       <h2 id="dsr-8">Start</h2>
       <ul>
-        <li>Email <a href="mailto:gaphunterlabs@gmail.com">gaphunterlabs@gmail.com</a> with &ldquo;Dependency security review&rdquo; in the subject, or use the <a href="/contact/?intent=hire">contact page</a>. Tell me the repositories and whether you need the CRA readiness check.</li>
+        <li>Email <a href="mailto:contact@gaphunterlabs.com">contact@gaphunterlabs.com</a> with &ldquo;Dependency security review&rdquo; in the subject, or use the <a href="/contact/?intent=hire">contact page</a>. Tell me the repositories and whether you need the CRA readiness check.</li>
       </ul>
     </section>
   </div>

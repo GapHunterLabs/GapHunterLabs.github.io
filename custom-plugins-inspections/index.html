@@ -46,6 +46,7 @@
 <meta name="twitter:description" content="Static-analysis inspections tailored to your codebase, delivered as a plugin your team installs and runs in CI: internal APIs, secrets and security patterns.">
 <meta name="twitter:image" content="https://gaphunterlabs.com/og-custom-plugins.png?v=3">
 <meta name="twitter:image:alt" content="Custom plugins and inspections, from USD 7,500 — Gap Hunter Labs">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"What does a custom static-analysis inspection catch that a generic linter does not?","acceptedAnswer":{"@type":"Answer","text":"A generic linter only knows general rules; a custom inspection knows your codebase, so it can flag your own internal APIs, secret formats, security patterns and architecture rules that a general linter cannot express. The inspections are delivered as a JetBrains plugin your developers install, with a test for every inspection and a written description of what each one flags and why."}},{"@type":"Question","name":"Can the same inspections run in CI, not only in the IDE?","acceptedAnswer":{"@type":"Answer","text":"Yes. The inspections can run in GitHub Actions or GitLab CI, so a pull request fails on the same rule the IDE flags as developers type, and the plugin can be served from a private plugin repository your team updates from."}}]}</script>
 <link rel="stylesheet" href="/css/theme.css?v=6c7f204f">
 <link rel="stylesheet" href="/css/base.css?v=3b2dc0b4">
 <style>
@@ -156,12 +157,22 @@
     <h1>Custom plugins and inspections</h1>
     <p class="contact-lead">For teams that want their own rules enforced in the IDE and in CI. Static-analysis inspections tailored to your codebase, delivered as a plugin your developers install &mdash; with a fixed scope, a fixed price and a test for every inspection.</p>
     <div class="hero-actions">
-      <a class="btn primary" href="mailto:gaphunterlabs@gmail.com?subject=Custom%20plugin" data-goatcounter-click="cta-custom-email">Ask for a quote</a>
+      <a class="btn primary" href="mailto:contact@gaphunterlabs.com?subject=Custom%20plugin" data-goatcounter-click="cta-custom-email">Ask for a quote</a>
       <a class="btn" href="/contact/?intent=hire" data-goatcounter-click="cta-custom-contact">Use the contact page</a>
     </div>
   </div>
 
   <div class="disclosure-list">
+
+    <section class="disclosure" aria-labelledby="cpi-faq1">
+      <h2 id="cpi-faq1">What does a custom static-analysis inspection catch that a generic linter does not?</h2>
+      <p>A generic linter only knows general rules; a custom inspection knows your codebase, so it can flag your own internal APIs, secret formats, security patterns and architecture rules that a general linter cannot express. The inspections are delivered as a JetBrains plugin your developers install, with a test for every inspection and a written description of what each one flags and why.</p>
+    </section>
+
+    <section class="disclosure" aria-labelledby="cpi-faq2">
+      <h2 id="cpi-faq2">Can the same inspections run in CI, not only in the IDE?</h2>
+      <p>Yes. The inspections can run in GitHub Actions or GitLab CI, so a pull request fails on the same rule the IDE flags as developers type, and the plugin can be served from a private plugin repository your team updates from.</p>
+    </section>
 
     <section class="disclosure" aria-labelledby="cpi-1">
       <h2 id="cpi-1">Who it is for</h2>
@@ -231,7 +242,7 @@
     <section class="disclosure" aria-labelledby="cpi-8">
       <h2 id="cpi-8">Start</h2>
       <ul>
-        <li>Email <a href="mailto:gaphunterlabs@gmail.com">gaphunterlabs@gmail.com</a> with &ldquo;Custom plugin&rdquo; in the subject, or use the <a href="/contact/?intent=hire">contact page</a>. Describe the rules you want enforced and whether you need them in CI.</li>
+        <li>Email <a href="mailto:contact@gaphunterlabs.com">contact@gaphunterlabs.com</a> with &ldquo;Custom plugin&rdquo; in the subject, or use the <a href="/contact/?intent=hire">contact page</a>. Describe the rules you want enforced and whether you need them in CI.</li>
       </ul>
     </section>
   </div>
