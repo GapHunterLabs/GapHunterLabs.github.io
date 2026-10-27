@@ -1,4 +1,4 @@
-Contact: mailto:gaphunterlabs@gmail.com
+Contact: mailto:contact@gaphunterlabs.com
 Contact: https://gaphunterlabs.com/security/
 Expires: 2027-10-05T00:00:00.000Z
 Preferred-Languages: en, es
