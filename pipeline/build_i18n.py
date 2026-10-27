@@ -346,14 +346,21 @@ def localize_links(text):
     return head + "</head>" + body
 
 
-def translate_faq_jsonld(text, table):
-    """Traduce los campos name/text de los bloques JSON-LD FAQPage via el
-    diccionario. Hace falta porque <script> esta en OPAQUE y translate() lo
-    copia tal cual del ingles. Solo actua en bloques que contienen "FAQPage";
-    el resto del JSON-LD (Organization, SoftwareApplication) queda intacto."""
+JSONLD_TRANSLATABLE = ('"FAQPage"', '"Article"', '"TechArticle"')
+
+
+def translate_jsonld_text(text, table):
+    """Traduce los campos de texto (name/text/headline/description) de los
+    bloques JSON-LD de FAQPage/Article/TechArticle via el diccionario. Hace
+    falta porque <script> esta en OPAQUE y translate() lo copia tal cual del
+    ingles. Solo actua en bloques que contienen uno de esos @type; el resto
+    del JSON-LD (Organization, SoftwareApplication, BreadcrumbList) queda
+    intacto. Cada campo usa normalize/lookup/restore igual que el resto de la
+    pagina, asi que reutiliza las mismas claves (p. ej. el H1 y la meta
+    description ya traducidos)."""
     def script_sub(m):
         block = m.group(0)
-        if '"FAQPage"' not in block:
+        if not any(t in block for t in JSONLD_TRANSLATABLE):
             return block
 
         def field_sub(fm):
@@ -369,7 +376,7 @@ def translate_faq_jsonld(text, table):
                 return fm.group(0)
             return fm.group(1) + json.dumps(restore(tr, vals), ensure_ascii=False)[1:-1] + fm.group(3)
 
-        return re.sub(r'("(?:name|text)":\s*")((?:[^"\\]|\\.)*)(")', field_sub, block)
+        return re.sub(r'("(?:name|text|headline|description)":\s*")((?:[^"\\]|\\.)*)(")', field_sub, block)
 
     return re.sub(r'<script type="application/ld\+json">.*?</script>', script_sub, text, flags=re.S)
 
@@ -389,7 +396,7 @@ def structural(text, en_path, es_path, table):
     text = localize_links(text)
     text = re.sub(re.escape(LANG_START) + r".*?" + re.escape(LANG_END),
                   lambda _m: lang_switch_html("es", en_path, es_path), text, count=1, flags=re.S)
-    text = translate_faq_jsonld(text, table)
+    text = translate_jsonld_text(text, table)
     return text
 
 
