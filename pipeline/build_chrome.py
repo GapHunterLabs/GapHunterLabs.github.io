@@ -45,6 +45,8 @@ PAGES = (
     ("eula/index.html", None, "/eula/"),
     ("plugin-performance-audit/index.html", None, "/plugin-performance-audit/"),
     ("dependency-security-review/index.html", "/services/", None),
+    ("custom-plugins-inspections/index.html", "/services/", None),
+    ("plugin-updates/index.html", "/services/", None),
     ("services/index.html", "/services/", None),
     ("ghl-jail/index.html", None, None),
 )
@@ -106,6 +108,8 @@ ES_PATHS = {
     "/eula/": "/es/eula/",
     "/plugin-performance-audit/": "/es/auditoria-de-rendimiento/",
     "/dependency-security-review/": "/es/revision-de-seguridad-de-dependencias/",
+    "/custom-plugins-inspections/": "/es/plugins-e-inspecciones-a-medida/",
+    "/plugin-updates/": "/es/actualizacion-de-plugins/",
     "/services/": "/es/servicios/",
     "/ghl-jail/": "/es/ghl-jail/",
 }

@@ -250,6 +250,34 @@ def pages():
         "Revisi&oacute;n de seguridad",
         ["Precio fijo desde USD 4.800", SITE]))
 
+    # ---------- CUSTOM PLUGINS AND INSPECTIONS ----------
+    P.append(("og-custom-plugins", "en", CSS_HERO, hero_body(
+        "Custom plugins and<br>inspections",
+        "Static-analysis inspections tailored to your codebase, delivered as a plugin your team installs and runs in CI &mdash; internal APIs, secrets and security patterns.",
+        "#B98CFF"),
+        "Custom plugins",
+        ["Fixed price from USD 7,500", SITE]))
+    P.append(("og-custom-plugins.es", "es", CSS_HERO, hero_body(
+        "Plugins e inspecciones<br>a medida",
+        "Inspecciones de an&aacute;lisis est&aacute;tico a medida de tu c&oacute;digo, entregadas como un plugin que tu equipo instala y corre en CI &mdash; API internas, secretos y patrones de seguridad.",
+        "#B98CFF"),
+        "Plugins a medida",
+        ["Precio fijo desde USD 7.500", SITE]))
+
+    # ---------- PLUGIN UPDATES FOR NEW IDE VERSIONS ----------
+    P.append(("og-plugin-updates", "en", CSS_HERO, hero_body(
+        "Plugin updates for<br>new IDE versions",
+        "Your JetBrains plugin built and verified against the IDE versions you support: removed and deprecated APIs, Kotlin K2, Gradle plugin 2.x and Plugin Verifier failures.",
+        "#0151FC"),
+        "IDE compatibility",
+        ["Fixed price from USD 4,500", SITE]))
+    P.append(("og-plugin-updates.es", "es", CSS_HERO, hero_body(
+        "Actualizaci&oacute;n de plugins<br>para nuevas versiones del IDE",
+        "Tu plugin de JetBrains compilado y verificado contra las versiones del IDE que soportas: API removidas y obsoletas, Kotlin K2, Gradle plugin 2.x y fallos del Plugin Verifier.",
+        "#0151FC"),
+        "Compatibilidad del IDE",
+        ["Precio fijo desde USD 4.500", SITE]))
+
     # ---------- CATALOG ----------
     P.append(("og-catalog", "en", CSS_HERO, hero_body(
         "JetBrains &amp; VS Code plugins<br>for real developer gaps",
