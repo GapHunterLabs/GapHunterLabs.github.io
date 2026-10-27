@@ -91,7 +91,13 @@
   var currentKey = 'gap';
   if (!fieldsHost || !form) return;
 
-  function esc(s) { var d = document.createElement('div'); d.textContent = s == null ? '' : s; return d.innerHTML; }
+  // 2026-10-27: antes usaba textContent->innerHTML, que NO escapa comillas, y esc() se usa dentro de atributos
+  // (placeholder="...", value="..."). Hoy ningun texto fijo las trae, pero bastaba una para romper el atributo.
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
 
   function renderFields(key) {
     var cfg = CONFIGS[key];
@@ -113,18 +119,18 @@
 
   function fieldHtml(f) {
     var reqMark = f.required ? ' <span class="req">*</span>' : ' <span style="color:var(--text-faint);font-weight:400">' + t('(optional)', '(opcional)') + '</span>';
-    var label = '<label for="cf-' + f.name + '">' + esc(f.label) + reqMark + '</label>';
+    var label = '<label for="cf-' + esc(f.name) + '">' + esc(f.label) + reqMark + '</label>';
     var body = '';
     if (f.type === 'select') {
-      body = '<select id="cf-' + f.name + '" name="' + f.name + '"' + (f.required ? ' required' : '') + '>' +
+      body = '<select id="cf-' + esc(f.name) + '" name="' + esc(f.name) + '"' + (f.required ? ' required' : '') + '>' +
         '<option value="">' + esc(f.prompt || t('Select one', 'Elige una opción')) + '</option>' +
         f.options.map(function (o) { return '<option value="' + esc(o) + '">' + esc(o) + '</option>'; }).join('') +
         '</select>';
     } else if (f.type === 'textarea') {
-      body = '<textarea id="cf-' + f.name + '" name="' + f.name + '" data-max="' + f.max + '" placeholder="' + esc(f.placeholder || '') + '"' + (f.required ? ' required' : '') + '></textarea>' +
-        '<span class="cf-counter" data-counter-for="cf-' + f.name + '">0/' + f.max + '</span>';
+      body = '<textarea id="cf-' + esc(f.name) + '" name="' + esc(f.name) + '" data-max="' + Number(f.max) + '" placeholder="' + esc(f.placeholder || '') + '"' + (f.required ? ' required' : '') + '></textarea>' +
+        '<span class="cf-counter" data-counter-for="cf-' + esc(f.name) + '">0/' + Number(f.max) + '</span>';
     } else {
-      body = '<input type="text" id="cf-' + f.name + '" name="' + f.name + '" placeholder="' + esc(f.placeholder || '') + '"' + (f.required ? ' required' : '') + '>';
+      body = '<input type="text" id="cf-' + esc(f.name) + '" name="' + esc(f.name) + '" placeholder="' + esc(f.placeholder || '') + '"' + (f.required ? ' required' : '') + '>';
     }
     return '<div class="cf-field">' + label + body + '</div>';
   }

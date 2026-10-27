@@ -171,13 +171,21 @@
     return plugins.concat(pages);
   }
 
+  // 2026-10-27: busca sobre el texto ORIGINAL y escapa cada tramo por separado. Antes buscaba sobre el texto ya
+  // escapado: escribir "am" o "amp" partia el "&amp;" de "JetBrains & VS Code" en "&<mark>amp</mark>;" y se leia
+  // "&amp;" literal; y como aplicaba un termino tras otro, un termino como "ar" podia caer dentro de un "<mark>"
+  // anterior. Una sola pasada, con el termino mas largo primero, evita ambas cosas.
   function highlight(text, terms) {
-    var out = esc(text);
-    terms.filter(function (t) { return t.length >= 2; }).forEach(function (t) {
-      var rx = new RegExp('(' + t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + ')', 'ig');
-      out = out.replace(rx, '<mark>$1</mark>');
-    });
-    return out;
+    var src = String(text == null ? '' : text);
+    var ts = terms.filter(function (t) { return t.length >= 2; }).sort(function (a, b) { return b.length - a.length; });
+    if (!ts.length) return esc(src);
+    var rx = new RegExp('(' + ts.map(function (t) { return t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }).join('|') + ')', 'ig');
+    var out = '', last = 0, m;
+    while ((m = rx.exec(src)) !== null) {
+      out += esc(src.slice(last, m.index)) + '<mark>' + esc(m[0]) + '</mark>';
+      last = m.index + m[0].length;
+    }
+    return out + esc(src.slice(last));
   }
 
   // ---- interfaz --------------------------------------------------------
@@ -230,7 +238,7 @@
     var it = d.it;
     var meta = it.t === 'p' || it.t === 'v'
       ? esc(it.k) + (it.pr ? ' · ' + esc(T.price[it.pr]) : '')
-      : esc(pick(it.d)).slice(0, 110);
+      : esc(String(pick(it.d) == null ? '' : pick(it.d)).slice(0, 110));   // recortar ANTES de escapar: no parte una entidad
     return '<li class="ghs-item ghs-t-' + it.t + '" id="ghs-opt-' + i + '" role="option" aria-selected="false" data-i="' + i + '">' +
       '<span class="ghs-kind">' + esc(T.type[it.t]) + '</span>' +
       '<span class="ghs-name">' + highlight(d.name, terms) + '</span>' +

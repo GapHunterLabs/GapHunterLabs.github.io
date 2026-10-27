@@ -40,29 +40,38 @@
   // 2026-09-27: la tabla ya no viaja pre-renderizada (duplicaba los 146
   // items de la grilla, ~137 KB). Se arma aqui desde las tarjetas, que ya
   // traen todos los datos en sus atributos data-*; sin JS queda la grilla.
+  // 2026-10-27: todo lo que entra a una fila pasa por esc() o se fuerza a numero. Los datos salen del HTML
+  // pre-renderizado por el build (no son entrada del usuario), pero esta funcion arma marcado con ellos y no
+  // debe depender de que eso siga siendo cierto.
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
   function buildRowsFromCards() {
     if (!tbody || tbody.children.length || !gridCards.length) return;
     var fmt = function (n) { return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ','); };
+    var numOrDash = function (v) { return v != null && v !== '' && isFinite(v) ? Number(v) : '—'; };
     var priceLabel = { FREE: ES ? 'Gratis' : 'Free', FREEMIUM: 'Freemium', PAID: ES ? 'De pago' : 'Paid' };
     var L = ES ? { dl: 'Descargas', rv: 'Reseñas', rt: 'Valoración', st: 'GitHub ★', pr: 'Precio', pb: 'Publicado' }
                : { dl: 'Downloads', rv: 'Reviews', rt: 'Rating', st: 'GitHub ★', pr: 'Pricing', pb: 'Published' };
     var html = gridCards.map(function (c) {
       var d = c.dataset;
       var attrs = Array.prototype.filter.call(c.attributes, function (a) { return a.name.indexOf('data-') === 0; })
-        .map(function (a) { return a.name + '="' + a.value.replace(/"/g, '&quot;') + '"'; }).join(' ');
+        .map(function (a) { return esc(a.name) + '="' + esc(a.value) + '"'; }).join(' ');
       var name = c.querySelector('.card-name'), niche = c.querySelector('.card-niche');
       var pending = c.hasAttribute('data-pending');
       var price = pending ? '<span class="price-badge price-pending">' + (ES ? 'Pendiente' : 'Pending') + '</span>'
-        : '<span class="price-badge price-' + (d.pricing || 'FREE').toLowerCase() + '">' + (priceLabel[d.pricing] || priceLabel.FREE) + '</span>';
+        : '<span class="price-badge price-' + esc((d.pricing || 'FREE').toLowerCase()) + '">' + (priceLabel[d.pricing] || priceLabel.FREE) + '</span>';
       return '<tr class="row" ' + attrs + '>' +
-        '<td class="name-cell"><a href="' + c.getAttribute('href') + '"><div class="plugin-name">' + (name ? name.innerHTML : '') + '</div>' +
-        '<div class="niche">' + (niche ? niche.innerHTML : '') + '</div></a></td>' +
-        '<td class="num-cell" data-label="' + L.dl + '">' + (pending ? '—' : fmt(d.downloads)) + '</td>' +
-        '<td class="num-cell tbl-optional" data-label="' + L.rv + '">' + (d.reviews != null ? d.reviews : '—') + '</td>' +
+        '<td class="name-cell"><a href="' + esc(c.getAttribute('href')) + '"><div class="plugin-name">' + (name ? esc(name.textContent) : '') + '</div>' +
+        '<div class="niche">' + (niche ? esc(niche.textContent) : '') + '</div></a></td>' +
+        '<td class="num-cell" data-label="' + L.dl + '">' + (pending ? '—' : fmt(Number(d.downloads) || 0)) + '</td>' +
+        '<td class="num-cell tbl-optional" data-label="' + L.rv + '">' + numOrDash(d.reviews) + '</td>' +
         '<td class="num-cell tbl-optional" data-label="' + L.rt + '">' + (d.rating != null ? Number(d.rating).toFixed(2) : '—') + '</td>' +
-        '<td class="num-cell" data-label="' + L.st + '">' + (d.stars != null ? d.stars : '—') + '</td>' +
+        '<td class="num-cell" data-label="' + L.st + '">' + numOrDash(d.stars) + '</td>' +
         '<td data-label="' + L.pr + '">' + price + '</td>' +
-        '<td class="num-cell" data-label="' + L.pb + '" style="text-align:left">' + (d.firstpublished || '—') + '</td></tr>';
+        '<td class="num-cell" data-label="' + L.pb + '" style="text-align:left">' + esc(d.firstpublished || '—') + '</td></tr>';
     }).join('');
     tbody.innerHTML = html;
   }
