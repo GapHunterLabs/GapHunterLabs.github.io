@@ -46,7 +46,7 @@
 <meta name="twitter:description" content="How performance, security and reliability problems are investigated and fixed, how plugin ideas are evaluated, and how catalog data is reported.">
 <meta name="twitter:image" content="https://gaphunterlabs.com/og-methodology.png?v=3">
 <meta name="twitter:image:alt" content="How a gap becomes a fix — Gap Hunter Labs methodology">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","@id":"https://gaphunterlabs.com/methodology/#article","mainEntityOfPage":"https://gaphunterlabs.com/methodology/","headline":"Methodology","description":"How performance, security and reliability problems are investigated and fixed, how plugin ideas are evaluated, and how catalog data is reported.","author":{"@type":"Person","@id":"https://gaphunterlabs.com/#joel","name":"Joel Diaz","url":"https://gaphunterlabs.com/"},"publisher":{"@type":"Organization","@id":"https://gaphunterlabs.com/#org","name":"Gap Hunter Labs","logo":{"@type":"ImageObject","url":"https://gaphunterlabs.com/apple-touch-icon.png"}},"datePublished":"2026-09-02","dateModified":"2026-09-24","url":"https://gaphunterlabs.com/methodology/"}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","@id":"https://gaphunterlabs.com/methodology/#article","mainEntityOfPage":"https://gaphunterlabs.com/methodology/","headline":"Methodology","description":"How performance, security and reliability problems are investigated and fixed, how plugin ideas are evaluated, and how catalog data is reported.","author":{"@type":"Person","@id":"https://gaphunterlabs.com/#joel","name":"Joel Diaz","url":"https://gaphunterlabs.com/"},"publisher":{"@type":"Organization","@id":"https://gaphunterlabs.com/#org","name":"Gap Hunter Labs","logo":{"@type":"ImageObject","url":"https://gaphunterlabs.com/apple-touch-icon.png"}},"datePublished":"2026-09-02","dateModified":"2026-10-27","url":"https://gaphunterlabs.com/methodology/"}</script>
 <link rel="stylesheet" href="/css/theme.css?v=6c7f204f">
 <link rel="stylesheet" href="/css/base.css?v=3b2dc0b4">
 <style>
@@ -268,7 +268,7 @@
   <div class="page-hero method-intro band-dark gh-page-header">
     <p class="contact-kicker">Gap Hunter Labs</p>
     <h1>Methodology</h1>
-    <p class="contact-lead" style="margin-bottom:0">How problems are investigated and fixed, how plugin ideas are evaluated, what the catalog&rsquo;s figures mean, and what this site deliberately leaves out.</p>
+    <p class="contact-lead" style="margin-bottom:0">How security, performance and reliability problems are found, verified and fixed: traced to a root cause, backed by evidence anyone can re-run, and reported with their real status. The same method stands behind every engagement and every plugin in the catalog.</p>
   </div>
 
   <section class="method-investigation" aria-labelledby="method-investigation">
@@ -280,6 +280,18 @@
       <li><strong>Build the fix.</strong> Ship the smallest change that removes the cause, with evidence before and after: a pull request upstream, a report to the maintainers, or a plugin when the fix belongs outside the platform.</li>
     </ol>
     <p>Results are published with their source (the ticket, the pull request, the report or the test) and with their real status: an open pull request is shown as open, and a fix that the maintainers made in a different way is described as theirs. See the <a href="/engineering-evidence/">engineering evidence</a>.</p>
+  </section>
+
+  <section class="disclosure" aria-labelledby="method-assurance">
+    <h2 id="method-assurance">Assurance, confidentiality and limits</h2>
+    <p>For a security or engineering lead deciding whether to rely on this work, the method holds to five commitments on every engagement.</p>
+    <ul>
+      <li><strong>Root cause, not symptoms.</strong> Every finding is traced to the exact code, dependency version or configuration that causes it, and reproduced on the version where it happens.</li>
+      <li><strong>Evidence you can re-run.</strong> Each finding ships with a measurement, a stack trace or a test, and a before-and-after for anything that gets a fix.</li>
+      <li><strong>Ranked by real exposure.</strong> Findings are ordered by actual exposure, not by raw CVSS score, and anything exploitable is reported first and privately through your security channel.</li>
+      <li><strong>No inflated findings.</strong> Results carry their real status; the work reports what it finds and does not claim that no other issue exists.</li>
+      <li><strong>Read-only and confidential.</strong> A review is read-only, so nothing is pushed to your code; your code and data stay confidential, and signing your NDA is fine.</li>
+    </ul>
   </section>
 
   <figure class="decision-figure" aria-labelledby="greenlit-title">
