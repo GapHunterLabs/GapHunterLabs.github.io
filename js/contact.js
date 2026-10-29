@@ -38,7 +38,7 @@
     plugin: {
       label: 'plugin-feedback',
       title: t('Report a plugin', 'Reportar un plugin'),
-      sub: t('Tell us which plugin and what happened.', 'Cuéntanos qué plugin y qué pasó.'),
+      sub: t('Tell me which plugin and what happened.', 'Cuéntame qué plugin y qué pasó.'),
       submitLabel: t('Report a plugin', 'Reportar un plugin'),
       fields: [
         { name: 'plugin', label: t('Plugin name', 'Nombre del plugin'), type: 'text', required: true, placeholder: t('e.g. GitLab CI Companion', 'p. ej. GitLab CI Companion') },
@@ -51,9 +51,9 @@
       label: 'hire',
       mail: true,
       title: t('Start an engagement', 'Iniciar un encargo'),
-      sub: t('Describe the problem or the work. You get the scope, delivery date and price in writing before any work starts. Joel replies personally by email.',
-             'Describe el problema o el trabajo. Recibes el alcance, la fecha de entrega y el precio por escrito antes de empezar cualquier trabajo. Joel responde personalmente por correo.'),
-      submitLabel: t('Email Joel', 'Escribir a Joel'),
+      sub: t('Describe the problem or the work. Before any work starts, I send you the scope, delivery date and price in writing. I reply personally by email.',
+             'Describe el problema o el trabajo. Antes de empezar cualquier trabajo, te envío por escrito el alcance, la fecha de entrega y el precio. Respondo personalmente por correo.'),
+      submitLabel: t('Email me', 'Escríbeme'),
       fields: [
         { name: 'org', label: t('Company or project', 'Empresa o proyecto'), type: 'text', required: true, placeholder: t('Your company, team or project', 'Tu empresa, equipo o proyecto') },
         { name: 'service', label: t('What do you need?', '¿Qué necesitas?'), prompt: t('Select one', 'Elige una opción'), type: 'select', required: true,
@@ -71,8 +71,8 @@
       label: 'partnership',
       mail: true,
       title: t('Partnership', 'Alianzas'),
-      sub: t('Tell us about your organization and what you have in mind. This goes by email, never as a public issue.',
-             'Cuéntanos sobre tu organización y lo que tienes en mente. Esto va por correo, nunca como un issue público.'),
+      sub: t('Tell me about your organization and what you have in mind. This goes by email, never as a public issue.',
+             'Cuéntame sobre tu organización y lo que tienes en mente. Esto va por correo, nunca como un issue público.'),
       submitLabel: t('Send by email', 'Enviar por correo'),
       fields: [
         { name: 'org', label: t('Organization', 'Organización'), type: 'text', required: true, placeholder: t('Your company or project', 'Tu empresa o proyecto') },
@@ -209,7 +209,7 @@
     var data = new FormData(form);
     var titleSeed = data.get(cfg.fields[0].name) || cfg.title;
     if (cfg.mail) {
-      var subject = (cfg.label === 'hire' ? t('Work with Joel: ', 'Trabaja con Joel: ') : t('Partnership: ', 'Alianza: ')) + String(titleSeed).slice(0, 80);
+      var subject = (cfg.label === 'hire' ? t('Engagement: ', 'Encargo: ') : t('Partnership: ', 'Alianza: ')) + String(titleSeed).slice(0, 80);
       var body = cfg.fields.map(function (f) {
         var v = data.get(f.name);
         return f.label + ':\n' + (v ? String(v) : t('(not provided)', '(sin completar)'));

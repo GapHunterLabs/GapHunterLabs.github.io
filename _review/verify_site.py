@@ -465,7 +465,7 @@ for _lang in ("en", "es"):
             p.locator("#cfSubmit").click()
             p.wait_for_selector("#cfFallback:not([hidden])")
             text = p.locator("#cfFallback textarea").input_value()
-            expect(("Work with Joel" in text) or ("Trabaja con Joel" in text), "the prepared message should carry the subject: %r" % text[:80])
+            expect(("Engagement: Acme" in text) or ("Encargo: Acme" in text), "the prepared message should carry the subject: %r" % text[:80])
             expect("Acme" in text and "hello" in text, "the prepared message should carry the fields")
             env.shot(p, "contact-%s" % lang)
 
