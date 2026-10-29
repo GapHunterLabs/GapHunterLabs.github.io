@@ -1,0 +1,17 @@
+{
+  "asOf": "2026-10-28",
+  "note": "Counts shown on the home page. Re-verify before changing: GitHub lists PR #3696 as closed because JetBrains integrates through its monorepo; the ticket IJPL-257919 is Fixed.",
+  "upstreamPullRequests": {
+    "repo": "JetBrains/intellij-community",
+    "author": "kendjm",
+    "total": 8,
+    "integrated": 1,
+    "open": 7,
+    "verifiedBy": "gh search prs --author kendjm --repo JetBrains/intellij-community (2026-10-28) + ticket state on YouTrack (2026-10-19)"
+  },
+  "advisoriesClosedUpstream": {
+    "count": 10,
+    "report": "bancolombia/reactive-commons-go#5",
+    "verifiedBy": "OSV check of the pinned version, fixed by the maintainers on 2026-10-07 (published on the home page)"
+  }
+}

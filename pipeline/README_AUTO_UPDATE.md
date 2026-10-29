@@ -41,3 +41,18 @@ A successful update requires the same plugin count in:
 - `catalog/index.html` no-script list (`<li>` count`)
 
 The workflow checks this parity before committing generated changes. It skips the commit when no tracked generated file changed.
+
+## Frontend build (Tailwind and badges)
+
+The site needs no CDN. `css/tw.css` is compiled from `pipeline/css-src/tailwind.css` by the Tailwind CLI and committed, so the CI does not need Node:
+
+```
+cd pipeline
+npm install          # once: tailwindcss, axe-core, simple-icons (all devDependencies)
+npm run build:css    # rewrites ../css/tw.css (~2 s)
+python _review/verify_tailwind.py   # fails if tw.css is stale
+```
+
+Utilities use the `tw-` prefix and read the colors from the CSS tokens in `css/theme.css`, so the light, dark and system themes keep working. Badges and the badge table come from `pipeline/badges.py` as inline SVG (brand marks from `pipeline/icons.json`, extracted from simple-icons, CC0, by `build_icons.py`). Rebuild `tw.css` after adding a `tw-*` class to a generator or a page.
+
+Accessibility check on a sample of pages, with the site served locally: `python _review/axe_check.py`.

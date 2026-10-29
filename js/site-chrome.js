@@ -22,7 +22,7 @@
     if (choice === 'light' || choice === 'dark') root.setAttribute('data-theme', choice);
     else root.removeAttribute('data-theme');
     try {
-      if (choice === 'system') localStorage.removeItem(KEY); else localStorage.setItem(KEY, choice);
+      localStorage.setItem(KEY, choice); // 'system' tambien se guarda: sin clave = primera visita (oscuro)
     } catch (e) { /* sin almacenamiento: vale para esta visita */ }
     syncThemeControls();
   }
@@ -96,7 +96,7 @@
   // ---- buscador del topbar (2026-10-05) --------------------------------
   // site-search.js y el indice se cargan recien al abrir el buscador (clic,
   // Ctrl/Cmd+K o "/"). build_search_index.py escribe la URL con su hash.
-  var SEARCH_SRC = /*SEARCH_SRC*/'/js/site-search.js?v=0996c81b'/*ENDSEARCH_SRC*/;
+  var SEARCH_SRC = /*SEARCH_SRC*/'/js/site-search.js?v=108a5668'/*ENDSEARCH_SRC*/;
   var searchLoading = false;
   function openSearch(trigger) {
     if (window.GHLSearch) { window.GHLSearch.open(trigger); return; }

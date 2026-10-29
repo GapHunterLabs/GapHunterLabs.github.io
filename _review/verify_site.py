@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 from playwright.sync_api import sync_playwright
 
@@ -32,9 +33,11 @@ def row_spreads(page, selector):
 
 
 with sync_playwright() as p:
+    # Edge fijo no existe en todas las maquinas: si falta, Chromium de Playwright.
+    _edge = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
     browser = p.chromium.launch(
         headless=True,
-        executable_path=r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe",
+        **({"executable_path": _edge} if os.path.exists(_edge) else {}),
     )
 
     for label, viewport in (

@@ -1,5 +1,6 @@
 /* Gap Hunter Labs -- home (index.html and es/index.html).
-   Rewritten 2026-10-18 for the "engineering notebook" redesign. The old
+   Restyled 2026-10-28 (v3): dense dark UI, cards, status pills and badges;
+   markup and copy are unchanged from the 2026-10-18 rewrite. The old
    sheet (2,971 lines, ~40% unused) carried the catalog dashboard, the
    slider and several earlier redesigns; none of it is used by the new
    home. Fonts, colors and radii come from /css/theme.css; header, footer,
@@ -63,9 +64,9 @@ a:focus-visible, .btn:focus-visible { outline: none; box-shadow: var(--focus-rin
 /* ---- Shared editorial pieces --------------------------------------------- */
 .nb-label {
   font: 600 12px/1.4 var(--mono);
-  letter-spacing: 0.08em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--text-dim);
+  color: var(--signal);
 }
 .nb-actions { display: flex; flex-wrap: wrap; gap: 10px; }
 .nb-more { display: flex; flex-wrap: wrap; gap: 6px 24px; font-size: 15px; }
@@ -75,18 +76,34 @@ a:focus-visible, .btn:focus-visible { outline: none; box-shadow: var(--focus-rin
 
 /* ---- Hero: statement + margin note, on the page itself -------------------- */
 .nb-hero {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(0, 1fr) 400px;
   gap: 32px 56px;
-  padding: 72px 0 56px;
-  border-bottom: 1px solid var(--border);
+  padding: 88px 0 64px;
 }
-.nb-kicker { font: 500 13px/1.4 var(--mono); color: var(--text-dim); }
+/* Grid + glow behind the headline: pure CSS, fades out toward the edges. */
+.nb-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(520px 220px at 28% 0%, color-mix(in srgb, var(--signal) 16%, transparent), transparent 70%),
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: auto, 48px 48px, 48px 48px;
+  -webkit-mask-image: radial-gradient(ellipse at 30% 0%, #000 25%, transparent 78%);
+  mask-image: radial-gradient(ellipse at 30% 0%, #000 25%, transparent 78%);
+}
+.nb-kicker { font: 600 12px/1.4 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--signal); }
+.nb-sync { display: inline-flex; align-items: center; gap: 8px; margin-top: 10px; font: 500 12px/1.4 var(--mono); color: var(--text-dim); }
 .nb-hero-title {
   margin-top: 18px;
-  max-width: 27ch;
-  font: 600 clamp(30px, 3.8vw, 46px)/1.1 var(--serif);
-  letter-spacing: -0.015em;
+  max-width: 22ch;
+  font: 800 clamp(32px, 4.6vw, 56px)/1.04 var(--sans);
+  letter-spacing: -0.035em;
 }
 .nb-lede { margin-top: 22px; max-width: 64ch; font-size: 18px; line-height: 1.65; color: var(--text-dim); }
 .nb-hero .nb-actions { margin-top: 32px; }
@@ -111,7 +128,8 @@ a:focus-visible, .btn:focus-visible { outline: none; box-shadow: var(--focus-rin
   height: auto;
   aspect-ratio: 800 / 816;
   object-fit: cover;
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
   background: var(--surface-2);
 }
 .nb-portrait figcaption {
@@ -137,9 +155,10 @@ a:focus-visible, .btn:focus-visible { outline: none; box-shadow: var(--focus-rin
 .nb-margin-note { margin-top: 20px; font: 400 13px/1.55 var(--mono); color: var(--text-dim); }
 
 /* ---- Sections ------------------------------------------------------------- */
-.nb-section { padding: 64px 0; border-bottom: 1px solid var(--border); }
-.nb-section-head { display: grid; gap: 8px; max-width: 72ch; margin-bottom: 36px; }
-.nb-section-head h2 { font: 600 clamp(26px, 3vw, 36px)/1.15 var(--serif); letter-spacing: -0.01em; }
+.nb-impact { padding: 0 0 64px; border-bottom: 1px solid var(--border); }
+.nb-section { padding: 72px 0; border-bottom: 1px solid var(--border); }
+.nb-section-head { display: grid; gap: 8px; max-width: 72ch; margin-bottom: 32px; }
+.nb-section-head h2 { font: 700 clamp(26px, 3vw, 36px)/1.12 var(--sans); letter-spacing: -0.03em; }
 .nb-section-lede { color: var(--text-dim); }
 
 /* ---- Investigations: ledger rows with a metadata margin ------------------- */
@@ -147,23 +166,42 @@ a:focus-visible, .btn:focus-visible { outline: none; box-shadow: var(--focus-rin
   display: grid;
   grid-template-columns: 240px minmax(0, 1fr);
   gap: 16px 40px;
-  padding: 32px 0;
-  border-top: 1px solid var(--border);
+  margin-top: 16px;
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  transition: border-color 140ms ease;
 }
+.inv:hover { border-color: var(--border-strong); }
 .inv-meta { display: grid; gap: 6px; align-content: start; font: 400 13px/1.5 var(--mono); color: var(--text-dim); }
 .inv-no { color: var(--text-faint); }
 .inv-id { font-size: 15px; font-weight: 600; color: var(--text); }
 .inv-id a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+/* Status pill: dot + label. The dot color carries state, the text always says it. */
 .inv-status {
-  display: inline-block;
+  display: inline-flex;
+  align-items: flex-start;
+  gap: 8px;
   justify-self: start;
-  padding-left: 10px;
-  border-left: 3px solid var(--border-strong);
-  font: 500 13px/1.45 var(--mono);
-  color: var(--text-dim);
+  padding: 4px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: 14px;
+  background: var(--surface-2);
+  font: 500 12px/1.45 var(--mono);
+  color: var(--text);
 }
-.inv-status.is-open { border-left-color: var(--inspect-line); }
-.inv-status.is-fixed { border-left-color: var(--valid-line); color: var(--valid); }
+.inv-status::before {
+  content: "";
+  flex: none;
+  width: 8px;
+  height: 8px;
+  margin-top: 0.4em;
+  border-radius: 50%;
+  background: var(--pending);
+}
+.inv-status.is-open::before { background: var(--inspect); }
+.inv-status.is-fixed::before { background: var(--valid); }
 
 .inv-body h3 { font: 600 21px/1.3 var(--sans); letter-spacing: -0.005em; }
 .inv-facts { display: grid; gap: 14px; margin-top: 18px; }
@@ -190,7 +228,7 @@ a:focus-visible, .btn:focus-visible { outline: none; box-shadow: var(--focus-rin
 .nb-record ul { list-style: none; padding: 0; display: grid; gap: 12px; margin: 14px 0 24px; }
 /* Block, not grid: the text after the link is a bare text node and would
    become its own grid cell. The status label sits in the left gutter. */
-.nb-record li { position: relative; padding-left: 96px; max-width: 100ch; }
+.nb-record li { position: relative; padding-left: 92px; max-width: 100ch; }
 .nb-record li > .inv-status { position: absolute; left: 0; top: 0.15em; }
 .nb-record li > a { text-decoration: underline; text-underline-offset: 0.2em; }
 
@@ -200,25 +238,33 @@ a:focus-visible, .btn:focus-visible { outline: none; box-shadow: var(--focus-rin
   padding: 0;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  border-top: 1px solid var(--text);
+  gap: 16px;
   margin-bottom: 32px;
 }
-.nb-steps li { padding: 20px 28px 4px 0; display: grid; gap: 8px; align-content: start; }
-.nb-steps li + li { padding-left: 28px; border-left: 1px solid var(--border); }
-.nb-steps h3 { font: 600 20px/1.3 var(--serif); }
+.nb-steps li {
+  display: grid; gap: 8px; align-content: start; padding: 24px;
+  border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface);
+}
+.nb-steps h3 { font: 700 20px/1.3 var(--sans); letter-spacing: -0.02em; }
 .nb-steps p { color: var(--text-dim); }
 
 /* ---- Services: a real table ---------------------------------------------- */
-.nb-table { width: 100%; border-collapse: collapse; font-size: 15px; }
-.nb-table th, .nb-table td { padding: 16px 20px 16px 0; text-align: left; vertical-align: top; border-bottom: 1px solid var(--border); }
-.nb-table thead th { padding-top: 0; font: 600 12px/1.4 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); border-bottom-color: var(--text); }
+.nb-table {
+  width: 100%; border-collapse: separate; border-spacing: 0; overflow: hidden; font-size: 15px;
+  border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface);
+}
+.nb-table th, .nb-table td { padding: 16px 20px; text-align: left; vertical-align: top; border-bottom: 1px solid var(--border); }
+.nb-table tbody tr:last-child th, .nb-table tbody tr:last-child td { border-bottom: 0; }
+.nb-table tbody tr:nth-child(odd) { background: var(--band-a); }
+.nb-table tbody tr:nth-child(even) { background: var(--band-b); }
+.nb-table thead th { background: var(--surface); font: 600 12px/1.4 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); }
 .nb-table tbody th { width: 26%; font-weight: 600; }
 .nb-table tbody th a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
 .nb-table td { color: var(--text-dim); }
-.nb-table .nb-terms { width: 22%; padding-right: 0; font: 400 13px/1.55 var(--mono); color: var(--text); }
+.nb-table .nb-terms { width: 22%; font: 400 13px/1.55 var(--mono); color: var(--text); }
 
 .nb-engage { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 32px 56px; margin-top: 44px; }
-.nb-engage h3 { font: 600 20px/1.3 var(--serif); margin-bottom: 14px; }
+.nb-engage h3 { font: 700 20px/1.3 var(--sans); letter-spacing: -0.02em; margin-bottom: 14px; }
 .nb-start ol { padding-left: 1.3em; display: grid; gap: 10px; margin-bottom: 24px; }
 .nb-start ol li::marker { font-family: var(--mono); color: var(--text-dim); }
 .nb-about { padding-left: 32px; border-left: 1px solid var(--border); }
@@ -230,14 +276,18 @@ a:focus-visible, .btn:focus-visible { outline: none; box-shadow: var(--focus-rin
 .nb-badge:focus-visible { outline: 2px solid var(--text); outline-offset: 2px; }
 
 /* ---- Tools ---------------------------------------------------------------- */
-.nb-tools { display: grid; border-top: 1px solid var(--border); }
+.nb-tools { display: grid; gap: 12px; }
 .tool {
   display: grid;
   grid-template-columns: 300px minmax(0, 1fr);
   gap: 12px 40px;
-  padding: 24px 0;
-  border-bottom: 1px solid var(--border);
+  padding: 24px 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  transition: border-color 140ms ease;
 }
+.tool:hover { border-color: var(--border-strong); }
 .tool-name { font: 600 19px/1.3 var(--sans); }
 .tool-name a { text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
 .tool-name a:hover { text-decoration-thickness: 2px; }
@@ -258,7 +308,7 @@ a:focus-visible, .btn:focus-visible { outline: none; box-shadow: var(--focus-rin
   gap: 24px 48px;
   padding: 56px 0 8px;
 }
-.nb-catalog h2 { margin-top: 8px; font: 600 clamp(24px, 2.6vw, 30px)/1.2 var(--serif); }
+.nb-catalog h2 { margin-top: 8px; font: 700 clamp(24px, 2.6vw, 30px)/1.2 var(--sans); letter-spacing: -0.025em; }
 .nb-catalog-line { margin-top: 10px; max-width: 72ch; color: var(--text-dim); }
 
 /* ---- Narrow screens -------------------------------------------------------- */
@@ -270,8 +320,6 @@ a:focus-visible, .btn:focus-visible { outline: none; box-shadow: var(--focus-rin
   .inv-meta { grid-template-columns: auto auto; justify-content: start; column-gap: 20px; }
   .inv-meta .inv-scope, .inv-meta .inv-status { grid-column: 1 / -1; }
   .nb-steps { grid-template-columns: 1fr; }
-  .nb-steps li, .nb-steps li + li { padding: 18px 0; border-left: 0; }
-  .nb-steps li + li { border-top: 1px solid var(--border); }
   .nb-engage { grid-template-columns: 1fr; }
   .nb-about { padding-left: 0; padding-top: 28px; border-left: 0; border-top: 1px solid var(--border); }
   .nb-catalog { grid-template-columns: 1fr; }
@@ -279,6 +327,8 @@ a:focus-visible, .btn:focus-visible { outline: none; box-shadow: var(--focus-rin
 @media (max-width: 700px) {
   .wrap { padding: 0 16px 40px; }
   .nb-section { padding: 48px 0; }
+  .nb-hero { padding: 56px 0 40px; }
+  .inv, .tool, .nb-steps li { padding: 20px; }
   .nb-lede { font-size: 17px; }
   .tool-facts { grid-template-columns: minmax(0, 1fr); }
   .inv-facts > div, .tool-facts > div { grid-template-columns: 1fr; gap: 2px; }
@@ -286,11 +336,12 @@ a:focus-visible, .btn:focus-visible { outline: none; box-shadow: var(--focus-rin
   .nb-record li > .inv-status { position: static; display: block; width: max-content; margin-bottom: 4px; }
   .nb-table thead { display: none; }
   .nb-table, .nb-table tbody, .nb-table tr, .nb-table th, .nb-table td { display: block; width: auto; }
-  .nb-table tr { padding: 16px 0; border-bottom: 1px solid var(--border); }
+  .nb-table tr { padding: 16px 20px; border-bottom: 1px solid var(--border); }
+  .nb-table tbody tr:last-child { border-bottom: 0; }
   .nb-table tbody th, .nb-table td, .nb-table .nb-terms { width: auto; padding: 0; border: 0; }
   .nb-table td { margin-top: 6px; }
   .nb-table .nb-terms { margin-top: 8px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .btn { transition: none; }
+  .btn, .inv, .tool { transition: none; }
 }
