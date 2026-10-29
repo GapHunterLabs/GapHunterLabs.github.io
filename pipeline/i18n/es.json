@@ -1367,5 +1367,6 @@
  "Backers": "Impulsores",
  "Supporters": "Colaboradores",
  "Services — Gap Hunter Labs": "Servicios — Gap Hunter Labs",
- "Sponsor the work — Gap Hunter Labs": "Patrocina el trabajo — Gap Hunter Labs"
+ "Sponsor the work — Gap Hunter Labs": "Patrocina el trabajo — Gap Hunter Labs",
+ "Your plugin built and verified against the IntelliJ versions you need to support: removed or deprecated APIs, Kotlin K{n} mode, IntelliJ Platform Gradle Plugin {n}.x and Plugin Verifier failures. It is the process I use to keep my own catalog compatible with each new release. You receive the changes as a pull request, the Plugin Verifier report for each target version and a written list of the API changes that were resolved.": "Tu plugin compilado y verificado contra las versiones de IntelliJ que necesitas soportar: API eliminadas u obsoletas, el modo K{n} de Kotlin, el IntelliJ Platform Gradle Plugin {n}.x y los fallos de Plugin Verifier. Es el proceso que uso para mantener mi propio catálogo compatible con cada versión nueva. Recibes los cambios como un pull request, el informe de Plugin Verifier de cada versión objetivo y una lista escrita de los cambios de API resueltos."
 }
