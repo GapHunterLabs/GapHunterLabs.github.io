@@ -990,6 +990,7 @@ tr.row td[data-label]::before { font-family: var(--sans); font-size: 11px; lette
 .ticket-head .ticket-status.is-fixed, .ticket-head .ticket-status.is-merged { --dot: var(--valid); background: var(--surface-2); color: var(--text); }
 .ticket-head .ticket-status.is-open { --dot: var(--inspect); background: var(--surface-2); color: var(--text); }
 .ticket-head .ticket-status.is-submitted, .ticket-head .ticket-status.is-progress { --dot: var(--cyan); background: var(--surface-2); color: var(--text); }
+.ticket-badges { margin: 0 0 10px; }
 .ticket-card p { font-size: 13.5px; }
 .ticket-card code { border: 1px solid var(--border); }
 
