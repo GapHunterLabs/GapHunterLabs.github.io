@@ -1497,3 +1497,82 @@
 /* 2026-10-05: al paginar, el foco pasa a los resultados por codigo
    (js/catalog-scroll.js); sin contorno en ese contenedor. */
 #fieldMain:focus, #tableView:focus, #vsxGrid:focus { outline: none; }
+
+/* =====================================================================
+   Redesign v3 -- catalog: data card header, segmented platform tabs, mono eyebrows,
+   cards and table in the same language as the home (surface + 1px border, radius-lg,
+   status-dot pricing, banded rows). Same markup and behavior as before.
+   ===================================================================== */
+.catalog-v2 .cv-eyebrow { font: 600 11.5px/1.4 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--signal); }
+.catalog-v2 .cv-head h2 { font-size: clamp(20px, 2.1vw, 25px); }
+.catalog-v2 .cv-lead { font-size: 15px; }
+
+/* Scope header: the spec sheet becomes a two-column data card with banded rows. */
+.catalog-v2 .spec-sheet { column-gap: 0; margin-top: 22px; overflow: hidden;
+  border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+.catalog-v2 .spec-sheet .spec-row { grid-template-columns: 132px minmax(0, 1fr); gap: 12px; padding: 12px 18px; border-bottom: 0; border-top: 1px solid var(--border); }
+.catalog-v2 .spec-sheet .spec-row:nth-child(-n+2) { border-top: 0; }
+.catalog-v2 .spec-sheet .spec-row:nth-child(4n+1), .catalog-v2 .spec-sheet .spec-row:nth-child(4n+2) { background: var(--band-a); }
+.catalog-v2 .spec-sheet .spec-row:nth-child(4n+3), .catalog-v2 .spec-sheet .spec-row:nth-child(4n+4) { background: var(--band-b); }
+.catalog-v2 .spec-sheet .spec-row:nth-child(even) { border-left: 1px solid var(--border); }
+.catalog-v2 .spec-sheet dt { font-size: 11.5px; }
+.catalog-v2 .spec-sheet dd { font-size: 13.5px; }
+@media (max-width: 700px) {
+  .catalog-v2 .spec-sheet .spec-row:nth-child(-n+2) { border-top: 1px solid var(--border); }
+  .catalog-v2 .spec-sheet .spec-row:first-child { border-top: 0; }
+  .catalog-v2 .spec-sheet .spec-row:nth-child(n) { background: var(--band-a); border-left: 0; }
+  .catalog-v2 .spec-sheet .spec-row:nth-child(even) { background: var(--band-b); }
+}
+
+/* Platform tabs: segmented control. */
+.catalog-v2 .platform-tabs { gap: 4px; width: max-content; max-width: 100%; margin-top: 26px; padding: 4px;
+  border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+.catalog-v2 .platform-tab { margin: 0; padding: 7px 14px; border: 0; border-radius: var(--radius); font: 600 13.5px var(--sans); }
+.catalog-v2 .platform-tab svg { width: 16px; height: 16px; }
+.catalog-v2 .platform-tab[aria-selected="true"] { background: var(--surface-3); box-shadow: inset 0 0 0 1px var(--border-strong); }
+.catalog-v2 .platform-tab[aria-selected="true"] svg { color: var(--signal); }
+.catalog-v2 .pt-count { padding: 1px 7px; font: 600 11.5px var(--mono); }
+.catalog-v2 .platform-tab[aria-selected="true"] .pt-count { background: var(--surface); color: var(--text); }
+.catalog-v2 .platform-panel { padding-top: 28px; }
+
+/* Controls and categories. */
+@media (min-width: 641px) {
+  .catalog-v2 .controls { padding: 8px; border-radius: var(--radius-lg); box-shadow: none; }
+}
+.catalog-v2 .search input, .catalog-v2 .controls select { height: 36px; font-size: 13.5px; }
+.catalog-v2 .search input:focus, .catalog-v2 .controls select:focus { border-color: var(--signal); }
+.catalog-v2 .section-head-sm { font: 600 11.5px/1.4 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-dim); }
+.catalog-v2 .catalog-explore .cat-cell { border-radius: var(--radius-lg); transition: border-color 120ms ease, background-color 120ms ease; }
+.catalog-v2 .catalog-explore .cat-cell:hover { border-color: var(--border-strong); background: var(--surface-2); }
+.catalog-v2 .catalog-explore .cat-cell[aria-pressed="true"] { border-color: var(--signal); background: color-mix(in srgb, var(--signal) 9%, var(--surface)); }
+
+/* Cards (JetBrains and VS Code). */
+.catalog-v2 .plugin-grid { gap: 14px; }
+.catalog-v2 .plugin-card, .catalog-v2 .vsx-card { gap: 12px; padding: 18px; border-radius: var(--radius-lg); box-shadow: none; transition: border-color 120ms ease, background-color 120ms ease; }
+.catalog-v2 .plugin-card:hover, .catalog-v2 .vsx-card:hover { border-color: var(--border-strong); background: var(--surface-2); box-shadow: none; }
+.catalog-v2 .card-cat { width: 34px; height: 34px; border: 1px solid color-mix(in srgb, var(--cat, var(--accent)) 35%, var(--border)); }
+.catalog-v2 .card-cat svg { width: 18px; height: 18px; }
+.catalog-v2 .card-name { font-size: 15.5px; font-weight: 650; letter-spacing: -0.01em; }
+.catalog-v2 .card-niche { font: 500 11.5px/1.4 var(--mono); letter-spacing: 0.04em; text-transform: uppercase; }
+.catalog-v2 .card-pitch { font-size: 13.5px; }
+.catalog-v2 .card-metrics { font: 500 12px var(--mono); }
+.catalog-v2 .card-dl { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+.catalog-v2 .card-go { color: var(--text); font-family: var(--sans); font-size: 13px; }
+.catalog-v2 .card-go::after { content: " \2192"; content: " \2192" / ""; }
+.catalog-v2 .plugin-card:hover .card-go, .catalog-v2 .vsx-card:hover .card-go { color: var(--signal); }
+
+/* Table view: banded rows, mono column heads (desktop; the phone layout stays as cards). */
+@media (min-width: 641px) {
+  .catalog-v2 .table-scroll { border-radius: var(--radius-lg); box-shadow: none; }
+  .catalog-v2 thead th { padding: 10px 14px; background: var(--surface-2); font: 600 11px var(--mono); letter-spacing: 0.07em; text-transform: uppercase; color: var(--text-dim); }
+  .catalog-v2 thead th:hover { background: var(--surface-3); }
+  .catalog-v2 tbody tr.row:nth-child(odd) { background: var(--band-a); }
+  .catalog-v2 tbody tr.row:nth-child(even) { background: var(--band-b); }
+  .catalog-v2 tbody tr.row:hover { background: var(--surface-3); }
+  .catalog-v2 td.num-cell { font-family: var(--mono); font-size: 13px; }
+}
+
+/* Services band at the bottom. */
+.catalog-services .svc-card { border-radius: var(--radius-lg); box-shadow: none; }
+.catalog-services .svc-kicker { font: 600 11.5px/1.4 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--signal); }
+.catalog-services .svc-band { border-color: var(--border-strong); border-radius: var(--radius-lg); }

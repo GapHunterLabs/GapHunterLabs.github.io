@@ -672,9 +672,14 @@
 .hdr-stat-num { color: var(--text); font: 700 26px / 1.1 var(--sans); font-variant-numeric: tabular-nums; letter-spacing: -0.01em; }
 .hdr-stat-label { color: var(--text-dim); font-size: 13px; }
 /* Price labels are neutral (2026-10-19): green means a verified fix on this site, not "free". */
-.price-badge { display: inline-flex; align-items: center; padding: 2px 8px; border: 1px solid var(--border-strong); border-radius: var(--radius);
-  font: 600 12px / 1.4 var(--sans); letter-spacing: .02em; white-space: nowrap; }
-.price-free, .price-freemium, .price-paid { background: transparent; color: var(--text); }
+/* Status-dot pricing, same language as the plugin page badges: the dot backs the label, never replaces it. */
+.price-badge { display: inline-flex; align-items: center; gap: 6px; padding: 2px 9px 2px 8px; border: 1px solid var(--border-strong); border-radius: var(--radius-sm);
+  background: var(--surface-2); font: 600 12px / 1.5 var(--sans); letter-spacing: .02em; white-space: nowrap; }
+.price-badge::before { content: ""; flex: none; width: 6px; height: 6px; border-radius: 50%; background: var(--dot, var(--pending)); }
+.price-free { --dot: var(--valid); }
+.price-freemium { --dot: var(--cyan); }
+.price-paid { --dot: var(--inspect); }
+.price-free, .price-freemium, .price-paid { color: var(--text); }
 .price-pending { background: var(--surface-3); color: var(--text-dim); }
 
 /* =====================================================================
