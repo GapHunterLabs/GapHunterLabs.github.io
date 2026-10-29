@@ -228,8 +228,8 @@ a:focus-visible, .btn:focus-visible { outline: none; box-shadow: var(--focus-rin
 .nb-record ul { list-style: none; padding: 0; display: grid; gap: 12px; margin: 14px 0 24px; }
 /* Block, not grid: the text after the link is a bare text node and would
    become its own grid cell. The status label sits in the left gutter. */
-.nb-record li { position: relative; padding-left: 92px; max-width: 100ch; }
-.nb-record li > .inv-status { position: absolute; left: 0; top: 0.15em; }
+.nb-record li { position: relative; padding-left: 136px; max-width: 100ch; }
+.nb-record li > .inv-status { position: absolute; left: 0; top: 0.15em; width: 116px; box-sizing: border-box; }
 .nb-record li > a { text-decoration: underline; text-underline-offset: 0.2em; }
 
 /* ---- Method --------------------------------------------------------------- */
