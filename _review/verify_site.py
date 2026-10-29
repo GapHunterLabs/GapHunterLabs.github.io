@@ -38,6 +38,7 @@ from playwright.sync_api import sync_playwright
 ROOT = Path(__file__).resolve().parents[1]
 SHOTS = Path(__file__).resolve().parent / "screenshots"
 PAGE_SIZE = 15  # js/catalog.js
+PNG_MAGIC = bytes([0x89]) + b"PNG" + bytes([0x0D, 0x0A, 0x1A, 0x0A])
 CATEGORIES = ("api", "devops", "security", "data", "quality", "codegen", "testing", "editor")
 THIRD_PARTY_OK = ("gc.zgo.at", ".goatcounter.com")  # the only analytics the CSP allows
 
@@ -575,6 +576,46 @@ def _third_party(env: Env):
                 continue
             offenders.add(h)
     expect(not offenders, "third-party hosts contacted: %s" % sorted(offenders))
+
+
+@check("share", "social images: every page points to an existing 1200x630 PNG with the current version")
+def _og(env: Env):
+    import struct
+    cfg = (ROOT / "pipeline" / "site_config.py").read_text(encoding="utf-8")
+    version = re.search(r'OG_VERSION\s*=\s*"([^"]+)"', cfg).group(1)
+    problems, users = [], {}
+    pages = [p for p in ROOT.rglob("index.html") if not any(part in ("node_modules", "_review", "pipeline", "out") for part in p.relative_to(ROOT).parts)]
+    pages += list(ROOT.glob("*.html"))
+    for page in pages:
+        rel = page.relative_to(ROOT).as_posix()
+        text = page.read_text(encoding="utf-8")
+        m = re.search(r'<meta property="og:image" content="([^"]+)"', text)
+        if not m:
+            if page.name == "index.html":  # 404.html and the search-console file are not content pages
+                problems.append("%s: no og:image" % rel)
+            continue
+        url = urllib.parse.urlparse(m.group(1))
+        if 'http-equiv="refresh"' not in text:  # redirect stubs mirror their target and may share its image
+            users.setdefault(url.path, []).append(rel)
+        if "v=" + version not in url.query:
+            problems.append("%s: og:image should carry ?v=%s (%s)" % (rel, version, m.group(1)))
+        png = ROOT / url.path.lstrip("/")
+        if not png.exists():
+            problems.append("%s: %s does not exist" % (rel, url.path))
+            continue
+        head = png.read_bytes()[:24]
+        if head[:8] != PNG_MAGIC or struct.unpack(">II", head[16:24]) != (1200, 630):
+            problems.append("%s: %s is not a 1200x630 PNG" % (rel, url.path))
+        for tag in ("og:image:width", "og:image:height", "twitter:image"):
+            if tag not in text:
+                problems.append("%s: missing %s" % (rel, tag))
+    generic = users.get("/og-image.png", []) + users.get("/og-image.es.png", [])
+    extra = [g for g in generic if g not in ("index.html", "es/index.html")]
+    expect(not extra, "the generic home image is reused by other pages: %s" % extra[:5])
+    for path, rels in users.items():
+        if path.startswith("/media/"):
+            expect(len(rels) <= 2, "%s is shared by more than an EN/ES pair: %s" % (path, rels[:4]))
+    expect(not problems, "; ".join(problems[:8]) + (" (+%d more)" % (len(problems) - 8) if len(problems) > 8 else ""))
 
 
 @check("pages", "screenshots (only with --shots)")

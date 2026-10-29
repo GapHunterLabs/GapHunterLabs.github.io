@@ -33,8 +33,8 @@
 <meta property="og:url" content="https://gaphunterlabs.com/es/revision-de-seguridad-de-dependencias/">
 <meta property="og:title" content="Revisión de seguridad de dependencias y CI/CD | Gap Hunter Labs">
 <meta property="og:description" content="Una revisión de solo lectura y precio fijo de tus dependencias y flujos de CI/CD: CVE conocidos, riesgos de confusión de dependencias y permisos de workflows, con la corrección de cada uno.">
-<meta property="og:image" content="https://gaphunterlabs.com/og-dependency-security.es.png?v=3">
-<meta property="og:image:secure_url" content="https://gaphunterlabs.com/og-dependency-security.es.png?v=3">
+<meta property="og:image" content="https://gaphunterlabs.com/og-dependency-security.es.png?v=4">
+<meta property="og:image:secure_url" content="https://gaphunterlabs.com/og-dependency-security.es.png?v=4">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -45,7 +45,7 @@
 <meta name="twitter:site" content="@GapHunterLabs">
 <meta name="twitter:title" content="Revisión de seguridad de dependencias y CI/CD | Gap Hunter Labs">
 <meta name="twitter:description" content="Una revisión de solo lectura y precio fijo de tus dependencias y flujos de CI/CD: CVE conocidos, riesgos de confusión de dependencias y permisos de workflows, con la corrección de cada uno.">
-<meta name="twitter:image" content="https://gaphunterlabs.com/og-dependency-security.es.png?v=3">
+<meta name="twitter:image" content="https://gaphunterlabs.com/og-dependency-security.es.png?v=4">
 <meta name="twitter:image:alt" content="Dependency and CI/CD security review, from USD 4.800 — Gap Hunter Labs">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"¿Cómo se determina si la vulnerabilidad de una dependencia es realmente explotable?","acceptedAnswer":{"@type":"Answer","text":"Cada aviso se verifica contra la versión exacta fijada en tus manifiestos y lockfiles, no contra un rango de versiones, así un aviso que no aplica a tu versión fijada no se reporta como riesgo. Luego los hallazgos se ordenan por exposición real y no por el puntaje CVSS en bruto, y todo lo explotable se reporta primero y en privado por tu canal de seguridad. La revisión es de solo lectura y reporta lo que encuentra; no puede garantizar que no exista otra vulnerabilidad."}},{"@type":"Question","name":"¿Qué incluye una revisión de seguridad de CI/CD?","acceptedAnswer":{"@type":"Answer","text":"La revisión examina los permisos, los tokens y las acciones de terceros de tus flujos de CI y CD con OpenSSF Scorecard, revisa los manifiestos y lockfiles en busca de nombres de paquetes internos que un registro público podría suplantar (confusión de dependencias) y puede añadir una verificación opcional de conformidad con el Reglamento de Ciberresiliencia de la UE que cubre la política de seguridad, el security.txt, el SBOM y el flujo de reporte de vulnerabilidades. Es de solo lectura: tú eliges los repositorios y no se sube nada a tu código."}}]}</script>
 <link rel="stylesheet" href="/css/theme.css?v=b641a03e">

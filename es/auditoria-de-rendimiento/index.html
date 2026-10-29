@@ -33,8 +33,8 @@
 <meta property="og:url" content="https://gaphunterlabs.com/es/auditoria-de-rendimiento/">
 <meta property="og:title" content="Auditoría de rendimiento de plugins — Gap Hunter Labs">
 <meta property="og:description" content="Una auditoría de rendimiento a precio fijo para plugins de la plataforma IntelliJ: congelamientos, demoras al escribir y CPU alta, reproducidos, medidos y con parches.">
-<meta property="og:image" content="https://gaphunterlabs.com/og-audit.es.png?v=3">
-<meta property="og:image:secure_url" content="https://gaphunterlabs.com/og-audit.es.png?v=3">
+<meta property="og:image" content="https://gaphunterlabs.com/og-audit.es.png?v=4">
+<meta property="og:image:secure_url" content="https://gaphunterlabs.com/og-audit.es.png?v=4">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
@@ -45,7 +45,7 @@
 <meta name="twitter:site" content="@GapHunterLabs">
 <meta name="twitter:title" content="Auditoría de rendimiento de plugins — Gap Hunter Labs">
 <meta name="twitter:description" content="Una auditoría de rendimiento a precio fijo para plugins de la plataforma IntelliJ: congelamientos, demoras al escribir y CPU alta, reproducidos, medidos y con parches.">
-<meta name="twitter:image" content="https://gaphunterlabs.com/og-audit.es.png?v=3">
+<meta name="twitter:image" content="https://gaphunterlabs.com/og-audit.es.png?v=4">
 <meta name="twitter:image:alt" content="Auditoría de rendimiento de plugins, USD 10.500 fijo — Gap Hunter Labs">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"¿Cómo se diagnostica un cuello de botella de rendimiento en un plugin de IntelliJ IDEA?","acceptedAnswer":{"@type":"Answer","text":"Reproduzco el plugin en un IDE limpio para cada versión que soporta, con la detección de congelamientos activa y un volcado de hilos capturado en cada congelamiento, y luego mido el tiempo en el hilo de UI cuando se abren las páginas de ajustes, las acciones y las ventanas de herramientas, en frío y en caliente. Una revisión de código busca los patrones de congelamiento detrás de la mayoría de los reportes en el tracker de JetBrains: read actions bloqueantes en tareas de fondo sin cancelación, acceso a archivos o a red en el hilo de UI, y esperas a otros hilos mientras se mantiene el read lock. Cada hallazgo se rastrea hasta el código exacto que lo causó; la auditoría reporta lo que encuentra y no puede probar que no exista otro congelamiento."}},{"@type":"Question","name":"¿Cómo se demuestra que una corrección de rendimiento realmente funciona?","acceptedAnswer":{"@type":"Answer","text":"Cada parche propuesto viene con una medición antes y después de la misma acción en la misma versión del IDE, así la mejora es un número que puedes verificar, no una afirmación. Los parches se entregan como un pull request o un diff con pruebas cuando la corrección lo permite, y es el mismo método aplicado a congelamientos en el propio código de IntelliJ reportados a JetBrains con una causa raíz y una medición."}}]}</script>
 <link rel="stylesheet" href="/css/theme.css?v=b641a03e">

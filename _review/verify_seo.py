@@ -25,6 +25,8 @@ from xml.etree import ElementTree
 
 ROOT = Path(__file__).resolve().parents[1]
 SITE = "https://gaphunterlabs.com"
+sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "pipeline"))
+from site_config import OG_VERSION  # noqa: E402  (version of the og:image URLs)
 MIN_WORDS = 110          # contenido real en el HTML crudo, sin JS
 TITLE_MAX = 70
 DESC_MAX = 160
@@ -110,7 +112,7 @@ def main() -> int:
         # -- si todavia no existe, debe caer a la og-image.png generica,
         # nunca a una URL de media/ inexistente.
         has_own_og = (ROOT / "media" / slug / "og.png").exists()
-        expected_og = "%s/media/%s/og.png" % (SITE, slug) if has_own_og else "%s/og-image.png" % SITE
+        expected_og = ("%s/media/%s/og.png?v=%s" % (SITE, slug, OG_VERSION)) if has_own_og else "%s/og-image.png?v=%s" % (SITE, OG_VERSION)
         for prop, label in ((r'<meta property="og:image" content="([^"]*)">', "og:image"),
                              (r'<meta property="og:image:secure_url" content="([^"]*)">', "og:image:secure_url"),
                              (r'<meta name="twitter:image" content="([^"]*)">', "twitter:image")):
