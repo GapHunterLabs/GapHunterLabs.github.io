@@ -47,7 +47,7 @@
 <meta name="twitter:description" content="Una auditoría de rendimiento a precio fijo para plugins de la plataforma IntelliJ: congelamientos, demoras al escribir y CPU alta, reproducidos, medidos y con parches.">
 <meta name="twitter:image" content="https://gaphunterlabs.com/og-audit.es.png?v=4">
 <meta name="twitter:image:alt" content="Auditoría de rendimiento de plugins, USD 10.500 fijo — Gap Hunter Labs">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"¿Cómo se diagnostica un cuello de botella de rendimiento en un plugin de IntelliJ IDEA?","acceptedAnswer":{"@type":"Answer","text":"Reproduzco el plugin en un IDE limpio para cada versión que soporta, con la detección de congelamientos activa y un volcado de hilos capturado en cada congelamiento, y luego mido el tiempo en el hilo de UI cuando se abren las páginas de ajustes, las acciones y las ventanas de herramientas, en frío y en caliente. Una revisión de código busca los patrones de congelamiento detrás de la mayoría de los reportes en el tracker de JetBrains: read actions bloqueantes en tareas de fondo sin cancelación, acceso a archivos o a red en el hilo de UI, y esperas a otros hilos mientras se mantiene el read lock. Cada hallazgo se rastrea hasta el código exacto que lo causó; la auditoría reporta lo que encuentra y no puede probar que no exista otro congelamiento."}},{"@type":"Question","name":"¿Cómo se demuestra que una corrección de rendimiento realmente funciona?","acceptedAnswer":{"@type":"Answer","text":"Cada parche propuesto viene con una medición antes y después de la misma acción en la misma versión del IDE, así la mejora es un número que puedes verificar, no una afirmación. Los parches se entregan como un pull request o un diff con pruebas cuando la corrección lo permite, y es el mismo método aplicado a congelamientos en el propio código de IntelliJ reportados a JetBrains con una causa raíz y una medición."}}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"¿Cómo se diagnostica un cuello de botella de rendimiento en un plugin de IntelliJ IDEA?","acceptedAnswer":{"@type":"Answer","text":"Reproduzco el plugin en un IDE limpio para cada versión que soporta, con la detección de congelamientos activada y volcados de hilos capturados en cada congelamiento, y luego mido el tiempo en el hilo de interfaz cuando se abren las páginas de configuración, las acciones y las ventanas de herramientas, en frío y en caliente. En la revisión de código busco los patrones de congelamiento que están detrás de la mayoría de los reportes del tracker de JetBrains: acciones de lectura bloqueantes en tareas en segundo plano sin cancelación, acceso a archivos o red en el hilo de interfaz y esperas de otros hilos mientras se mantiene el bloqueo de lectura. Rastreo cada hallazgo hasta el código exacto que lo causó. Reporto lo que encuentro; no puedo demostrar que no exista otro congelamiento."}},{"@type":"Question","name":"¿Cómo se demuestra que una corrección de rendimiento realmente funciona?","acceptedAnswer":{"@type":"Answer","text":"Cada parche que propongo viene con una medición antes y después de la misma acción en la misma versión del IDE, así que la mejora es un número que puedes comprobar, no una afirmación. Entrego los parches como un pull request o un diff con tests donde la corrección lo permite. Es el mismo método que usé con congelamientos en el propio código de IntelliJ, que reporté a JetBrains con una causa raíz y una medición."}}]}</script>
 <link rel="stylesheet" href="/css/theme.css?v=b641a03e">
 <link rel="stylesheet" href="/css/base.css?v=3b2dc0b4">
 <style>
@@ -127,7 +127,7 @@
   }
 
 </style>
-<link rel="stylesheet" href="/css/shell.css?v=49856de6">
+<link rel="stylesheet" href="/css/shell.css?v=332179ac">
 <link rel="stylesheet" href="/css/tw.css?v=8b76ac4a">
 </head>
 <body>
@@ -168,12 +168,12 @@
 
     <section class="disclosure" aria-labelledby="audit-faq1">
       <h2 id="audit-faq1">¿Cómo se diagnostica un cuello de botella de rendimiento en un plugin de IntelliJ IDEA?</h2>
-      <p>Reproduzco el plugin en un IDE limpio para cada versión que soporta, con la detección de congelamientos activa y un volcado de hilos capturado en cada congelamiento, y luego mido el tiempo en el hilo de UI cuando se abren las páginas de ajustes, las acciones y las ventanas de herramientas, en frío y en caliente. Una revisión de código busca los patrones de congelamiento detrás de la mayoría de los reportes en el tracker de JetBrains: read actions bloqueantes en tareas de fondo sin cancelación, acceso a archivos o a red en el hilo de UI, y esperas a otros hilos mientras se mantiene el read lock. Cada hallazgo se rastrea hasta el código exacto que lo causó; la auditoría reporta lo que encuentra y no puede probar que no exista otro congelamiento.</p>
+      <p>Reproduzco el plugin en un IDE limpio para cada versión que soporta, con la detección de congelamientos activada y volcados de hilos capturados en cada congelamiento, y luego mido el tiempo en el hilo de interfaz cuando se abren las páginas de configuración, las acciones y las ventanas de herramientas, en frío y en caliente. En la revisión de código busco los patrones de congelamiento que están detrás de la mayoría de los reportes del tracker de JetBrains: acciones de lectura bloqueantes en tareas en segundo plano sin cancelación, acceso a archivos o red en el hilo de interfaz y esperas de otros hilos mientras se mantiene el bloqueo de lectura. Rastreo cada hallazgo hasta el código exacto que lo causó. Reporto lo que encuentro; no puedo demostrar que no exista otro congelamiento.</p>
     </section>
 
     <section class="disclosure" aria-labelledby="audit-faq2">
       <h2 id="audit-faq2">¿Cómo se demuestra que una corrección de rendimiento realmente funciona?</h2>
-      <p>Cada parche propuesto viene con una medición antes y después de la misma acción en la misma versión del IDE, así la mejora es un número que puedes verificar, no una afirmación. Los parches se entregan como un pull request o un diff con pruebas cuando la corrección lo permite, y es el mismo método aplicado a congelamientos en el propio código de IntelliJ reportados a JetBrains con una causa raíz y una medición.</p>
+      <p>Cada parche que propongo viene con una medición antes y después de la misma acción en la misma versión del IDE, así que la mejora es un número que puedes comprobar, no una afirmación. Entrego los parches como un pull request o un diff con tests donde la corrección lo permite. Es el mismo método que usé con congelamientos en el propio código de IntelliJ, que reporté a JetBrains con una causa raíz y una medición.</p>
     </section>
 
     <section class="disclosure" aria-labelledby="audit-1">
@@ -188,10 +188,10 @@
     <section class="disclosure" aria-labelledby="audit-2">
       <h2 id="audit-2">Qué cubre la auditoría</h2>
       <ul>
-        <li><strong>Reproducción.</strong> Tu plugin corre en una IDE limpia por cada versión que soportas, con la detección de congelamientos en 500 ms y volcados de hilos en cada congelamiento.</li>
-        <li><strong>Mediciones en el hilo de la interfaz.</strong> El tiempo que pasa en el hilo de la interfaz al abrir tu página de configuración, al actualizar tus acciones, al abrir tus ventanas de herramientas y al arrancar, medido en frío y en caliente.</li>
-        <li><strong>Revisión del código en busca de patrones de congelamiento.</strong> Lecturas bloqueantes en tareas de fondo sin cancelación, acceso a archivos o a la red y procesos lanzados desde el hilo de la interfaz, y esperas a otros hilos mientras se tiene el bloqueo de lectura. Estos patrones están detrás de muchos reportes de congelamiento en el tracker de JetBrains.</li>
-        <li><strong>Tus reportes existentes.</strong> Los volcados de hilos o extractos de idea.log que ya te enviaron los usuarios se rastrean hasta el código que los causó.</li>
+        <li><strong>Reproducción.</strong> Ejecuto tu plugin en un IDE limpio para cada versión que soportas, con la detección de congelamientos fijada en 500 ms y volcados de hilos capturados en cada congelamiento.</li>
+        <li><strong>Mediciones del hilo de interfaz.</strong> Mido el tiempo en el hilo de interfaz cuando se abre tu página de configuración, cuando se actualizan tus acciones, cuando se abren tus ventanas de herramientas y al arrancar, cada vez en frío y en caliente.</li>
+        <li><strong>Revisión de código en busca de patrones de congelamiento.</strong> Busco acciones de lectura bloqueantes en tareas en segundo plano sin cancelación, acceso a archivos o red y lanzamiento de procesos en el hilo de interfaz, y esperas de otros hilos mientras se mantiene el bloqueo de lectura. Estos patrones están detrás de muchos de los reportes de congelamiento del tracker de JetBrains.</li>
+        <li><strong>Tus reportes existentes.</strong> Rastreo hasta el código que los causó los volcados de hilos o los fragmentos de idea.log que tus usuarios ya te enviaron.</li>
       </ul>
     </section>
 
@@ -209,9 +209,9 @@
       <h2 id="audit-4">Cómo funciona</h2>
       <ul>
         <li>Envías el build del plugin o acceso al repositorio, las versiones de IDE que soportas y los reportes de congelamiento que tengas.</li>
-        <li>En 2 días hábiles recibes el alcance por escrito: plugin, versiones de IDE, fecha de entrega y precio.</li>
-        <li>El 50% se paga al empezar y el 50% en la entrega. La entrega es dentro de 10 días hábiles desde el inicio, o de 15 con alcance ampliado.</li>
-        <li>El trabajo es asíncrono: correo y el pull request. Si prefieres una llamada, también es posible.</li>
+        <li>En un plazo de 2 días hábiles te envío por escrito el alcance: plugin, versiones del IDE, fecha de entrega y precio.</li>
+        <li>Pagas el 50% al empezar el trabajo y el 50% en la entrega. Entrego en un plazo de 10 días hábiles desde el inicio, o 15 si el alcance es ampliado.</li>
+        <li>Trabajo de forma asíncrona: correo y el pull request. Con gusto hago una llamada si la prefieres.</li>
       </ul>
     </section>
 
@@ -220,7 +220,7 @@
       <ul>
         <li><strong>USD 10.500, fijo,</strong> por un plugin y hasta 3 versiones del IDE, con entrega en 10 días hábiles.</li>
         <li><strong>USD 15.000, fijo,</strong> por un alcance ampliado: más de 3 versiones del IDE, o un plugin con varios subsistemas en segundo plano, servidores de lenguaje o procesos externos. Entrega en 15 días hábiles.</li>
-        <li>Pago por transferencia bancaria internacional en USD, con factura.</li>
+        <li>Pagas por transferencia bancaria internacional en USD, contra factura.</li>
       </ul>
     </section>
 
@@ -228,17 +228,17 @@
       <h2 id="audit-6">Condiciones en breve</h2>
       <ul>
         <li>Los parches son tuyos una vez pagada la factura.</li>
-        <li>Tu código y tus datos son confidenciales. Firmar tu NDA no es problema.</li>
-        <li>La auditoría informa lo que encuentra y no puede prometer que no exista otro congelamiento. La responsabilidad se limita al precio pagado.</li>
+        <li>Mantengo la confidencialidad de tu código y tus datos. Firmar tu NDA no es problema.</li>
+        <li>Reporto lo que encuentro y no puedo prometer que no exista otro congelamiento. Mi responsabilidad se limita al precio pagado.</li>
       </ul>
     </section>
 
     <section class="disclosure" aria-labelledby="audit-7">
       <h2 id="audit-7">Antecedentes</h2>
       <ul>
-        <li>Errores de congelamiento en el propio código de IntelliJ, reportados a JetBrains con la causa raíz, una medición y un arreglo propuesto, más pull requests aportados a intellij-community: ver <a href="/es/ingenieria-y-evidencia/tickets-jetbrains-platform/">Tickets de JetBrains Platform</a>.</li>
-        <li><a href="/es/catalogo/background-readaction-freeze-companion/">Background ReadAction Freeze Companion</a>, un plugin que marca el patrón de lectura bloqueante en tu propio código.</li>
-        <li>146 plugins en este catálogo, cada uno comprobado contra las versiones de IDE que soporta antes de publicarse.</li>
+        <li>Fallos de congelamiento en el propio código de IntelliJ, que reporté a JetBrains con la causa raíz, una medición y una corrección propuesta, además de pull requests que aporté a intellij-community: mira los <a href="/es/ingenieria-y-evidencia/tickets-jetbrains-platform/">tickets de JetBrains Platform</a>.</li>
+        <li><a href="/es/catalogo/background-readaction-freeze-companion/">Background ReadAction Freeze Companion</a>, mi plugin que señala el patrón de acción de lectura bloqueante en tu propio código.</li>
+        <li>Verifico cada uno de los 146 plugins de mi catálogo contra las versiones del IDE que soporta antes de publicarlo.</li>
       </ul>
     </section>
 
@@ -293,7 +293,7 @@
           <p class="gh-footer-about-links"><a href="/feed.xml">RSS</a><a href="mailto:contact@gaphunterlabs.com">contact@gaphunterlabs.com</a></p></div>
         </div>
       </div>
-      <nav class="gh-footer-cols" aria-label="Pie de página"><div class="gh-footer-col"><p class="gh-footer-title">Trabajo</p><a href="/es/#work">Investigaciones seleccionadas</a><a href="/es/ingenieria-y-evidencia/tickets-jetbrains-platform/">Tickets de JetBrains Platform</a><a href="/es/ingenieria-y-evidencia/reportes-de-seguridad/">Reportes de seguridad en código abierto</a><a href="/es/ingenieria-y-evidencia/auditorias-de-plugins-de-terceros/">Auditorías de plugins de terceros</a><a href="/es/ingenieria-y-evidencia/casos-de-estudio/">Casos de estudio de plugins</a></div><div class="gh-footer-col"><p class="gh-footer-title">Ingeniería</p><a href="/es/metodologia/">Metodología</a><a href="/es/ingenieria-y-evidencia/">Resumen de la evidencia</a></div><div class="gh-footer-col"><p class="gh-footer-title">Herramientas</p><a href="/es/catalogo/">Catálogo de plugins</a><a href="/es/catalogo/?pricing=paid">Plugins de pago y Pro</a><a href="/es/catalogo/?platform=vscode">Extensiones de VS Code</a><a href="/es/ghl-jail/">ghl-jail (sandbox de Windows)</a></div><div class="gh-footer-col"><p class="gh-footer-title">Servicios</p><a href="/es/servicios/">Contratar</a><a href="/es/auditoria-de-rendimiento/" aria-current="page">Auditoría de rendimiento</a><a href="/es/contacto/">Contacto</a></div><div class="gh-footer-col"><p class="gh-footer-title">Tiendas</p><a href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" target="_blank" rel="noopener">JetBrains Marketplace</a><a href="https://marketplace.visualstudio.com/publishers/GapHunterLabs" target="_blank" rel="noopener">VS Code Marketplace</a><a href="https://github.com/GapHunterLabs" target="_blank" rel="noopener">GitHub</a></div><div class="gh-footer-col"><p class="gh-footer-title">Legal</p><a href="/es/seguridad/">Seguridad</a><a href="/es/privacidad/">Privacidad</a><a href="/es/terminos/">Términos</a><a href="/es/eula/">EULA</a></div></nav>
+      <nav class="gh-footer-cols" aria-label="Pie de página"><div class="gh-footer-col"><p class="gh-footer-title">Trabajo</p><a href="/es/#work">Investigaciones seleccionadas</a><a href="/es/ingenieria-y-evidencia/tickets-jetbrains-platform/">Tickets de JetBrains Platform</a><a href="/es/ingenieria-y-evidencia/reportes-de-seguridad/">Reportes de seguridad en código abierto</a><a href="/es/ingenieria-y-evidencia/auditorias-de-plugins-de-terceros/">Auditorías de plugins de terceros</a><a href="/es/ingenieria-y-evidencia/casos-de-estudio/">Casos de estudio de plugins</a></div><div class="gh-footer-col"><p class="gh-footer-title">Ingeniería</p><a href="/es/metodologia/">Metodología</a><a href="/es/ingenieria-y-evidencia/">Resumen de la evidencia</a></div><div class="gh-footer-col"><p class="gh-footer-title">Herramientas</p><a href="/es/catalogo/">Catálogo de plugins</a><a href="/es/catalogo/?pricing=paid">Plugins de pago y Pro</a><a href="/es/catalogo/?platform=vscode">Extensiones de VS Code</a><a href="/es/ghl-jail/">ghl-jail (sandbox de Windows)</a></div><div class="gh-footer-col"><p class="gh-footer-title">Servicios</p><a href="/es/servicios/">Contratar</a><a href="/es/auditoria-de-rendimiento/" aria-current="page">Auditoría de rendimiento</a><a href="/es/patrocinadores/">Patrocina el trabajo</a><a href="/es/contacto/">Contacto</a></div><div class="gh-footer-col"><p class="gh-footer-title">Tiendas</p><a href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" target="_blank" rel="noopener">JetBrains Marketplace</a><a href="https://marketplace.visualstudio.com/publishers/GapHunterLabs" target="_blank" rel="noopener">VS Code Marketplace</a><a href="https://github.com/GapHunterLabs" target="_blank" rel="noopener">GitHub</a></div><div class="gh-footer-col"><p class="gh-footer-title">Legal</p><a href="/es/seguridad/">Seguridad</a><a href="/es/privacidad/">Privacidad</a><a href="/es/terminos/">Términos</a><a href="/es/eula/">EULA</a></div></nav>
     </div>
     <div class="gh-footer-bottom">
       <p class="gh-footer-legal">&copy; 2026 Gap Hunter Labs. Los datos de descargas se sincronizan dos veces al día con las API públicas de JetBrains Marketplace y GitHub.</p>

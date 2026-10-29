@@ -281,7 +281,7 @@
 </script>
 <link rel="stylesheet" href="/css/theme.css?v=b641a03e">
 <link rel="stylesheet" href="/css/home.css?v=001cd0f9">
-<link rel="stylesheet" href="/css/shell.css?v=49856de6">
+<link rel="stylesheet" href="/css/shell.css?v=332179ac">
 <link rel="stylesheet" href="/css/tw.css?v=8b76ac4a">
 </head>
 <body>
@@ -323,7 +323,7 @@
       <p class="nb-kicker">Gap Hunter Labs &middot; independent engineering practice</p>
       <p class="nb-sync"><!-- PRERENDER:SYNC:START --><span class="live-dot" aria-hidden="true"></span><span>Catalog synced</span> <time datetime="2026-10-29">2026-10-29</time><!-- PRERENDER:SYNC:END --></p>
       <h1 class="nb-hero-title" id="heroTitle">I find critical software failures and build the fix, down to the root cause.</h1>
-      <p class="nb-lede">Gap Hunter Labs is the engineering practice of Joel Díaz. I analyze complex systems, audit codebases and investigate performance bottlenecks, critical security vulnerabilities (CVEs) and structural failures in developer tools, enterprise platforms and open-source ecosystems.</p>
+      <p class="nb-lede">I&rsquo;m Joel Díaz, and Gap Hunter Labs is my engineering practice. I analyze complex systems, audit codebases and investigate performance bottlenecks, critical security vulnerabilities (CVEs) and structural failures in developer tools, enterprise platforms and open-source ecosystems.</p>
       <p class="nb-lede nb-lede-more">I follow each problem to its root cause and ship the precise fix that removes it: from upstream reports and patches to specialized tools and tailored audits. Every finding and fix published here is backed by verifiable technical evidence: tickets, pull requests, tests and a direct trail to the source.</p>
       <div class="nb-actions">
         <a class="btn primary" href="#work" data-goatcounter-click="cta-hero-work">Read the investigations</a>
@@ -336,9 +336,9 @@
         <figcaption><span>Joel Díaz</span><span class="nb-portrait-rule" aria-hidden="true"></span><span>Independent engineering</span></figcaption>
       </figure>
       <ol class="nb-method-mini">
-        <li><span class="nb-step">01</span>Find the gap</li>
-        <li><span class="nb-step">02</span>Understand the cause</li>
-        <li><span class="nb-step">03</span>Build the fix</li>
+        <li><span class="nb-step">01</span>I find the gap</li>
+        <li><span class="nb-step">02</span>I trace the cause</li>
+        <li><span class="nb-step">03</span>I build the fix</li>
       </ol>
       <div class="nb-focus" role="group" aria-label="Focus areas"><!-- PRERENDER:FOCUS:START --><div class="badge-row"><span class="badge badge--dark"><svg class="b-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8.6 16.6 4 12l4.6-4.6L10 8.8 6.8 12l3.2 3.2-1.4 1.4Zm6.8 0-1.4-1.4 3.2-3.2L14 8.8l1.4-1.4L20 12l-4.6 4.6Z"/></svg><span>Static analysis</span></span><span class="badge badge--dark"><svg class="b-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 4a10 10 0 0 0-8.7 15h2.2A8 8 0 1 1 18.5 19h2.2A10 10 0 0 0 12 4Zm4.5 4.5-4.2 4.2a2 2 0 1 0 1.4 1.4l4.2-4.2-1.4-1.4Z"/></svg><span>Performance</span></span><span class="badge badge--dark"><svg class="b-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Zm0 2.1 6 2.2V11c0 3.9-2.5 7.4-6 8.9-3.5-1.5-6-5-6-8.9V6.3l6-2.2Z"/></svg><span>Security research</span></span><span class="badge badge--dark"><svg class="b-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2 2 7l10 5 10-5-10-5Zm-8.2 9L2 12l10 5 10-5-1.8-1L12 15 3.8 11Zm0 5L2 17l10 5 10-5-1.8-1L12 20l-8.2-4Z"/></svg><span>Reliability</span></span></div><!-- PRERENDER:FOCUS:END --></div>
     </aside>
@@ -351,7 +351,7 @@
     <div class="nb-section-head">
       <p class="nb-label">Work</p>
       <h2 id="workTitle">Selected investigations</h2>
-      <p class="nb-section-lede">Performance, security, reliability, static analysis and third-party audits. Status as of October 19, 2026. Performance measurements were taken on IntelliJ IDEA 2026.2.3, with each test attached to its ticket; security findings were checked against OSV for the exact pinned version. The fixes sent to JetBrains are open pull requests awaiting review.</p>
+      <p class="nb-section-lede">Performance, security, reliability, static analysis and third-party audits. Status as of October 19, 2026. I took the performance measurements on IntelliJ IDEA 2026.2.3 and attached each test to its ticket; I checked the security findings against OSV for the exact pinned version. The fixes I sent to JetBrains are open pull requests awaiting review.</p>
     </div>
 
     <article class="inv" aria-labelledby="inv1Title">
@@ -365,7 +365,7 @@
         <h3 id="inv1Title">Opening Settings &rsaquo; Plugins took most of a second</h3>
         <dl class="inv-facts">
           <div><dt>Cause</dt><dd>For each installed plugin, the page rebuilt the plugin and module maps and walked the dependencies of every essential plugin, on the UI thread. The cost grows with the square of the number of installed plugins, and the source code already had a FIXME about it.</dd></div>
-          <div><dt>Intervention</dt><dd>Compute the set of plugins that essential plugins require once per plugin set, then look each plugin up in it. The cache is dropped when the plugin set is replaced.</dd></div>
+          <div><dt>Intervention</dt><dd>I compute the set of plugins that essential plugins require once per plugin set, then look each plugin up in it. The cache is dropped when the plugin set is replaced.</dd></div>
           <div><dt>Result</dt><dd>With 158 plugins loaded, the page took <span class="m-before">689–931 ms</span> to open. One walk plus a lookup per plugin takes <span class="m-after">8–22 ms</span> and gives the same answer for all 158.</dd></div>
         </dl>
         <p class="inv-links"><a href="https://youtrack.jetbrains.com/issue/IJPL-257909" target="_blank" rel="noopener">Ticket and measurement test</a><a href="https://github.com/JetBrains/intellij-community/pull/3701" target="_blank" rel="noopener">Pull request #3701</a></p>
@@ -383,7 +383,7 @@
         <h3 id="inv2Title">A messaging library pinned to a dependency with three critical advisories</h3>
         <dl class="inv-facts">
           <div><dt>Cause</dt><dd>The library&rsquo;s <code>go.mod</code> pinned <code>github.com/rabbitmq/amqp091-go</code> at v1.10.0, inside the affected range of 10 advisories published in September 2026: 3 critical (a missing TLS minimum version in the URI parser, frame injection through an integer overflow, and silent truncation of short strings) and 7 high.</dd></div>
-          <div><dt>Intervention</dt><dd>A report to the maintainers with every advisory checked against OSV for the exact pinned version, and the version that fixes all of them (v1.13.0).</dd></div>
+          <div><dt>Intervention</dt><dd>I sent the maintainers a report with every advisory checked against OSV for the exact pinned version, and the version that fixes all of them (v1.13.0).</dd></div>
           <div><dt>Result</dt><dd>From <span class="m-before">10 advisories</span> to <span class="m-after">0</span> in OSV: the maintainers upgraded to v1.15.0 in pull request #6 and closed the report 3 days after it was filed.</dd></div>
         </dl>
         <p class="inv-links"><a href="https://github.com/bancolombia/reactive-commons-go/issues/5" target="_blank" rel="noopener">Report</a><a href="https://github.com/bancolombia/reactive-commons-go/pull/6" target="_blank" rel="noopener">Pull request #6</a><a href="/engineering-evidence/open-source-security-reports/">All security reports</a></p>
@@ -401,8 +401,8 @@
         <h3 id="invLspTitle">A language-server client detecting file types on the UI thread</h3>
         <dl class="inv-facts">
           <div><dt>Cause</dt><dd><code>LSPBreadcrumbsRefreshListener.breadcrumbsChanged()</code> runs on the UI thread and requested document symbols there, which reaches file-type detection that can read the file content. The issue had been open since May 2026.</dd></div>
-          <div><dt>Intervention</dt><dd>A report to the maintainer with the exact path in the current code and a suggested fix: run the request on a pooled thread and keep only the restart on the UI thread.</dd></div>
-          <div><dt>Outcome</dt><dd>The maintainer made that change the same day and closed the issue. Impact, stated plainly: one slow call per open file each time a language server starts.</dd></div>
+          <div><dt>Intervention</dt><dd>I sent the maintainer a report with the exact path in the current code and a suggested fix: run the request on a pooled thread and keep only the restart on the UI thread.</dd></div>
+          <div><dt>Outcome</dt><dd>The maintainer made that change the same day and closed the issue. To be plain about the impact: one slow call per open file each time a language server starts.</dd></div>
         </dl>
         <p class="inv-links"><a href="https://github.com/redhat-developer/lsp4ij/issues/1540" target="_blank" rel="noopener">Issue #1540</a><a href="https://github.com/redhat-developer/lsp4ij/commit/f38259550e" target="_blank" rel="noopener">Commit f38259550e</a><a href="/engineering-evidence/third-party-plugin-audits/">All third-party audits</a></p>
       </div>
@@ -419,7 +419,7 @@
         <h3 id="inv3Title">A ConcurrentModificationException in the workspace model</h3>
         <dl class="inv-facts">
           <div><dt>Cause</dt><dd><code>WorkspaceFileIndexDataImpl.fillPackageFilesAndDirectories()</code> iterates an unsynchronized <code>LinkedHashMap</code> that can change in the middle of the iteration.</dd></div>
-          <div><dt>Intervention</dt><dd>Root-cause analysis posted on the ticket. It located that iteration and proposed a <code>ProgressManager.checkCanceled()</code> call.</dd></div>
+          <div><dt>Intervention</dt><dd>I posted a root-cause analysis on the ticket. It located that iteration, and I proposed a <code>ProgressManager.checkCanceled()</code> call.</dd></div>
           <div><dt>Outcome</dt><dd>JetBrains fixed the ticket with a different change: the package-name queries now bring the index up to date before reading it.</dd></div>
         </dl>
         <p class="inv-links"><a href="https://youtrack.jetbrains.com/issue/IJPL-200871" target="_blank" rel="noopener">Ticket and analysis</a><a href="https://github.com/JetBrains/intellij-community/commit/e1d600df32849eb28169d7d497e012b239b02ec1" target="_blank" rel="noopener">Commit e1d600df</a></p>
@@ -438,7 +438,7 @@
         <h3 id="inv5Title">A freeze pattern inside IntelliJ&rsquo;s own test search</h3>
         <dl class="inv-facts">
           <div><dt>Cause</dt><dd><code>SearchForTestsTask</code> ran in the background but called <code>onFound()</code> through the blocking <code>ReadAction.run()</code>, with no <code>checkCanceled()</code> anywhere in the class. JetBrains&rsquo; Platform Blog names this pattern as a recurring cause of UI freezes.</dd></div>
-          <div><dt>Intervention</dt><dd>Found by Background ReadAction Freeze Companion, a static check for this pattern. A follow-up showed why a plain switch to a non-blocking read action is not safe here: <code>onFound()</code> writes files, and a restarted read action would write them again.</dd></div>
+          <div><dt>Intervention</dt><dd>I found it with Background ReadAction Freeze Companion, a static check for this pattern. In a follow-up I showed why a plain switch to a non-blocking read action is not safe here: <code>onFound()</code> writes files, and a restarted read action would write them again.</dd></div>
           <div><dt>Outcome</dt><dd>JetBrains moved the ticket to the IDEA project, assigned it to a developer and fixed it on master on October 28, 2026. <code>onFound()</code> now runs in a non-blocking read action, the loops that build the test lists call <code>checkCanceled()</code>, and the JUnit upload step moved to <code>onSuccess()</code>. The ticket is marked Fixed.</dd></div>
         </dl>
         <p class="inv-links"><a href="https://youtrack.jetbrains.com/issue/IDEA-393501" target="_blank" rel="noopener">Ticket and follow-up</a><a href="https://github.com/JetBrains/intellij-community/commit/4a88fdfa4d4a7979f00173c1a45af86e0c1920bd" target="_blank" rel="noopener">Commit 4a88fdfa</a><a href="/catalog/background-readaction-freeze-companion/">The plugin that found it</a></p>
@@ -448,11 +448,11 @@
     <div class="nb-record">
       <h3 class="nb-label">Also on record</h3>
       <ul>
-        <li><span class="inv-status is-fixed">Fixed</span> <a href="https://github.com/bancolombia/async-dataflow/issues/148" target="_blank" rel="noopener">async-dataflow#148</a>: high-severity advisories in direct dependencies of a real-time delivery service, <code>cowboy</code>, <code>cowlib</code> and <code>plug</code>. The maintainers also found <code>plug_cowboy</code>, which the report had missed, and upgraded all of them in pull request #149, merged on October 16, 2026.</li>
-        <li><span class="inv-status is-open">Open</span> <a href="https://youtrack.jetbrains.com/issue/IJPL-257908" target="_blank" rel="noopener">IJPL-257908</a>: Live Templates settings compared 1,295 templates against 336 context types on the UI thread after every key press. A one-line fast path, sent as pull request #3694, takes the comparison from 157 ms to 0 ms.</li>
-        <li><span class="inv-status is-open">Open</span> Root-cause analysis on existing IntelliJ Platform tickets: a memory leak through <code>ProjectRootManagerImpl</code> (<a href="https://youtrack.jetbrains.com/issue/IJPL-196254" target="_blank" rel="noopener">IJPL-196254</a>) and a stack overflow that silently empties Git Log (<a href="https://youtrack.jetbrains.com/issue/IJPL-76141" target="_blank" rel="noopener">IJPL-76141</a>).</li>
-        <li><span class="inv-status is-open">Open</span> <a href="https://youtrack.jetbrains.com/issue/IJPL-223452#focus=Comments-27-14501015.0-0" target="_blank" rel="noopener">IJPL-223452</a>: a headless reproduction of slow typing in a large Java file with the Structure view open, a median of 1,080 ms per key press against 33 ms without it.</li>
-        <li><span class="inv-status is-open">Open</span> Three Java inspection changes sent as pull requests (#3697, #3698 and #3699): two new inspections, and an extension of an existing one that a JetBrains maintainer had asked for.</li>
+        <li><span class="inv-status is-fixed">Fixed</span> <a href="https://github.com/bancolombia/async-dataflow/issues/148" target="_blank" rel="noopener">async-dataflow#148</a>: I reported high-severity advisories in direct dependencies of a real-time delivery service: <code>cowboy</code>, <code>cowlib</code> and <code>plug</code>. The maintainers also found <code>plug_cowboy</code>, which my report had missed, and upgraded all of them in pull request #149, merged on October 16, 2026.</li>
+        <li><span class="inv-status is-open">Open</span> <a href="https://youtrack.jetbrains.com/issue/IJPL-257908" target="_blank" rel="noopener">IJPL-257908</a>: Live Templates settings compared 1,295 templates against 336 context types on the UI thread after every key press. I sent a one-line fast path as pull request #3694; it takes the comparison from 157 ms to 0 ms.</li>
+        <li><span class="inv-status is-open">Open</span> I posted root-cause analyses on existing IntelliJ Platform tickets: a memory leak through <code>ProjectRootManagerImpl</code> (<a href="https://youtrack.jetbrains.com/issue/IJPL-196254" target="_blank" rel="noopener">IJPL-196254</a>) and a stack overflow that silently empties Git Log (<a href="https://youtrack.jetbrains.com/issue/IJPL-76141" target="_blank" rel="noopener">IJPL-76141</a>).</li>
+        <li><span class="inv-status is-open">Open</span> <a href="https://youtrack.jetbrains.com/issue/IJPL-223452#focus=Comments-27-14501015.0-0" target="_blank" rel="noopener">IJPL-223452</a>: I built a headless reproduction of slow typing in a large Java file with the Structure view open, a median of 1,080 ms per key press against 33 ms without it.</li>
+        <li><span class="inv-status is-open">Open</span> I sent three Java inspection changes as pull requests (#3697, #3698 and #3699): two new inspections, and an extension of an existing one that a JetBrains maintainer had asked for.</li>
       </ul>
       <p class="nb-more"><a href="/engineering-evidence/jetbrains-platform-tickets/">All JetBrains Platform tickets</a><a href="/engineering-evidence/open-source-security-reports/">Open-source security reports</a><a href="/engineering-evidence/case-studies/">Plugin case studies</a></p>
     </div>
@@ -462,23 +462,23 @@
     <div class="nb-section-head">
       <p class="nb-label">Engineering</p>
       <h2 id="engTitle">How an investigation runs</h2>
-      <p class="nb-section-lede">The same method applies to a slow IDE, a vulnerable dependency and a crash in a platform tracker.</p>
+      <p class="nb-section-lede">I use the same method for a slow IDE, a vulnerable dependency and a crash in a platform tracker.</p>
     </div>
     <ol class="nb-steps">
       <li>
         <span class="nb-step">01</span>
-        <h3>Find the gap</h3>
-        <p>Start from evidence someone can point to: a freeze report, a published advisory, a crash in a tracker, a check that no tool makes. Reproduce it on the exact version where it happens.</p>
+        <h3>I find the gap</h3>
+        <p>I start from evidence anyone can point to: a freeze report, a published advisory, a crash in a tracker, a check that no tool makes. I reproduce it on the exact version where it happens.</p>
       </li>
       <li>
         <span class="nb-step">02</span>
-        <h3>Understand the cause</h3>
-        <p>Follow it to the code that causes it: the method that spends the time, the dependency version inside an advisory&rsquo;s affected range, the iteration that is not synchronized. Keep the reproduction as a test or a check that anyone can run again.</p>
+        <h3>I trace the cause</h3>
+        <p>I follow it to the code that causes it: the method that spends the time, the dependency version inside an advisory&rsquo;s affected range, the iteration that is not synchronized. I keep the reproduction as a test or a check that anyone can run again.</p>
       </li>
       <li>
         <span class="nb-step">03</span>
-        <h3>Build the fix</h3>
-        <p>Ship the smallest change that removes the cause, with evidence before and after: a pull request upstream, a report to the maintainers, or a plugin when the fix belongs outside the platform.</p>
+        <h3>I build the fix</h3>
+        <p>I ship the smallest change that removes the cause, with evidence before and after: a pull request upstream, a report to the maintainers, or a plugin when the fix belongs outside the platform.</p>
       </li>
     </ol>
     <p class="nb-more"><a href="/methodology/">Read the methodology</a><a href="/engineering-evidence/">All engineering evidence</a></p>
@@ -496,7 +496,7 @@
     <div class="nb-section-head">
       <p class="nb-label">Services</p>
       <h2 id="servicesTitle">Engagements</h2>
-      <p class="nb-section-lede">Published prices in USD, per engagement. The written scope, agreed before any work starts, confirms which level applies. Written deliverables, async by default.</p>
+      <p class="nb-section-lede">My prices are published in USD, per engagement. Before any work starts, I confirm in a written scope which level applies. I deliver in writing, async by default.</p>
     </div>
     <table class="nb-table">
       <thead>
@@ -531,8 +531,8 @@
         <h3>How to start</h3>
         <ol>
           <li>Email <a href="mailto:contact@gaphunterlabs.com">contact@gaphunterlabs.com</a> or use the <a href="/contact/?intent=hire">contact page</a>. Tell me the plugin or repository and what you need.</li>
-          <li>You get the scope, delivery date and price in writing before any work starts.</li>
-          <li>The work arrives in writing: a report, and a pull request when there is code to change.</li>
+          <li>Before any work starts, I send you the scope, delivery date and price in writing.</li>
+          <li>I deliver in writing: a report, and a pull request when there is code to change.</li>
         </ol>
         <div class="nb-actions">
           <a class="btn primary" href="/contact/?intent=hire" data-goatcounter-click="cta-founder-hire">Start a conversation</a>
@@ -571,6 +571,19 @@
       <a class="btn" href="/catalog/?pricing=paid" data-goatcounter-click="cta-home-paid">Paid and Pro plugins</a>
     </div>
   </section>
+
+  <section class="nb-section nb-sponsors" id="sponsors" aria-labelledby="sponsorsTitle">
+    <div class="nb-section-head">
+      <p class="nb-label">Sponsors</p>
+      <h2 id="sponsorsTitle">Independent by design</h2>
+      <p class="nb-section-lede">Sponsors fund the upstream fixes I send, the free tools I build and the time I spend keeping them working. No sponsor can change a finding, a report or a rating.</p>
+    </div>
+    <div class="sp-home"><!-- PRERENDER:SPONSORS:START --><div class="badge-row"><span class="badge badge--dark"><svg class="b-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M23.546 10.93L13.067.452c-.604-.603-1.582-.603-2.188 0L8.708 2.627l2.76 2.76c.645-.215 1.379-.07 1.889.441.516.515.658 1.258.438 1.9l2.658 2.66c.645-.223 1.387-.078 1.9.435.721.72.721 1.884 0 2.604-.719.719-1.881.719-2.6 0-.539-.541-.674-1.337-.404-1.996L12.86 8.955v6.525c.176.086.342.203.488.348.713.721.713 1.883 0 2.6-.719.721-1.889.721-2.609 0-.719-.719-.719-1.879 0-2.598.182-.18.387-.316.605-.406V8.835c-.217-.091-.424-.222-.6-.401-.545-.545-.676-1.342-.396-2.009L7.636 3.7.45 10.881c-.6.605-.6 1.584 0 2.189l10.48 10.477c.604.604 1.582.604 2.186 0l10.43-10.43c.605-.603.605-1.582 0-2.187"/></svg><span>Upstream fixes</span></span><span class="badge badge--dark"><svg class="b-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M8.6 16.6 4 12l4.6-4.6L10 8.8 6.8 12l3.2 3.2-1.4 1.4Zm6.8 0-1.4-1.4 3.2-3.2L14 8.8l1.4-1.4L20 12l-4.6 4.6Z"/></svg><span>Free tools kept current</span></span><span class="badge badge--dark"><svg class="b-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2 4 5v6c0 5 3.4 9.4 8 11 4.6-1.6 8-6 8-11V5l-8-3Zm0 2.1 6 2.2V11c0 3.9-2.5 7.4-6 8.9-3.5-1.5-6-5-6-8.9V6.3l6-2.2Z"/></svg><span>Independent research</span></span></div><p class="sp-empty">The first sponsor spots are open.</p><!-- PRERENDER:SPONSORS:END --></div>
+    <div class="nb-actions">
+      <a class="btn primary" href="/sponsors/" data-goatcounter-click="cta-home-sponsors">Become a sponsor</a>
+      <a class="btn" href="/sponsors/#sec-levels" data-goatcounter-click="cta-home-sponsor-levels">See the levels</a>
+    </div>
+  </section>
 </main>
 </div>
 </div>
@@ -589,7 +602,7 @@
           <p class="gh-footer-about-links"><a href="/feed.xml">RSS</a><a href="mailto:contact@gaphunterlabs.com">contact@gaphunterlabs.com</a></p></div>
         </div>
       </div>
-      <nav class="gh-footer-cols" aria-label="Footer"><div class="gh-footer-col"><p class="gh-footer-title">Work</p><a href="/#work">Selected investigations</a><a href="/engineering-evidence/jetbrains-platform-tickets/">JetBrains Platform tickets</a><a href="/engineering-evidence/open-source-security-reports/">Open-source security reports</a><a href="/engineering-evidence/third-party-plugin-audits/">Third-party plugin audits</a><a href="/engineering-evidence/case-studies/">Plugin case studies</a></div><div class="gh-footer-col"><p class="gh-footer-title">Engineering</p><a href="/methodology/">Methodology</a><a href="/engineering-evidence/">Evidence overview</a></div><div class="gh-footer-col"><p class="gh-footer-title">Tools</p><a href="/catalog/">Plugin catalog</a><a href="/catalog/?pricing=paid">Paid &amp; Pro plugins</a><a href="/catalog/?platform=vscode">VS Code extensions</a><a href="/ghl-jail/">ghl-jail (Windows sandbox)</a></div><div class="gh-footer-col"><p class="gh-footer-title">Services</p><a href="/services/">Work with me</a><a href="/plugin-performance-audit/">Performance audit</a><a href="/contact/">Contact</a></div><div class="gh-footer-col"><p class="gh-footer-title">Marketplaces</p><a href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" target="_blank" rel="noopener">JetBrains Marketplace</a><a href="https://marketplace.visualstudio.com/publishers/GapHunterLabs" target="_blank" rel="noopener">VS Code Marketplace</a><a href="https://github.com/GapHunterLabs" target="_blank" rel="noopener">GitHub</a></div><div class="gh-footer-col"><p class="gh-footer-title">Legal</p><a href="/security/">Security</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/eula/">EULA</a></div></nav>
+      <nav class="gh-footer-cols" aria-label="Footer"><div class="gh-footer-col"><p class="gh-footer-title">Work</p><a href="/#work">Selected investigations</a><a href="/engineering-evidence/jetbrains-platform-tickets/">JetBrains Platform tickets</a><a href="/engineering-evidence/open-source-security-reports/">Open-source security reports</a><a href="/engineering-evidence/third-party-plugin-audits/">Third-party plugin audits</a><a href="/engineering-evidence/case-studies/">Plugin case studies</a></div><div class="gh-footer-col"><p class="gh-footer-title">Engineering</p><a href="/methodology/">Methodology</a><a href="/engineering-evidence/">Evidence overview</a></div><div class="gh-footer-col"><p class="gh-footer-title">Tools</p><a href="/catalog/">Plugin catalog</a><a href="/catalog/?pricing=paid">Paid &amp; Pro plugins</a><a href="/catalog/?platform=vscode">VS Code extensions</a><a href="/ghl-jail/">ghl-jail (Windows sandbox)</a></div><div class="gh-footer-col"><p class="gh-footer-title">Services</p><a href="/services/">Work with me</a><a href="/plugin-performance-audit/">Performance audit</a><a href="/sponsors/">Sponsor the work</a><a href="/contact/">Contact</a></div><div class="gh-footer-col"><p class="gh-footer-title">Marketplaces</p><a href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" target="_blank" rel="noopener">JetBrains Marketplace</a><a href="https://marketplace.visualstudio.com/publishers/GapHunterLabs" target="_blank" rel="noopener">VS Code Marketplace</a><a href="https://github.com/GapHunterLabs" target="_blank" rel="noopener">GitHub</a></div><div class="gh-footer-col"><p class="gh-footer-title">Legal</p><a href="/security/">Security</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/eula/">EULA</a></div></nav>
     </div>
     <div class="gh-footer-bottom">
       <p class="gh-footer-legal">&copy; 2026 Gap Hunter Labs. Download data is synced twice daily from the public JetBrains Marketplace and GitHub APIs.</p>

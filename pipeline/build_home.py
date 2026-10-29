@@ -39,6 +39,8 @@ from badges import badge, badge_row, badge_table, price_badge  # noqa: E402
 ROOT = Path(__file__).resolve().parents[1]
 HOME_PAGE = ROOT / "index.html"
 VSCODE_DATA = ROOT / "data" / "vscode-catalog-data.json"
+SPONSORS_DATA = ROOT / "data" / "sponsors.json"
+SPONSORS_PAGE = ROOT / "sponsors" / "index.html"
 RESEARCH_DATA = ROOT / "data" / "research.json"
 PRICING_LABEL = {"FREE": "Free", "FREEMIUM": "Freemium", "PAID": "Paid"}
 
@@ -146,6 +148,69 @@ def stack_html():
     return badge_table("Platforms, languages and tooling", rows, "stackCaption")
 
 
+# Sponsors: (clave del nivel, titulo del grupo). Platinum/gold/silver llevan logo y enlace; el resto, solo nombre.
+SPONSOR_TIERS = (("platinum", "Platinum"), ("gold", "Gold"), ("silver", "Silver"),
+                 ("backer", "Backers"), ("supporter", "Supporters"))
+HOME_TIERS = ("platinum", "gold")   # el nivel Gold incluye el logo en la home
+SPONSOR_OPEN = "The first sponsor spots are open."
+SPONSOR_CHIPS = [dict(label="Upstream fixes", icon="git", variant="dark"),
+                 dict(label="Free tools kept current", icon="code", variant="dark"),
+                 dict(label="Independent research", icon="shield", variant="dark")]
+
+
+def load_sponsors():
+    """Lee data/sponsors.json y valida cada entrada: un error aqui es un logo roto o un nivel mal escrito en produccion."""
+    if not SPONSORS_DATA.exists():
+        return []
+    valid = {k for k, _ in SPONSOR_TIERS}
+    rows = json.loads(SPONSORS_DATA.read_text(encoding="utf-8")).get("sponsors", [])
+    for r in rows:
+        if r.get("tier") not in valid:
+            die("sponsors.json: nivel desconocido %r en %r" % (r.get("tier"), r.get("name")))
+        if not r.get("name"):
+            die("sponsors.json: hay un patrocinador sin nombre")
+        if r.get("url") and not str(r["url"]).startswith("https://"):
+            die("sponsors.json: la URL de %r tiene que ser https://" % r["name"])
+        if r.get("logo") and not (ROOT / str(r["logo"]).lstrip("/")).is_file():
+            die("sponsors.json: no existe el logo %s" % r["logo"])
+    return rows
+
+
+def sponsor_link(r, inner, cls):
+    if not r.get("url"):
+        return '<span class="%s">%s</span>' % (cls, inner)
+    return '<a class="%s" href="%s" target="_blank" rel="sponsored noopener">%s</a>' % (cls, esc(r["url"]), inner)
+
+
+def sponsors_html(rows, home):
+    """Muro de patrocinadores. Sin patrocinadores muestra la convocatoria (nada inventado)."""
+    tiers = [(k, t) for k, t in SPONSOR_TIERS if not home or k in HOME_TIERS]
+    groups = []
+    for key, title in tiers:
+        mine = [r for r in rows if r["tier"] == key]
+        if not mine:
+            continue
+        if key in ("platinum", "gold", "silver"):
+            items = "".join(
+                "<li>%s</li>" % sponsor_link(
+                    r, ('<img class="sp-logo-img" src="%s" alt="%s" height="%d" loading="lazy" decoding="async">'
+                        % (esc(r["logo"]), esc(r["name"]), {"platinum": 56, "gold": 44, "silver": 34}[key]))
+                    if r.get("logo") else '<span class="sp-name">%s</span>' % esc(r["name"]), "sp-logo")
+                for r in mine)
+            groups.append('<div class="sp-tier sp-tier-%s"><p class="sp-tier-title">%s</p><ul class="sp-logos">%s</ul></div>'
+                          % (key, title, items))
+        else:
+            items = "".join("<li>%s</li>" % sponsor_link(r, '<span class="sp-name">%s</span>' % esc(r["name"]), "sp-person")
+                            for r in mine)
+            groups.append('<div class="sp-tier sp-tier-%s"><p class="sp-tier-title">%s</p><ul class="sp-names">%s</ul></div>'
+                          % (key, title, items))
+    if groups:
+        return '<div class="sp-wall">%s</div>' % "".join(groups)
+    chips = badge_row(SPONSOR_CHIPS) if home else ""
+    return '%s<p class="sp-empty">%s</p>' % (chips, SPONSOR_OPEN if home else
+                                            SPONSOR_OPEN + " Your name or logo could be the first one here.")
+
+
 def die(msg: str) -> "NoReturn":  # noqa: F821
     sys.exit("[build_home] ERROR: " + msg)
 
@@ -203,11 +268,24 @@ def build(dry_run: bool = False) -> None:
     html = inject(html, "<!-- PRERENDER:FOCUS:START -->", "<!-- PRERENDER:FOCUS:END -->", focus_html(), "FOCUS")
     html = inject(html, "<!-- PRERENDER:CATALOG:START -->", "<!-- PRERENDER:CATALOG:END -->", esc(catalog_line), "CATALOG")
 
+    sponsors = load_sponsors()
+    html = inject(html, "<!-- PRERENDER:SPONSORS:START -->", "<!-- PRERENDER:SPONSORS:END -->",
+                  sponsors_html(sponsors, home=True), "SPONSORS")
+    sp_page = None
+    if SPONSORS_PAGE.exists():
+        sp_page = SPONSORS_PAGE.read_text(encoding="utf-8")
+        sp_page = inject(sp_page, "<!-- PRERENDER:SPONSORS:START -->", "<!-- PRERENDER:SPONSORS:END -->",
+                         sponsors_html(sponsors, home=False), "SPONSORS (pagina)")
+        sp_page = inject(sp_page, "<!-- PRERENDER:METRICS:START -->", "<!-- PRERENDER:METRICS:END -->",
+                         metrics_html(data, research, vscode_total), "METRICS (pagina)")
+
     if dry_run:
         print("[dry-run] %d herramientas, catalogo: %s -- nada escrito" % (len(rows), catalog_line))
         return
 
     HOME_PAGE.write_text(html, encoding="utf-8")
+    if sp_page is not None:
+        SPONSORS_PAGE.write_text(sp_page, encoding="utf-8")
     print("[build_home] index.html: %d herramientas destacadas + linea del catalogo (%s)" % (len(rows), snapshot))
 
 

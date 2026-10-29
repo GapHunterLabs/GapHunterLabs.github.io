@@ -68,7 +68,7 @@
           empty.innerHTML = (ES ? 'Todavía no hay nada para “' + term + '”. ' : 'Nothing here matches “' + term + '” yet. ') +
             '<a class="miss-cta" href="' + (ES ? '/es/contacto/' : '/contact/') + '?intent=hire&amp;need=' + encodeURIComponent(query.slice(0, 120)) +
             '" data-goatcounter-click="cta-search-miss-hire">' +
-            (ES ? '¿Necesitas que se construya? Trabaja con Joel →' : 'Need it built? Work with Joel →') + '</a>';
+            (ES ? '¿Necesitas que se construya? Trabaja conmigo →' : 'Need it built? Work with me →') + '</a>';
         }
       }
       if (!pagerHost) return;

@@ -49,6 +49,7 @@ PAGES = (
     ("plugin-updates/index.html", "/services/", None),
     ("services/index.html", "/services/", None),
     ("ghl-jail/index.html", None, None),
+    ("sponsors/index.html", None, "/sponsors/"),
 )
 
 # Un item con submenu es (etiqueta, [(href, texto), ...]); el resto (href, texto).
@@ -112,6 +113,7 @@ ES_PATHS = {
     "/plugin-updates/": "/es/actualizacion-de-plugins/",
     "/services/": "/es/servicios/",
     "/ghl-jail/": "/es/ghl-jail/",
+    "/sponsors/": "/es/patrocinadores/",
 }
 PLUGIN_PATH_RE = re.compile(r"^/catalog/((?:vscode/)?[a-z0-9][a-z0-9-]*)/$")
 
@@ -225,7 +227,7 @@ def footer_html(active):
         ("Tools", [link("/catalog/", "Plugin catalog"), link("/catalog/?pricing=paid", "Paid &amp; Pro plugins"),
                    link("/catalog/?platform=vscode", "VS Code extensions"), link("/ghl-jail/", "ghl-jail (Windows sandbox)")]),
         ("Services", [link("/services/", "Work with me"), link("/plugin-performance-audit/", "Performance audit"),
-                      link("/contact/", "Contact")]),
+                      link("/sponsors/", "Sponsor the work"), link("/contact/", "Contact")]),
         ("Marketplaces", [link("https://plugins.jetbrains.com/vendor/gap-hunter-labs", "JetBrains Marketplace", True),
                           link("https://marketplace.visualstudio.com/publishers/GapHunterLabs", "VS Code Marketplace", True),
                           link("https://github.com/GapHunterLabs", "GitHub", True)]),

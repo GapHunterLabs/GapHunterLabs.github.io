@@ -273,6 +273,13 @@ PAGES = [
          dict(label="Herramienta de código abierto", h1="Un sandbox de Windows de una\nlínea para CLIs no confiables",
               lede="Ejecuta una herramienta de línea de comandos para que solo toque una carpeta de proyecto, no tus claves SSH, tokens de la nube ni tu .env. Sin admin, sin controlador.",
               badges=["windows", "python", "security"], note="Sin admin · Sin controlador · Solo Python")),
+    page("og-sponsors", "hero",
+         dict(label="Sponsors", h1="Sponsor the work",
+              lede="Fund the upstream fixes and the free JetBrains and VS Code tools. Five levels from USD 5 a month, and no sponsor can change a finding or a report.",
+              badges=[("Sponsorship", "heart", "dark"), "jetbrains", "vscode", "security"], note="Independent by design"),
+         dict(label="Patrocinadores", h1="Patrocina el trabajo",
+              lede="Financia las correcciones al origen y las herramientas gratuitas para JetBrains y VS Code. Cinco niveles desde USD 5 al mes, y ningún patrocinador puede cambiar un hallazgo o un informe.",
+              badges=[("Patrocinio", "heart", "dark"), "jetbrains", "vscode", "security"], note="Independiente por diseño")),
 ]
 
 

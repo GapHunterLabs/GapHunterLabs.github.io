@@ -240,7 +240,7 @@
     .decision-figure { padding: var(--card-pad); }
   }
 </style>
-<link rel="stylesheet" href="/css/shell.css?v=49856de6">
+<link rel="stylesheet" href="/css/shell.css?v=332179ac">
 <link rel="stylesheet" href="/css/tw.css?v=8b76ac4a">
 </head>
 <body>
@@ -270,35 +270,35 @@
   <div class="page-hero method-intro band-dark gh-page-header">
     <p class="contact-kicker">Gap Hunter Labs</p>
     <h1>Metodología</h1>
-    <p class="contact-lead" style="margin-bottom:0">Cómo se encuentran, verifican y corrigen los problemas de seguridad, rendimiento y confiabilidad: rastreados hasta su causa raíz, respaldados con evidencia que cualquiera puede reproducir y reportados con su estado real. El mismo método está detrás de cada proyecto y de cada plugin del catálogo.</p>
+    <p class="contact-lead" style="margin-bottom:0">Así encuentro, verifico y corrijo los problemas de seguridad, rendimiento y fiabilidad: rastreo cada uno hasta una causa raíz, lo respaldo con evidencia que cualquiera puede volver a ejecutar y lo reporto con su estado real. Uso el mismo método en cada encargo y en cada plugin que publico.</p>
   </div>
 
   <section class="method-investigation" aria-labelledby="method-investigation">
     <h2 id="method-investigation">Cómo se hace una investigación</h2>
-    <p>El mismo método sirve para un IDE lento, una dependencia vulnerable y un fallo en el tracker de una plataforma. Cada paso deja algo que se puede verificar.</p>
+    <p>Uso el mismo método para un IDE lento, una dependencia vulnerable y un fallo en el tracker de una plataforma. Cada paso deja algo que se puede verificar.</p>
     <ol class="method-steps">
-      <li><strong>Encontrar la brecha.</strong> Partir de una evidencia que alguien pueda señalar: un reporte de congelamiento, un aviso de seguridad publicado, un fallo en un tracker, un control que ninguna herramienta hace. Reproducirla en la versión exacta donde ocurre.</li>
-      <li><strong>Entender la causa.</strong> Seguirla hasta el código que la provoca: el método que gasta el tiempo, la versión de la dependencia dentro del rango afectado de un aviso, el recorrido que no está sincronizado. Conservar la reproducción como un test o un control que cualquiera pueda volver a ejecutar.</li>
-      <li><strong>Construir la corrección.</strong> Enviar el cambio más pequeño que elimina la causa, con evidencia de antes y después: un pull request upstream, un reporte a los mantenedores o un plugin cuando la corrección corresponde fuera de la plataforma.</li>
+      <li><strong>Encuentro la brecha.</strong> Parto de una evidencia que cualquiera pueda señalar: un reporte de congelamiento, un aviso de seguridad publicado, un fallo en un tracker, un control que ninguna herramienta hace. La reproduzco en la versión exacta donde ocurre.</li>
+      <li><strong>Rastreo la causa.</strong> Sigo el rastro hasta el código que la provoca: el método que gasta el tiempo, la versión de la dependencia dentro del rango afectado de un aviso, el recorrido que no está sincronizado. Conservo la reproducción como un test o un control que cualquiera pueda volver a ejecutar.</li>
+      <li><strong>Construyo la corrección.</strong> Envío el cambio más pequeño que elimina la causa, con evidencia de antes y después: un pull request upstream, un reporte a los mantenedores o un plugin cuando la corrección corresponde fuera de la plataforma.</li>
     </ol>
-    <p>Los resultados se publican con su fuente (el ticket, el pull request, el reporte o el test) y con su estado real: un pull request abierto figura como abierto, y una corrección que los mantenedores hicieron de otra forma se presenta como suya. Consulta la <a href="/es/ingenieria-y-evidencia/">evidencia de ingeniería</a>.</p>
+    <p>Publico los resultados con su fuente (el ticket, el pull request, el reporte o el test) y con su estado real: muestro como abierto un pull request abierto, y describo como suya una corrección que los mantenedores hicieron de otra manera. Mira la <a href="/es/ingenieria-y-evidencia/">evidencia de ingeniería</a>.</p>
   </section>
 
   <section class="disclosure" aria-labelledby="method-assurance">
     <h2 id="method-assurance">Garantías, confidencialidad y límites</h2>
-    <p>Para un responsable de seguridad o de ingeniería que evalúa si puede confiar en este trabajo, el método mantiene cinco compromisos en cada proyecto.</p>
+    <p>Si eres responsable de seguridad o de ingeniería y estás decidiendo si confiar en mi trabajo, estos son los cinco compromisos que cumplo en cada encargo.</p>
     <ul>
-      <li><strong>Causa raíz, no síntomas.</strong> Cada hallazgo se rastrea hasta el código, la versión de la dependencia o la configuración exacta que lo causa, y se reproduce en la versión donde ocurre.</li>
-      <li><strong>Evidencia que puedes reproducir.</strong> Cada hallazgo viene con una medición, una traza de pila o una prueba, y un antes y después para todo lo que recibe una corrección.</li>
-      <li><strong>Ordenado por exposición real.</strong> Los hallazgos se ordenan por exposición real, no por el puntaje CVSS en bruto, y todo lo explotable se reporta primero y en privado por tu canal de seguridad.</li>
-      <li><strong>Sin hallazgos inflados.</strong> Los resultados llevan su estado real; el trabajo reporta lo que encuentra y no afirma que no exista otro problema.</li>
-      <li><strong>De solo lectura y confidencial.</strong> Una revisión es de solo lectura, así que no se sube nada a tu código; tu código y tus datos quedan confidenciales, y firmar tu NDA no es problema.</li>
+      <li><strong>Causa raíz, no síntomas.</strong> Rastreo cada hallazgo hasta el código, la versión de dependencia o la configuración exactos que lo causan, y lo reproduzco en la versión donde ocurre.</li>
+      <li><strong>Evidencia que puedes volver a ejecutar.</strong> Cada hallazgo viene con una medición, un stack trace o un test, y con un antes y después para todo lo que recibe una corrección.</li>
+      <li><strong>Ordenado por exposición real.</strong> Ordeno los hallazgos por la exposición real y no por la puntuación CVSS en bruto, y reporto primero y en privado, por tu canal de seguridad, todo lo explotable.</li>
+      <li><strong>Sin hallazgos inflados.</strong> Mis resultados llevan su estado real. Reporto lo que encuentro y nunca afirmo que no exista otro problema.</li>
+      <li><strong>Solo lectura y confidencial.</strong> Una revisión es de solo lectura, así que no envío nada a tu código; mantengo la confidencialidad de tu código y tus datos, y firmar tu NDA no es problema.</li>
     </ul>
   </section>
 
   <figure class="decision-figure" aria-labelledby="greenlit-title">
-    <h2 id="greenlit-title">Cómo se aprueba un plugin</h2>
-    <p>Un plugin enfocado solo avanza cuando cada pregunta pública y basada en evidencia tiene una respuesta clara.</p>
+    <h2 id="greenlit-title">Cómo decido construir un plugin</h2>
+    <p>Solo construyo un plugin enfocado cuando cada pregunta pública y basada en evidencia tiene una respuesta clara.</p>
     <div class="diagram-scroll">
       <svg class="decision-diagram" viewBox="0 0 900 720" role="img" aria-labelledby="diagram-title diagram-desc" xmlns="http://www.w3.org/2000/svg">
         <title id="diagram-title">How a plugin gets greenlit</title>
@@ -377,7 +377,7 @@
           <p class="gh-footer-about-links"><a href="/feed.xml">RSS</a><a href="mailto:contact@gaphunterlabs.com">contact@gaphunterlabs.com</a></p></div>
         </div>
       </div>
-      <nav class="gh-footer-cols" aria-label="Pie de página"><div class="gh-footer-col"><p class="gh-footer-title">Trabajo</p><a href="/es/#work">Investigaciones seleccionadas</a><a href="/es/ingenieria-y-evidencia/tickets-jetbrains-platform/">Tickets de JetBrains Platform</a><a href="/es/ingenieria-y-evidencia/reportes-de-seguridad/">Reportes de seguridad en código abierto</a><a href="/es/ingenieria-y-evidencia/auditorias-de-plugins-de-terceros/">Auditorías de plugins de terceros</a><a href="/es/ingenieria-y-evidencia/casos-de-estudio/">Casos de estudio de plugins</a></div><div class="gh-footer-col"><p class="gh-footer-title">Ingeniería</p><a href="/es/metodologia/">Metodología</a><a href="/es/ingenieria-y-evidencia/">Resumen de la evidencia</a></div><div class="gh-footer-col"><p class="gh-footer-title">Herramientas</p><a href="/es/catalogo/">Catálogo de plugins</a><a href="/es/catalogo/?pricing=paid">Plugins de pago y Pro</a><a href="/es/catalogo/?platform=vscode">Extensiones de VS Code</a><a href="/es/ghl-jail/">ghl-jail (sandbox de Windows)</a></div><div class="gh-footer-col"><p class="gh-footer-title">Servicios</p><a href="/es/servicios/">Contratar</a><a href="/es/auditoria-de-rendimiento/">Auditoría de rendimiento</a><a href="/es/contacto/">Contacto</a></div><div class="gh-footer-col"><p class="gh-footer-title">Tiendas</p><a href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" target="_blank" rel="noopener">JetBrains Marketplace</a><a href="https://marketplace.visualstudio.com/publishers/GapHunterLabs" target="_blank" rel="noopener">VS Code Marketplace</a><a href="https://github.com/GapHunterLabs" target="_blank" rel="noopener">GitHub</a></div><div class="gh-footer-col"><p class="gh-footer-title">Legal</p><a href="/es/seguridad/">Seguridad</a><a href="/es/privacidad/">Privacidad</a><a href="/es/terminos/">Términos</a><a href="/es/eula/">EULA</a></div></nav>
+      <nav class="gh-footer-cols" aria-label="Pie de página"><div class="gh-footer-col"><p class="gh-footer-title">Trabajo</p><a href="/es/#work">Investigaciones seleccionadas</a><a href="/es/ingenieria-y-evidencia/tickets-jetbrains-platform/">Tickets de JetBrains Platform</a><a href="/es/ingenieria-y-evidencia/reportes-de-seguridad/">Reportes de seguridad en código abierto</a><a href="/es/ingenieria-y-evidencia/auditorias-de-plugins-de-terceros/">Auditorías de plugins de terceros</a><a href="/es/ingenieria-y-evidencia/casos-de-estudio/">Casos de estudio de plugins</a></div><div class="gh-footer-col"><p class="gh-footer-title">Ingeniería</p><a href="/es/metodologia/">Metodología</a><a href="/es/ingenieria-y-evidencia/">Resumen de la evidencia</a></div><div class="gh-footer-col"><p class="gh-footer-title">Herramientas</p><a href="/es/catalogo/">Catálogo de plugins</a><a href="/es/catalogo/?pricing=paid">Plugins de pago y Pro</a><a href="/es/catalogo/?platform=vscode">Extensiones de VS Code</a><a href="/es/ghl-jail/">ghl-jail (sandbox de Windows)</a></div><div class="gh-footer-col"><p class="gh-footer-title">Servicios</p><a href="/es/servicios/">Contratar</a><a href="/es/auditoria-de-rendimiento/">Auditoría de rendimiento</a><a href="/es/patrocinadores/">Patrocina el trabajo</a><a href="/es/contacto/">Contacto</a></div><div class="gh-footer-col"><p class="gh-footer-title">Tiendas</p><a href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" target="_blank" rel="noopener">JetBrains Marketplace</a><a href="https://marketplace.visualstudio.com/publishers/GapHunterLabs" target="_blank" rel="noopener">VS Code Marketplace</a><a href="https://github.com/GapHunterLabs" target="_blank" rel="noopener">GitHub</a></div><div class="gh-footer-col"><p class="gh-footer-title">Legal</p><a href="/es/seguridad/">Seguridad</a><a href="/es/privacidad/">Privacidad</a><a href="/es/terminos/">Términos</a><a href="/es/eula/">EULA</a></div></nav>
     </div>
     <div class="gh-footer-bottom">
       <p class="gh-footer-legal">&copy; 2026 Gap Hunter Labs. Los datos de descargas se sincronizan dos veces al día con las API públicas de JetBrains Marketplace y GitHub.</p>

@@ -1,0 +1,5 @@
+{
+  "_note": "Sponsors shown on the home page and on /sponsors/. After editing, run: python pipeline/build_home.py && python pipeline/build_i18n.py --strict && python pipeline/version_assets.py. Tiers: platinum, gold, silver (logo + link), backer, supporter (name, optional link). A logo is a local file under assets/sponsors/ (the CSP only allows same-origin images). Add a sponsor only with their permission.",
+  "asOf": "2026-10-29",
+  "sponsors": []
+}

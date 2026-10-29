@@ -199,7 +199,7 @@
     .case-meta-row { flex: 1 1 140px; }
   }
 </style>
-<link rel="stylesheet" href="/css/shell.css?v=49856de6">
+<link rel="stylesheet" href="/css/shell.css?v=332179ac">
 <link rel="stylesheet" href="/css/tw.css?v=8b76ac4a">
 </head>
 <body>
@@ -238,7 +238,7 @@
       <div class="case-body">
         <p class="eyebrow">Case study</p>
         <h2>Background ReadAction Freeze Companion</h2>
-        <p>Most plugins in this catalog start from users complaining about a paid competitor. This one started from JetBrains' own Platform Blog, which describes a background-thread entry point reaching a blocking, non-cancellable read-lock call as a recurring cause of IDE freezes.</p>
+        <p>Most plugins in my catalog start from users complaining about a paid competitor. This one started from JetBrains' own Platform Blog, which describes a background-thread entry point reaching a blocking, non-cancellable read-lock call as a recurring cause of IDE freezes.</p>
         <p>Pointed at IntelliJ&rsquo;s own source, it found the pattern in <code>SearchForTestsTask</code>, which ran one step through the cancellable <code>ReadAction.nonBlocking()</code> and its sibling through the blocking <code>ReadAction.run()</code>. That became <a href="https://youtrack.jetbrains.com/issue/IDEA-393501" target="_blank" rel="noopener">IDEA-393501</a>, filed with JetBrains and since fixed on master. On the same code it also skipped a read action whose only caller runs on the EDT: a false positive avoided in production code, not in a synthetic test.</p>
         <a class="btn" href="https://github.com/GapHunterLabs/background-readaction-freeze-companion#readme" target="_blank" rel="noopener">View evidence</a>
       </div>
@@ -350,7 +350,7 @@
       </dl>
     </article>
 
-    <p class="lab-pending">More case studies will be added as they're reviewed. Each one requires reading the plugin's full evidence in its own README and checking every claim against a public source, the same bar as the ones above. Every plugin in the <a href="/catalog/">catalog</a> already lists its evidence; this page collects the few with the most unusual or best-documented stories.</p>
+    <p class="lab-pending">I will add more case studies as I review them. For each one I read the plugin's full evidence in its own README and check every claim against a public source, the same bar as the ones above. Every plugin in my <a href="/catalog/">catalog</a> already lists its evidence; this page collects the few with the most unusual or best-documented stories.</p>
   </div>
 
   <p class="ee-next">Next: <a href="/engineering-evidence/jetbrains-platform-tickets/">JetBrains Platform tickets</a></p>
@@ -402,7 +402,7 @@
           <p class="gh-footer-about-links"><a href="/feed.xml">RSS</a><a href="mailto:contact@gaphunterlabs.com">contact@gaphunterlabs.com</a></p></div>
         </div>
       </div>
-      <nav class="gh-footer-cols" aria-label="Footer"><div class="gh-footer-col"><p class="gh-footer-title">Work</p><a href="/#work">Selected investigations</a><a href="/engineering-evidence/jetbrains-platform-tickets/">JetBrains Platform tickets</a><a href="/engineering-evidence/open-source-security-reports/">Open-source security reports</a><a href="/engineering-evidence/third-party-plugin-audits/">Third-party plugin audits</a><a href="/engineering-evidence/case-studies/">Plugin case studies</a></div><div class="gh-footer-col"><p class="gh-footer-title">Engineering</p><a href="/methodology/">Methodology</a><a href="/engineering-evidence/">Evidence overview</a></div><div class="gh-footer-col"><p class="gh-footer-title">Tools</p><a href="/catalog/">Plugin catalog</a><a href="/catalog/?pricing=paid">Paid &amp; Pro plugins</a><a href="/catalog/?platform=vscode">VS Code extensions</a><a href="/ghl-jail/">ghl-jail (Windows sandbox)</a></div><div class="gh-footer-col"><p class="gh-footer-title">Services</p><a href="/services/">Work with me</a><a href="/plugin-performance-audit/">Performance audit</a><a href="/contact/">Contact</a></div><div class="gh-footer-col"><p class="gh-footer-title">Marketplaces</p><a href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" target="_blank" rel="noopener">JetBrains Marketplace</a><a href="https://marketplace.visualstudio.com/publishers/GapHunterLabs" target="_blank" rel="noopener">VS Code Marketplace</a><a href="https://github.com/GapHunterLabs" target="_blank" rel="noopener">GitHub</a></div><div class="gh-footer-col"><p class="gh-footer-title">Legal</p><a href="/security/">Security</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/eula/">EULA</a></div></nav>
+      <nav class="gh-footer-cols" aria-label="Footer"><div class="gh-footer-col"><p class="gh-footer-title">Work</p><a href="/#work">Selected investigations</a><a href="/engineering-evidence/jetbrains-platform-tickets/">JetBrains Platform tickets</a><a href="/engineering-evidence/open-source-security-reports/">Open-source security reports</a><a href="/engineering-evidence/third-party-plugin-audits/">Third-party plugin audits</a><a href="/engineering-evidence/case-studies/">Plugin case studies</a></div><div class="gh-footer-col"><p class="gh-footer-title">Engineering</p><a href="/methodology/">Methodology</a><a href="/engineering-evidence/">Evidence overview</a></div><div class="gh-footer-col"><p class="gh-footer-title">Tools</p><a href="/catalog/">Plugin catalog</a><a href="/catalog/?pricing=paid">Paid &amp; Pro plugins</a><a href="/catalog/?platform=vscode">VS Code extensions</a><a href="/ghl-jail/">ghl-jail (Windows sandbox)</a></div><div class="gh-footer-col"><p class="gh-footer-title">Services</p><a href="/services/">Work with me</a><a href="/plugin-performance-audit/">Performance audit</a><a href="/sponsors/">Sponsor the work</a><a href="/contact/">Contact</a></div><div class="gh-footer-col"><p class="gh-footer-title">Marketplaces</p><a href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" target="_blank" rel="noopener">JetBrains Marketplace</a><a href="https://marketplace.visualstudio.com/publishers/GapHunterLabs" target="_blank" rel="noopener">VS Code Marketplace</a><a href="https://github.com/GapHunterLabs" target="_blank" rel="noopener">GitHub</a></div><div class="gh-footer-col"><p class="gh-footer-title">Legal</p><a href="/security/">Security</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/eula/">EULA</a></div></nav>
     </div>
     <div class="gh-footer-bottom">
       <p class="gh-footer-legal">&copy; 2026 Gap Hunter Labs. Download data is synced twice daily from the public JetBrains Marketplace and GitHub APIs.</p>

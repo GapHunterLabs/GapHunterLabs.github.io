@@ -51,7 +51,9 @@ OPAQUE = {"script", "style", "svg", "pre", "textarea", "template", "noscript"}
 SKIP_CLASSES = {"card-pitch", "card-name", "card-niche", "hs-name", "hs-niche", "paid-niche", "sc-name", "sc-niche",
                 "ticket-id", "code-window", "gh-brand-name", "gh-lang",
                 # fichas de plugin (2026-10-05): datos del plugin y de los relacionados
-                "ph-niche", "ph-lead", "pb-text", "rel-name", "rel-niche", "rel-pitch", "fact-data"}
+                "ph-niche", "ph-lead", "pb-text", "rel-name", "rel-niche", "rel-pitch", "fact-data",
+                # patrocinadores (2026-10-29): nombres propios que carga data/sponsors.json
+                "sp-name"}
 SKIP_IDS = {"tbody"}
 SKIP_IN = {"paid-card": {"h3", "p"}, "fact": {"code"}, "fact-data": {"span"}}   # ancestro con clase -> etiquetas de datos adentro
 ATTRS = ("aria-label", "title", "placeholder", "alt")
@@ -295,7 +297,7 @@ def translate(text, table, missing, page):
 
     def tag_sub(m):
         tag = m.group(0)
-        if tag.startswith("<svg") or tag.startswith("<path"):
+        if tag.startswith("<svg") or tag.startswith("<path") or 'class="sp-logo-img"' in tag:   # el alt del logo es un nombre propio
             return tag
         return re.sub(r'\b(%s)="([^"]*)"' % "|".join(ATTRS), attr_sub, tag)
     text = re.sub(r"<(?!/|!|script|style)[a-zA-Z][^>]*>", tag_sub, text)

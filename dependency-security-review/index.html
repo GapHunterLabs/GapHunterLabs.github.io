@@ -46,7 +46,7 @@
 <meta name="twitter:description" content="A fixed-price, read-only review of your dependencies and CI/CD workflows: known CVEs, dependency-confusion risks and workflow permissions, with the fix for each.">
 <meta name="twitter:image" content="https://gaphunterlabs.com/og-dependency-security.png?v=4">
 <meta name="twitter:image:alt" content="Dependency and CI/CD security review, from USD 4,800 — Gap Hunter Labs">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do you tell whether a dependency vulnerability is actually exploitable?","acceptedAnswer":{"@type":"Answer","text":"Each advisory is verified against the exact version pinned in your manifests and lockfiles, not against a version range, so an advisory that does not apply to your pinned version is not reported as a risk. Findings are then ordered by real exposure rather than by raw CVSS score, and anything exploitable is reported first and privately through your security channel. The review is read-only and reports what it finds; it cannot promise that no other vulnerability exists."}},{"@type":"Question","name":"What does a CI/CD security review include?","acceptedAnswer":{"@type":"Answer","text":"The review checks your CI and CD workflow permissions, tokens and third-party actions with OpenSSF Scorecard, looks at manifests and lockfiles for internal package names that a public registry could shadow (dependency confusion), and can add an optional EU Cyber Resilience Act readiness check covering the security policy, security.txt, SBOM and the vulnerability-reporting workflow. It is read-only: you choose the repositories and nothing is pushed to your code."}}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do you tell whether a dependency vulnerability is actually exploitable?","acceptedAnswer":{"@type":"Answer","text":"I verify each advisory against the exact version pinned in your manifests and lockfiles, not against a version range, so an advisory that does not apply to your pinned version is not reported as a risk. I then order the findings by real exposure rather than by raw CVSS score, and I report anything exploitable first and privately through your security channel. The review is read-only and I report what I find; I cannot promise that no other vulnerability exists."}},{"@type":"Question","name":"What does a CI/CD security review include?","acceptedAnswer":{"@type":"Answer","text":"I check your CI and CD workflow permissions, tokens and third-party actions with OpenSSF Scorecard, and I look at manifests and lockfiles for internal package names that a public registry could shadow (dependency confusion). I can add an optional EU Cyber Resilience Act readiness check covering the security policy, security.txt, SBOM and the vulnerability-reporting workflow. The review is read-only: you choose the repositories and I push nothing to your code."}}]}</script>
 <link rel="stylesheet" href="/css/theme.css?v=b641a03e">
 <link rel="stylesheet" href="/css/base.css?v=3b2dc0b4">
 <style>
@@ -126,7 +126,7 @@
   }
 
 </style>
-<link rel="stylesheet" href="/css/shell.css?v=49856de6">
+<link rel="stylesheet" href="/css/shell.css?v=332179ac">
 <link rel="stylesheet" href="/css/tw.css?v=8b76ac4a">
 </head>
 <body>
@@ -167,12 +167,12 @@
 
     <section class="disclosure" aria-labelledby="dsr-faq1">
       <h2 id="dsr-faq1">How do you tell whether a dependency vulnerability is actually exploitable?</h2>
-      <p>Each advisory is verified against the exact version pinned in your manifests and lockfiles, not against a version range, so an advisory that does not apply to your pinned version is not reported as a risk. Findings are then ordered by real exposure rather than by raw CVSS score, and anything exploitable is reported first and privately through your security channel. The review is read-only and reports what it finds; it cannot promise that no other vulnerability exists.</p>
+      <p>I verify each advisory against the exact version pinned in your manifests and lockfiles, not against a version range, so an advisory that does not apply to your pinned version is not reported as a risk. I then order the findings by real exposure rather than by raw CVSS score, and I report anything exploitable first and privately through your security channel. The review is read-only and I report what I find; I cannot promise that no other vulnerability exists.</p>
     </section>
 
     <section class="disclosure" aria-labelledby="dsr-faq2">
       <h2 id="dsr-faq2">What does a CI/CD security review include?</h2>
-      <p>The review checks your CI and CD workflow permissions, tokens and third-party actions with OpenSSF Scorecard, looks at manifests and lockfiles for internal package names that a public registry could shadow (dependency confusion), and can add an optional EU Cyber Resilience Act readiness check covering the security policy, security.txt, SBOM and the vulnerability-reporting workflow. It is read-only: you choose the repositories and nothing is pushed to your code.</p>
+      <p>I check your CI and CD workflow permissions, tokens and third-party actions with OpenSSF Scorecard, and I look at manifests and lockfiles for internal package names that a public registry could shadow (dependency confusion). I can add an optional EU Cyber Resilience Act readiness check covering the security policy, security.txt, SBOM and the vulnerability-reporting workflow. The review is read-only: you choose the repositories and I push nothing to your code.</p>
     </section>
 
     <section class="disclosure" aria-labelledby="dsr-1">
@@ -187,10 +187,10 @@
     <section class="disclosure" aria-labelledby="dsr-2">
       <h2 id="dsr-2">What the review covers</h2>
       <ul>
-        <li><strong>Known vulnerabilities.</strong> Production dependencies checked against OSV, with each advisory verified against the exact version pinned in your manifests and lockfiles &mdash; not a version-range guess.</li>
-        <li><strong>Dependency-confusion risks.</strong> Manifests and lockfiles reviewed for internal package names that a public registry could shadow.</li>
-        <li><strong>CI/CD workflow permissions.</strong> Workflow tokens, third-party actions and supply-chain settings reviewed with OpenSSF Scorecard.</li>
-        <li><strong>Optional CRA readiness.</strong> Security policy, security.txt, SBOM and the vulnerability-reporting workflow (technical, not legal advice).</li>
+        <li><strong>Known vulnerabilities.</strong> I check production dependencies against OSV and verify each advisory against the exact version pinned in your manifests and lockfiles &mdash; not a version-range guess.</li>
+        <li><strong>Dependency-confusion risks.</strong> I review manifests and lockfiles for internal package names that a public registry could shadow.</li>
+        <li><strong>CI/CD workflow permissions.</strong> I review workflow tokens, third-party actions and supply-chain settings with OpenSSF Scorecard.</li>
+        <li><strong>Optional CRA readiness.</strong> I check the security policy, security.txt, SBOM and the vulnerability-reporting workflow (technical, not legal advice).</li>
       </ul>
     </section>
 
@@ -199,7 +199,7 @@
       <ul>
         <li>A written report: each finding with its source and, when one exists, the version that fixes it.</li>
         <li>Findings ordered by real exposure, not by raw CVSS score.</li>
-        <li>Anything exploitable reported first, privately, through your security channel.</li>
+        <li>If anything is exploitable, I report it to you first, privately, through your security channel.</li>
         <li>One round of follow-up questions by email after delivery.</li>
       </ul>
     </section>
@@ -207,10 +207,10 @@
     <section class="disclosure" aria-labelledby="dsr-4">
       <h2 id="dsr-4">How it works</h2>
       <ul>
-        <li>Read-only. You choose the repositories; nothing is pushed to your code.</li>
-        <li>Within 2 business days you receive the scope in writing: repositories, whether CRA readiness is included, delivery date and price.</li>
-        <li>50% is paid when the work starts and 50% on delivery.</li>
-        <li>The work is asynchronous: email and the written report. A call is available if you prefer one.</li>
+        <li>Read-only. You choose the repositories; I push nothing to your code.</li>
+        <li>Within 2 business days I send you the scope in writing: repositories, whether CRA readiness is included, delivery date and price.</li>
+        <li>You pay 50% when the work starts and 50% on delivery.</li>
+        <li>I work asynchronously: email and the written report. I am happy to have a call if you prefer one.</li>
       </ul>
     </section>
 
@@ -220,24 +220,24 @@
         <li><strong>USD 4,800, fixed,</strong> for one repository and its CI/CD workflows, delivered within 5 business days.</li>
         <li><strong>USD 12,000, fixed,</strong> for up to 5 repositories of the same system, delivered within 10 business days.</li>
         <li><strong>+ USD 1,500</strong> for the optional EU CRA readiness check, adding 2 business days to either level.</li>
-        <li>Paid by international bank transfer in USD, against an invoice.</li>
+        <li>You pay by international bank transfer in USD, against an invoice.</li>
       </ul>
     </section>
 
     <section class="disclosure" aria-labelledby="dsr-6">
       <h2 id="dsr-6">Terms in short</h2>
       <ul>
-        <li>The review is read-only and reports what it finds; it cannot promise that no other vulnerability exists.</li>
-        <li>Your code and your data stay confidential. Signing your NDA is fine.</li>
-        <li>CRA readiness is a technical check, not legal advice. Liability is limited to the price paid.</li>
+        <li>The review is read-only. I report what I find and cannot promise that no other vulnerability exists.</li>
+        <li>I keep your code and your data confidential. Signing your NDA is fine.</li>
+        <li>CRA readiness is a technical check, not legal advice. My liability is limited to the price paid.</li>
       </ul>
     </section>
 
     <section class="disclosure" aria-labelledby="dsr-7">
       <h2 id="dsr-7">Track record</h2>
       <ul>
-        <li>Vulnerable dependencies reported to open-source maintainers and fixed after the report &mdash; for example <a href="https://github.com/bancolombia/reactive-commons-go/issues/5" target="_blank" rel="noopener">reactive-commons-go#5</a>, from 10 advisories to 0, fixed by the maintainers 3 days later.</li>
-        <li>Every advisory is verified against the exact pinned version in OSV before it is listed: see the <a href="/engineering-evidence/open-source-security-reports/">open-source security reports</a>.</li>
+        <li>I reported vulnerable dependencies to open-source maintainers, who fixed them &mdash; for example <a href="https://github.com/bancolombia/reactive-commons-go/issues/5" target="_blank" rel="noopener">reactive-commons-go#5</a>, from 10 advisories to 0, fixed by the maintainers 3 days later.</li>
+        <li>I verify every advisory against the exact pinned version in OSV before I list it: see the <a href="/engineering-evidence/open-source-security-reports/">open-source security reports</a>.</li>
       </ul>
     </section>
 
@@ -291,7 +291,7 @@
           <p class="gh-footer-about-links"><a href="/feed.xml">RSS</a><a href="mailto:contact@gaphunterlabs.com">contact@gaphunterlabs.com</a></p></div>
         </div>
       </div>
-      <nav class="gh-footer-cols" aria-label="Footer"><div class="gh-footer-col"><p class="gh-footer-title">Work</p><a href="/#work">Selected investigations</a><a href="/engineering-evidence/jetbrains-platform-tickets/">JetBrains Platform tickets</a><a href="/engineering-evidence/open-source-security-reports/">Open-source security reports</a><a href="/engineering-evidence/third-party-plugin-audits/">Third-party plugin audits</a><a href="/engineering-evidence/case-studies/">Plugin case studies</a></div><div class="gh-footer-col"><p class="gh-footer-title">Engineering</p><a href="/methodology/">Methodology</a><a href="/engineering-evidence/">Evidence overview</a></div><div class="gh-footer-col"><p class="gh-footer-title">Tools</p><a href="/catalog/">Plugin catalog</a><a href="/catalog/?pricing=paid">Paid &amp; Pro plugins</a><a href="/catalog/?platform=vscode">VS Code extensions</a><a href="/ghl-jail/">ghl-jail (Windows sandbox)</a></div><div class="gh-footer-col"><p class="gh-footer-title">Services</p><a href="/services/">Work with me</a><a href="/plugin-performance-audit/">Performance audit</a><a href="/contact/">Contact</a></div><div class="gh-footer-col"><p class="gh-footer-title">Marketplaces</p><a href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" target="_blank" rel="noopener">JetBrains Marketplace</a><a href="https://marketplace.visualstudio.com/publishers/GapHunterLabs" target="_blank" rel="noopener">VS Code Marketplace</a><a href="https://github.com/GapHunterLabs" target="_blank" rel="noopener">GitHub</a></div><div class="gh-footer-col"><p class="gh-footer-title">Legal</p><a href="/security/">Security</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/eula/">EULA</a></div></nav>
+      <nav class="gh-footer-cols" aria-label="Footer"><div class="gh-footer-col"><p class="gh-footer-title">Work</p><a href="/#work">Selected investigations</a><a href="/engineering-evidence/jetbrains-platform-tickets/">JetBrains Platform tickets</a><a href="/engineering-evidence/open-source-security-reports/">Open-source security reports</a><a href="/engineering-evidence/third-party-plugin-audits/">Third-party plugin audits</a><a href="/engineering-evidence/case-studies/">Plugin case studies</a></div><div class="gh-footer-col"><p class="gh-footer-title">Engineering</p><a href="/methodology/">Methodology</a><a href="/engineering-evidence/">Evidence overview</a></div><div class="gh-footer-col"><p class="gh-footer-title">Tools</p><a href="/catalog/">Plugin catalog</a><a href="/catalog/?pricing=paid">Paid &amp; Pro plugins</a><a href="/catalog/?platform=vscode">VS Code extensions</a><a href="/ghl-jail/">ghl-jail (Windows sandbox)</a></div><div class="gh-footer-col"><p class="gh-footer-title">Services</p><a href="/services/">Work with me</a><a href="/plugin-performance-audit/">Performance audit</a><a href="/sponsors/">Sponsor the work</a><a href="/contact/">Contact</a></div><div class="gh-footer-col"><p class="gh-footer-title">Marketplaces</p><a href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" target="_blank" rel="noopener">JetBrains Marketplace</a><a href="https://marketplace.visualstudio.com/publishers/GapHunterLabs" target="_blank" rel="noopener">VS Code Marketplace</a><a href="https://github.com/GapHunterLabs" target="_blank" rel="noopener">GitHub</a></div><div class="gh-footer-col"><p class="gh-footer-title">Legal</p><a href="/security/">Security</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/eula/">EULA</a></div></nav>
     </div>
     <div class="gh-footer-bottom">
       <p class="gh-footer-legal">&copy; 2026 Gap Hunter Labs. Download data is synced twice daily from the public JetBrains Marketplace and GitHub APIs.</p>

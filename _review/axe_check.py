@@ -31,7 +31,7 @@ AXE = ROOT / "pipeline" / "node_modules" / "axe-core" / "axe.min.js"
 SAMPLE = [
     "/", "/services/", "/catalog/", "/contact/", "/methodology/",
     "/engineering-evidence/", "/engineering-evidence/jetbrains-platform-tickets/",
-    "/catalog/mermaid-companion/", "/ghl-jail/", "/privacy/",
+    "/catalog/mermaid-companion/", "/ghl-jail/", "/sponsors/", "/privacy/",
 ]
 
 

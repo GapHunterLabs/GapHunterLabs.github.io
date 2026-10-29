@@ -46,7 +46,7 @@
 <meta name="twitter:description" content="Your JetBrains plugin built and verified against the IDE versions you support: removed and deprecated APIs, Kotlin K2, Gradle plugin 2.x and Plugin Verifier failures.">
 <meta name="twitter:image" content="https://gaphunterlabs.com/og-plugin-updates.png?v=4">
 <meta name="twitter:image:alt" content="Plugin updates for new IDE versions, from USD 4,500 — Gap Hunter Labs">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do you update a JetBrains plugin for a new IntelliJ Platform version without breaking it?","acceptedAnswer":{"@type":"Answer","text":"Calls to APIs removed or deprecated in the target versions are replaced with their supported equivalent, the Gradle build is migrated to the current IntelliJ Platform Gradle Plugin and its new configuration, and the plugin is built and tested under the new Kotlin compiler mode where the target versions require it. Every Plugin Verifier error and warning for each target version is resolved or explained, and the changes ship as a pull request that builds green against each IDE version in scope."}},{"@type":"Question","name":"What is the difference between a minor and a major plugin update?","acceptedAnswer":{"@type":"Answer","text":"A minor update covers deprecated APIs, the move to the current Gradle plugin and Plugin Verifier warnings. A major update covers removed APIs, the new Kotlin compiler mode, or a plugin with several modules. Both are delivered as a pull request with the Plugin Verifier report for every version you support."}}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"How do you update a JetBrains plugin for a new IntelliJ Platform version without breaking it?","acceptedAnswer":{"@type":"Answer","text":"I replace calls to APIs removed or deprecated in the target versions with their supported equivalent, migrate the Gradle build to the current IntelliJ Platform Gradle Plugin and its new configuration, and build and test the plugin under the new Kotlin compiler mode where the target versions require it. I resolve or explain every Plugin Verifier error and warning for each target version, and I deliver the changes as a pull request that builds green against each IDE version in scope."}},{"@type":"Question","name":"What is the difference between a minor and a major plugin update?","acceptedAnswer":{"@type":"Answer","text":"A minor update covers deprecated APIs, the move to the current Gradle plugin and Plugin Verifier warnings. A major update covers removed APIs, the new Kotlin compiler mode, or a plugin with several modules. I deliver both as a pull request with the Plugin Verifier report for every version you support."}}]}</script>
 <link rel="stylesheet" href="/css/theme.css?v=b641a03e">
 <link rel="stylesheet" href="/css/base.css?v=3b2dc0b4">
 <style>
@@ -126,7 +126,7 @@
   }
 
 </style>
-<link rel="stylesheet" href="/css/shell.css?v=49856de6">
+<link rel="stylesheet" href="/css/shell.css?v=332179ac">
 <link rel="stylesheet" href="/css/tw.css?v=8b76ac4a">
 </head>
 <body>
@@ -167,12 +167,12 @@
 
     <section class="disclosure" aria-labelledby="pu-faq1">
       <h2 id="pu-faq1">How do you update a JetBrains plugin for a new IntelliJ Platform version without breaking it?</h2>
-      <p>Calls to APIs removed or deprecated in the target versions are replaced with their supported equivalent, the Gradle build is migrated to the current IntelliJ Platform Gradle Plugin and its new configuration, and the plugin is built and tested under the new Kotlin compiler mode where the target versions require it. Every Plugin Verifier error and warning for each target version is resolved or explained, and the changes ship as a pull request that builds green against each IDE version in scope.</p>
+      <p>I replace calls to APIs removed or deprecated in the target versions with their supported equivalent, migrate the Gradle build to the current IntelliJ Platform Gradle Plugin and its new configuration, and build and test the plugin under the new Kotlin compiler mode where the target versions require it. I resolve or explain every Plugin Verifier error and warning for each target version, and I deliver the changes as a pull request that builds green against each IDE version in scope.</p>
     </section>
 
     <section class="disclosure" aria-labelledby="pu-faq2">
       <h2 id="pu-faq2">What is the difference between a minor and a major plugin update?</h2>
-      <p>A minor update covers deprecated APIs, the move to the current Gradle plugin and Plugin Verifier warnings. A major update covers removed APIs, the new Kotlin compiler mode, or a plugin with several modules. Both are delivered as a pull request with the Plugin Verifier report for every version you support.</p>
+      <p>A minor update covers deprecated APIs, the move to the current Gradle plugin and Plugin Verifier warnings. A major update covers removed APIs, the new Kotlin compiler mode, or a plugin with several modules. I deliver both as a pull request with the Plugin Verifier report for every version you support.</p>
     </section>
 
     <section class="disclosure" aria-labelledby="pu-1">
@@ -187,10 +187,10 @@
     <section class="disclosure" aria-labelledby="pu-2">
       <h2 id="pu-2">What the update covers</h2>
       <ul>
-        <li><strong>Removed and deprecated APIs.</strong> Calls to APIs removed or deprecated in the target versions, replaced with the supported equivalent.</li>
-        <li><strong>Kotlin K2 mode.</strong> The plugin built and tested under the K2 compiler where the target versions require it.</li>
-        <li><strong>IntelliJ Platform Gradle Plugin 2.x.</strong> The build migrated to the 2.x plugin and its new configuration.</li>
-        <li><strong>Plugin Verifier failures.</strong> Every Plugin Verifier error and warning for each target version resolved or explained.</li>
+        <li><strong>Removed and deprecated APIs.</strong> I replace calls to APIs removed or deprecated in the target versions with the supported equivalent.</li>
+        <li><strong>Kotlin K2 mode.</strong> I build and test the plugin under the K2 compiler where the target versions require it.</li>
+        <li><strong>IntelliJ Platform Gradle Plugin 2.x.</strong> I migrate the build to the 2.x plugin and its new configuration.</li>
+        <li><strong>Plugin Verifier failures.</strong> I resolve or explain every Plugin Verifier error and warning for each target version.</li>
       </ul>
     </section>
 
@@ -199,7 +199,7 @@
       <ul>
         <li>The changes as a pull request, building green against each IDE version in scope.</li>
         <li>The Plugin Verifier report for each target version.</li>
-        <li>A written list of the API changes that were resolved.</li>
+        <li>A written list of the API changes I resolved.</li>
         <li>One round of follow-up questions by email after delivery.</li>
       </ul>
     </section>
@@ -208,9 +208,9 @@
       <h2 id="pu-4">How it works</h2>
       <ul>
         <li>You share the plugin repository and the IDE versions it needs to support.</li>
-        <li>Within 2 business days you receive the scope in writing: versions, Minor or Major, delivery date and price.</li>
-        <li>50% is paid when the work starts and 50% on delivery.</li>
-        <li>The work is asynchronous: email and the pull request. A call is available if you prefer one.</li>
+        <li>Within 2 business days I send you the scope in writing: versions, Minor or Major, delivery date and price.</li>
+        <li>You pay 50% when the work starts and 50% on delivery.</li>
+        <li>I work asynchronously: email and the pull request. I am happy to have a call if you prefer one.</li>
       </ul>
     </section>
 
@@ -219,7 +219,7 @@
       <ul>
         <li><strong>USD 4,500, fixed (Minor),</strong> for deprecated APIs, the IntelliJ Platform Gradle Plugin 2.x and Plugin Verifier warnings, delivered within 5 business days.</li>
         <li><strong>USD 9,000, fixed (Major),</strong> for removed APIs, Kotlin K2 mode, or a plugin with several modules, delivered within 10 business days.</li>
-        <li>Paid by international bank transfer in USD, against an invoice.</li>
+        <li>You pay by international bank transfer in USD, against an invoice.</li>
       </ul>
     </section>
 
@@ -227,16 +227,16 @@
       <h2 id="pu-6">Terms in short</h2>
       <ul>
         <li>The changes are yours once the invoice is paid.</li>
-        <li>Your code and your data stay confidential. Signing your NDA is fine.</li>
-        <li>The update targets the versions in scope and cannot promise a future IDE release will not change again. Liability is limited to the price paid.</li>
+        <li>I keep your code and your data confidential. Signing your NDA is fine.</li>
+        <li>The update targets the versions in scope, and I cannot promise a future IDE release will not change again. My liability is limited to the price paid.</li>
       </ul>
     </section>
 
     <section class="disclosure" aria-labelledby="pu-7">
       <h2 id="pu-7">Track record</h2>
       <ul>
-        <li>It is the same process that keeps this catalog&rsquo;s 146 plugins compatible with each new IntelliJ release: see the <a href="/catalog/">plugin catalog</a>.</li>
-        <li>Root-cause work inside the IntelliJ Platform itself, reported to JetBrains: see the <a href="/engineering-evidence/jetbrains-platform-tickets/">JetBrains Platform tickets</a>.</li>
+        <li>It is the same process I use to keep the 146 plugins in my catalog compatible with each new IntelliJ release: see the <a href="/catalog/">plugin catalog</a>.</li>
+        <li>Root-cause work inside the IntelliJ Platform itself, which I reported to JetBrains: see the <a href="/engineering-evidence/jetbrains-platform-tickets/">JetBrains Platform tickets</a>.</li>
       </ul>
     </section>
 
@@ -290,7 +290,7 @@
           <p class="gh-footer-about-links"><a href="/feed.xml">RSS</a><a href="mailto:contact@gaphunterlabs.com">contact@gaphunterlabs.com</a></p></div>
         </div>
       </div>
-      <nav class="gh-footer-cols" aria-label="Footer"><div class="gh-footer-col"><p class="gh-footer-title">Work</p><a href="/#work">Selected investigations</a><a href="/engineering-evidence/jetbrains-platform-tickets/">JetBrains Platform tickets</a><a href="/engineering-evidence/open-source-security-reports/">Open-source security reports</a><a href="/engineering-evidence/third-party-plugin-audits/">Third-party plugin audits</a><a href="/engineering-evidence/case-studies/">Plugin case studies</a></div><div class="gh-footer-col"><p class="gh-footer-title">Engineering</p><a href="/methodology/">Methodology</a><a href="/engineering-evidence/">Evidence overview</a></div><div class="gh-footer-col"><p class="gh-footer-title">Tools</p><a href="/catalog/">Plugin catalog</a><a href="/catalog/?pricing=paid">Paid &amp; Pro plugins</a><a href="/catalog/?platform=vscode">VS Code extensions</a><a href="/ghl-jail/">ghl-jail (Windows sandbox)</a></div><div class="gh-footer-col"><p class="gh-footer-title">Services</p><a href="/services/">Work with me</a><a href="/plugin-performance-audit/">Performance audit</a><a href="/contact/">Contact</a></div><div class="gh-footer-col"><p class="gh-footer-title">Marketplaces</p><a href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" target="_blank" rel="noopener">JetBrains Marketplace</a><a href="https://marketplace.visualstudio.com/publishers/GapHunterLabs" target="_blank" rel="noopener">VS Code Marketplace</a><a href="https://github.com/GapHunterLabs" target="_blank" rel="noopener">GitHub</a></div><div class="gh-footer-col"><p class="gh-footer-title">Legal</p><a href="/security/">Security</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/eula/">EULA</a></div></nav>
+      <nav class="gh-footer-cols" aria-label="Footer"><div class="gh-footer-col"><p class="gh-footer-title">Work</p><a href="/#work">Selected investigations</a><a href="/engineering-evidence/jetbrains-platform-tickets/">JetBrains Platform tickets</a><a href="/engineering-evidence/open-source-security-reports/">Open-source security reports</a><a href="/engineering-evidence/third-party-plugin-audits/">Third-party plugin audits</a><a href="/engineering-evidence/case-studies/">Plugin case studies</a></div><div class="gh-footer-col"><p class="gh-footer-title">Engineering</p><a href="/methodology/">Methodology</a><a href="/engineering-evidence/">Evidence overview</a></div><div class="gh-footer-col"><p class="gh-footer-title">Tools</p><a href="/catalog/">Plugin catalog</a><a href="/catalog/?pricing=paid">Paid &amp; Pro plugins</a><a href="/catalog/?platform=vscode">VS Code extensions</a><a href="/ghl-jail/">ghl-jail (Windows sandbox)</a></div><div class="gh-footer-col"><p class="gh-footer-title">Services</p><a href="/services/">Work with me</a><a href="/plugin-performance-audit/">Performance audit</a><a href="/sponsors/">Sponsor the work</a><a href="/contact/">Contact</a></div><div class="gh-footer-col"><p class="gh-footer-title">Marketplaces</p><a href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" target="_blank" rel="noopener">JetBrains Marketplace</a><a href="https://marketplace.visualstudio.com/publishers/GapHunterLabs" target="_blank" rel="noopener">VS Code Marketplace</a><a href="https://github.com/GapHunterLabs" target="_blank" rel="noopener">GitHub</a></div><div class="gh-footer-col"><p class="gh-footer-title">Legal</p><a href="/security/">Security</a><a href="/privacy/">Privacy</a><a href="/terms/">Terms</a><a href="/eula/">EULA</a></div></nav>
     </div>
     <div class="gh-footer-bottom">
       <p class="gh-footer-legal">&copy; 2026 Gap Hunter Labs. Download data is synced twice daily from the public JetBrains Marketplace and GitHub APIs.</p>

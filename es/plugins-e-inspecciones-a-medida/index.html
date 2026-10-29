@@ -47,7 +47,7 @@
 <meta name="twitter:description" content="Inspecciones de análisis estático a medida de tu código, entregadas como un plugin que tu equipo instala y corre en CI: API internas, secretos y patrones de seguridad.">
 <meta name="twitter:image" content="https://gaphunterlabs.com/og-custom-plugins.es.png?v=4">
 <meta name="twitter:image:alt" content="Custom plugins and inspections, from USD 7.500 — Gap Hunter Labs">
-<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"¿Qué detecta una inspección de análisis estático a medida que un linter genérico no detecta?","acceptedAnswer":{"@type":"Answer","text":"Un linter genérico solo conoce reglas generales; una inspección a medida conoce tu base de código, así que puede marcar tus propias APIs internas, formatos de secretos, patrones de seguridad y reglas de arquitectura que un linter general no puede expresar. Las inspecciones se entregan como un plugin de JetBrains que tus desarrolladores instalan, con una prueba por cada inspección y una descripción escrita de qué marca cada una y por qué."}},{"@type":"Question","name":"¿Pueden las mismas inspecciones correr en CI, no solo en el IDE?","acceptedAnswer":{"@type":"Answer","text":"Sí. Las inspecciones pueden correr en GitHub Actions o GitLab CI, así un pull request falla con la misma regla que el IDE marca mientras los desarrolladores escriben, y el plugin puede servirse desde un repositorio de plugins privado desde el que tu equipo se actualiza."}}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"FAQPage","mainEntity":[{"@type":"Question","name":"¿Qué detecta una inspección de análisis estático a medida que un linter genérico no detecta?","acceptedAnswer":{"@type":"Answer","text":"Un linter genérico solo conoce reglas generales; una inspección a medida conoce tu base de código, así que puede señalar tus propias API internas, formatos de secretos, patrones de seguridad y reglas de arquitectura que un linter general no puede expresar. Entrego las inspecciones como un plugin de JetBrains que instalan tus desarrolladores, con un test para cada inspección y una descripción escrita de qué señala cada una y por qué."}},{"@type":"Question","name":"¿Pueden las mismas inspecciones correr en CI, no solo en el IDE?","acceptedAnswer":{"@type":"Answer","text":"Sí. Puedo ejecutar las inspecciones en GitHub Actions o GitLab CI, de modo que un pull request falla con la misma regla que el IDE señala mientras escribes, y puedo servir el plugin desde un repositorio privado de plugins del que se actualice tu equipo."}}]}</script>
 <link rel="stylesheet" href="/css/theme.css?v=b641a03e">
 <link rel="stylesheet" href="/css/base.css?v=3b2dc0b4">
 <style>
@@ -127,7 +127,7 @@
   }
 
 </style>
-<link rel="stylesheet" href="/css/shell.css?v=49856de6">
+<link rel="stylesheet" href="/css/shell.css?v=332179ac">
 <link rel="stylesheet" href="/css/tw.css?v=8b76ac4a">
 </head>
 <body>
@@ -168,12 +168,12 @@
 
     <section class="disclosure" aria-labelledby="cpi-faq1">
       <h2 id="cpi-faq1">¿Qué detecta una inspección de análisis estático a medida que un linter genérico no detecta?</h2>
-      <p>Un linter genérico solo conoce reglas generales; una inspección a medida conoce tu base de código, así que puede marcar tus propias APIs internas, formatos de secretos, patrones de seguridad y reglas de arquitectura que un linter general no puede expresar. Las inspecciones se entregan como un plugin de JetBrains que tus desarrolladores instalan, con una prueba por cada inspección y una descripción escrita de qué marca cada una y por qué.</p>
+      <p>Un linter genérico solo conoce reglas generales; una inspección a medida conoce tu base de código, así que puede señalar tus propias API internas, formatos de secretos, patrones de seguridad y reglas de arquitectura que un linter general no puede expresar. Entrego las inspecciones como un plugin de JetBrains que instalan tus desarrolladores, con un test para cada inspección y una descripción escrita de qué señala cada una y por qué.</p>
     </section>
 
     <section class="disclosure" aria-labelledby="cpi-faq2">
       <h2 id="cpi-faq2">¿Pueden las mismas inspecciones correr en CI, no solo en el IDE?</h2>
-      <p>Sí. Las inspecciones pueden correr en GitHub Actions o GitLab CI, así un pull request falla con la misma regla que el IDE marca mientras los desarrolladores escriben, y el plugin puede servirse desde un repositorio de plugins privado desde el que tu equipo se actualiza.</p>
+      <p>Sí. Puedo ejecutar las inspecciones en GitHub Actions o GitLab CI, de modo que un pull request falla con la misma regla que el IDE señala mientras escribes, y puedo servir el plugin desde un repositorio privado de plugins del que se actualice tu equipo.</p>
     </section>
 
     <section class="disclosure" aria-labelledby="cpi-1">
@@ -189,9 +189,9 @@
       <h2 id="cpi-2">Qué se construye</h2>
       <ul>
         <li><strong>Inspecciones a medida de tu código.</strong> API internas, formatos de secretos, patrones de seguridad y reglas de arquitectura que un linter genérico no puede expresar.</li>
-        <li><strong>Entregadas como un plugin.</strong> Empaquetadas como un plugin de JetBrains que tu equipo instala, con una prueba por cada inspección.</li>
+        <li><strong>Entregadas como un plugin.</strong> Empaqueto las inspecciones como un plugin de JetBrains que instala tu equipo, con un test para cada inspección.</li>
         <li><strong>Los mismos controles en CI.</strong> Las inspecciones pueden correr en GitHub Actions o GitLab CI, para que un pull request falle con la misma regla que marca el IDE.</li>
-        <li><strong>Distribución privada.</strong> El plugin puede servirse desde un repositorio de plugins privado desde el que tu equipo se actualiza.</li>
+        <li><strong>Distribución privada.</strong> Puedo servir el plugin desde un repositorio privado de plugins del que se actualice tu equipo.</li>
       </ul>
     </section>
 
@@ -209,9 +209,9 @@
       <h2 id="cpi-4">Cómo funciona</h2>
       <ul>
         <li>Describes las reglas que quieres aplicar y compartes código de ejemplo que debería y no debería dispararlas.</li>
-        <li>En 2 días hábiles recibes el alcance por escrito: las inspecciones, si se incluye CI, fecha de entrega y precio.</li>
-        <li>Se paga 50% al iniciar el trabajo y 50% a la entrega.</li>
-        <li>El trabajo es asíncrono: correo y un pull request. Hay una llamada disponible si la prefieres.</li>
+        <li>En un plazo de 2 días hábiles te envío por escrito el alcance: las inspecciones, si incluye CI, fecha de entrega y precio.</li>
+        <li>Pagas el 50% al empezar el trabajo y el 50% en la entrega.</li>
+        <li>Trabajo de forma asíncrona: correo y un pull request. Con gusto hago una llamada si la prefieres.</li>
       </ul>
     </section>
 
@@ -219,8 +219,8 @@
       <h2 id="cpi-5">Precio</h2>
       <ul>
         <li><strong>USD 7.500, fijo,</strong> por hasta 3 inspecciones, empaquetadas como un plugin con una prueba por cada una, entregado en 10 días hábiles.</li>
-        <li><strong>Desde USD 15.000</strong> por un plugin completo: las inspecciones también corren en GitHub Actions o GitLab CI y el plugin se sirve desde un repositorio de plugins privado. La fecha de entrega se fija en el alcance.</li>
-        <li>Pago por transferencia bancaria internacional en USD, con factura.</li>
+        <li><strong>Desde USD 15.000</strong> por un plugin completo: las inspecciones también se ejecutan en GitHub Actions o GitLab CI y el plugin se sirve desde un repositorio privado de plugins. Fijo la fecha de entrega en el alcance.</li>
+        <li>Pagas por transferencia bancaria internacional en USD, contra factura.</li>
       </ul>
     </section>
 
@@ -228,16 +228,16 @@
       <h2 id="cpi-6">Condiciones en breve</h2>
       <ul>
         <li>El plugin y su código fuente son tuyos una vez pagada la factura.</li>
-        <li>Tu código y tus datos son confidenciales. Firmar tu NDA no es problema.</li>
-        <li>La responsabilidad se limita al precio pagado.</li>
+        <li>Mantengo la confidencialidad de tu código y tus datos. Firmar tu NDA no es problema.</li>
+        <li>Mi responsabilidad se limita al precio pagado.</li>
       </ul>
     </section>
 
     <section class="disclosure" aria-labelledby="cpi-7">
       <h2 id="cpi-7">Antecedentes</h2>
       <ul>
-        <li>146 plugins en este catálogo, creados y publicados en JetBrains Marketplace con las mismas herramientas de inspección: mira el <a href="/es/catalogo/">catálogo de plugins</a>.</li>
-        <li>Cada uno se entrega con pruebas y se verifica contra las versiones del IDE que soporta antes de publicarse.</li>
+        <li>Construí y publiqué en JetBrains Marketplace los 146 plugins de mi catálogo con las mismas herramientas de inspección: mira el <a href="/es/catalogo/">catálogo de plugins</a>.</li>
+        <li>Cada uno incluye tests, y lo verifico contra las versiones del IDE que soporta antes de publicarlo.</li>
       </ul>
     </section>
 
@@ -291,7 +291,7 @@
           <p class="gh-footer-about-links"><a href="/feed.xml">RSS</a><a href="mailto:contact@gaphunterlabs.com">contact@gaphunterlabs.com</a></p></div>
         </div>
       </div>
-      <nav class="gh-footer-cols" aria-label="Pie de página"><div class="gh-footer-col"><p class="gh-footer-title">Trabajo</p><a href="/es/#work">Investigaciones seleccionadas</a><a href="/es/ingenieria-y-evidencia/tickets-jetbrains-platform/">Tickets de JetBrains Platform</a><a href="/es/ingenieria-y-evidencia/reportes-de-seguridad/">Reportes de seguridad en código abierto</a><a href="/es/ingenieria-y-evidencia/auditorias-de-plugins-de-terceros/">Auditorías de plugins de terceros</a><a href="/es/ingenieria-y-evidencia/casos-de-estudio/">Casos de estudio de plugins</a></div><div class="gh-footer-col"><p class="gh-footer-title">Ingeniería</p><a href="/es/metodologia/">Metodología</a><a href="/es/ingenieria-y-evidencia/">Resumen de la evidencia</a></div><div class="gh-footer-col"><p class="gh-footer-title">Herramientas</p><a href="/es/catalogo/">Catálogo de plugins</a><a href="/es/catalogo/?pricing=paid">Plugins de pago y Pro</a><a href="/es/catalogo/?platform=vscode">Extensiones de VS Code</a><a href="/es/ghl-jail/">ghl-jail (sandbox de Windows)</a></div><div class="gh-footer-col"><p class="gh-footer-title">Servicios</p><a href="/es/servicios/">Contratar</a><a href="/es/auditoria-de-rendimiento/">Auditoría de rendimiento</a><a href="/es/contacto/">Contacto</a></div><div class="gh-footer-col"><p class="gh-footer-title">Tiendas</p><a href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" target="_blank" rel="noopener">JetBrains Marketplace</a><a href="https://marketplace.visualstudio.com/publishers/GapHunterLabs" target="_blank" rel="noopener">VS Code Marketplace</a><a href="https://github.com/GapHunterLabs" target="_blank" rel="noopener">GitHub</a></div><div class="gh-footer-col"><p class="gh-footer-title">Legal</p><a href="/es/seguridad/">Seguridad</a><a href="/es/privacidad/">Privacidad</a><a href="/es/terminos/">Términos</a><a href="/es/eula/">EULA</a></div></nav>
+      <nav class="gh-footer-cols" aria-label="Pie de página"><div class="gh-footer-col"><p class="gh-footer-title">Trabajo</p><a href="/es/#work">Investigaciones seleccionadas</a><a href="/es/ingenieria-y-evidencia/tickets-jetbrains-platform/">Tickets de JetBrains Platform</a><a href="/es/ingenieria-y-evidencia/reportes-de-seguridad/">Reportes de seguridad en código abierto</a><a href="/es/ingenieria-y-evidencia/auditorias-de-plugins-de-terceros/">Auditorías de plugins de terceros</a><a href="/es/ingenieria-y-evidencia/casos-de-estudio/">Casos de estudio de plugins</a></div><div class="gh-footer-col"><p class="gh-footer-title">Ingeniería</p><a href="/es/metodologia/">Metodología</a><a href="/es/ingenieria-y-evidencia/">Resumen de la evidencia</a></div><div class="gh-footer-col"><p class="gh-footer-title">Herramientas</p><a href="/es/catalogo/">Catálogo de plugins</a><a href="/es/catalogo/?pricing=paid">Plugins de pago y Pro</a><a href="/es/catalogo/?platform=vscode">Extensiones de VS Code</a><a href="/es/ghl-jail/">ghl-jail (sandbox de Windows)</a></div><div class="gh-footer-col"><p class="gh-footer-title">Servicios</p><a href="/es/servicios/">Contratar</a><a href="/es/auditoria-de-rendimiento/">Auditoría de rendimiento</a><a href="/es/patrocinadores/">Patrocina el trabajo</a><a href="/es/contacto/">Contacto</a></div><div class="gh-footer-col"><p class="gh-footer-title">Tiendas</p><a href="https://plugins.jetbrains.com/vendor/gap-hunter-labs" target="_blank" rel="noopener">JetBrains Marketplace</a><a href="https://marketplace.visualstudio.com/publishers/GapHunterLabs" target="_blank" rel="noopener">VS Code Marketplace</a><a href="https://github.com/GapHunterLabs" target="_blank" rel="noopener">GitHub</a></div><div class="gh-footer-col"><p class="gh-footer-title">Legal</p><a href="/es/seguridad/">Seguridad</a><a href="/es/privacidad/">Privacidad</a><a href="/es/terminos/">Términos</a><a href="/es/eula/">EULA</a></div></nav>
     </div>
     <div class="gh-footer-bottom">
       <p class="gh-footer-legal">&copy; 2026 Gap Hunter Labs. Los datos de descargas se sincronizan dos veces al día con las API públicas de JetBrains Marketplace y GitHub.</p>

@@ -172,7 +172,7 @@
     var lead = ES ? (term ? 'Todav\u00eda no hay nada para \u201c' + safe + '\u201d. ' : 'No hay resultados para ese filtro. ')
                   : (term ? 'Nothing here matches \u201c' + safe + '\u201d yet. ' : 'No results for that filter. ');
     return lead + '<a class="miss-cta" href="' + href + '" data-goatcounter-click="cta-search-miss-hire">' +
-      (ES ? '\u00bfNecesitas que se construya? Trabaja con Joel \u2192' : 'Need it built? Work with Joel \u2192') + '</a>';
+      (ES ? '\u00bfNecesitas que se construya? Trabaja conmigo \u2192' : 'Need it built? Work with me \u2192') + '</a>';
   }
 
   function renderGrid() {
