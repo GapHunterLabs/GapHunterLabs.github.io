@@ -1,161 +1,314 @@
+/* Behaviour tests for the static site, driven over the Chrome DevTools Protocol (no Playwright needed).
+
+   Needs Node 22+ and any Chromium-based browser. The browser is found in this order:
+   BROWSER_PATH, Edge, Chrome, then the Chromium that Playwright downloaded. The script starts its own
+   static server and, for the unreachable-data test, blocks /data/*.json from the browser side (an instant
+   failure, the one that reaches a script before the code that consumes it has attached), so nothing has to be running.
+
+     node _review/site-behavior.test.js
+
+   Exit code 1 if any test fails. A lighter, faster set than verify_site.py (which uses Playwright and
+   covers more): this one is meant for machines that only have Node and a browser. */
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
+const net = require('net');
 const { spawn } = require('child_process');
 
 const root = path.resolve(__dirname, '..');
-const edge = 'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe';
 const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+const PAGE_SIZE = 15;
 
-const failureServer = http.createServer((request, response) => {
-  const pathname = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);
-  if (pathname === '/data/catalog-data.json') {
-    response.writeHead(503, { 'Content-Type': 'application/json' });
-    response.end('{"error":"unavailable"}');
-    return;
-  }
-  const relative = pathname === '/' ? 'index.html' : pathname.replace(/^\//, '');
-  const file = path.resolve(root, relative);
-  if (!file.startsWith(root) || !fs.existsSync(file) || fs.statSync(file).isDirectory()) {
-    response.writeHead(404);
-    response.end('Not found');
-    return;
-  }
-  response.writeHead(200);
-  fs.createReadStream(file).pipe(response);
+// ------------------------------------------------------------------------------------ servers
+function makeServer() {
+  return http.createServer((request, response) => {
+    const pathname = decodeURIComponent(new URL(request.url, 'http://localhost').pathname);
+    let file = path.resolve(root, pathname.replace(/^\//, ''));
+    if (file.startsWith(root) && fs.existsSync(file) && fs.statSync(file).isDirectory()) file = path.join(file, 'index.html');
+    if (!file.startsWith(root) || !fs.existsSync(file)) {
+      response.writeHead(404);
+      response.end('Not found');
+      return;
+    }
+    const types = { '.html': 'text/html; charset=utf-8', '.css': 'text/css', '.js': 'text/javascript', '.json': 'application/json', '.svg': 'image/svg+xml', '.jpg': 'image/jpeg', '.png': 'image/png', '.woff2': 'font/woff2', '.xml': 'application/xml', '.txt': 'text/plain' };
+    response.writeHead(200, { 'Content-Type': types[path.extname(file)] || 'application/octet-stream' });
+    fs.createReadStream(file).pipe(response);
+  });
+}
+const listen = (server) => new Promise((resolve) => server.listen(0, '127.0.0.1', () => resolve(server.address().port)));
+const freePort = () => new Promise((resolve) => {
+  const s = net.createServer();
+  s.listen(0, '127.0.0.1', () => { const { port } = s.address(); s.close(() => resolve(port)); });
 });
 
-async function readJson(url) {
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(String(response.status));
-  return response.json();
+// ------------------------------------------------------------------------------------ browser
+function findBrowser() {
+  const candidates = [
+    process.env.BROWSER_PATH,
+    'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe',
+    'C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe',
+    'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe',
+    'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+    '/usr/bin/google-chrome', '/usr/bin/chromium', '/usr/bin/chromium-browser',
+    '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+  ].filter(Boolean);
+  for (const c of candidates) if (fs.existsSync(c)) return c;
+  const pw = path.join(process.env.LOCALAPPDATA || path.join(os.homedir(), '.cache'), process.env.LOCALAPPDATA ? 'ms-playwright' : 'ms-playwright');
+  if (fs.existsSync(pw)) {
+    const dirs = fs.readdirSync(pw).filter((d) => d.startsWith('chromium-')).sort().reverse();
+    for (const d of dirs) {
+      for (const rel of ['chrome-win64\\chrome.exe', 'chrome-win\\chrome.exe', 'chrome-linux/chrome', 'chrome-mac/Chromium.app/Contents/MacOS/Chromium']) {
+        const f = path.join(pw, d, rel);
+        if (fs.existsSync(f)) return f;
+      }
+    }
+  }
+  throw new Error('No Chromium-based browser found. Set BROWSER_PATH to msedge.exe, chrome.exe or a Chromium binary.');
 }
 
-async function run() {
-  await new Promise((resolve) => failureServer.listen(8766, '127.0.0.1', resolve));
-  const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'ghl-edge-'));
-  const edgeProcess = spawn(edge, [
-    '--headless=new',
-    '--disable-gpu',
-    '--no-first-run',
-    '--remote-debugging-port=9223',
-    '--user-data-dir=' + profile,
-    'about:blank'
-  ], { stdio: 'ignore' });
-
-  try {
-    let targets;
-    for (let attempt = 0; attempt < 50; attempt += 1) {
-      try {
-        targets = await readJson('http://127.0.0.1:9223/json/list');
-        if (targets.length) break;
-      } catch {}
+async function openBrowser() {
+  const exe = findBrowser();
+  const port = await freePort();
+  const profile = fs.mkdtempSync(path.join(os.tmpdir(), 'ghl-browser-'));
+  const proc = spawn(exe, ['--headless=new', '--disable-gpu', '--no-first-run', '--no-default-browser-check',
+    '--remote-debugging-port=' + port, '--user-data-dir=' + profile, 'about:blank'], { stdio: 'ignore' });
+  proc.on('error', (error) => { throw error; });
+  let targets;
+  for (let attempt = 0; attempt < 80; attempt += 1) {
+    try {
+      const r = await fetch('http://127.0.0.1:' + port + '/json/list');
+      targets = await r.json();
+      if (targets.length) break;
+    } catch {}
+    await delay(100);
+  }
+  const target = targets && (targets.find((t) => t.type === 'page' && t.url === 'about:blank') || targets.find((t) => t.type === 'page'));
+  if (!target) throw new Error('Browser debugging target unavailable (' + exe + ')');
+  const socket = new WebSocket(target.webSocketDebuggerUrl);
+  await new Promise((resolve, reject) => { socket.onopen = resolve; socket.onerror = reject; });
+  let sequence = 0;
+  const pending = new Map();
+  const exceptions = [];
+  socket.onmessage = (event) => {
+    const message = JSON.parse(event.data);
+    if (message.method === 'Runtime.exceptionThrown') {
+      const d = message.params.exceptionDetails;
+      exceptions.push(((d.exception && d.exception.description) || d.text || 'exception').split('\n')[0].slice(0, 160));
+    }
+    if (!message.id || !pending.has(message.id)) return;
+    const handlers = pending.get(message.id);
+    pending.delete(message.id);
+    if (message.error) handlers.reject(new Error(message.error.message));
+    else handlers.resolve(message.result);
+  };
+  const send = (method, params = {}) => new Promise((resolve, reject) => {
+    const id = ++sequence;
+    pending.set(id, { resolve, reject });
+    socket.send(JSON.stringify({ id, method, params }));
+  });
+  await send('Runtime.enable');
+  await send('Page.enable');
+  const evaluate = async (expression) => {
+    const result = await send('Runtime.evaluate', { expression, returnByValue: true, awaitPromise: true });
+    if (result.exceptionDetails) throw new Error((result.exceptionDetails.exception && result.exceptionDetails.exception.description) || result.exceptionDetails.text);
+    return result.result.value;
+  };
+  const waitFor = async (expression, what) => {
+    for (let attempt = 0; attempt < 80; attempt += 1) {
+      if (await evaluate(expression)) return;
       await delay(100);
     }
-    if (!targets || !targets.length) throw new Error('Edge debugging target unavailable');
+    throw new Error('Timed out waiting for ' + (what || expression));
+  };
+  const navigate = async (url) => {
+    exceptions.length = 0;
+    await send('Page.navigate', { url });
+    await delay(150);
+    await waitFor("document.readyState === 'complete'", 'load of ' + url);
+    await delay(250);
+  };
+  const viewport = (width, height, mobile) => send('Emulation.setDeviceMetricsOverride', { width, height, deviceScaleFactor: 1, mobile: !!mobile });
+  const close = () => { try { socket.close(); } catch {} proc.kill(); };
+  return { send, evaluate, waitFor, navigate, viewport, exceptions, close, exe };
+}
 
-    const pageTarget = targets.find((target) => target.type === 'page' && target.url === 'about:blank') ||
-      targets.find((target) => target.type === 'page');
-    if (!pageTarget) throw new Error('Edge page target unavailable');
-    const socket = new WebSocket(pageTarget.webSocketDebuggerUrl);
-    await new Promise((resolve, reject) => {
-      socket.onopen = resolve;
-      socket.onerror = reject;
-    });
-    let sequence = 0;
-    const pending = new Map();
-    socket.onmessage = (event) => {
-      const message = JSON.parse(event.data);
-      if (!message.id || !pending.has(message.id)) return;
-      const handlers = pending.get(message.id);
-      pending.delete(message.id);
-      if (message.error) handlers.reject(new Error(message.error.message));
-      else handlers.resolve(message.result);
-    };
-    const send = (method, params = {}) => new Promise((resolve, reject) => {
-      const id = ++sequence;
-      pending.set(id, { resolve, reject });
-      socket.send(JSON.stringify({ id, method, params }));
-    });
-    const evaluate = async (expression) => {
-      const result = await send('Runtime.evaluate', {
-        expression,
-        returnByValue: true,
-        awaitPromise: true
-      });
-      if (result.exceptionDetails) throw new Error(result.exceptionDetails.text);
-      return result.result.value;
-    };
-    const navigate = async (url) => {
-      await send('Page.navigate', { url });
-      for (let attempt = 0; attempt < 100; attempt += 1) {
-        if (await evaluate("document.readyState === 'complete'")) return;
-        await delay(100);
-      }
-      throw new Error('Navigation timed out: ' + url);
-    };
-    const waitFor = async (expression) => {
-      for (let attempt = 0; attempt < 100; attempt += 1) {
-        if (await evaluate(expression)) return;
-        await delay(100);
-      }
-      throw new Error('Condition timed out: ' + expression);
-    };
+// -------------------------------------------------------------------------------------- tests
+const tests = [];
+const test = (name, fn) => tests.push({ name, fn });
+const assert = (cond, message) => { if (!cond) throw new Error(message); };
+const equal = (actual, wanted, what) => { if (actual !== wanted) throw new Error(what + ': got ' + JSON.stringify(actual) + ', expected ' + JSON.stringify(wanted)); };
+const readData = (file) => JSON.parse(fs.readFileSync(path.join(root, 'data', file), 'utf8'));
 
-    await navigate('http://127.0.0.1:8765/catalog.html');
-    await delay(1000);
-    const initialDiagnostic = await evaluate("({url:location.href,ready:document.readyState,cards:document.querySelectorAll('.plugin-card').length,error:document.querySelector('#fieldMain [role=alert]')&&document.querySelector('#fieldMain [role=alert]').textContent,loader:document.querySelector('#siteLoader')&&document.querySelector('#siteLoader').textContent,field:document.querySelector('#fieldMain')&&document.querySelector('#fieldMain').innerHTML.slice(0,300)})");
-    if (!initialDiagnostic.cards) console.error('Catalog diagnostic:', JSON.stringify(initialDiagnostic));
-    await waitFor("document.querySelectorAll('.plugin-card').length > 0");
-    await evaluate("document.querySelector('[data-mode=table]').click()");
-    await waitFor("document.querySelectorAll('tr.row').length > 0");
-    const opened = await evaluate("(()=>{const row=document.querySelector('tr.row');const repo=row.dataset.repo;row.click();return{repo,hash:location.hash,title:document.title,expanded:document.querySelector('tr.row[data-repo=\"'+repo+'\"]').getAttribute('aria-expanded')}})()");
-    if (opened.hash !== '#' + opened.repo || opened.expanded !== 'true' || !opened.title.includes('Gap Hunter Labs')) {
-      throw new Error('Table open state did not synchronize: ' + JSON.stringify(opened));
-    }
-    const closed = await evaluate("(()=>{document.querySelector('.dossier-close').click();return{hash:location.hash,title:document.title,expanded:[...document.querySelectorAll('tr.row')].some(row=>row.getAttribute('aria-expanded')==='true')}})()");
-    if (closed.hash || closed.expanded || closed.title !== 'Plugin Catalog for IntelliJ & JetBrains IDEs | Gap Hunter Labs') {
-      throw new Error('Table close state did not synchronize: ' + JSON.stringify(closed));
-    }
+const visibleCards = "[...document.querySelectorAll('#catalogGrid > *')].filter(e => !e.hidden)";
 
-    await navigate('http://127.0.0.1:8766/catalog.html');
-    await waitFor("document.querySelector('#fieldMain [role=alert]') !== null");
-    await waitFor("document.querySelector('#siteLoader') === null");
-    const catalogFailure = await evaluate("(()=>{const alert=document.querySelector('#fieldMain [role=alert]');return{persistent:!!alert,title:!!alert.querySelector('h2'),retry:!!alert.querySelector('#catalogRetry'),fallback:!!alert.querySelector('a[href*=\"plugins.jetbrains.com/vendor\"]'),loader:!!document.querySelector('#siteLoader')}})()");
-    if (!catalogFailure.persistent || !catalogFailure.title || !catalogFailure.retry || !catalogFailure.fallback || catalogFailure.loader) {
-      throw new Error('Catalog failure UI incomplete: ' + JSON.stringify(catalogFailure));
-    }
+test('catalog: 146 prerendered cards, 15 visible, pager moves', async ({ b, base }) => {
+  const total = readData('catalog-data.json').totalPlugins;
+  await b.viewport(1440, 900);
+  await b.navigate(base + '/catalog/');
+  equal(await b.evaluate("document.querySelectorAll('#catalogGrid > a.plugin-card').length"), total, 'cards in the page');
+  equal(await b.evaluate(visibleCards + '.length'), PAGE_SIZE, 'visible cards');
+  assert(/Page 1 of \d+/.test(await b.evaluate("document.querySelector('.catalog-pager-status').textContent")), 'pager text on load');
+  await b.evaluate("document.querySelector('[data-page-dir=\"1\"]').click()");
+  assert(/Page 2 of \d+/.test(await b.evaluate("document.querySelector('.catalog-pager-status').textContent")), 'pager text after next');
+  equal(b.exceptions.length, 0, 'JavaScript exceptions: ' + b.exceptions.join(' | '));
+});
 
-    await navigate('http://127.0.0.1:8766/index.html');
-    await waitFor("document.querySelector('#heroSubtitle[role=alert]') !== null");
-    const homeFailure = await evaluate("({alert:!!document.querySelector('#heroSubtitle[role=alert]'),retry:!!document.querySelector('#homeCatalogRetry'),fallback:!!document.querySelector('#stats a[href*=\"plugins.jetbrains.com/vendor\"]')})");
-    if (!homeFailure.alert || !homeFailure.retry || !homeFailure.fallback) {
-      throw new Error('Home failure UI incomplete: ' + JSON.stringify(homeFailure));
-    }
+test('catalog: search, no-results offer, category URL, pricing URL', async ({ b, base }) => {
+  await b.navigate(base + '/catalog/');
+  await b.evaluate("(()=>{const i=document.getElementById('searchInput');i.value='Mermaid';i.dispatchEvent(new Event('input',{bubbles:true}))})()");
+  await delay(300);
+  const names = await b.evaluate(visibleCards + ".map(e => e.querySelector('.card-name').textContent)");
+  assert(names.length >= 1 && /Mermaid/.test(names[0]), 'Mermaid search: ' + JSON.stringify(names));
+  await b.evaluate("(()=>{const i=document.getElementById('searchInput');i.value='zzzzq';i.dispatchEvent(new Event('input',{bubbles:true}))})()");
+  await delay(300);
+  const miss = await b.evaluate("(()=>{const e=document.getElementById('fieldNoResults');return {hidden:e.hidden,href:e.querySelector('a.miss-cta')&&e.querySelector('a.miss-cta').getAttribute('href')}})()");
+  assert(!miss.hidden && /intent=hire/.test(miss.href) && /need=zzzzq/.test(miss.href), 'no-results offer: ' + JSON.stringify(miss));
+  await b.navigate(base + '/catalog/?category=security');
+  const sec = await b.evaluate(visibleCards + '.map(e => e.dataset.cat)');
+  assert(sec.length > 0 && sec.every((c) => c === 'security'), 'category=security: ' + JSON.stringify(sec));
+  await b.navigate(base + '/catalog/?pricing=paid');
+  const paid = await b.evaluate(visibleCards + '.map(e => e.dataset.pricing)');
+  assert(paid.length > 0 && paid.every((p) => p === 'FREEMIUM' || p === 'PAID'), 'pricing=paid: ' + JSON.stringify(paid));
+});
 
-    await send('Emulation.setDeviceMetricsOverride', {
-      width: 390,
-      height: 844,
-      deviceScaleFactor: 1,
-      mobile: true
-    });
-    await navigate('http://127.0.0.1:8765/methodology.html');
-    const mobile = await evaluate("(()=>{const diagram=document.querySelector('.diagram-scroll');return{docOverflow:document.documentElement.scrollWidth>document.documentElement.clientWidth,region:diagram.getAttribute('role'),tabIndex:diagram.tabIndex,label:diagram.getAttribute('aria-label'),centerDelta:Math.abs(diagram.scrollLeft-(diagram.scrollWidth-diagram.clientWidth)/2),svgWidth:document.querySelector('.decision-diagram').getBoundingClientRect().width}})()");
-    if (mobile.docOverflow || mobile.region !== 'region' || mobile.tabIndex !== 0 || !/Arrow keys/.test(mobile.label) || mobile.centerDelta > 2 || mobile.svgWidth < 719) {
-      throw new Error('Methodology mobile diagram failed: ' + JSON.stringify(mobile));
-    }
+test('catalog: table view sorts by downloads, then by name', async ({ b, base }) => {
+  await b.navigate(base + '/catalog/');
+  await b.evaluate("document.querySelector('[data-mode=table]').click()");
+  await b.waitFor("document.querySelectorAll('#tbody tr.row').length > 0", 'table rows');
+  const rows = () => b.evaluate("[...document.querySelectorAll('#tbody tr.row')].filter(r => !r.hidden).map(r => ({d: +r.dataset.downloads, n: r.dataset.name}))");
+  const byDownloads = (await rows()).map((r) => r.d);
+  assert(byDownloads.length === PAGE_SIZE && JSON.stringify(byDownloads) === JSON.stringify([...byDownloads].sort((x, y) => y - x)), 'downloads should descend: ' + byDownloads);
+  await b.evaluate("document.querySelector(\"thead th[data-key='name']\").click()");
+  const names = (await rows()).map((r) => r.n);
+  const asc = [...names].sort();
+  assert(JSON.stringify(names) === JSON.stringify(asc) || JSON.stringify(names) === JSON.stringify(asc.reverse()), 'names should be sorted: ' + names);
+});
 
-    console.log(JSON.stringify({ opened, closed, catalogFailure, homeFailure, mobile }, null, 2));
-    socket.close();
+test('catalog: platform tabs switch panels and keep the VS Code blue', async ({ b, base }) => {
+  await b.navigate(base + '/catalog/');
+  const color = (plat) => b.evaluate("getComputedStyle(document.querySelector('.platform-tab[data-platform=\"" + plat + "\"] svg')).color");
+  assert((await color('jetbrains')) !== 'rgb(0, 122, 204)', 'JetBrains icon must not be the VS Code blue');
+  await b.evaluate("document.querySelector('.platform-tab[data-platform=vscode]').click()");
+  await delay(300);
+  equal(await b.evaluate("document.querySelector('.platform-tab[data-platform=vscode]').getAttribute('aria-selected')"), 'true', 'VS Code tab selected');
+  equal(await color('vscode'), 'rgb(0, 122, 204)', 'VS Code icon color');
+  equal(await b.evaluate("document.getElementById('vsxSection').hidden"), false, 'VS Code panel shown');
+  equal(await b.evaluate("document.getElementById('jetbrains').hidden"), true, 'JetBrains panel hidden');
+});
+
+test('catalog and home keep working when /data/*.json is unreachable', async ({ b, base }) => {
+  await b.send('Network.enable');
+  await b.send('Network.setBlockedURLs', { urls: ['*/data/*.json'] });
+  try {
+    await unreachableData({ b, base });
   } finally {
-    edgeProcess.kill();
-    failureServer.close();
+    await b.send('Network.setBlockedURLs', { urls: [] });
   }
+});
+
+async function unreachableData({ b, base }) {
+  await b.navigate(base + '/catalog/');
+  await b.evaluate("(()=>{const i=document.getElementById('searchInput');i.value='Mermaid';i.dispatchEvent(new Event('input',{bubbles:true}))})()");
+  await delay(300);
+  assert((await b.evaluate(visibleCards + '.length')) >= 1, 'search should work without data');
+  equal(b.exceptions.length, 0, 'catalog JavaScript exceptions: ' + b.exceptions.join(' | '));
+  await b.navigate(base + '/');
+  equal(await b.evaluate("document.querySelectorAll('article.inv').length"), 5, 'investigations without data');
+  equal(await b.evaluate("document.querySelectorAll('article.tool').length"), 4, 'tools without data');
+  equal(b.exceptions.length, 0, 'home JavaScript exceptions: ' + b.exceptions.join(' | '));
+}
+
+test('home: hero, profile card, figures, investigations, tools, stack', async ({ b, base }) => {
+  const data = readData('catalog-data.json');
+  await b.viewport(1440, 900);
+  await b.navigate(base + '/');
+  const facts = await b.evaluate("({h1: document.querySelector('h1.nb-hero-title').textContent.trim().length, lede: document.querySelectorAll('.nb-hero .nb-lede').length, img: document.querySelector('.nb-profile img').naturalWidth, steps: document.querySelectorAll('.nb-method-mini li').length, focus: document.querySelectorAll('.nb-focus .badge svg').length, inv: document.querySelectorAll('article.inv').length, facts: [...document.querySelectorAll('article.inv')].map(a => a.querySelectorAll('dt').length), tools: [...document.querySelectorAll('article.tool')].map(t => t.querySelectorAll('.tool-badges .badge').length), stack: document.querySelectorAll('#stack .badge-table tr').length, stackImgs: document.querySelectorAll('#stack img').length, impact: document.querySelector('.nb-impact').innerText})");
+  assert(facts.h1 > 20 && facts.lede === 2 && facts.img > 0 && facts.steps === 3 && facts.focus === 4, 'hero: ' + JSON.stringify(facts));
+  assert(facts.inv === 5 && facts.facts.every((n) => n === 3), 'investigations: ' + JSON.stringify(facts.facts));
+  assert(facts.tools.length === 4 && facts.tools.every((n) => n === 2), 'tool badges: ' + JSON.stringify(facts.tools));
+  assert(facts.stack === 4 && facts.stackImgs === 0, 'stack rows ' + facts.stack + ', images ' + facts.stackImgs);
+  assert(facts.impact.includes(data.totalDownloads.toLocaleString('en-US')), 'downloads ' + data.totalDownloads + ' not shown in: ' + facts.impact.slice(0, 120));
+});
+
+test('Ctrl+K search: open, results, arrow keys, Escape', async ({ b, base }) => {
+  await b.viewport(1440, 900);
+  await b.navigate(base + '/');
+  await b.evaluate("document.dispatchEvent(new KeyboardEvent('keydown', {key: 'k', ctrlKey: true, bubbles: true}))");
+  await b.waitFor("document.querySelector('.ghs-backdrop') && !document.querySelector('.ghs-backdrop').hidden", 'the dialog');
+  await b.evaluate("(()=>{const i=document.querySelector('.ghs-input');i.value='openapi';i.dispatchEvent(new Event('input',{bubbles:true}))})()");
+  await b.waitFor("document.querySelectorAll('.ghs-item').length >= 2", 'results');
+  const first = await b.evaluate("document.querySelector('.ghs-item.is-active .ghs-name').textContent");
+  await b.evaluate("document.querySelector('.ghs-input').dispatchEvent(new KeyboardEvent('keydown', {key: 'ArrowDown', bubbles: true}))");
+  assert((await b.evaluate("document.querySelector('.ghs-item.is-active .ghs-name').textContent")) !== first, 'ArrowDown should move the active result');
+  await b.evaluate("document.querySelector('.ghs-input').dispatchEvent(new KeyboardEvent('keydown', {key: 'Escape', bubbles: true}))");
+  assert(await b.evaluate("document.querySelector('.ghs-backdrop').hidden"), 'Escape should close the dialog');
+});
+
+test('contact: each request type has its own form; the counter counts', async ({ b, base }) => {
+  await b.navigate(base + '/contact/');
+  const titles = new Set();
+  const n = await b.evaluate("document.querySelectorAll('.qa-item[data-target]').length");
+  assert(n >= 4, 'request types: ' + n);
+  for (let i = 0; i < n; i += 1) {
+    await b.evaluate("document.querySelectorAll('.qa-item[data-target]')[" + i + "].click()");
+    titles.add(await b.evaluate("document.getElementById('cfTitle').textContent"));
+    equal(await b.evaluate("document.querySelectorAll('.qa-item.is-active').length"), 1, 'one active type');
+  }
+  equal(titles.size, n, 'distinct titles');
+  await b.evaluate("document.querySelector('.qa-item[data-target=hire]').click()");
+  await b.evaluate("(()=>{const t=document.querySelector('#cfFields [name=message]');t.value='hello';t.dispatchEvent(new Event('input',{bubbles:true}))})()");
+  assert(/5\s*\/\s*1500/.test(await b.evaluate("document.querySelector('.cf-counter').textContent")), 'counter should read 5/1500');
+});
+
+test('phone (390 px): no horizontal overflow on the main pages; methodology diagram fits', async ({ b, base }) => {
+  await b.viewport(390, 844, true);
+  const pages = ['/', '/es/', '/catalog/', '/es/catalogo/', '/catalog/openapi-companion/', '/services/', '/engineering-evidence/',
+    '/engineering-evidence/jetbrains-platform-tickets/', '/contact/', '/security/', '/methodology/'];
+  const bad = [];
+  for (const p of pages) {
+    await b.navigate(base + p);
+    const over = await b.evaluate('document.documentElement.scrollWidth - document.documentElement.clientWidth');
+    if (over > 0) bad.push(p + ' (+' + over + 'px)');
+    if (b.exceptions.length) bad.push(p + ' threw: ' + b.exceptions[0]);
+  }
+  assert(!bad.length, bad.join('; '));
+  await b.navigate(base + '/methodology/');
+  const w = await b.evaluate("document.querySelector('.decision-diagram').getBoundingClientRect().width");
+  assert(w > 0 && w <= 390, 'diagram width ' + w);
+});
+
+// -------------------------------------------------------------------------------------- runner
+async function run() {
+  const server = makeServer();
+  const base = 'http://127.0.0.1:' + (await listen(server));
+  let b;
+  const results = [];
+  try {
+    b = await openBrowser();
+    console.log('site: ' + base + ' | browser: ' + path.basename(b.exe) + ' | tests: ' + tests.length);
+    for (const t of tests) {
+      const started = Date.now();
+      try {
+        await t.fn({ b, base });
+        results.push({ name: t.name, ok: true });
+        console.log('PASS  ' + t.name + ' (' + ((Date.now() - started) / 1000).toFixed(1) + 's)');
+      } catch (error) {
+        results.push({ name: t.name, ok: false });
+        console.log('FAIL  ' + t.name + '\n      ' + String(error.message || error).split('\n')[0]);
+      }
+    }
+  } finally {
+    if (b) b.close();
+    server.close();
+  }
+  const failed = results.filter((r) => !r.ok).length;
+  console.log('\n' + results.length + ' tests: ' + (results.length - failed) + ' passed, ' + failed + ' failed');
+  process.exitCode = failed ? 1 : 0;
 }
 
 run().catch((error) => {
   console.error(error.stack || error);
-  failureServer.close();
   process.exitCode = 1;
+  setTimeout(() => process.exit(1), 200);
 });

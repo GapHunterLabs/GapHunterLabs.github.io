@@ -1,138 +1,647 @@
+#!/usr/bin/env python3
+"""verify_site.py -- behaviour checks for the static site, run in a real browser (Playwright).
+
+Covers what the other verifiers do not: the catalog filters, pager, table and platform tabs,
+the home sections and their figures, the Ctrl+K search, theme and navigation, the contact
+form, mobile overflow, internal links, redirect stubs and third-party requests. Each check
+runs in its own browser context and reports PASS or FAIL; the exit code is 1 if any fails.
+
+    python _review/verify_site.py                    # starts its own local server
+    python _review/verify_site.py --base http://127.0.0.1:8080
+    python _review/verify_site.py --only catalog,search
+    python _review/verify_site.py --list
+    python _review/verify_site.py --shots            # also saves screenshots to _review/screenshots/
+    python _review/verify_site.py --browser "C:/path/to/msedge.exe"
+
+Page structure and expectations come from the pages and from data/*.json, so a change in the
+catalog does not need a change here. Update the checks when the markup changes.
+"""
+from __future__ import annotations
+
+import argparse
+import contextlib
+import http.server
+import json
+import math
 import os
+import re
+import sys
+import threading
+import time
+import traceback
+import urllib.parse
 from pathlib import Path
+from types import SimpleNamespace
+
 from playwright.sync_api import sync_playwright
 
-BASE = "http://127.0.0.1:8973"
-OUT = Path(__file__).parent / "screenshots"
-OUT.mkdir(parents=True, exist_ok=True)
+ROOT = Path(__file__).resolve().parents[1]
+SHOTS = Path(__file__).resolve().parent / "screenshots"
+PAGE_SIZE = 15  # js/catalog.js
 CATEGORIES = ("api", "devops", "security", "data", "quality", "codegen", "testing", "editor")
+THIRD_PARTY_OK = ("gc.zgo.at", ".goatcounter.com")  # the only analytics the CSP allows
+
+LANGS = {
+    "en": dict(home="/", catalog="/catalog/", ficha="/catalog/openapi-companion/", contact="/contact/",
+               services="/services/", pager=r"Page (\d+) of (\d+)", card_prefix="/catalog/"),
+    "es": dict(home="/es/", catalog="/es/catalogo/", ficha="/es/catalogo/openapi-companion/", contact="/es/contacto/",
+               services="/es/servicios/", pager=r"P[aá]gina (\d+) de (\d+)", card_prefix="/es/catalogo/"),
+}
+
+CHECKS: list[tuple[str, str, object]] = []
 
 
-def ready(page, url):
-    page.goto(BASE + url, wait_until="networkidle")
-    page.locator("#siteLoader").wait_for(state="detached")
+def check(group: str, name: str):
+    def deco(fn):
+        CHECKS.append((group, name, fn))
+        return fn
+    return deco
 
 
-def row_spreads(page, selector):
-    return page.eval_on_selector_all(
-        selector,
-        """els => {
-          const rows = {};
-          els.forEach(el => {
-            const r = el.getBoundingClientRect();
-            const key = Math.round(r.top);
-            (rows[key] ||= []).push(r);
-          });
-          return Object.values(rows).map(rs => ({
-            count: rs.length,
-            top: Math.max(...rs.map(r => r.top)) - Math.min(...rs.map(r => r.top)),
-            bottom: Math.max(...rs.map(r => r.bottom)) - Math.min(...rs.map(r => r.bottom))
-          }));
-        }""",
-    )
+def expect(cond, message: str = "expectation failed"):
+    if not cond:
+        raise AssertionError(message)
 
 
-with sync_playwright() as p:
-    # Edge fijo no existe en todas las maquinas: si falta, Chromium de Playwright.
-    _edge = r"C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe"
-    browser = p.chromium.launch(
-        headless=True,
-        **({"executable_path": _edge} if os.path.exists(_edge) else {}),
-    )
+def eq(actual, wanted, what: str):
+    if actual != wanted:
+        raise AssertionError("%s: got %r, expected %r" % (what, actual, wanted))
 
-    for label, viewport in (
-        ("desktop", {"width": 1440, "height": 1000}),
-        ("mobile", {"width": 390, "height": 844}),
-    ):
-        context = browser.new_context(viewport=viewport, device_scale_factor=1)
-        page = context.new_page()
-        for name, url in (
-            ("home", "/index.html"),
-            ("catalog", "/catalog.html"),
-            ("methodology", "/methodology.html"),
-        ):
-            ready(page, url)
-            page.screenshot(path=str(OUT / f"{name}-{label}.png"), full_page=True)
 
-        page.add_init_script(
-            """{
-              const nativeFetch = window.fetch;
-              window.fetch = function(resource, init) {
-                if (String(resource).includes('data/catalog-data.json')) {
-                  return new Promise(function() {});
-                }
-                return nativeFetch.call(this, resource, init);
-              };
-            }"""
-        )
-        page.goto(BASE + "/index.html", wait_until="domcontentloaded")
-        page.locator("#siteLoader").wait_for(state="visible")
-        page.screenshot(path=str(OUT / f"loader-{label}.png"))
-        context.close()
+# ------------------------------------------------------------------------------ server
+class _Quiet(http.server.SimpleHTTPRequestHandler):
+    def __init__(self, *a, **k):
+        super().__init__(*a, directory=str(ROOT), **k)
 
-    context = browser.new_context(viewport={"width": 1440, "height": 1000})
-    page = context.new_page()
-    ready(page, "/index.html")
-    alignment = {
-        "hero_stats": row_spreads(page, "#stats .tele-row"),
-        "category_tiles": row_spreads(page, ".category-links .cat-cell"),
-        "identity_steps": row_spreads(page, ".identity-process .identity-step"),
-        "method_facts": row_spreads(page, "#methodFacts .method-fact"),
-    }
+    def log_message(self, *a):  # noqa: D401
+        pass
 
-    for category in CATEGORIES:
-        ready(page, f"/catalog.html?category={category}")
-        assert page.locator("#categoryFilter").input_value() == category
-        assert page.locator(".plugin-card").count() > 0
 
-    ready(page, "/catalog.html")
-    alignment["plugin_cards"] = row_spreads(page, ".plugin-card")
-    page.locator("#searchInput").fill("Mermaid")
-    page.wait_for_timeout(250)
-    assert page.locator(".plugin-card").count() == 1
-    page.locator("#searchInput").fill("")
-    page.locator("#pricingFilter").select_option("FREE")
-    assert page.locator(".plugin-card").count() > 0
-    page.locator("#pricingFilter").select_option("")
-    page.locator("[data-page-dir='1']").first.click()
-    assert "Page 2 of" in page.locator(".catalog-pager-status").first.inner_text()
-    page.locator(".plugin-card").first.click()
-    assert page.locator(".dossier-sheet").count() == 1
-    page.locator("#dossierBack").click()
-    page.locator("#modeToggle [data-mode='table']").click()
-    page.locator("thead th[data-key='name']").click()
-    row = page.locator("tr.row").first
-    repo = row.get_attribute("data-repo")
-    plugin_name = row.locator(".plugin-name").inner_text().strip()
-    row.click()
-    assert page.locator(".tbl-dossier").count() == 1
-    assert page.evaluate("location.hash") == "#" + repo
-    assert page.title() == plugin_name + " — Gap Hunter Labs"
-    page.locator(".dossier-close").click()
-    assert page.evaluate("location.hash") == ""
-    assert page.title() == "Plugin Catalog for IntelliJ & JetBrains IDEs | Gap Hunter Labs"
+def start_server():
+    srv = http.server.ThreadingHTTPServer(("127.0.0.1", 0), _Quiet)
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+    return srv, "http://127.0.0.1:%d" % srv.server_address[1]
 
-    for group, rows in alignment.items():
-        for row in rows:
-            assert row["top"] <= 2 and row["bottom"] <= 2, (group, row)
-    context.close()
 
-    failure_context = browser.new_context(viewport={"width": 1440, "height": 1000})
-    failure_page = failure_context.new_page()
-    failure_page.route("**/data/catalog-data.json", lambda route: route.abort())
-    failure_page.goto(BASE + "/catalog.html", wait_until="domcontentloaded")
-    failure_page.locator("#catalogRetry").wait_for(state="visible")
-    assert "Catalog data could not be loaded" in failure_page.locator("#fieldMain").inner_text()
-    failure_page.goto(BASE + "/index.html", wait_until="domcontentloaded")
-    failure_page.locator("#homeCatalogRetry").wait_for(state="visible")
-    assert "Catalog data could not be loaded" in failure_page.locator("main").inner_text()
-    failure_context.close()
+# ----------------------------------------------------------------------------- harness
+class Env:
+    def __init__(self, browser, base: str, shots: bool):
+        self.browser, self.base, self.shots = browser, base, shots
+        cat = json.loads((ROOT / "data" / "catalog-data.json").read_text(encoding="utf-8"))
+        vsx_path = ROOT / "data" / "vscode-catalog-data.json"
+        vsx = json.loads(vsx_path.read_text(encoding="utf-8")) if vsx_path.exists() else {}
+        self.total_plugins = cat["totalPlugins"]
+        self.total_downloads = cat["totalDownloads"]
+        self.total_vsx = vsx.get("totalExtensions") or 0
 
-    print({
-        "alignment": alignment,
-        "categories": list(CATEGORIES),
-        "functional": "passed",
-        "table_url_state": "passed",
-        "failure_states": "passed",
-    })
-    browser.close()
+    @contextlib.contextmanager
+    def page(self, width=1440, height=1000, theme="dark", block_data=False, js=True):
+        ctx = self.browser.new_context(viewport={"width": width, "height": height}, java_script_enabled=js,
+                                       reduced_motion="reduce", device_scale_factor=1)
+        if theme:
+            ctx.add_init_script("try{localStorage.setItem('ghl-theme','%s')}catch(e){}" % theme)
+        if block_data:
+            ctx.route("**/data/*.json", lambda route: route.abort())
+        page = ctx.new_page()
+        page.set_default_timeout(8000)
+        page.rec = SimpleNamespace(errors=[], requests=[])
+        page.on("pageerror", lambda e: page.rec.errors.append(str(e)[:200]))
+        page.on("request", lambda r: page.rec.requests.append(r.url))
+        try:
+            yield page
+        finally:
+            ctx.close()
+
+    def go(self, page, path: str, wait="networkidle"):
+        page.goto(self.base + path, wait_until=wait)
+
+    def get(self, path: str) -> int:
+        import urllib.request
+        try:
+            with urllib.request.urlopen(self.base + path, timeout=10) as r:
+                return r.status
+        except urllib.error.HTTPError as e:  # noqa: PERF203
+            return e.code
+
+    def shot(self, page, name: str, full=False):
+        if self.shots:
+            SHOTS.mkdir(parents=True, exist_ok=True)
+            page.screenshot(path=str(SHOTS / (name + ".png")), full_page=full)
+
+
+def visible_cards(page):
+    return page.evaluate("[...document.querySelectorAll('#catalogGrid > *')].filter(e=>!e.hidden).map(e=>({cat:e.dataset.cat,pricing:e.dataset.pricing,"
+                         "search:e.dataset.search,name:e.querySelector('.card-name').textContent.trim(),href:e.getAttribute('href')}))")
+
+
+def all_cards(page):
+    return page.evaluate("[...document.querySelectorAll('#catalogGrid > *')].map(e=>({cat:e.dataset.cat,pricing:e.dataset.pricing,search:e.dataset.search}))")
+
+
+def pager_state(page, lang):
+    text = page.locator(".catalog-pager-status").first.inner_text()
+    m = re.search(LANGS[lang]["pager"], text)
+    expect(m, "pager text not recognised: %r" % text)
+    return int(m.group(1)), int(m.group(2))
+
+
+# ==================================================================================== catalog
+def _catalog_checks(lang: str):
+    L = LANGS[lang]
+
+    @check("catalog", "prerendered in the HTML without JavaScript [%s]" % lang)
+    def _prerender(env: Env):
+        with env.page(js=False) as p:
+            env.go(p, L["catalog"], wait="load")
+            n = p.locator("#catalogGrid > a.plugin-card").count()
+            eq(n, env.total_plugins, "plugin cards in the raw HTML")
+            bad = p.evaluate("[...document.querySelectorAll('#catalogGrid > a.plugin-card')].filter(a=>!a.getAttribute('href').startsWith('%s')).length" % L["card_prefix"])
+            eq(bad, 0, "cards whose link is outside %s" % L["card_prefix"])
+
+    @check("catalog", "pager: 15 per page, previous/next, last page [%s]" % lang)
+    def _pager(env: Env):
+        pages = math.ceil(env.total_plugins / PAGE_SIZE)
+        with env.page() as p:
+            env.go(p, L["catalog"])
+            eq(len(visible_cards(p)), PAGE_SIZE, "visible cards on page 1")
+            eq(pager_state(p, lang), (1, pages), "pager on load")
+            expect(p.locator("[data-page-dir='-1']").first.is_disabled(), "previous should be disabled on page 1")
+            p.locator("[data-page-dir='1']").first.click()
+            eq(pager_state(p, lang), (2, pages), "pager after next")
+            eq(len(visible_cards(p)), PAGE_SIZE, "visible cards on page 2")
+            for _ in range(pages - 2):
+                p.locator("[data-page-dir='1']").first.click()
+            eq(pager_state(p, lang), (pages, pages), "pager on the last page")
+            eq(len(visible_cards(p)), env.total_plugins - PAGE_SIZE * (pages - 1), "cards on the last page")
+            expect(p.locator("[data-page-dir='1']").first.is_disabled(), "next should be disabled on the last page")
+            env.shot(p, "catalog-%s-desktop" % lang)
+
+    @check("catalog", "category filter via the URL, 8 categories [%s]" % lang)
+    def _categories(env: Env):
+        with env.page() as p:
+            env.go(p, L["catalog"])
+            cards = all_cards(p)
+            for cat in CATEGORIES:
+                env.go(p, "%s?category=%s" % (L["catalog"], cat))
+                eq(p.locator("#categoryFilter").input_value(), cat, "select value for " + cat)
+                vis = visible_cards(p)
+                wanted = min(PAGE_SIZE, sum(1 for c in cards if c["cat"] == cat))
+                eq(len(vis), wanted, "visible cards for " + cat)
+                expect(wanted > 0, "category %s has no plugins" % cat)
+                expect(all(v["cat"] == cat for v in vis), "a card of another category is visible under " + cat)
+
+    @check("catalog", "text search and clearing it [%s]" % lang)
+    def _search(env: Env):
+        with env.page() as p:
+            env.go(p, L["catalog"])
+            cards = all_cards(p)
+            p.locator("#searchInput").fill("Mermaid")
+            p.wait_for_timeout(300)
+            vis = visible_cards(p)
+            wanted = min(PAGE_SIZE, sum(1 for c in cards if "mermaid" in (c["search"] or "")))
+            eq(len(vis), wanted, "cards matching 'Mermaid'")
+            expect(wanted >= 1 and "Mermaid" in vis[0]["name"], "Mermaid Companion should be the first match")
+            p.locator("#searchInput").fill("")
+            p.wait_for_timeout(300)
+            eq(len(visible_cards(p)), PAGE_SIZE, "cards after clearing the search")
+
+    @check("catalog", "pricing filter: free and paid & pro [%s]" % lang)
+    def _pricing(env: Env):
+        with env.page() as p:
+            env.go(p, L["catalog"])
+            cards = all_cards(p)
+            p.locator("#pricingFilter").select_option("FREE")
+            vis = visible_cards(p)
+            eq(len(vis), min(PAGE_SIZE, sum(1 for c in cards if c["pricing"] == "FREE")), "free cards")
+            expect(all(v["pricing"] == "FREE" for v in vis), "a non-free card is visible under Free")
+            env.go(p, L["catalog"] + "?pricing=paid")
+            vis = visible_cards(p)
+            wanted = min(PAGE_SIZE, sum(1 for c in cards if c["pricing"] in ("FREEMIUM", "PAID")))
+            eq(len(vis), wanted, "freemium + paid cards via ?pricing=paid")
+            expect(all(v["pricing"] in ("FREEMIUM", "PAID") for v in vis), "a free card is visible under Paid & Pro")
+
+    @check("catalog", "search without results offers the hire link [%s]" % lang)
+    def _no_results(env: Env):
+        with env.page() as p:
+            env.go(p, L["catalog"])
+            p.locator("#searchInput").fill("zzzzq")
+            p.wait_for_timeout(300)
+            eq(len(visible_cards(p)), 0, "visible cards for a nonsense query")
+            box = p.locator("#fieldNoResults")
+            expect(box.is_visible(), "the no-results box should be visible")
+            href = box.locator("a.miss-cta").get_attribute("href")
+            expect("intent=hire" in href and "need=zzzzq" in href, "miss link should carry the intent and the query: %r" % href)
+
+    @check("catalog", "table view: rows, order and sorting [%s]" % lang)
+    def _table(env: Env):
+        with env.page() as p:
+            env.go(p, L["catalog"])
+            p.locator("#modeToggle [data-mode='table']").click()
+            expect(p.locator("#tableView").is_visible(), "table view should be visible")
+            rows = p.evaluate("[...document.querySelectorAll('#tbody tr.row')].filter(r=>!r.hidden).map(r=>({d:+r.dataset.downloads,n:r.dataset.name,badge:!!r.querySelector('.price-badge')}))")
+            eq(len(rows), PAGE_SIZE, "visible rows")
+            expect(all(r["badge"] for r in rows), "every row should show a pricing badge")
+            d = [r["d"] for r in rows]
+            expect(d == sorted(d, reverse=True), "rows should start sorted by downloads, descending: %r" % d)
+            p.locator("thead th[data-key='name']").click()
+            first = [r for r in p.evaluate("[...document.querySelectorAll('#tbody tr.row')].filter(r=>!r.hidden).map(r=>r.dataset.name)")]
+            expect(first == sorted(first) or first == sorted(first, reverse=True), "rows should be sorted by name after the click")
+            p.locator("thead th[data-key='name']").click()
+            second = p.evaluate("[...document.querySelectorAll('#tbody tr.row')].filter(r=>!r.hidden).map(r=>r.dataset.name)")
+            expect(second == first[::-1] or second != first, "a second click should flip the order")
+            env.shot(p, "catalog-%s-table" % lang)
+
+    @check("catalog", "keeps working with the data files unreachable [%s]" % lang)
+    def _data_blocked(env: Env):
+        with env.page(block_data=True) as p:
+            env.go(p, L["catalog"], wait="load")
+            p.wait_for_timeout(500)
+            p.locator("#searchInput").fill("Mermaid")
+            p.wait_for_timeout(300)
+            expect(len(visible_cards(p)) >= 1, "search should still work without data/*.json")
+            eq(p.rec.errors, [], "uncaught page errors")
+
+
+for _lang in ("en", "es"):
+    _catalog_checks(_lang)
+
+
+@check("catalog", "platform tabs: VS Code panel and brand colors")
+def _tabs(env: Env):
+    blue = "rgb(0, 122, 204)"
+    for theme in ("dark", "light"):
+        with env.page(theme=theme) as p:
+            env.go(p, "/catalog/")
+            color = lambda plat: p.evaluate("getComputedStyle(document.querySelector('.platform-tab[data-platform=\"%s\"] svg')).color" % plat)
+            eq(p.locator(".platform-tab[data-platform=jetbrains]").get_attribute("aria-selected"), "true", "JetBrains tab selected on load")
+            expect(color("jetbrains") != blue, "the JetBrains icon must not use the VS Code blue (%s)" % theme)
+            p.locator(".platform-tab[data-platform=vscode]").click()
+            p.wait_for_timeout(300)
+            eq(p.locator(".platform-tab[data-platform=vscode]").get_attribute("aria-selected"), "true", "VS Code tab selected")
+            eq(color("vscode"), blue, "VS Code icon color when selected (%s)" % theme)
+            expect(p.locator("#vsxSection").is_visible() and not p.locator("#jetbrains").is_visible(), "panels should switch")
+            expect("platform=vscode" in p.url, "the URL should record the platform: " + p.url)
+            expect(p.locator("#vsxGrid > *:not([hidden])").count() > 0, "no VS Code cards are visible")
+            env.shot(p, "catalog-vscode-" + theme)
+
+
+@check("catalog", "opening ?platform=vscode shows the VS Code panel")
+def _tab_url(env: Env):
+    with env.page() as p:
+        env.go(p, "/catalog/?platform=vscode")
+        expect(p.locator("#vsxSection").is_visible(), "VS Code panel should be open from the URL")
+
+
+# ====================================================================================== home
+def _home_checks(lang: str):
+    L = LANGS[lang]
+
+    @check("home", "hero: title, profile card, method and focus badges [%s]" % lang)
+    def _hero(env: Env):
+        with env.page() as p:
+            env.go(p, L["home"])
+            expect(len(p.locator("h1.nb-hero-title").inner_text().strip()) > 20, "hero title is empty")
+            eq(p.locator(".nb-hero .nb-lede").count(), 2, "lede paragraphs")
+            expect(p.evaluate("document.querySelector('.nb-profile img').naturalWidth") > 0, "portrait did not load")
+            eq(p.locator(".nb-method-mini li").count(), 3, "method steps")
+            badges = p.locator(".nb-focus .badge")
+            eq(badges.count(), 4, "focus badges")
+            expect(all(badges.nth(i).locator("svg").count() == 1 for i in range(4)), "each focus badge should carry an inline svg")
+            env.shot(p, "home-%s-desktop" % lang)
+
+    @check("home", "figures match data/*.json [%s]" % lang)
+    def _figures(env: Env):
+        with env.page() as p:
+            env.go(p, L["home"])
+            text = p.locator(".nb-impact").inner_text()
+            expect(("{:,}".format(env.total_downloads)) in text, "downloads %s not shown: %r" % ("{:,}".format(env.total_downloads), text[:120]))
+            expect(str(env.total_plugins + env.total_vsx) in text, "tool total %d not shown" % (env.total_plugins + env.total_vsx))
+            expect(str(env.total_plugins) in text and str(env.total_vsx) in text, "per-platform totals not shown")
+            eq(p.locator(".nb-impact .tw-p-5").count(), 4, "metric tiles")
+
+    @check("home", "investigations: facts, badges, status and links [%s]" % lang)
+    def _investigations(env: Env):
+        with env.page() as p:
+            env.go(p, L["home"])
+            cards = p.locator("article.inv")
+            eq(cards.count(), 5, "investigation cards")
+            for i in range(5):
+                c = cards.nth(i)
+                eq(c.locator("dt").count(), 3, "facts in card %d" % (i + 1))
+                expect(c.locator(".inv-links a").count() >= 2, "card %d needs evidence links" % (i + 1))
+                expect(c.locator(".inv-badges .badge svg").count() >= 1, "card %d needs a category badge" % (i + 1))
+                expect(c.locator(".inv-status").count() == 1, "card %d needs a status" % (i + 1))
+                lid = c.get_attribute("aria-labelledby")
+                expect(lid and p.locator("#" + lid).count() == 1, "card %d: aria-labelledby points nowhere" % (i + 1))
+
+    @check("home", "featured tools: platform and price badges, working links [%s]" % lang)
+    def _tools(env: Env):
+        with env.page() as p:
+            env.go(p, L["home"])
+            tools = p.locator("article.tool")
+            eq(tools.count(), 4, "featured tools")
+            for i in range(4):
+                t = tools.nth(i)
+                eq(t.locator(".tool-badges .badge").count(), 2, "badges on tool %d" % (i + 1))
+                href = t.locator("h3 a").get_attribute("href")
+                eq(env.get(href), 200, "link of tool %d (%s)" % (i + 1, href))
+
+    @check("home", "stack table: 4 rows and inline SVG badges only [%s]" % lang)
+    def _stack(env: Env):
+        with env.page() as p:
+            env.go(p, L["home"])
+            eq(p.locator("#stack .badge-table tr").count(), 4, "stack rows")
+            eq(p.locator("#stack img, .badge img").count(), 0, "images inside badges")
+            missing = p.evaluate("[...document.querySelectorAll('#stack .badge')].filter(b=>!b.querySelector('svg.b-ico')).length")
+            eq(missing, 0, "stack badges without an inline icon")
+
+
+for _lang in ("en", "es"):
+    _home_checks(_lang)
+
+
+# =============================================================================== chrome
+@check("chrome", "theme: first visit dark, choices persist, system clears the attribute")
+def _theme(env: Env):
+    with env.page(theme=None) as p:
+        env.go(p, "/")
+        eq(p.evaluate("document.documentElement.getAttribute('data-theme')"), "dark", "first visit")
+        p.locator("footer [data-theme-choice=light]").click()
+        eq(p.evaluate("document.documentElement.getAttribute('data-theme')"), "light", "after choosing light")
+        eq(p.evaluate("localStorage.getItem('ghl-theme')"), "light", "stored choice")
+        p.reload(wait_until="networkidle")
+        eq(p.evaluate("document.documentElement.getAttribute('data-theme')"), "light", "after reload")
+        eq(p.locator("footer [data-theme-choice=light]").get_attribute("aria-pressed"), "true", "pressed state")
+        p.locator("footer [data-theme-choice=system]").click()
+        eq(p.evaluate("document.documentElement.getAttribute('data-theme')"), None, "system removes the attribute")
+        eq(p.evaluate("localStorage.getItem('ghl-theme')"), "system", "system is stored")
+
+
+for _lang in ("en", "es"):
+    @check("search", "Ctrl+K dialog: open, results, keys, close, open a result [%s]" % _lang)
+    def _search(env: Env, lang=_lang):
+        L = LANGS[lang]
+        with env.page() as p:
+            env.go(p, L["home"])
+            p.keyboard.press("Control+k")
+            dlg = p.locator(".ghs-backdrop")
+            p.wait_for_selector(".ghs-backdrop:not([hidden])")
+            expect(p.evaluate("document.activeElement && document.activeElement.classList.contains('ghs-input')"), "the input should take focus")
+            p.keyboard.type("openapi")
+            p.wait_for_selector(".ghs-item")
+            n = p.locator(".ghs-item").count()
+            expect(n >= 2, "expected several results for 'openapi', got %d" % n)
+            eq(p.locator(".ghs-item.is-active").count(), 1, "one active result")
+            first = p.locator(".ghs-item.is-active .ghs-name").inner_text()
+            p.keyboard.press("ArrowDown")
+            expect(p.locator(".ghs-item.is-active .ghs-name").inner_text() != first, "ArrowDown should move the active result")
+            expect(p.locator(".ghs-preview").is_visible(), "the preview should be visible on desktop")
+            env.shot(p, "search-%s" % lang)
+            p.keyboard.press("Escape")
+            expect(not dlg.is_visible(), "Escape should close the dialog")
+            p.locator("[data-search-open]").first.click()
+            p.wait_for_selector(".ghs-backdrop:not([hidden])")
+            p.keyboard.type("openapi")
+            p.wait_for_selector(".ghs-item")
+            with p.expect_navigation():
+                p.keyboard.press("Enter")
+            expect(urllib.parse.urlparse(p.url).path not in ("/", "/es/"), "Enter should open the result: " + p.url)
+
+    @check("chrome", "header: menus, language switch and mobile burger [%s]" % _lang)
+    def _nav(env: Env, lang=_lang):
+        L = LANGS[lang]
+        with env.page() as p:
+            env.go(p, L["home"])
+            toggle = p.locator(".gh-nav-toggle").first
+            toggle.click()
+            eq(toggle.get_attribute("aria-expanded"), "true", "dropdown opens")
+            p.keyboard.press("Escape")
+            eq(toggle.get_attribute("aria-expanded"), "false", "Escape closes the dropdown")
+            hrefs = p.evaluate("[...document.querySelectorAll('.gh-lang a')].map(a=>a.getAttribute('href'))")
+            expect("/es/" in hrefs and "/" in hrefs, "language menu should link both versions: %r" % hrefs)
+        with env.page(width=390, height=844) as p:
+            env.go(p, L["home"])
+            expect(not p.locator(".gh-nav").is_visible(), "the nav should be collapsed on a phone")
+            p.locator(".gh-burger").click()
+            expect(p.locator(".gh-nav").is_visible(), "the burger should open the nav")
+            eq(p.locator(".gh-burger").get_attribute("aria-expanded"), "true", "burger state")
+
+
+@check("chrome", "language switch lands on the Spanish home with lang=es")
+def _lang_switch(env: Env):
+    with env.page() as p:
+        env.go(p, "/")
+        p.locator(".gh-lang-btn").click()
+        with p.expect_navigation():
+            p.locator(".gh-lang a[href='/es/']").click()
+        eq(urllib.parse.urlparse(p.url).path, "/es/", "path after switching")
+        eq(p.evaluate("document.documentElement.lang"), "es", "html lang")
+
+
+# ============================================================================== contact
+for _lang in ("en", "es"):
+    @check("contact", "request types, fields, counter and prepared message [%s]" % _lang)
+    def _contact(env: Env, lang=_lang):
+        L = LANGS[lang]
+        with env.page() as p:
+            env.go(p, L["contact"])
+            items = p.locator(".qa-item[data-target]")
+            n = items.count()
+            expect(n >= 4, "expected 4 request types, got %d" % n)
+            titles = set()
+            for i in range(n):
+                items.nth(i).click()
+                titles.add(p.locator("#cfTitle").inner_text())
+                eq(p.locator(".qa-item.is-active").count(), 1, "one active request type")
+                eq(items.nth(i).get_attribute("class").count("is-active"), 1, "the clicked type should be the active one")
+                expect(p.locator("#cfFields [name]").count() >= 2, "the form should show its fields")
+            eq(len(titles), n, "each request type should have its own title")
+            items.nth(0).click()
+            p.locator("#cfFields [name=org]").fill("Acme")
+            p.locator("#cfFields [name=service]").select_option(index=1)
+            p.locator("#cfFields [name=message]").fill("hello")
+            expect(re.search(r"5\s*/\s*1500", p.locator(".cf-counter").first.inner_text()), "the counter should read 5/1500")
+            p.locator("#cfSubmit").click()
+            p.wait_for_selector("#cfFallback:not([hidden])")
+            text = p.locator("#cfFallback textarea").input_value()
+            expect(("Work with Joel" in text) or ("Trabaja con Joel" in text), "the prepared message should carry the subject: %r" % text[:80])
+            expect("Acme" in text and "hello" in text, "the prepared message should carry the fields")
+            env.shot(p, "contact-%s" % lang)
+
+
+@check("contact", "?intent and ?need prefill the form")
+def _contact_prefill(env: Env):
+    with env.page() as p:
+        env.go(p, "/contact/?intent=hire&need=openapi%20drift")
+        expect(p.locator(".qa-item[data-target=hire]").get_attribute("class").count("is-active") == 1, "hire should be active")
+        expect("openapi drift" in p.locator("#cfFields [name=message]").input_value(), "the message should carry the query")
+
+
+# ================================================================================ pages
+PAGES_AT_390 = ["/", "/es/", "/catalog/", "/es/catalogo/", "/catalog/openapi-companion/", "/services/", "/es/servicios/",
+                "/engineering-evidence/", "/engineering-evidence/jetbrains-platform-tickets/",
+                "/engineering-evidence/case-studies/", "/engineering-evidence/open-source-security-reports/",
+                "/engineering-evidence/third-party-plugin-audits/", "/contact/", "/security/", "/methodology/",
+                "/privacy/", "/terms/", "/ghl-jail/"]
+
+
+@check("pages", "no horizontal overflow at 390 px, no page errors")
+def _overflow(env: Env):
+    bad = []
+    with env.page(width=390, height=844) as p:
+        for path in PAGES_AT_390:
+            before = len(p.rec.errors)
+            env.go(p, path)
+            over = p.evaluate("document.documentElement.scrollWidth - document.documentElement.clientWidth")
+            if over > 0:
+                bad.append("%s overflows by %dpx" % (path, over))
+            if len(p.rec.errors) > before:
+                bad.append("%s: %s" % (path, p.rec.errors[-1]))
+    expect(not bad, "; ".join(bad))
+
+
+@check("pages", "methodology: the decision diagram fits a phone")
+def _methodology(env: Env):
+    with env.page(width=390, height=844) as p:
+        env.go(p, "/methodology/")
+        w = p.evaluate("document.querySelector('.decision-diagram').getBoundingClientRect().width")
+        expect(0 < w <= 390, "diagram width %.0f should fit 390px" % w)
+        eq(p.evaluate("document.documentElement.scrollWidth > document.documentElement.clientWidth"), False, "page overflow")
+
+
+@check("pages", "plugin page: facts table, badges and related plugins")
+def _ficha(env: Env):
+    for lang in ("en", "es"):
+        with env.page() as p:
+            env.go(p, LANGS[lang]["ficha"])
+            eq(p.locator(".facts-table .fact").count(), 7, "facts rows [%s]" % lang)
+            expect(p.locator(".facts-table .badge svg").count() >= 1, "the platform badge should carry an inline icon")
+            expect(p.locator(".facts-table .badge-status").count() == 1, "the pricing badge is missing")
+            expect(p.locator(".similar-grid .rel-card").count() >= 3, "related plugins are missing")
+
+
+@check("pages", "redirect stubs land on their target")
+def _stubs(env: Env):
+    stubs = {}
+    for f in ROOT.glob("*.html"):
+        m = re.search(r'http-equiv="refresh" content="\d+;\s*url=([^"]+)"', f.read_text(encoding="utf-8"))
+        if m:
+            stubs["/" + f.name] = m.group(1)
+    expect(len(stubs) >= 5, "expected the redirect stubs, found %r" % stubs)
+    with env.page() as p:
+        for src, dst in stubs.items():
+            env.go(p, src, wait="load")
+            p.wait_for_url("**" + dst, timeout=5000)
+
+
+def _internal_links(env: Env, page, path):
+    hrefs = page.evaluate("[...new Set([...document.querySelectorAll('a[href]')].map(a=>a.getAttribute('href')))]")
+    out = []
+    for h in hrefs:
+        if h.startswith(("mailto:", "tel:", "javascript:", "#", "http://", "https://", "//")):
+            continue
+        out.append(h.split("#")[0] or path)
+    return sorted(set(out))
+
+
+@check("pages", "internal links resolve on the main pages")
+def _links(env: Env):
+    broken = []
+    seen = {}
+    with env.page() as p:
+        for path in ["/", "/es/", "/catalog/", "/es/catalogo/", "/services/", "/es/servicios/", "/engineering-evidence/",
+                     "/contact/", "/security/", "/methodology/"]:
+            env.go(p, path)
+            for href in _internal_links(env, p, path):
+                if href not in seen:
+                    seen[href] = env.get(href.split("?")[0])
+                if seen[href] >= 400:
+                    broken.append("%s -> %s (%d)" % (path, href, seen[href]))
+    expect(not broken, "broken links: " + "; ".join(broken[:8]))
+
+
+@check("pages", "no third-party requests except analytics")
+def _third_party(env: Env):
+    offenders = set()
+    host = urllib.parse.urlparse(env.base).netloc
+    with env.page() as p:
+        for path in ["/", "/es/", "/catalog/", "/services/", "/contact/", "/catalog/openapi-companion/", "/engineering-evidence/"]:
+            env.go(p, path)
+        for u in p.rec.requests:
+            h = urllib.parse.urlparse(u).netloc
+            if u.startswith(("data:", "blob:")) or h == host or not h:
+                continue
+            if any(h == ok or h.endswith(ok) for ok in THIRD_PARTY_OK):
+                continue
+            offenders.add(h)
+    expect(not offenders, "third-party hosts contacted: %s" % sorted(offenders))
+
+
+@check("pages", "screenshots (only with --shots)")
+def _screens(env: Env):
+    if not env.shots:
+        return
+    for label, w, h in (("desktop", 1440, 1000), ("mobile", 390, 844)):
+        with env.page(width=w, height=h) as p:
+            for name, path in (("home", "/"), ("services", "/services/"), ("engineering", "/engineering-evidence/"),
+                               ("security", "/security/"), ("methodology", "/methodology/")):
+                env.go(p, path)
+                env.shot(p, "%s-%s" % (name, label), full=True)
+
+
+# ================================================================================ runner
+def main() -> int:
+    ap = argparse.ArgumentParser(description=__doc__.split("\n\n")[0])
+    ap.add_argument("--base", help="URL of a running server (default: start a local one)")
+    ap.add_argument("--only", help="comma-separated groups or words to run (e.g. catalog,search)")
+    ap.add_argument("--list", action="store_true", help="list the checks and exit")
+    ap.add_argument("--shots", action="store_true", help="save screenshots to _review/screenshots/")
+    ap.add_argument("--browser", default=os.environ.get("VERIFY_BROWSER"), help="path to a Chromium-based browser (default: Playwright's)")
+    ap.add_argument("--json", help="write the results to this file")
+    args = ap.parse_args()
+
+    wanted = [w.strip().lower() for w in (args.only or "").split(",") if w.strip()]
+    selected = [c for c in CHECKS if not wanted or any(w in (c[0] + " " + c[1]).lower() for w in wanted)]
+    if args.list:
+        for g, n, _ in selected:
+            print("%-8s %s" % (g, n))
+        print("%d checks" % len(selected))
+        return 0
+
+    server = None
+    base = args.base
+    if not base:
+        server, base = start_server()
+    results = []
+    with sync_playwright() as pw:
+        kw = {"executable_path": args.browser} if args.browser else {}
+        browser = pw.chromium.launch(headless=True, **kw)
+        env = Env(browser, base.rstrip("/"), args.shots)
+        print("site: %s | browser: %s %s | checks: %d" % (env.base, browser.browser_type.name, browser.version, len(selected)))
+        for group, name, fn in selected:
+            t0 = time.time()
+            try:
+                fn(env)
+                status, detail = "PASS", ""
+            except Exception as exc:  # noqa: BLE001
+                status = "FAIL"
+                detail = str(exc) if isinstance(exc, AssertionError) else "%s: %s" % (type(exc).__name__, str(exc).splitlines()[0] if str(exc) else "")
+                if not isinstance(exc, AssertionError):
+                    detail += "\n" + "".join(traceback.format_exc().splitlines(True)[-4:])
+            dt = time.time() - t0
+            results.append(dict(group=group, name=name, status=status, seconds=round(dt, 1), detail=detail))
+            print("%s  %-8s %s (%.1fs)" % (status, group, name, dt))
+            if detail:
+                print("      " + detail.replace("\n", "\n      "))
+        browser.close()
+    if server:
+        server.shutdown()
+    failed = [r for r in results if r["status"] == "FAIL"]
+    print("\n%d checks: %d passed, %d failed" % (len(results), len(results) - len(failed), len(failed)))
+    if args.json:
+        Path(args.json).write_text(json.dumps(results, indent=1), encoding="utf-8")
+    return 1 if failed else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
