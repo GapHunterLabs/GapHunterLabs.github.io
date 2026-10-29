@@ -151,7 +151,7 @@
     .blocks-table th, .blocks-table td { padding: 7px 7px; }
   }
 </style>
-<link rel="stylesheet" href="/css/shell.css?v=ff1c5620">
+<link rel="stylesheet" href="/css/shell.css?v=31bcabdf">
 <link rel="stylesheet" href="/css/tw.css?v=a8c71639">
 </head>
 <body>
@@ -199,9 +199,9 @@
     <section class="disclosure" aria-labelledby="sec-fence">
       <h2 id="sec-fence">Una cerca en una línea</h2>
       <p>ghl-jail ejecuta un solo comando para que solo pueda tocar la carpeta de proyecto que le indiques:</p>
-      <div class="terminal"><span class="pr">C:\work\mi-proyecto&gt;</span> python ghl_jail.py run --project . -- herramienta-sospechosa.exe</div>
+      <div class="terminal" tabindex="0"><span class="pr">C:\work\mi-proyecto&gt;</span> python ghl_jail.py run --project . -- herramienta-sospechosa.exe</div>
       <p>Dentro de esa carpeta la herramienta lee y escribe con libertad. En cuanto intenta salir &mdash; hacia <code>~/.ssh</code>, un archivo de credenciales de la nube, un token de tu entorno &mdash; choca con un muro:</p>
-      <div class="terminal"><span class="deny">Access is denied.</span></div>
+      <div class="terminal" tabindex="0"><span class="deny">Access is denied.</span></div>
       <p>Y por defecto no tiene <b>red</b>, así que incluso una herramienta que no encontró nada que leer no tiene adónde enviarlo.</p>
       <figure class="demo-figure">
         <img src="/media/ghl-jail-demo.gif?v=c544a641" alt="Demo en terminal: crear un proyecto, agregar ghl-jail, escribir dentro del proyecto (permitido), leer un secreto fuera de él (Access is denied), sin red, ejecutar git y la limpieza." loading="lazy" width="1000" height="624">
@@ -245,7 +245,7 @@
     <section class="disclosure" aria-labelledby="sec-get">
       <h2 id="sec-get">Cómo obtenerlo</h2>
       <p>Necesitas Python 3.8+ y Windows 10 u 11 (Home incluido). Sin permisos de administrador, sin instalación, sin servicio en segundo plano. Clona el repositorio y ejecútalo:</p>
-      <div class="terminal"><span class="mut"># clona y luego ejecuta cualquier comando dentro de la jaula</span> git clone https://github.com/GapHunterLabs/ghl-jail <span class="pr">C:\work\mi-proyecto&gt;</span> python ghl_jail.py run --project . -- npm install</div>
+      <div class="terminal" tabindex="0"><span class="mut"># clona y luego ejecuta cualquier comando dentro de la jaula</span> git clone https://github.com/GapHunterLabs/ghl-jail <span class="pr">C:\work\mi-proyecto&gt;</span> python ghl_jail.py run --project . -- npm install</div>
       <p>Código abierto y gratis. Solo Windows. El README tiene el recorrido completo, los tres modos y los límites conocidos.</p>
       <div class="get-row">
         <a class="btn primary" href="https://github.com/GapHunterLabs/ghl-jail" target="_blank" rel="noopener" data-goatcounter-click="ghl-jail-github">Ver en GitHub</a>
