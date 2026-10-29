@@ -1531,6 +1531,8 @@
 .catalog-v2 .platform-tab svg { width: 16px; height: 16px; }
 .catalog-v2 .platform-tab[aria-selected="true"] { background: var(--surface-3); box-shadow: inset 0 0 0 1px var(--border-strong); }
 .catalog-v2 .platform-tab[aria-selected="true"] svg { color: var(--signal); }
+/* Brand logos keep their own color: VS Code is blue when selected, never the site accent. */
+.catalog-v2 .platform-tab[data-platform="vscode"][aria-selected="true"] svg { color: #007ACC; }
 .catalog-v2 .pt-count { padding: 1px 7px; font: 600 11.5px var(--mono); }
 .catalog-v2 .platform-tab[aria-selected="true"] .pt-count { background: var(--surface); color: var(--text); }
 .catalog-v2 .platform-panel { padding-top: 28px; }
