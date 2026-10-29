@@ -478,12 +478,41 @@ def _contact_prefill(env: Env):
         expect("openapi drift" in p.locator("#cfFields [name=message]").input_value(), "the message should carry the query")
 
 
+@check("sponsors", "sponsors page: five levels, ways to join, reach figures and sponsor links marked rel=sponsored")
+def _sponsors_page(env: Env):
+    listed = json.loads((ROOT / "data" / "sponsors.json").read_text(encoding="utf-8")).get("sponsors", [])
+    for lang, path, contact in (("en", "/sponsors/", "/contact/"), ("es", "/es/patrocinadores/", "/es/contacto/")):
+        with env.page() as p:
+            env.go(p, path)
+            eq(p.locator(".sp-level").count(), 5, "levels [%s]" % lang)
+            hrefs = p.evaluate("[...document.querySelectorAll('.get-row a')].map(a => a.getAttribute('href'))")
+            expect(any("patreon.com" in h for h in hrefs), "the Patreon link is missing [%s]" % lang)
+            expect(any("buymeacoffee.com" in h for h in hrefs), "the Buy Me a Coffee link is missing [%s]" % lang)
+            expect(contact in hrefs, "the company-sponsorship link should go to %s [%s]" % (contact, lang))
+            eq(p.locator(".sp-reach .tw-bg-bg").count(), 4, "reach figures [%s]" % lang)
+            eq(p.locator(".sp-wall").count() > 0, bool(listed), "the wall and data/sponsors.json disagree [%s]" % lang)
+            if not listed:
+                eq(p.locator(".sp-empty").count(), 1, "the open call [%s]" % lang)
+            rels = p.evaluate("[...document.querySelectorAll('a.sp-logo, a.sp-person')].map(a => a.getAttribute('rel') || '')")
+            expect(all("sponsored" in r for r in rels), "sponsor links must carry rel=sponsored [%s]" % lang)
+            eq(len(rels), len([r for r in listed if r.get("url")]), "linked sponsors [%s]" % lang)
+
+
+@check("sponsors", "home: the sponsors section links to the sponsors page")
+def _sponsors_home(env: Env):
+    for lang, home, target in (("en", "/", "/sponsors/"), ("es", "/es/", "/es/patrocinadores/")):
+        with env.page() as p:
+            env.go(p, home)
+            expect(p.locator("#sponsors").count() == 1, "the sponsors section is missing [%s]" % lang)
+            expect(p.locator("#sponsors a.btn.primary[href='%s']" % target).count() == 1, "the call to action [%s]" % lang)
+
+
 # ================================================================================ pages
 PAGES_AT_390 = ["/", "/es/", "/catalog/", "/es/catalogo/", "/catalog/openapi-companion/", "/services/", "/es/servicios/",
                 "/engineering-evidence/", "/engineering-evidence/jetbrains-platform-tickets/",
                 "/engineering-evidence/case-studies/", "/engineering-evidence/open-source-security-reports/",
                 "/engineering-evidence/third-party-plugin-audits/", "/contact/", "/security/", "/methodology/",
-                "/privacy/", "/terms/", "/ghl-jail/"]
+                "/privacy/", "/terms/", "/ghl-jail/", "/sponsors/", "/es/patrocinadores/"]
 
 
 @check("pages", "no horizontal overflow at 390 px, no page errors")
@@ -551,7 +580,7 @@ def _links(env: Env):
     seen = {}
     with env.page() as p:
         for path in ["/", "/es/", "/catalog/", "/es/catalogo/", "/services/", "/es/servicios/", "/engineering-evidence/",
-                     "/contact/", "/security/", "/methodology/"]:
+                     "/contact/", "/security/", "/methodology/", "/sponsors/", "/es/patrocinadores/"]:
             env.go(p, path)
             for href in _internal_links(env, p, path):
                 if href not in seen:
