@@ -1029,3 +1029,19 @@ tr.row td[data-label]::before { font-family: var(--sans); font-size: 11px; lette
 .cf-direct { font-size: 14px; }
 .pi-checklist li::marker, .pi-steps li::marker { color: var(--text-faint); }
 .pi-checklist li { font-size: 12.5px; }
+
+/* =====================================================================
+   Redesign v3 -- security page: the five sections are cards with a decorative index
+   (CSS counters), and the "what isn't in place" notice is an amber-bordered card with a
+   dot, so the gap is visible without relying on the old left accent rule.
+   ===================================================================== */
+.disclosure-list:has(> .disclosure-warn) > .disclosure:not(.disclosure-warn) h2::before {
+  counter-increment: svc; content: counter(svc, decimal-leading-zero); content: counter(svc, decimal-leading-zero) / "";
+  display: block; margin-bottom: 8px; font: 600 11.5px/1 var(--mono); letter-spacing: 0.1em; color: var(--signal);
+}
+.disclosure.disclosure-warn { border-color: var(--inspect-line); background: color-mix(in srgb, var(--inspect) 6%, var(--surface)); }
+.disclosure-warn h2::before { content: ""; display: inline-block; width: 8px; height: 8px; margin-right: 10px; border-radius: 50%;
+  background: var(--inspect); vertical-align: middle; }
+.disclosure code { border-radius: var(--radius-sm); font-size: 0.9em; }
+.disclosure a { color: var(--text); text-decoration-thickness: 1px; text-underline-offset: 0.2em; }
+.disclosure b, .disclosure strong { font-weight: 650; }
