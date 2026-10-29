@@ -526,6 +526,46 @@ def _es_meta(env: Env):
     expect(not same, "still in English: " + "; ".join(same[:8]))
 
 
+# Voice: everything I publish speaks as "I" (strict first person singular). The EULA keeps the licensor
+# wording of its template ("the Developer") and plugin pages carry catalog data, so both are left out.
+VOICE_EN = re.compile(
+    r"\b[Ww]e\b|\b[Oo]ur(s|selves)?\b|\bus\b"
+    r"|\bJoel (is|has|does|builds|writes|maintains|leads|runs|replies|responds)\b|\b(with|Email|Ask|Tell|Contact) Joel\b"
+    r"|\bone engineer\b|\bthe (author|studio|team)\b"
+    r"|\bGap Hunter Labs (is (the|an|a)|are|does|do|maintains|publishes|builds|ships|has|have|offers|provides|runs|never|will|keeps|tests|uses|reports)\b")
+VOICE_ES = re.compile(r"\bnuestr[oa]s?\b|\bnosotr[oa]s\b|\bJoel (es|tiene|responde|hace|construye|escribe|mantiene)\b|\b(con|a) Joel\b|\bun solo ingeniero\b")
+VOICE_SKIP = ("eula/", "es/eula/", "catalog/", "es/catalogo/", "laboratorio/")
+
+
+def _visible_main(text):
+    m = re.search(r"(?is)<main\b.*?</main>", re.sub(r"(?s)<!--.*?-->", "", text))
+    body = m.group(0) if m else ""
+    body = re.sub(r"(?is)<(script|style|svg)\b.*?</\1>", " ", body)
+    body = re.sub(r"<[^>]+>", " ", body)
+    import html as _html
+    return " ".join(_html.unescape(body).split())
+
+
+@check("voice", "public copy speaks in the first person singular (no 'we', 'our', 'Joel does', 'one engineer')")
+def _voice(env: Env):
+    bad = []
+    for f in sorted(ROOT.rglob("index.html")):
+        rel = f.relative_to(ROOT).as_posix()
+        if rel.startswith(("node_modules/", "pipeline/", "_review/")) or rel.startswith(VOICE_SKIP):
+            continue
+        rx = VOICE_ES if rel.startswith("es/") else VOICE_EN
+        text = _visible_main(f.read_text(encoding="utf-8"))
+        for sent in re.split(r"(?<=[.!?])\s+", text):
+            if rx.search(sent) and "Gap Hunter Labs is my" not in sent:
+                bad.append("%s: %s" % (rel, sent[:110]))
+    for js in ("contact.js", "catalog.js", "catalog-vsx.js", "site-search.js"):
+        text = (ROOT / "js" / js).read_text(encoding="utf-8")
+        for m in re.finditer(r"'([^'\n]{12,})'", text):
+            if VOICE_EN.search(m.group(1)) or VOICE_ES.search(m.group(1)):
+                bad.append("js/%s: %s" % (js, m.group(1)[:90]))
+    expect(not bad, "%d line(s) not in my voice: %s" % (len(bad), " | ".join(bad[:6])))
+
+
 # ================================================================================ pages
 PAGES_AT_390 = ["/", "/es/", "/catalog/", "/es/catalogo/", "/catalog/openapi-companion/", "/services/", "/es/servicios/",
                 "/engineering-evidence/", "/engineering-evidence/jetbrains-platform-tickets/",

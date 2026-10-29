@@ -239,7 +239,7 @@
       <div class="case-body">
         <p class="eyebrow">Caso de estudio</p>
         <h2>Background ReadAction Freeze Companion</h2>
-        <p>La mayoría de los plugins de este catálogo nacen de usuarios que se quejan de un competidor de pago. Este nació del Platform Blog de JetBrains, que describe un punto de entrada en un hilo de fondo que llega a una llamada de read-lock bloqueante y no cancelable como una causa recurrente de congelamientos del IDE.</p>
+        <p>La mayoría de los plugins de mi catálogo nacen de usuarios que se quejan de un competidor de pago. Este nació del Platform Blog de JetBrains, que describe un punto de entrada en un hilo de fondo que llega a una llamada de read-lock bloqueante y no cancelable como una causa recurrente de congelamientos del IDE.</p>
         <p>Aplicado al propio código de IntelliJ, encontró el patrón en <code>SearchForTestsTask</code>, que ejecutaba un paso con el cancelable <code>ReadAction.nonBlocking()</code> y el paso hermano con el bloqueante <code>ReadAction.run()</code>. Eso se convirtió en <a href="https://youtrack.jetbrains.com/issue/IDEA-393501" target="_blank" rel="noopener">IDEA-393501</a>, presentado a JetBrains y ya corregido en master. Sobre ese mismo código también descartó una read action cuyo único llamador corre en el EDT: un falso positivo evitado en código de producción, no en un ejemplo sintético.</p>
         <a class="btn" href="https://github.com/GapHunterLabs/background-readaction-freeze-companion#readme" target="_blank" rel="noopener">Ver la evidencia</a>
       </div>
@@ -351,7 +351,7 @@
       </dl>
     </article>
 
-    <p class="lab-pending">Se irán sumando más casos de estudio a medida que se revisen. Cada uno exige leer toda la evidencia del plugin en su propio README y comprobar cada afirmación contra una fuente pública, el mismo estándar que los de arriba. Cada plugin del <a href="/es/catalogo/">catálogo</a> ya muestra su evidencia; esta página reúne los pocos con las historias más inusuales o mejor documentadas.</p>
+    <p class="lab-pending">Agregaré más casos de estudio a medida que los revise. Para cada uno leo la evidencia completa del plugin en su propio README y verifico cada afirmación contra una fuente pública, con el mismo rigor que los anteriores. Cada plugin de mi <a href="/es/catalogo/">catálogo</a> ya lista su evidencia; esta página reúne los pocos con las historias más inusuales o mejor documentadas.</p>
   </div>
 
   <p class="ee-next">Siguiente: <a href="/es/ingenieria-y-evidencia/tickets-jetbrains-platform/">Tickets de JetBrains Platform</a></p>

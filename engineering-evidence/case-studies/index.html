@@ -238,7 +238,7 @@
       <div class="case-body">
         <p class="eyebrow">Case study</p>
         <h2>Background ReadAction Freeze Companion</h2>
-        <p>Most plugins in this catalog start from users complaining about a paid competitor. This one started from JetBrains' own Platform Blog, which describes a background-thread entry point reaching a blocking, non-cancellable read-lock call as a recurring cause of IDE freezes.</p>
+        <p>Most plugins in my catalog start from users complaining about a paid competitor. This one started from JetBrains' own Platform Blog, which describes a background-thread entry point reaching a blocking, non-cancellable read-lock call as a recurring cause of IDE freezes.</p>
         <p>Pointed at IntelliJ&rsquo;s own source, it found the pattern in <code>SearchForTestsTask</code>, which ran one step through the cancellable <code>ReadAction.nonBlocking()</code> and its sibling through the blocking <code>ReadAction.run()</code>. That became <a href="https://youtrack.jetbrains.com/issue/IDEA-393501" target="_blank" rel="noopener">IDEA-393501</a>, filed with JetBrains and since fixed on master. On the same code it also skipped a read action whose only caller runs on the EDT: a false positive avoided in production code, not in a synthetic test.</p>
         <a class="btn" href="https://github.com/GapHunterLabs/background-readaction-freeze-companion#readme" target="_blank" rel="noopener">View evidence</a>
       </div>
@@ -350,7 +350,7 @@
       </dl>
     </article>
 
-    <p class="lab-pending">More case studies will be added as they're reviewed. Each one requires reading the plugin's full evidence in its own README and checking every claim against a public source, the same bar as the ones above. Every plugin in the <a href="/catalog/">catalog</a> already lists its evidence; this page collects the few with the most unusual or best-documented stories.</p>
+    <p class="lab-pending">I will add more case studies as I review them. For each one I read the plugin's full evidence in its own README and check every claim against a public source, the same bar as the ones above. Every plugin in my <a href="/catalog/">catalog</a> already lists its evidence; this page collects the few with the most unusual or best-documented stories.</p>
   </div>
 
   <p class="ee-next">Next: <a href="/engineering-evidence/jetbrains-platform-tickets/">JetBrains Platform tickets</a></p>
