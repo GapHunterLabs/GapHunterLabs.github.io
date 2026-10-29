@@ -79,6 +79,11 @@ def badge(label: str, icon: str | None = None, variant: str = "brand", hex6: str
     return '<span class="%s"%s>%s</span>' % (cls, style, inner)
 
 
+def price_badge(key: str, text: str) -> str:
+    """Pricing as a status badge: the dot color (is-free / is-freemium / is-paid / is-pending) backs the label, never replaces it."""
+    return '<span class="badge badge-status is-%s">%s</span>' % (html.escape(key, quote=True), html.escape(text, quote=False))
+
+
 def badge_row(items) -> str:
     """items: iterable de dicts/tuplas para badge(); devuelve <div class="badge-row">."""
     out = []

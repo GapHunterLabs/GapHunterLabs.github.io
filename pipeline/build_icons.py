@@ -27,7 +27,7 @@ ICONS = {
     "jetbrains": "jetbrains", "intellijidea": "intellij-idea", "kotlin": "kotlin",
     "gradle": "gradle", "openjdk": "java", "python": "python", "github": "github",
     "githubactions": "github-actions", "git": "git", "markdown": "markdown",
-    "junit5": "junit", "cloudflare": "cloudflare",
+    "junit5": "junit", "cloudflare": "cloudflare", "gitlab": "gitlab", "go": "go",
 }
 
 # Genericos (no son marcas): 24x24, trazo relleno.
