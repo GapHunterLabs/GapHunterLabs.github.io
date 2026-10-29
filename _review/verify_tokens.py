@@ -39,7 +39,7 @@ def scripts(html: str) -> list[str]:
         attrs, body = m.group(1), m.group(2)
         if "src=" in attrs or not body.strip():
             continue
-        if "application/ld+json" in attrs:
+        if "application/ld+json" in attrs or "speculationrules" in attrs:
             continue
         out.append(body)
     return out

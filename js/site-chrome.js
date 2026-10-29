@@ -22,7 +22,7 @@
     if (choice === 'light' || choice === 'dark') root.setAttribute('data-theme', choice);
     else root.removeAttribute('data-theme');
     try {
-      if (choice === 'system') localStorage.removeItem(KEY); else localStorage.setItem(KEY, choice);
+      localStorage.setItem(KEY, choice); // 'system' tambien se guarda: sin clave = primera visita (oscuro)
     } catch (e) { /* sin almacenamiento: vale para esta visita */ }
     syncThemeControls();
   }
