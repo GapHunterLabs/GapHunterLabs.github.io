@@ -557,6 +557,15 @@
   .gh-cta { display: none; }
   .gh-header-inner { gap: 12px; }
 }
+/* 320-380px phones: the brand and the four buttons need about 330px with the usual margins, so the margins,
+   the brand and the buttons give up a few pixels (checked at 320, 340 and 360). */
+@media (max-width: 380px) {
+  .gh-header-inner { padding: 0 12px; gap: 8px; }
+  .gh-brand { gap: 6px; font-size: 13px; }
+  .gh-logo { width: 22px; height: 22px; }
+  .gh-tools { gap: 6px; }
+  .gh-burger { width: 34px; }
+}
 
 .site-footer.gh-footer { margin-top: 72px; padding: 56px 0 28px; padding-left: 0; border-top: 0; background: var(--bg); color: var(--text); }
 .gh-footer-inner { max-width: var(--page-max); margin: 0 auto; padding: 0 var(--page-pad); }

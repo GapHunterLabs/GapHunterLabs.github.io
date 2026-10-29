@@ -589,6 +589,19 @@ def _overflow(env: Env):
     expect(not bad, "; ".join(bad))
 
 
+@check("pages", "no horizontal overflow at 320 px (header and long words included)")
+def _overflow_320(env: Env):
+    bad = []
+    with env.page(width=320, height=640) as p:
+        for path in PAGES_AT_390:
+            env.go(p, path)
+            over = p.evaluate("document.documentElement.scrollWidth - document.documentElement.clientWidth")
+            header = p.evaluate("(() => { const h = document.querySelector('.gh-header-inner'); return h.scrollWidth - h.clientWidth; })()")
+            if over > 0 or header > 0:
+                bad.append("%s overflows by %dpx (header %dpx)" % (path, over, header))
+    expect(not bad, "; ".join(bad))
+
+
 @check("pages", "methodology: the decision diagram fits a phone")
 def _methodology(env: Env):
     with env.page(width=390, height=844) as p:
