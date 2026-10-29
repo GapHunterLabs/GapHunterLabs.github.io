@@ -484,7 +484,7 @@
 .app-main > .methodology-main, .app-main > .contact-main { margin-left: auto; margin-right: auto; }
 @media (min-width: 841px) { body { background-image: none; } }
 
-.gh-header { position: sticky; top: 0; z-index: 50; background: color-mix(in srgb, var(--surface) 92%, transparent);
+.gh-header { position: sticky; top: 0; z-index: 50; background: var(--glass);
   -webkit-backdrop-filter: saturate(1.4) blur(10px); backdrop-filter: saturate(1.4) blur(10px); border-bottom: 1px solid var(--border); }
 .gh-header-inner { position: relative; max-width: var(--page-max); margin: 0 auto; padding: 0 var(--page-pad);
   height: var(--gh-header-h); display: flex; align-items: center; gap: 28px; }
@@ -563,6 +563,14 @@
   padding-bottom: 40px; border-bottom: 1px solid var(--border); }
 .gh-footer-brand { display: flex; flex-direction: column; align-items: flex-start; gap: 14px; }
 .gh-footer-brand p { margin: 0; max-width: 34ch; color: var(--text-dim); line-height: 1.6; }
+.gh-footer-about { display: flex; gap: 12px; align-items: flex-start; max-width: 40ch; margin-top: 8px; padding: 14px;
+  border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+.gh-footer-about img { width: 48px; height: 48px; flex: none; border-radius: 50%; border: 1px solid var(--border); object-fit: cover; }
+.gh-footer-about p { max-width: none; font-size: 13.5px; line-height: 1.55; color: var(--text-dim); }
+.gh-footer-about p strong { color: var(--text); }
+.gh-footer-about-title { margin: 0 0 4px; color: var(--signal) !important; font: 600 11px/1.4 var(--mono) !important; letter-spacing: 0.1em; text-transform: uppercase; }
+.gh-footer-about-links { display: flex; flex-wrap: wrap; gap: 4px 14px; margin-top: 8px !important; }
+.gh-footer-about-links a { color: var(--text); font-size: 13px; text-decoration: underline; text-underline-offset: 0.18em; }
 .gh-footer-cols { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 24px; }
 .gh-footer-col { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
 .gh-footer-title { margin: 0 0 4px; color: var(--text); font: 600 13.5px var(--sans); }

@@ -1,6 +1,9 @@
 /* Source of css/tw.css (generated: do not edit tw.css by hand). Build: cd pipeline && npm run build:css */
 @tailwind utilities;
 
+/* No preflight: border utilities need an explicit style or the border is invisible. */
+[class*="tw-border"] { border-style: solid; }
+
 /* ---- Badges: icon + label, inline SVG, no external requests (see pipeline/badges.py) ---- */
 .badge {
   display: inline-flex; align-items: center; gap: 0.4rem; height: 1.5rem; padding: 0 0.55rem;

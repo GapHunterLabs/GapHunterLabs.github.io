@@ -34,10 +34,12 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from build_plugin_pages import Sources, esc  # noqa: E402
+from badges import badge, badge_row, badge_table  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 HOME_PAGE = ROOT / "index.html"
 VSCODE_DATA = ROOT / "data" / "vscode-catalog-data.json"
+RESEARCH_DATA = ROOT / "data" / "research.json"
 PRICING_LABEL = {"FREE": "Free", "FREEMIUM": "Freemium", "PAID": "Paid"}
 
 # (slug, brecha, correccion). Texto en ingles: build_i18n.py lo traduce
@@ -63,6 +65,77 @@ TOOLS = (
      "Syntax highlighting and syntax validation for <code>.mmd</code> and <code>.mermaid</code> files: "
      "flowchart, sequence and class diagrams."),
 )
+
+
+def sparkline(values, w=140, h=28):
+    """Polilinea SVG (en linea, sin librerias) de una serie corta de enteros."""
+    lo, hi = min(values), max(values)
+    span = (hi - lo) or 1
+    step = w / (len(values) - 1)
+    pts = " ".join("%.0f,%.0f" % (i * step, h - 2 - (v - lo) * (h - 4) / span) for i, v in enumerate(values))
+    label = "Downloads over the last %d days: %s to %s" % (len(values), format(values[0], ","), format(values[-1], ","))
+    return ('<svg class="tw-mt-2 tw-h-7 tw-w-full" viewBox="0 0 %d %d" preserveAspectRatio="none" role="img" '
+            'aria-label="%s"><polyline fill="none" stroke="var(--signal)" stroke-width="2" '
+            'stroke-linejoin="round" stroke-linecap="round" points="%s"/></svg>' % (w, h, esc(label), pts))
+
+
+def tile(label, value, sub_html, extra=""):
+    return ('<div class="tw-bg-bg tw-p-5"><p class="tw-font-mono tw-text-xs tw-text-faint">%s</p>'
+            '<p class="tw-mt-1 tw-text-3xl tw-font-bold tw-text-ink">%s</p>%s'
+            '<p class="tw-mt-2 tw-text-xs tw-text-dim">%s</p></div>' % (label, value, extra, sub_html))
+
+
+def sync_html(data):
+    snap = (data.get("generatedAt") or "")[:10]
+    return ('<span class="live-dot" aria-hidden="true"></span>'
+            '<span>Catalog synced</span> <time datetime="%s">%s</time>' % (snap, snap))
+
+
+def metrics_html(data, research, vscode_total):
+    trend = [d["totalDownloads"] for d in data.get("trend7d", []) if "totalDownloads" in d]
+    pr = research["upstreamPullRequests"]
+    adv = research["advisoriesClosedUpstream"]
+    tiles = [
+        tile("JetBrains Marketplace downloads", format(data["totalDownloads"], ","),
+             "Last 7 days", sparkline(trend) if len(trend) >= 2 else ""),
+        tile("Tools in the catalog", str(data["totalPlugins"] + vscode_total),
+             "<span>%d JetBrains plugins</span> &middot; <span>%d VS Code extensions</span>" % (data["totalPlugins"], vscode_total)),
+        tile("Pull requests to IntelliJ", str(pr["total"]),
+             "<b>%d</b> <span>integrated</span> &middot; <b>%d</b> <span>open</span>" % (pr["integrated"], pr["open"])),
+        tile("Advisories closed upstream", str(adv["count"]),
+             "<span>Fixed by the maintainers in</span> <code>reactive-commons-go</code>"),
+    ]
+    grid = ('<div class="tw-grid tw-grid-cols-2 tw-gap-px tw-overflow-hidden tw-rounded-lg tw-border tw-border-line '
+            'tw-bg-line md:tw-grid-cols-4">%s</div>' % "".join(tiles))
+    chips = badge_row([
+        dict(label="JetBrains Marketplace", icon="jetbrains", variant="dark",
+             href="https://plugins.jetbrains.com/vendor/gap-hunter-labs"),
+        dict(label="GitHub", icon="github", variant="dark", href="https://github.com/GapHunterLabs"),
+        dict(label="VS Code Marketplace", icon="vscode", variant="dark"),
+    ])
+    asof = research["asOf"]
+    foot = ('<p class="tw-mt-3 tw-font-mono tw-text-xs tw-text-faint"><span>Counts as of</span> '
+            '<time datetime="%s">%s</time></p>' % (asof, asof))
+    return grid + '<div class="tw-mt-4">' + chips + "</div>" + foot
+
+
+def stack_html():
+    rows = [
+        ("Platforms", [dict(label="JetBrains IDEs", icon="jetbrains", variant="dark"),
+                       dict(label="IntelliJ IDEA", icon="intellij-idea", variant="dark"),
+                       dict(label="VS Code", icon="vscode", variant="brand", hex6="007ACC"),
+                       dict(label="Windows", icon="windows", variant="dark")]),
+        ("Languages", [dict(label="Kotlin", icon="kotlin"), dict(label="Java", icon="java", variant="soft"),
+                       dict(label="Python", icon="python")]),
+        ("Disciplines", [dict(label="Static analysis", icon="code", variant="dark"),
+                         dict(label="Performance", icon="gauge", variant="dark"),
+                         dict(label="Security research", icon="shield", variant="dark"),
+                         dict(label="Reliability", icon="layers", variant="dark")]),
+        ("Tooling", [dict(label="Gradle", icon="gradle", variant="soft"), dict(label="JUnit", icon="junit"),
+                     dict(label="Git", icon="git"), dict(label="GitHub", icon="github", variant="dark"),
+                     dict(label="GitHub Actions", icon="github-actions")]),
+    ]
+    return badge_table("Platforms, languages and tooling", rows, "stackCaption")
 
 
 def die(msg: str) -> "NoReturn":  # noqa: F821
@@ -112,6 +185,11 @@ def build(dry_run: bool = False) -> None:
     )
 
     html = inject(html, "<!-- PRERENDER:TOOLS:START -->", "<!-- PRERENDER:TOOLS:END -->", tools_html, "TOOLS")
+    research = json.loads(RESEARCH_DATA.read_text(encoding="utf-8"))
+    html = inject(html, "<!-- PRERENDER:SYNC:START -->", "<!-- PRERENDER:SYNC:END -->", sync_html(data), "SYNC")
+    html = inject(html, "<!-- PRERENDER:METRICS:START -->", "<!-- PRERENDER:METRICS:END -->",
+                  metrics_html(data, research, vscode_total), "METRICS")
+    html = inject(html, "<!-- PRERENDER:STACK:START -->", "<!-- PRERENDER:STACK:END -->", stack_html(), "STACK")
     html = inject(html, "<!-- PRERENDER:CATALOG:START -->", "<!-- PRERENDER:CATALOG:END -->", esc(catalog_line), "CATALOG")
 
     if dry_run:
