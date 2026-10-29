@@ -1510,13 +1510,19 @@
 .pb-facts { margin-top: 16px; }
 .pb-facts-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
 .pb-facts-head .pb-title { margin: 0; }
-.pb-facts-head .share-row { margin: 0; padding: 0; border: 0; }
-.facts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1px; margin: 0; overflow: hidden;
-  border: 1px solid var(--border); border-radius: var(--radius); background: var(--border); }
-.facts-grid .fact { display: flex; flex-direction: column; gap: 4px; min-width: 0; padding: 14px 16px; background: var(--surface); }
-.facts-grid dt { color: var(--text-faint); font: 500 12.5px var(--sans); }
-.facts-grid dd { display: flex; align-items: center; gap: 6px; margin: 0; color: var(--text); font: 600 15px var(--sans); overflow-wrap: anywhere; }
-.facts-grid dd code { padding: 1px 6px; border-radius: var(--radius); background: var(--surface-2); font: 500 13px var(--mono); }
+.pb-facts .pb-facts-head .share-row { margin: 0; padding: 0; border: 0; }
+/* Facts: one row per datum with alternating bands (same table style as the home "Data" block).
+   Platform and pricing are inline-SVG badges (pipeline/badges.py, styles in css/tw.css). */
+.facts-table { margin: 0; overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+.facts-table .fact { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 4px 16px; align-items: center; min-height: 52px;
+  padding: 10px 18px; border-top: 1px solid var(--border); }
+.facts-table .fact:first-child { border-top: 0; }
+.facts-table .fact:nth-child(odd) { background: var(--band-a); }
+.facts-table .fact:nth-child(even) { background: var(--band-b); }
+.facts-table dt { color: var(--text-dim); font: 600 12px var(--mono); letter-spacing: 0.06em; text-transform: uppercase; }
+.facts-table dd { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0; color: var(--text); font: 600 15px var(--sans); overflow-wrap: anywhere; }
+.facts-table dd code { padding: 1px 6px; border-radius: var(--radius); background: var(--surface-3); font: 500 13px var(--mono); }
+@media (max-width: 640px) { .facts-table .fact { grid-template-columns: minmax(0, 1fr); } }
 .similar-section { margin-top: 32px; }
 .similar-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
 .similar-head h2.similar-title { margin: 0; }

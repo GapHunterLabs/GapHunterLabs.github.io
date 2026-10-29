@@ -52,6 +52,7 @@ import sys as _sys
 from pathlib import Path as _Path
 _sys.path.insert(0, str(_Path(__file__).resolve().parent))
 from site_config import SITE_URL  # noqa: E402
+from badges import badge  # noqa: E402
 SITE = SITE_URL
 ORG_ID = SITE + "/#org"
 CATALOG_URL = SITE + "/catalog/"
@@ -265,6 +266,11 @@ def js_literal(src: str, name: str, label: str):
 # 2. Helpers de render (puerto 1:1 de los de js/catalog-shared.js)
 # =============================================================================
 
+def price_badge(key: str, text: str) -> str:
+    """Pricing as a status badge: the dot color (is-free/is-freemium/is-paid/is-pending) backs the label, never replaces it."""
+    return '<span class="badge badge-status is-%s">%s</span>' % (esc(key), esc(text))
+
+
 def esc(value) -> str:
     """Mismo escape que esc() en catalog-shared.js: & < > "."""
     if value is None:
@@ -476,13 +482,19 @@ PLUGIN_PAGE_CSS = """
 .pb-facts { margin-top: 16px; }
 .pb-facts-head { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
 .pb-facts-head .pb-title { margin: 0; }
-.pb-facts-head .share-row { margin: 0; padding: 0; border: 0; }
-.facts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1px; margin: 0; overflow: hidden;
-  border: 1px solid var(--border); border-radius: var(--radius); background: var(--border); }
-.facts-grid .fact { display: flex; flex-direction: column; gap: 4px; min-width: 0; padding: 14px 16px; background: var(--surface); }
-.facts-grid dt { color: var(--text-faint); font: 500 12.5px var(--sans); }
-.facts-grid dd { display: flex; align-items: center; gap: 6px; margin: 0; color: var(--text); font: 600 15px var(--sans); overflow-wrap: anywhere; }
-.facts-grid dd code { padding: 1px 6px; border-radius: var(--radius); background: var(--surface-2); font: 500 13px var(--mono); }
+.pb-facts .pb-facts-head .share-row { margin: 0; padding: 0; border: 0; }
+/* Facts: one row per datum with alternating bands (same table style as the home "Data" block).
+   Platform and pricing are inline-SVG badges (pipeline/badges.py, styles in css/tw.css). */
+.facts-table { margin: 0; overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+.facts-table .fact { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 4px 16px; align-items: center; min-height: 52px;
+  padding: 10px 18px; border-top: 1px solid var(--border); }
+.facts-table .fact:first-child { border-top: 0; }
+.facts-table .fact:nth-child(odd) { background: var(--band-a); }
+.facts-table .fact:nth-child(even) { background: var(--band-b); }
+.facts-table dt { color: var(--text-dim); font: 600 12px var(--mono); letter-spacing: 0.06em; text-transform: uppercase; }
+.facts-table dd { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 0; color: var(--text); font: 600 15px var(--sans); overflow-wrap: anywhere; }
+.facts-table dd code { padding: 1px 6px; border-radius: var(--radius); background: var(--surface-3); font: 500 13px var(--mono); }
+@media (max-width: 640px) { .facts-table .fact { grid-template-columns: minmax(0, 1fr); } }
 .similar-section { margin-top: 32px; }
 .similar-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
 .similar-head h2.similar-title { margin: 0; }
@@ -800,10 +812,10 @@ class PluginRenderer:
                  '<div class="pb-text">%s</div></section>' % md_block(self.gap_text(p)))
         fact = lambda k, v: '<div class="fact"><dt>%s</dt><dd>%s</dd></div>' % (k, v)
         h.append('<section class="pb-card pb-facts"><div class="pb-facts-head"><h2 class="pb-title">Facts and pricing</h2>%s</div>'
-                 '<dl class="facts-grid">%s</dl></section>' % (self.share_html(p), "".join((
+                 '<dl class="facts-table">%s</dl></section>' % (self.share_html(p), "".join((
                      fact("Category", esc(cat["label"])),
-                     fact("Pricing", esc(pr_text)),
-                     fact("Platform", '<span class="fact-data">%s</span>' % esc(self.platform_of(p))),
+                     fact("Pricing", price_badge(pr_cls, pr_text)),
+                     fact("Platform", badge(self.platform_of(p), icon="jetbrains", variant="dark", extra_class="fact-data")),
                      fact("First published", esc(p.get("firstPublished") or "—")),
                      fact("Marketplace ID", ("#" + esc(mp_id)) if mp_id else ("Pending" if is_pending else "—")),
                      fact("Repository", '<code>%s</code><button type="button" class="copy-btn" data-copy="%s" '
@@ -918,9 +930,9 @@ class PluginRenderer:
         item = (e.get("marketplaceUrl") or "").split("itemName=")[-1]
         share_item = {"repo": self.vsx_path(e), "name": e["displayName"], "niche": e.get("niche")}
         h.append('<section class="pb-card pb-facts pb-gap"><div class="pb-facts-head"><h2 class="pb-title">Facts and pricing</h2>%s</div>'
-                 '<dl class="facts-grid">%s</dl></section>' % (self.share_html(share_item, platform="VS Code"), "".join((
-                     fact("Platform", "Visual Studio Code"),
-                     fact("Pricing", "Free"),
+                 '<dl class="facts-table">%s</dl></section>' % (self.share_html(share_item, platform="VS Code"), "".join((
+                     fact("Platform", badge("Visual Studio Code", icon="vscode", variant="dark")),
+                     fact("Pricing", price_badge("free", "Free")),
                      fact("Version", esc(e.get("version") or "—")),
                      fact("First published", esc((e.get("publishedDate") or "—")[:10])),
                      fact("Last updated", esc((e.get("lastUpdated") or "—")[:10])),
