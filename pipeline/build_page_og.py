@@ -2,32 +2,30 @@
 # -*- coding: utf-8 -*-
 """
 build_page_og.py -- one distinct 1200x630 social-share image per hand-made
-site page, in English and Spanish (not the plugin cards, which
-build_og_images.py already renders one-per-plugin into media/<slug>/og.png).
+site page (19 pages), in English and Spanish (not the plugin cards, which
+build_og_images.py renders one-per-plugin into media/<slug>/og.png).
 
-Supersedes _review/render_og.py: it covers home, /services/ and
-/plugin-performance-audit/ with the exact same three layouts as before, and
-adds every other static page (catalog, methodology, the engineering-evidence
-pages, contact, security, privacy, terms, eula, ghl-jail) plus a native
-Spanish image for all sixteen -- so no two pages share a preview any more.
+Redesigned 2026-10-29 in the site's v3 look (see og_kit.py): near-black ground
+with the hero grid and glow, a large headline, one short line of purpose and
+inline-SVG badges for the platform, language, tooling or discipline that the page
+itself names. Four compositions: the home (with a gap/fix evidence card),
+services (price table), the performance audit (price card) and a generic hero for
+every other page. Deliberately timeless: no live catalog numbers, so the twice-daily
+catalog refresh never has to regenerate these.
 
-Each image is a standalone, noindex HTML page that loads the same fonts/ and
-brand mark as the live site; Chromium (via Playwright) screenshots it at
-exactly 1200x630. Deliberately timeless: no live catalog numbers baked in, so
-the twice-daily catalog refresh never has to regenerate these.
-
-Output lives at the repo root next to the three originals:
+Output lives at the repo root:
   home -> og-image.png / og-image.es.png
   /services/ -> og-services.png / og-services.es.png
-  ... and og-<slug>.png / og-<slug>.es.png for the rest.
+  ... and og-<slug>.png / og-<slug>.es.png for the rest (38 images).
 
-The English page HTML references these directly in <head>; build_i18n.py
-rewrites the ES pages' og:image from og-X.png to og-X.es.png automatically.
+The English page HTML references these directly in <head>; build_i18n.py rewrites
+the ES pages' og:image from og-X.png to og-X.es.png automatically. After changing
+an image, bump OG_VERSION in site_config.py so social networks fetch it again.
 
 Requires: playwright + `python -m playwright install chromium`.
 
 Usage:
-  python pipeline/build_page_og.py                 # all 32
+  python pipeline/build_page_og.py                 # all 38
   python pipeline/build_page_og.py --only og-methodology og-image.es
   python pipeline/build_page_og.py --out-dir /tmp/preview --only og-image
 """
@@ -35,500 +33,284 @@ from __future__ import annotations
 
 import argparse
 import sys
-import tempfile
 from pathlib import Path
 
-ROOT = Path(__file__).resolve().parents[1]
-FONTS = (ROOT / "fonts").resolve()
+HERE = Path(__file__).resolve().parent
+sys.path.insert(0, str(HERE))
 
-LOGO = (
-    '<svg viewBox="172 81 675 782" aria-hidden="true">'
-    '<path d="M 511,81 L 847,283 L 725,351 L 508,223 L 296,348 L 296,588 L 463,691 L 342,765 L 173,665 L 172,281 Z" fill="#0151FC"/>'
-    '<path d="M 846,412 L 844,668 L 518,863 L 393,795 L 724,589 L 721,540 L 567,538 L 568,412 Z" fill="#01B3FD"/>'
-    '<polygon points="569,413 695,413 695,539 569,539" fill="#02F172"/></svg>'
-)
+import og_kit as K  # noqa: E402
 
-# Shared base: identical to the three original og-*-source.html files so the
-# existing home/services/audit images come out byte-for-byte equivalent.
-BASE_CSS = """
-  @font-face { font-family:"IBM Plex Sans"; src:url("@@FONTS@@/IBMPlexSans-Latin.woff2") format("woff2"); font-weight:100 700; font-display:block; }
-  @font-face { font-family:"IBM Plex Serif"; src:url("@@FONTS@@/IBMPlexSerif-SemiBold-Latin.woff2") format("woff2"); font-weight:600; font-display:block; }
-  @font-face { font-family:"JetBrains Mono"; src:url("@@FONTS@@/JetBrainsMono-Latin.woff2") format("woff2"); font-weight:100 800; font-display:block; }
-  * { margin:0; padding:0; box-sizing:border-box; }
-  html, body { width:1200px; height:630px; overflow:hidden; background:#F6F8FA; color:#1F2328; font-family:"IBM Plex Sans",sans-serif; }
-  .page { position:absolute; inset:28px; background:#FFFFFF; border:1px solid #D0D7DE; border-radius:2px; padding:40px 48px 30px; display:flex; flex-direction:column; }
-  .top { display:flex; align-items:center; justify-content:space-between; padding-bottom:18px; border-bottom:1px solid #1F2328; }
-  .brand { display:flex; align-items:center; gap:12px; font-size:22px; font-weight:600; letter-spacing:-0.01em; }
-  .brand svg { width:30px; height:35px; display:block; }
-  .label { font:600 16px/1 "JetBrains Mono",monospace; letter-spacing:0.1em; text-transform:uppercase; color:#57606A; }
-  h1 { font-family:"IBM Plex Serif",serif; font-weight:600; letter-spacing:-0.015em; color:#1F2328; }
-  .mono { font-family:"JetBrains Mono",monospace; font-variant-numeric:tabular-nums; }
-  .foot { margin-top:auto; display:flex; justify-content:space-between; align-items:baseline; gap:20px; padding-top:16px; border-top:1px solid #D0D7DE; font:500 18px/1 "JetBrains Mono",monospace; color:#57606A; }
-  .foot b { font-weight:600; color:#1F2328; }
-  .tag { display:inline-block; width:52px; padding:5px 0 4px; text-align:center; font:700 12px/1 "JetBrains Mono",monospace; letter-spacing:0.1em; border-left:3px solid; }
-  .tag.gap { color:#9A4A08; background:#FBF0DF; border-color:#F59E0B; }
-  .tag.fix { color:#047857; background:#E3F3EC; border-color:#10B981; }
-"""
+ROOT = HERE.parent
+NL = "\n"
 
-# ---- layout-specific CSS ----------------------------------------------------
-CSS_HOME = """
-  .record { margin-top:24px; display:grid; grid-template-columns:60px 260px minmax(0,1fr); gap:12px 18px; align-items:center; font-size:24px; line-height:1.3; }
-  .record .ref { font:500 19px/1.3 "JetBrains Mono",monospace; color:#57606A; }
-  h1 { margin-top:30px; font-size:60px; line-height:1.08; }
-  .lede { margin-top:20px; max-width:960px; font-size:26px; line-height:1.45; color:#57606A; }
-"""
-CSS_SERVICES = """
-  h1 { margin-top:30px; font-size:52px; line-height:1.1; }
-  table { margin-top:26px; width:100%; border-collapse:collapse; }
-  td { padding:17px 0; border-bottom:1px solid #D0D7DE; font-size:26px; vertical-align:baseline; }
-  tr:first-child td { border-top:1px solid #1F2328; }
-  td.p { text-align:right; font:500 22px/1 "JetBrains Mono",monospace; font-variant-numeric:tabular-nums; white-space:nowrap; }
-  td.p small { font-size:18px; color:#57606A; }
-"""
-CSS_AUDIT = """
-  .cols { margin-top:32px; display:grid; grid-template-columns:minmax(0,1fr) 380px; gap:40px; }
-  h1 { font-size:54px; line-height:1.1; }
-  ul { margin-top:20px; list-style:none; border-top:1px solid #D0D7DE; }
-  li { padding:11px 0; border-bottom:1px solid #D0D7DE; font-size:24px; color:#1F2328; }
-  .price { border-top:1px solid #1F2328; padding-top:16px; }
-  .price .amt { font:600 54px/1 "JetBrains Mono",monospace; letter-spacing:-0.02em; font-variant-numeric:tabular-nums; }
-  .price .amt small { font-size:30px; font-weight:500; color:#57606A; margin-right:8px; }
-  .price p { margin-top:14px; font-size:22px; line-height:1.45; color:#57606A; }
-  .price p.ext { margin-top:16px; padding-top:14px; border-top:1px solid #D0D7DE; font:500 19px/1.4 "JetBrains Mono",monospace; color:#1F2328; }
-"""
-# Generic page: a serif headline, a grey lede, and an accent rule that carries
-# the page's category colour -- enough to make every static page read as its
-# own card without baking in any number that would go stale.
 CSS_HERO = """
-  .hero { flex:1 1 auto; display:flex; flex-direction:column; justify-content:center; align-items:flex-start; }
-  .accent { width:80px; height:6px; border-radius:3px; background:#0151FC; }
-  h1 { margin-top:28px; font-size:54px; line-height:1.14; max-width:1000px; }
-  h1.sm { font-size:48px; }
-  .lede { margin-top:24px; max-width:980px; font-size:27px; line-height:1.5; color:#57606A; }
+  .headline { margin-top:0; }
+  .lede { max-width:1020px; }
 """
 
-PAGE_TPL = """<!doctype html>
-<html lang="@@LANG@@">
-<head>
-<meta charset="utf-8">
-<meta name="robots" content="noindex">
-<title>Gap Hunter Labs social share preview</title>
-<style>@@CSS@@</style>
-</head>
-<body>
-<div class="page">
-  <div class="top">
-    <div class="brand">@@LOGO@@ Gap Hunter Labs</div>
-    <div class="label">@@LABEL@@</div>
-  </div>
-  @@BODY@@
-  <div class="foot">@@FOOT@@</div>
-</div>
-</body>
-</html>
+CSS_HOME = """
+  .cols { display:grid; grid-template-columns:minmax(0,1fr) 390px; gap:40px; align-items:center; }
+  .headline { font-size:56px; }
+  .lede { font-size:26px; margin-top:20px; max-width:640px; }
+  .evidence { padding:8px 26px; }
+  .evidence .row { padding:20px 0; display:grid; gap:10px; }
+  .evidence .row + .row { border-top:1px solid #2E2E2E; }
+  .evidence .tag { font:700 17px/1 "JetBrains Mono",monospace; letter-spacing:.14em; display:flex; align-items:center; gap:10px; }
+  .evidence .tag::before { content:""; width:12px; height:12px; border-radius:50%; background:var(--c); }
+  .evidence .gap { --c:#F59E0B; color:#F59E0B; } .evidence .fix { --c:#10B981; color:#10B981; }
+  .evidence .ref { font:600 24px/1.2 "JetBrains Mono",monospace; color:#FFFFFF; }
+  .evidence .txt { font-size:23px; line-height:1.35; color:#B4B4B4; }
+"""
+
+CSS_SERVICES = """
+  .headline { font-size:62px; }
+  .table { margin-top:26px; padding:2px 28px; }
+  .table .tr { display:flex; align-items:baseline; justify-content:space-between; gap:24px; padding:15px 0; font-size:27px; }
+  .table .tr + .tr { border-top:1px solid #2E2E2E; }
+  .table .nm { color:#EDEDED; font-weight:500; }
+  .table .pr { font:600 25px/1 "JetBrains Mono",monospace; color:#FFFFFF; white-space:nowrap; }
+  .table .pr small { font:500 19px/1 "JetBrains Mono",monospace; color:#9A9A9A; margin-left:8px; }
+"""
+
+CSS_AUDIT = """
+  .cols { display:grid; grid-template-columns:minmax(0,1fr) 400px; gap:48px; align-items:center; }
+  .headline { font-size:56px; }
+  .list { margin-top:22px; display:grid; gap:10px; }
+  .list div { display:flex; gap:14px; align-items:baseline; font-size:26px; line-height:1.3; color:#D4D4D4; }
+  .list div::before { content:""; flex:none; width:12px; height:12px; border-radius:3px; background:#FF6A1A; transform:translateY(1px); }
+  .price { padding:28px 30px; }
+  .price .amt { font:700 78px/1 "JetBrains Mono",monospace; letter-spacing:-0.03em; color:#FFFFFF; }
+  .price .amt small { font:500 34px/1 "JetBrains Mono",monospace; color:#9A9A9A; margin-right:10px; letter-spacing:0; }
+  .price p { margin-top:16px; font-size:23px; line-height:1.4; color:#B4B4B4; }
+  .price p.ext { margin-top:18px; padding-top:16px; border-top:1px solid #2E2E2E; font:500 20px/1.4 "JetBrains Mono",monospace; color:#EDEDED; }
 """
 
 
-def foot(spans):
-    return "".join("<span>%s</span>" % s for s in spans)
+def hero_body(h1, lede, badge_keys, lang):
+    return ('<h1 class="headline" style="font-size:%dpx">%s</h1>'
+            '<p class="lede">%s</p>%s'
+            % (K.headline_size(h1), K.text_html(h1), K.esc(lede), K.badges_html(badge_keys, lang)))
 
 
-def hero_body(headline, lede, accent="#0151FC", small=False):
-    cls = "sm" if small else ""
-    return ('<div class="hero"><div class="accent" style="background:%s"></div>'
-            '<h1 class="%s">%s</h1><p class="lede">%s</p></div>' % (accent, cls, headline, lede))
+def home_body(c, lang):
+    return ('<div class="cols"><div>'
+            '<h1 class="headline">%s</h1><p class="lede">%s</p>%s</div>'
+            '<div class="card evidence">'
+            '<div class="row"><span class="tag gap">%s</span><span class="ref">%s</span><span class="txt">%s</span></div>'
+            '<div class="row"><span class="tag fix">%s</span><span class="ref">%s</span><span class="txt">%s</span></div>'
+            '</div></div>'
+            % (K.text_html(c["h1"]), K.esc(c["lede"]), K.badges_html(c["badges"], lang),
+               c["gap_label"], K.esc(c["gap_ref"]), K.esc(c["gap_text"]),
+               c["fix_label"], K.esc(c["fix_ref"]), K.esc(c["fix_text"])))
 
 
-# ---- the three original rich layouts (text parametrised for EN/ES) ----------
-def home_body(h1, lede, gap_ref, gap_text, fix_ref, fix_text, gap_label="GAP", fix_label="FIX"):
-    return (
-        '<h1>%s</h1>\n'
-        '  <p class="lede">%s</p>\n'
-        '  <div class="record">\n'
-        '    <span class="tag gap">%s</span><span class="ref">%s</span><span>%s</span>\n'
-        '    <span class="tag fix">%s</span><span class="ref">%s</span><span>%s</span>\n'
-        '  </div>' % (h1, lede, gap_label, gap_ref, gap_text, fix_label, fix_ref, fix_text)
-    )
+def services_body(c, lang):
+    rows = "".join('<div class="tr"><span class="nm">%s</span><span class="pr">%s<small>· %s</small></span></div>'
+                   % (K.esc(n), K.esc(p), K.esc(w)) for n, p, w in c["rows"])
+    return ('<h1 class="headline">%s</h1><div class="card table">%s</div>%s'
+            % (K.text_html(c["h1"]), rows, K.badges_html(c["badges"], lang).replace('class="badges"', 'class="badges" style="margin-top:22px"')))
 
 
-def services_body(h1, rows):
-    trs = "".join(
-        '<tr><td>%s</td><td class="p">%s <small>&middot; %s</small></td></tr>' % (name, price, when)
-        for name, price, when in rows)
-    return '<h1>%s</h1>\n  <table>%s</table>' % (h1, trs)
+def audit_body(c, lang):
+    lis = "".join("<div>%s</div>" % K.esc(b) for b in c["bullets"])
+    return ('<div class="cols"><div><h1 class="headline">%s</h1><div class="list">%s</div>%s</div>'
+            '<div class="card price"><div class="amt"><small>%s</small>%s</div><p>%s</p><p class="ext">%s</p></div></div>'
+            % (K.text_html(c["h1"]), lis, K.badges_html(c["badges"], lang),
+               K.esc(c["cur"]), K.esc(c["amount"]), K.esc(c["price_note"]), K.esc(c["ext_note"])))
 
 
-def audit_body(h1, bullets, amount_small, amount, price_note, ext_note):
-    lis = "".join("<li>%s</li>" % b for b in bullets)
-    return (
-        '<div class="cols">\n'
-        '    <div><h1>%s</h1><ul>%s</ul></div>\n'
-        '    <div class="price"><div class="amt"><small>%s</small>%s</div>'
-        '<p>%s</p><p class="ext">%s</p></div>\n'
-        '  </div>' % (h1, lis, amount_small, amount, price_note, ext_note)
-    )
+LAYOUTS = {"hero": (CSS_HERO, None), "home": (CSS_HOME, home_body), "services": (CSS_SERVICES, services_body),
+           "audit": (CSS_AUDIT, audit_body)}
 
 
-# ---- page table -------------------------------------------------------------
-# Each entry: (out_stem, lang, css, body_html, label, [foot spans]).
-# out_stem -> <out_stem>.png.  ES mirrors carry the ".es" in the stem.
-SITE = "gaphunterlabs.com"
+def page(stem, layout, en, es):
+    return dict(stem=stem, layout=layout, en=en, es=es)
 
 
-def pages():
-    P = []
-
-    # ---------- HOME ----------
-    P.append(("og-image", "en", CSS_HOME, home_body(
-        "Find the gap.<br>Understand the cause.<br>Build the fix.",
-        "Performance bottlenecks, security vulnerabilities and structural failures in developer tools and open-source software, traced to their root cause and fixed.",
-        "lsp4ij#1540", "A UI-thread violation in Red Hat&rsquo;s LSP4IJ",
-        "commit f38259550e", "Fixed by the maintainer after the report"),
-        "Engineering practice of Joel D&iacute;az",
-        ["Performance &middot; Security &middot; Reliability", "<b>Fixed-scope engagements from USD 4,500</b>", SITE]))
-    P.append(("og-image.es", "es", CSS_HOME, home_body(
-        "Encuentra la brecha.<br>Entiende la causa.<br>Construye la soluci&oacute;n.",
-        "Cuellos de botella de rendimiento, vulnerabilidades de seguridad y fallas estructurales en herramientas de desarrollo y software de c&oacute;digo abierto, rastreados hasta su causa ra&iacute;z y corregidos.",
-        "lsp4ij#1540", "Una violaci&oacute;n del hilo de UI en LSP4IJ de Red Hat",
-        "commit f38259550e", "Corregido por el mantenedor tras el reporte"),
-        "Estudio de ingenier&iacute;a de Joel D&iacute;az",
-        ["Rendimiento &middot; Seguridad &middot; Fiabilidad", "<b>Proyectos de alcance fijo desde USD 4.500</b>", SITE]))
-
-    # ---------- SERVICES ----------
-    P.append(("og-services", "en", CSS_SERVICES, services_body(
-        "Fixed scope. Published prices.", [
-            ("Plugin performance audit", "USD 10,500", "10 business days"),
-            ("Plugin updates for new IDE versions", "from USD 4,500", "5 business days"),
-            ("Custom plugins and inspections", "from USD 7,500", "10 business days"),
-            ("Dependency and CI/CD security review", "from USD 4,800", "5 business days"),
-        ]),
-        "Engineering services",
-        ["Written deliverables &middot; 50% on start, 50% on delivery", SITE]))
-    P.append(("og-services.es", "es", CSS_SERVICES, services_body(
-        "Alcance fijo. Precios publicados.", [
-            ("Auditor&iacute;a de rendimiento de plugins", "USD 10.500", "10 d&iacute;as h&aacute;biles"),
-            ("Actualizaci&oacute;n de plugins para nuevas versiones del IDE", "desde USD 4.500", "5 d&iacute;as h&aacute;biles"),
-            ("Plugins e inspecciones a medida", "desde USD 7.500", "10 d&iacute;as h&aacute;biles"),
-            ("Revisi&oacute;n de seguridad de dependencias y CI/CD", "desde USD 4.800", "5 d&iacute;as h&aacute;biles"),
-        ]),
-        "Servicios de ingenier&iacute;a",
-        ["Entregables por escrito &middot; 50% al iniciar, 50% al entregar", SITE]))
-
-    # ---------- PLUGIN PERFORMANCE AUDIT ----------
-    P.append(("og-audit", "en", CSS_AUDIT, audit_body(
-        "Your plugin freezes.<br>I find the cause and patch it.",
-        ["Reproduction on each IDE version you support",
-         "UI-thread measurements, cold and warm",
-         "Patches with before-and-after measurements"],
-        "USD", "10,500",
-        "Fixed price. One plugin, up to 3 IDE versions, delivered in 10 business days.",
-        "Extended: USD 15,000 &middot; 15 business days"),
-        "Plugin performance audit",
-        ["The same method found freeze bugs in the IntelliJ Platform", SITE]))
-    P.append(("og-audit.es", "es", CSS_AUDIT, audit_body(
-        "Tu plugin se congela.<br>Encuentro la causa y lo parcheo.",
-        ["Reproducci&oacute;n en cada versi&oacute;n del IDE que soportas",
-         "Mediciones del hilo de UI, en fr&iacute;o y en caliente",
-         "Parches con mediciones antes y despu&eacute;s"],
-        "USD", "10.500",
-        "Precio fijo. Un plugin, hasta 3 versiones del IDE, entregado en 10 d&iacute;as h&aacute;biles.",
-        "Extendida: USD 15.000 &middot; 15 d&iacute;as h&aacute;biles"),
-        "Auditor&iacute;a de rendimiento de plugins",
-        ["El mismo m&eacute;todo hall&oacute; congelamientos en IntelliJ Platform", SITE]))
-
-    # ---------- DEPENDENCY & CI/CD SECURITY REVIEW ----------
-    P.append(("og-dependency-security", "en", CSS_HERO, hero_body(
-        "Dependency and CI/CD<br>security review",
-        "A read-only review of your dependencies and CI/CD workflows: known CVEs, dependency-confusion risks and workflow permissions &mdash; each finding with the version that fixes it.",
-        "#10B981"),
-        "Security review",
-        ["Fixed price from USD 4,800", SITE]))
-    P.append(("og-dependency-security.es", "es", CSS_HERO, hero_body(
-        "Revisi&oacute;n de seguridad de<br>dependencias y CI/CD",
-        "Una revisi&oacute;n de solo lectura de tus dependencias y flujos de CI/CD: CVE conocidos, riesgos de confusi&oacute;n de dependencias y permisos de workflows &mdash; cada hallazgo con la versi&oacute;n que lo corrige.",
-        "#10B981"),
-        "Revisi&oacute;n de seguridad",
-        ["Precio fijo desde USD 4.800", SITE]))
-
-    # ---------- CUSTOM PLUGINS AND INSPECTIONS ----------
-    P.append(("og-custom-plugins", "en", CSS_HERO, hero_body(
-        "Custom plugins and<br>inspections",
-        "Static-analysis inspections tailored to your codebase, delivered as a plugin your team installs and runs in CI &mdash; internal APIs, secrets and security patterns.",
-        "#B98CFF"),
-        "Custom plugins",
-        ["Fixed price from USD 7,500", SITE]))
-    P.append(("og-custom-plugins.es", "es", CSS_HERO, hero_body(
-        "Plugins e inspecciones<br>a medida",
-        "Inspecciones de an&aacute;lisis est&aacute;tico a medida de tu c&oacute;digo, entregadas como un plugin que tu equipo instala y corre en CI &mdash; API internas, secretos y patrones de seguridad.",
-        "#B98CFF"),
-        "Plugins a medida",
-        ["Precio fijo desde USD 7.500", SITE]))
-
-    # ---------- PLUGIN UPDATES FOR NEW IDE VERSIONS ----------
-    P.append(("og-plugin-updates", "en", CSS_HERO, hero_body(
-        "Plugin updates for<br>new IDE versions",
-        "Your JetBrains plugin built and verified against the IDE versions you support: removed and deprecated APIs, Kotlin K2, Gradle plugin 2.x and Plugin Verifier failures.",
-        "#0151FC"),
-        "IDE compatibility",
-        ["Fixed price from USD 4,500", SITE]))
-    P.append(("og-plugin-updates.es", "es", CSS_HERO, hero_body(
-        "Actualizaci&oacute;n de plugins<br>para nuevas versiones del IDE",
-        "Tu plugin de JetBrains compilado y verificado contra las versiones del IDE que soportas: API removidas y obsoletas, Kotlin K2, Gradle plugin 2.x y fallos del Plugin Verifier.",
-        "#0151FC"),
-        "Compatibilidad del IDE",
-        ["Precio fijo desde USD 4.500", SITE]))
-
-    # ---------- CATALOG ----------
-    P.append(("og-catalog", "en", CSS_HERO, hero_body(
-        "JetBrains &amp; VS Code plugins<br>for real developer gaps",
-        "Browse every Gap Hunter Labs plugin for JetBrains IDEs and VS Code: filter by category and price, and see the gap each one fixes.",
-        "#0151FC"),
-        "Plugin catalog",
-        ["Filter by category, platform and price", SITE]))
-    P.append(("og-catalog.es", "es", CSS_HERO, hero_body(
-        "Plugins para JetBrains y VS Code<br>que resuelven brechas reales",
-        "Explora todos los plugins de Gap Hunter Labs para IDE de JetBrains y VS Code: filtra por categor&iacute;a y precio, y mira la brecha que resuelve cada uno.",
-        "#0151FC"),
-        "Cat&aacute;logo de plugins",
-        ["Filtra por categor&iacute;a, plataforma y precio", SITE]))
-
-    # ---------- METHODOLOGY ----------
-    P.append(("og-methodology", "en", CSS_HERO, hero_body(
-        "How a gap becomes a fix",
-        "How performance, security and reliability problems are investigated and fixed, how plugin ideas are evaluated, and how catalog data is reported.",
-        "#B98CFF"),
-        "Methodology",
-        ["Investigate &middot; Reproduce &middot; Fix &middot; Report", SITE]))
-    P.append(("og-methodology.es", "es", CSS_HERO, hero_body(
-        "De la brecha a la soluci&oacute;n",
-        "C&oacute;mo se investigan y corrigen los problemas de rendimiento, seguridad y fiabilidad, c&oacute;mo se eval&uacute;an las ideas de plugins y c&oacute;mo se reportan los datos del cat&aacute;logo.",
-        "#B98CFF"),
-        "Metodolog&iacute;a",
-        ["Investigar &middot; Reproducir &middot; Corregir &middot; Reportar", SITE]))
-
-    # ---------- ENGINEERING & EVIDENCE (overview) ----------
-    P.append(("og-evidence", "en", CSS_HERO, hero_body(
-        "Everything that backs the work",
-        "Root-cause analysis and fixes in the IntelliJ Platform, security reports fixed by open-source maintainers, and plugin case studies &mdash; each with a public source.",
-        "#34D5C7"),
-        "Engineering &amp; Evidence",
-        ["Tickets &middot; Security reports &middot; Audits &middot; Case studies", SITE]))
-    P.append(("og-evidence.es", "es", CSS_HERO, hero_body(
-        "Todo lo que respalda el trabajo",
-        "An&aacute;lisis de causa ra&iacute;z y correcciones en IntelliJ Platform, reportes de seguridad corregidos por mantenedores de c&oacute;digo abierto y casos de estudio de plugins &mdash; cada uno con una fuente p&uacute;blica.",
-        "#34D5C7"),
-        "Ingenier&iacute;a y evidencia",
-        ["Tickets &middot; Reportes &middot; Auditor&iacute;as &middot; Casos", SITE]))
-
-    # ---------- CASE STUDIES ----------
-    P.append(("og-evidence-case-studies", "en", CSS_HERO, hero_body(
-        "Plugins with the strongest evidence",
-        "A freeze pattern JetBrains named itself, a compliance gap cloud tools cannot clear, and injection sinks behind real CVEs.",
-        "#FFB020"),
-        "Case studies",
-        ["Engineering &amp; Evidence", SITE]))
-    P.append(("og-evidence-case-studies.es", "es", CSS_HERO, hero_body(
-        "Plugins con la evidencia m&aacute;s s&oacute;lida",
-        "Un congelamiento que nombr&oacute; JetBrains, una brecha de cumplimiento que la nube no cubre y sinks de inyecci&oacute;n con CVE reales.",
-        "#FFB020"),
-        "Casos de estudio",
-        ["Ingenier&iacute;a y evidencia", SITE]))
-
-    # ---------- JETBRAINS PLATFORM TICKETS ----------
-    P.append(("og-evidence-jetbrains-tickets", "en", CSS_HERO, hero_body(
-        "Root-cause reports in the<br>IntelliJ Platform",
-        "Bugs filed in JetBrains&rsquo; YouTrack after a catalog check found them in IntelliJ&rsquo;s source, plus root-cause analysis on existing Platform tickets.",
-        "#0151FC"),
-        "JetBrains Platform tickets",
-        ["Engineering &amp; Evidence", SITE]))
-    P.append(("og-evidence-jetbrains-tickets.es", "es", CSS_HERO, hero_body(
-        "Reportes de causa ra&iacute;z en<br>IntelliJ Platform",
-        "Errores reportados en el YouTrack de JetBrains tras hallarlos un control del cat&aacute;logo en el c&oacute;digo de IntelliJ, m&aacute;s an&aacute;lisis de causa ra&iacute;z en tickets existentes.",
-        "#0151FC"),
-        "Tickets de JetBrains Platform",
-        ["Ingenier&iacute;a y evidencia", SITE]))
-
-    # ---------- OPEN-SOURCE SECURITY REPORTS ----------
-    P.append(("og-evidence-security-reports", "en", CSS_HERO, hero_body(
-        "Vulnerable dependencies,<br>fixed by maintainers",
-        "Vulnerable dependencies reported to open-source maintainers, each advisory checked against the exact pinned version in OSV, listed once they fixed them.",
-        "#10B981"),
-        "Open-source security reports",
-        ["Engineering &amp; Evidence", SITE]))
-    P.append(("og-evidence-security-reports.es", "es", CSS_HERO, hero_body(
-        "Dependencias vulnerables,<br>corregidas por sus mantenedores",
-        "Dependencias vulnerables reportadas a mantenedores de c&oacute;digo abierto, cada aviso verificado contra la versi&oacute;n exacta fijada en OSV, publicadas cuando las corrigieron.",
-        "#10B981"),
-        "Reportes de seguridad",
-        ["Ingenier&iacute;a y evidencia", SITE]))
-
-    # ---------- THIRD-PARTY PLUGIN AUDITS ----------
-    P.append(("og-evidence-third-party-audits", "en", CSS_HERO, hero_body(
-        "Findings in other vendors&rsquo;<br>plugins, fixed by them",
-        "Performance findings in third-party IntelliJ Platform plugins, reported to their maintainers with the root cause and a suggested fix, listed once the fix is public.",
-        "#B98CFF"),
-        "Third-party plugin audits",
-        ["Engineering &amp; Evidence", SITE]))
-    P.append(("og-evidence-third-party-audits.es", "es", CSS_HERO, hero_body(
-        "Hallazgos en plugins de otros<br>proveedores, corregidos por ellos",
-        "Hallazgos de rendimiento en plugins de terceros para IntelliJ Platform, reportados a sus mantenedores con la causa ra&iacute;z y un arreglo sugerido, publicados cuando la correcci&oacute;n es p&uacute;blica.",
-        "#B98CFF"),
-        "Auditor&iacute;as de plugins de terceros",
-        ["Ingenier&iacute;a y evidencia", SITE]))
-
-    # ---------- CONTACT ----------
-    P.append(("og-contact", "en", CSS_HERO, hero_body(
-        "Get in touch",
-        "Contact Gap Hunter Labs about audits and engineering work, plugin support or partnerships &mdash; by email, GitHub, JetBrains Marketplace or LinkedIn.",
-        "#34D5C7"),
-        "Contact",
-        ["Email &middot; GitHub &middot; JetBrains &middot; LinkedIn", SITE]))
-    P.append(("og-contact.es", "es", CSS_HERO, hero_body(
-        "Ponte en contacto",
-        "Contacta a Gap Hunter Labs por auditor&iacute;as y trabajo de ingenier&iacute;a, soporte de plugins o alianzas &mdash; por correo, GitHub, JetBrains Marketplace o LinkedIn.",
-        "#34D5C7"),
-        "Contacto",
-        ["Correo &middot; GitHub &middot; JetBrains &middot; LinkedIn", SITE]))
-
-    # ---------- SECURITY ----------
-    P.append(("og-security", "en", CSS_HERO, hero_body(
-        "What the plugins do with your<br>code &mdash; and what they don&rsquo;t",
-        "What Gap Hunter Labs plugins do and don&rsquo;t do with your code, how vulnerabilities are reported, and why there&rsquo;s no formal SOC 2 / ISO certification yet.",
-        "#10B981"),
-        "Security",
-        ["Responsible disclosure &middot; No telemetry", SITE]))
-    P.append(("og-security.es", "es", CSS_HERO, hero_body(
-        "Qu&eacute; hacen los plugins con tu<br>c&oacute;digo &mdash; y qu&eacute; no",
-        "Qu&eacute; hacen y qu&eacute; no hacen los plugins de Gap Hunter Labs con tu c&oacute;digo, c&oacute;mo se reportan vulnerabilidades y por qu&eacute; todav&iacute;a no hay certificaci&oacute;n formal SOC 2 / ISO.",
-        "#10B981"),
-        "Seguridad",
-        ["Divulgaci&oacute;n responsable &middot; Sin telemetr&iacute;a", SITE]))
-
-    # ---------- PRIVACY ----------
-    P.append(("og-privacy", "en", CSS_HERO, hero_body(
-        "A short privacy policy",
-        "What this site collects, what it doesn&rsquo;t, and why &mdash; a short privacy policy, because the site&rsquo;s actual data footprint is short.",
-        "#8DACE0"),
-        "Privacy",
-        ["No accounts &middot; No ad tracking", SITE]))
-    P.append(("og-privacy.es", "es", CSS_HERO, hero_body(
-        "Una pol&iacute;tica de privacidad corta",
-        "Qu&eacute; recoge este sitio, qu&eacute; no y por qu&eacute; &mdash; una pol&iacute;tica de privacidad corta, porque la huella de datos real del sitio es corta.",
-        "#8DACE0"),
-        "Privacidad",
-        ["Sin cuentas &middot; Sin rastreo publicitario", SITE]))
-
-    # ---------- TERMS ----------
-    P.append(("og-terms", "en", CSS_HERO, hero_body(
-        "Terms of Service",
-        "What this catalog is, what it isn&rsquo;t, and who&rsquo;s responsible for what.",
-        "#57606A", small=True),
-        "Terms",
-        ["Gap Hunter Labs", SITE]))
-    P.append(("og-terms.es", "es", CSS_HERO, hero_body(
-        "T&eacute;rminos de servicio",
-        "Qu&eacute; es este cat&aacute;logo, qu&eacute; no es y qui&eacute;n responde por qu&eacute;.",
-        "#57606A", small=True),
-        "T&eacute;rminos",
-        ["Gap Hunter Labs", SITE]))
-
-    # ---------- EULA ----------
-    P.append(("og-eula", "en", CSS_HERO, hero_body(
-        "End User License Agreement",
-        "License terms for the Gap Hunter Labs paid plugins on JetBrains Marketplace: the license, the Apache-2.0 source code, warranty, liability and support.",
-        "#FFB020", small=True),
-        "License (EULA)",
-        ["Paid plugins &middot; Apache-2.0 source", SITE]))
-    P.append(("og-eula.es", "es", CSS_HERO, hero_body(
-        "Acuerdo de Licencia de Usuario Final",
-        "T&eacute;rminos de licencia de los plugins de pago de Gap Hunter Labs en JetBrains Marketplace: la licencia, el c&oacute;digo fuente Apache-2.0, la garant&iacute;a, la responsabilidad y el soporte.",
-        "#FFB020", small=True),
-        "Licencia (EULA)",
-        ["Plugins de pago &middot; C&oacute;digo Apache-2.0", SITE]))
-
-    # ---------- GHL-JAIL ----------
-    P.append(("og-ghl-jail", "en", CSS_HERO, hero_body(
-        "A one-line Windows sandbox<br>for untrusted CLIs",
-        "Run a command-line tool so it can only touch one project folder &mdash; not your SSH keys, cloud tokens or .env. No admin, no driver: just Python and Windows.",
-        "#02F172"),
-        "Open-source tool",
-        ["No admin &middot; No driver &middot; Just Python", SITE]))
-    P.append(("og-ghl-jail.es", "es", CSS_HERO, hero_body(
-        "Un sandbox de Windows de una<br>l&iacute;nea para CLIs no confiables",
-        "Ejecuta una herramienta de l&iacute;nea de comandos para que solo toque una carpeta de proyecto &mdash; no tus claves SSH, tokens de la nube ni tu .env. Sin administrador, sin controlador: solo Python y Windows.",
-        "#02F172"),
-        "Herramienta de c&oacute;digo abierto",
-        ["Sin admin &middot; Sin controlador &middot; Solo Python", SITE]))
-
-    return P
+# Each entry has an English and a Spanish block. `label` is the mono eyebrow (what the page is), `h1` the headline
+# (\n = line break), `lede` one short line of purpose, `badges` keys from og_kit.REG, `note` the footer line.
+PAGES = [
+    page("og-image", "home",
+         dict(label="Engineering practice of Joel Díaz", h1="Find the gap.\nUnderstand the cause.\nBuild the fix.",
+              lede="Performance, security and reliability failures in developer tools and open-source software, traced to their root cause and fixed.",
+              badges=["static", "perf", "security", "reliability"], gap_label="GAP", fix_label="FIX",
+              gap_ref="lsp4ij#1540", gap_text="A UI-thread violation in Red Hat's LSP4IJ",
+              fix_ref="commit f38259550e", fix_text="Fixed by the maintainer after the report",
+              note="Fixed-scope engagements from USD 4,500"),
+         dict(label="Estudio de ingeniería de Joel Díaz", h1="Encuentra la brecha.\nEntiende la causa.\nConstruye la solución.",
+              lede="Fallas de rendimiento, seguridad y fiabilidad en herramientas de desarrollo y código abierto, rastreadas hasta su causa raíz y corregidas.",
+              badges=["static", "perf", "security", "reliability"], gap_label="BRECHA", fix_label="SOLUCIÓN",
+              gap_ref="lsp4ij#1540", gap_text="Una violación del hilo de UI en LSP4IJ de Red Hat",
+              fix_ref="commit f38259550e", fix_text="Corregido por el mantenedor tras el reporte",
+              note="Proyectos de alcance fijo desde USD 4.500")),
+    page("og-services", "services",
+         dict(label="Engineering services", h1="Fixed scope. Published prices.", badges=["jetbrains", "kotlin", "gradle", "actions", "gitlab"],
+              rows=[("Plugin performance audit", "USD 10,500", "10 business days"), ("Plugin updates for new IDE versions", "from USD 4,500", "5 business days"),
+                    ("Custom plugins and inspections", "from USD 7,500", "10 business days"), ("Dependency and CI/CD security review", "from USD 4,800", "5 business days")],
+              note="Written deliverables · 50% on start, 50% on delivery"),
+         dict(label="Servicios de ingeniería", h1="Alcance fijo. Precios publicados.", badges=["jetbrains", "kotlin", "gradle", "actions", "gitlab"],
+              rows=[("Auditoría de rendimiento de plugins", "USD 10.500", "10 días hábiles"), ("Actualización de plugins para nuevos IDE", "desde USD 4.500", "5 días hábiles"),
+                    ("Plugins e inspecciones a medida", "desde USD 7.500", "10 días hábiles"), ("Seguridad de dependencias y CI/CD", "desde USD 4.800", "5 días hábiles")],
+              note="Entregables por escrito · 50% al iniciar, 50% al entregar")),
+    page("og-audit", "audit",
+         dict(label="Plugin performance audit", h1="Your plugin freezes.\nI find the cause and patch it.", badges=["jetbrains", "perf"],
+              bullets=["Reproduction on each IDE version you support", "UI-thread measurements, cold and warm", "Patches with before-and-after measurements"],
+              cur="USD", amount="10,500", price_note="Fixed price. One plugin, up to 3 IDE versions, 10 business days.",
+              ext_note="Extended: USD 15,000 · 15 business days", note="The same method found freeze bugs in the IntelliJ Platform"),
+         dict(label="Auditoría de rendimiento de plugins", h1="Tu plugin se congela.\nEncuentro la causa y lo parcheo.", badges=["jetbrains", "perf"],
+              bullets=["Reproducción en cada versión del IDE que soportas", "Mediciones del hilo de UI, en frío y en caliente", "Parches con mediciones antes y después"],
+              cur="USD", amount="10.500", price_note="Precio fijo. Un plugin, hasta 3 versiones del IDE, 10 días hábiles.",
+              ext_note="Extendida: USD 15.000 · 15 días hábiles", note="El mismo método halló congelamientos en IntelliJ Platform")),
+    page("og-dependency-security", "hero",
+         dict(label="Security review", h1="Dependency and CI/CD\nsecurity review",
+              lede="A read-only review of your dependencies and CI/CD workflows: known CVEs, dependency confusion and workflow permissions.",
+              badges=["security"], note="Fixed price from USD 4,800"),
+         dict(label="Revisión de seguridad", h1="Revisión de seguridad de\ndependencias y CI/CD",
+              lede="Una revisión de solo lectura de tus dependencias y flujos de CI/CD: CVE conocidos, confusión de dependencias y permisos de workflows.",
+              badges=["security"], note="Precio fijo desde USD 4.800")),
+    page("og-custom-plugins", "hero",
+         dict(label="Custom plugins", h1="Custom plugins and\ninspections",
+              lede="Static-analysis inspections tailored to your codebase, delivered as a plugin your team installs and runs in CI.",
+              badges=["static", "actions", "gitlab"], note="Fixed price from USD 7,500"),
+         dict(label="Plugins a medida", h1="Plugins e inspecciones\na medida",
+              lede="Inspecciones de análisis estático a medida de tu código, entregadas como un plugin que tu equipo instala y corre en CI.",
+              badges=["static", "actions", "gitlab"], note="Precio fijo desde USD 7.500")),
+    page("og-plugin-updates", "hero",
+         dict(label="IDE compatibility", h1="Plugin updates for\nnew IDE versions",
+              lede="Your JetBrains plugin built and verified against the IDE versions you support: removed APIs, Kotlin K2 and Plugin Verifier failures.",
+              badges=["jetbrains", "kotlin", "gradle"], note="Fixed price from USD 4,500"),
+         dict(label="Compatibilidad del IDE", h1="Actualización de plugins\npara nuevos IDE",
+              lede="Tu plugin de JetBrains compilado y verificado contra las versiones del IDE que soportas: API removidas, Kotlin K2 y fallos del Plugin Verifier.",
+              badges=["jetbrains", "kotlin", "gradle"], note="Precio fijo desde USD 4.500")),
+    page("og-catalog", "hero",
+         dict(label="Plugin catalog", h1="JetBrains & VS Code plugins\nfor real developer gaps",
+              lede="Every Gap Hunter Labs plugin for JetBrains IDEs and VS Code: filter by category and price and see the gap each one fixes.",
+              badges=["jetbrains", "vscode", "free", "freemium", "paid"], note="Filter by category, platform and price"),
+         dict(label="Catálogo de plugins", h1="Plugins para JetBrains y VS Code\nque resuelven brechas reales",
+              lede="Todos los plugins de Gap Hunter Labs para IDE de JetBrains y VS Code: filtra por categoría y precio y mira la brecha que resuelve cada uno.",
+              badges=["jetbrains", "vscode", "free", "freemium", "paid"], note="Filtra por categoría, plataforma y precio")),
+    page("og-methodology", "hero",
+         dict(label="Methodology", h1="How a gap becomes a fix",
+              lede="How performance, security and reliability problems are investigated and fixed, and how the catalog data is reported.",
+              badges=["perf", "security", "reliability"], note="Investigate · Reproduce · Fix · Report"),
+         dict(label="Metodología", h1="De la brecha a la solución",
+              lede="Cómo se investigan y corrigen los problemas de rendimiento, seguridad y fiabilidad, y cómo se reportan los datos del catálogo.",
+              badges=["perf", "security", "reliability"], note="Investigar · Reproducir · Corregir · Reportar")),
+    page("og-evidence", "hero",
+         dict(label="Engineering & Evidence", h1="Everything that backs the work",
+              lede="Root-cause analysis and fixes in the IntelliJ Platform, security reports fixed by maintainers and plugin case studies, each with a public source.",
+              badges=["platform", "github", "security"], note="Tickets · Security reports · Audits · Case studies"),
+         dict(label="Ingeniería y evidencia", h1="Todo lo que respalda el trabajo",
+              lede="Análisis de causa raíz y correcciones en IntelliJ Platform, reportes de seguridad corregidos por mantenedores y casos de estudio, cada uno con fuente pública.",
+              badges=["platform", "github", "security"], note="Tickets · Reportes · Auditorías · Casos")),
+    page("og-evidence-case-studies", "hero",
+         dict(label="Case studies", h1="Plugins with the strongest evidence",
+              lede="A freeze pattern JetBrains named itself, a compliance gap cloud tools cannot clear, and injection sinks behind real CVEs.",
+              badges=["static", "perf", "security"], note="Engineering & Evidence"),
+         dict(label="Casos de estudio", h1="Plugins con la evidencia\nmás sólida",
+              lede="Un congelamiento que nombró JetBrains, una brecha de cumplimiento que la nube no cubre y sinks de inyección con CVE reales.",
+              badges=["static", "perf", "security"], note="Ingeniería y evidencia")),
+    page("og-evidence-jetbrains-tickets", "hero",
+         dict(label="JetBrains Platform tickets", h1="Root-cause reports in the\nIntelliJ Platform",
+              lede="Bugs filed in JetBrains' YouTrack after a catalog check found them in IntelliJ's source, plus root-cause analysis on existing tickets.",
+              badges=["idea", "platform"], note="Engineering & Evidence"),
+         dict(label="Tickets de JetBrains Platform", h1="Reportes de causa raíz en\nIntelliJ Platform",
+              lede="Errores reportados en el YouTrack de JetBrains tras hallarlos un control del catálogo en el código de IntelliJ, y análisis de causa raíz en tickets existentes.",
+              badges=["idea", "platform"], note="Ingeniería y evidencia")),
+    page("og-evidence-security-reports", "hero",
+         dict(label="Open-source security reports", h1="Vulnerable dependencies,\nfixed by maintainers",
+              lede="Advisories reported to open-source maintainers, each checked against the exact pinned version in OSV and listed once fixed.",
+              badges=["github", "security"], note="Engineering & Evidence"),
+         dict(label="Reportes de seguridad", h1="Dependencias vulnerables,\ncorregidas por sus mantenedores",
+              lede="Avisos reportados a mantenedores de código abierto, cada uno verificado contra la versión exacta fijada en OSV y publicado cuando se corrigió.",
+              badges=["github", "security"], note="Ingeniería y evidencia")),
+    page("og-evidence-third-party-audits", "hero",
+         dict(label="Third-party plugin audits", h1="Findings in other vendors'\nplugins, fixed by them",
+              lede="Performance findings in third-party IntelliJ plugins, reported with the root cause and a suggested fix, listed once public.",
+              badges=["platform", "perf", "audit"], note="Engineering & Evidence"),
+         dict(label="Auditorías de plugins de terceros", h1="Hallazgos en plugins de otros\nproveedores, corregidos por ellos",
+              lede="Hallazgos de rendimiento en plugins de terceros para IntelliJ, reportados con la causa raíz y un arreglo sugerido, publicados cuando son públicos.",
+              badges=["platform", "perf", "audit"], note="Ingeniería y evidencia")),
+    page("og-contact", "hero",
+         dict(label="Contact", h1="Get in touch",
+              lede="Audits and engineering work, plugin support or partnerships, by email, GitHub, JetBrains Marketplace or LinkedIn.",
+              badges=["email", "github", "marketplace", "linkedin"], note="Email · GitHub · JetBrains · LinkedIn"),
+         dict(label="Contacto", h1="Ponte en contacto",
+              lede="Auditorías y trabajo de ingeniería, soporte de plugins o alianzas, por correo, GitHub, JetBrains Marketplace o LinkedIn.",
+              badges=["email", "github", "marketplace", "linkedin"], note="Correo · GitHub · JetBrains · LinkedIn")),
+    page("og-security", "hero",
+         dict(label="Security", h1="What the plugins do with your\ncode, and what they don't",
+              lede="What the plugins do and don't do with your code, how vulnerabilities are reported, and where certification stands.",
+              badges=["security", "github"], note="Responsible disclosure · No telemetry"),
+         dict(label="Seguridad", h1="Qué hacen los plugins con tu\ncódigo, y qué no",
+              lede="Qué hacen y qué no hacen los plugins con tu código, cómo se reportan las vulnerabilidades y en qué punto está la certificación.",
+              badges=["security", "github"], note="Divulgación responsable · Sin telemetría")),
+    page("og-privacy", "hero",
+         dict(label="Privacy", h1="A short privacy policy",
+              lede="What this site collects, what it doesn't, and why: a short policy, because the data footprint is short.",
+              badges=[("No accounts", "shield", "dark"), ("No ad tracking", "shield", "dark")], note="Gap Hunter Labs"),
+         dict(label="Privacidad", h1="Una política de privacidad corta",
+              lede="Qué recoge este sitio, qué no y por qué: una política corta, porque la huella de datos real del sitio es corta.",
+              badges=[("No accounts", "shield", "dark"), ("No ad tracking", "shield", "dark")], note="Gap Hunter Labs")),
+    page("og-terms", "hero",
+         dict(label="Terms", h1="Terms of Service",
+              lede="What this catalog is, what it isn't, and who is responsible for what.",
+              badges=["jetbrains", "vscode"], note="Gap Hunter Labs"),
+         dict(label="Términos", h1="Términos de servicio",
+              lede="Qué es este catálogo, qué no es y quién responde por qué.",
+              badges=["jetbrains", "vscode"], note="Gap Hunter Labs")),
+    page("og-eula", "hero",
+         dict(label="License (EULA)", h1="End User License Agreement",
+              lede="License terms for the paid Gap Hunter Labs plugins on JetBrains Marketplace: license, source code, warranty, liability and support.",
+              badges=["marketplace", ("Apache-2.0", "code", "dark")], note="Paid plugins · Apache-2.0 source"),
+         dict(label="Licencia (EULA)", h1="Acuerdo de Licencia\nde Usuario Final",
+              lede="Términos de licencia de los plugins de pago de Gap Hunter Labs en JetBrains Marketplace: licencia, código fuente, garantía, responsabilidad y soporte.",
+              badges=["marketplace", ("Apache-2.0", "code", "dark")], note="Plugins de pago · Código Apache-2.0")),
+    page("og-ghl-jail", "hero",
+         dict(label="Open-source tool", h1="A one-line Windows sandbox\nfor untrusted CLIs",
+              lede="Run a command-line tool so it can only touch one project folder, not your SSH keys, cloud tokens or .env. No admin, no driver.",
+              badges=["windows", "python", "security"], note="No admin · No driver · Just Python"),
+         dict(label="Herramienta de código abierto", h1="Un sandbox de Windows de una\nlínea para CLIs no confiables",
+              lede="Ejecuta una herramienta de línea de comandos para que solo toque una carpeta de proyecto, no tus claves SSH, tokens de la nube ni tu .env. Sin admin, sin controlador.",
+              badges=["windows", "python", "security"], note="Sin admin · Sin controlador · Solo Python")),
+]
 
 
-def build_html(lang, css, body, label, foot_spans):
-    html = PAGE_TPL
-    subs = {
-        "@@LANG@@": lang,
-        "@@CSS@@": (BASE_CSS + css).replace("@@FONTS@@", FONTS.as_uri()),
-        "@@LOGO@@": LOGO,
-        "@@LABEL@@": label,
-        "@@BODY@@": body,
-        "@@FOOT@@": foot(foot_spans),
-    }
-    for k, v in subs.items():
-        html = html.replace(k, v)
-    return html
-
-
-def render_batch(jobs, out_dir):
-    try:
-        from playwright.sync_api import sync_playwright
-    except ImportError:
-        sys.exit("[build_page_og] ERROR: falta playwright -- pip install playwright && python -m playwright install chromium")
-    out_dir.mkdir(parents=True, exist_ok=True)
-    written = []
-    with sync_playwright() as pw:
-        browser = pw.chromium.launch()
-        try:
-            page = browser.new_page(viewport={"width": 1200, "height": 630}, device_scale_factor=1)
-            for stem, html in jobs:
-                out = out_dir / (stem + ".png")
-                with tempfile.NamedTemporaryFile("w", suffix=".html", delete=False, encoding="utf-8") as f:
-                    f.write(html)
-                    tmp = Path(f.name)
-                try:
-                    page.goto(tmp.resolve().as_uri(), wait_until="load")
-                    page.evaluate("() => document.fonts.ready")
-                    page.wait_for_timeout(300)
-                    page.screenshot(path=str(out), type="png")
-                finally:
-                    tmp.unlink(missing_ok=True)
-                if not out.exists() or out.stat().st_size < 5000:
-                    sys.exit("[build_page_og] ERROR: PNG ausente o sospechosamente chico: %s" % out)
-                written.append(out)
-        finally:
-            browser.close()
-    return written
+def jobs():
+    out = []
+    for p in PAGES:
+        for lang in ("en", "es"):
+            c = p[lang]
+            css, builder = LAYOUTS[p["layout"]]
+            body = builder(c, lang) if builder else hero_body(c["h1"], c["lede"], c["badges"], lang)
+            stem = p["stem"] + (".es" if lang == "es" else "")
+            out.append((stem, K.page_html(lang, body, css=css, label=c["label"], note=c["note"])))
+    return out
 
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--out-dir", default=str(ROOT), help="donde escribir los PNG (default: raiz del repo)")
-    ap.add_argument("--only", nargs="*", help="solo estos stems (p.ej. og-methodology og-image.es)")
+    ap.add_argument("--out-dir", default=str(ROOT), help="where to write the PNGs (default: the repo root)")
+    ap.add_argument("--only", nargs="*", help="only these stems (e.g. og-methodology og-image.es)")
+    ap.add_argument("--html", action="store_true", help="also write the source HTML next to the PNG (for debugging)")
     args = ap.parse_args()
 
-    rows = pages()
-    stems = {r[0] for r in rows}
+    all_jobs = jobs()
+    stems = {s for s, _ in all_jobs}
     if args.only:
-        wanted = set(args.only)
-        unknown = wanted - stems
+        unknown = set(args.only) - stems
         if unknown:
-            sys.exit("[build_page_og] ERROR: stems desconocidos: %s" % ", ".join(sorted(unknown)))
-        rows = [r for r in rows if r[0] in wanted]
-
-    jobs = [(stem, build_html(lang, css, body, label, fs)) for stem, lang, css, body, label, fs in rows]
-    written = render_batch(jobs, Path(args.out_dir))
+            sys.exit("[build_page_og] ERROR: unknown stems: %s" % ", ".join(sorted(unknown)))
+        all_jobs = [j for j in all_jobs if j[0] in set(args.only)]
+    out_dir = Path(args.out_dir)
+    if args.html:
+        out_dir.mkdir(parents=True, exist_ok=True)
+        for stem, html in all_jobs:
+            (out_dir / (stem + ".html")).write_text(html, encoding="utf-8")
+    written = K.render(all_jobs, lambda stem: out_dir / (stem + ".png"), label="build_page_og")
     for out in written:
         print("  %-42s %6.0f KB" % (out.name, out.stat().st_size / 1024))
-    print("\nOK -- %d imagen(es) OG." % len(written))
+    print("\nOK -- %d image(s)." % len(written))
     return 0
 
 
