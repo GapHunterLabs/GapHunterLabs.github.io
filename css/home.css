@@ -80,7 +80,7 @@ a:focus-visible, .btn:focus-visible { outline: none; box-shadow: var(--focus-rin
   display: grid;
   grid-template-columns: minmax(0, 1fr) 400px;
   gap: 32px 56px;
-  padding: 88px 0 64px;
+  padding: 64px 0 52px;
 }
 /* Grid + glow behind the headline: pure CSS, fades out toward the edges. */
 .nb-hero::before {
@@ -100,13 +100,13 @@ a:focus-visible, .btn:focus-visible { outline: none; box-shadow: var(--focus-rin
 .nb-kicker { font: 600 12px/1.4 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--signal); }
 .nb-sync { display: inline-flex; align-items: center; gap: 8px; margin-top: 10px; font: 500 12px/1.4 var(--mono); color: var(--text-dim); }
 .nb-hero-title {
-  margin-top: 18px;
-  max-width: 22ch;
-  font: 800 clamp(32px, 4.6vw, 56px)/1.04 var(--sans);
-  letter-spacing: -0.035em;
+  margin-top: 14px;
+  max-width: 24ch;
+  font: 700 clamp(28px, 3.7vw, 44px)/1.1 var(--sans);
+  letter-spacing: -0.03em;
 }
-.nb-lede { margin-top: 22px; max-width: 64ch; font-size: 18px; line-height: 1.65; color: var(--text-dim); }
-.nb-hero .nb-actions { margin-top: 32px; }
+.nb-lede { margin-top: 16px; max-width: 60ch; font-size: 16px; line-height: 1.65; color: var(--text-dim); }
+.nb-hero .nb-actions { margin-top: 24px; }
 
 .nb-hero-side { align-self: start; display: grid; gap: 32px; min-width: 0; }
 
@@ -228,8 +228,8 @@ a:focus-visible, .btn:focus-visible { outline: none; box-shadow: var(--focus-rin
 .nb-record ul { list-style: none; padding: 0; display: grid; gap: 12px; margin: 14px 0 24px; }
 /* Block, not grid: the text after the link is a bare text node and would
    become its own grid cell. The status label sits in the left gutter. */
-.nb-record li { position: relative; padding-left: 92px; max-width: 100ch; }
-.nb-record li > .inv-status { position: absolute; left: 0; top: 0.15em; }
+.nb-record li { position: relative; padding-left: 136px; max-width: 100ch; }
+.nb-record li > .inv-status { position: absolute; left: 0; top: 0.15em; width: 116px; box-sizing: border-box; }
 .nb-record li > a { text-decoration: underline; text-underline-offset: 0.2em; }
 
 /* ---- Method --------------------------------------------------------------- */
@@ -329,7 +329,7 @@ a:focus-visible, .btn:focus-visible { outline: none; box-shadow: var(--focus-rin
   .nb-section { padding: 48px 0; }
   .nb-hero { padding: 56px 0 40px; }
   .inv, .tool, .nb-steps li { padding: 20px; }
-  .nb-lede { font-size: 17px; }
+  .nb-lede { font-size: 15.5px; }
   .tool-facts { grid-template-columns: minmax(0, 1fr); }
   .inv-facts > div, .tool-facts > div { grid-template-columns: 1fr; gap: 2px; }
   .nb-record li { padding-left: 0; }

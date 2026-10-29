@@ -53,7 +53,7 @@ SKIP_CLASSES = {"card-pitch", "card-name", "card-niche", "hs-name", "hs-niche", 
                 # fichas de plugin (2026-10-05): datos del plugin y de los relacionados
                 "ph-niche", "ph-lead", "pb-text", "rel-name", "rel-niche", "rel-pitch", "fact-data"}
 SKIP_IDS = {"tbody"}
-SKIP_IN = {"paid-card": {"h3", "p"}, "fact": {"code"}}   # ancestro con clase -> etiquetas de datos adentro
+SKIP_IN = {"paid-card": {"h3", "p"}, "fact": {"code"}, "fact-data": {"span"}}   # ancestro con clase -> etiquetas de datos adentro
 ATTRS = ("aria-label", "title", "placeholder", "alt")
 META = ('name="description"', 'property="og:title"', 'property="og:description"', 'name="twitter:title"',
         'name="twitter:description"', 'property="og:image:alt"', 'name="twitter:image:alt"')

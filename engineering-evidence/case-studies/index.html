@@ -199,8 +199,8 @@
     .case-meta-row { flex: 1 1 140px; }
   }
 </style>
-<link rel="stylesheet" href="/css/shell.css?v=31bcabdf">
-<link rel="stylesheet" href="/css/tw.css?v=a8c71639">
+<link rel="stylesheet" href="/css/shell.css?v=5379c65a">
+<link rel="stylesheet" href="/css/tw.css?v=8b76ac4a">
 </head>
 <body>
 <div class="app-shell">
@@ -239,7 +239,7 @@
         <p class="eyebrow">Case study</p>
         <h2>Background ReadAction Freeze Companion</h2>
         <p>Most plugins in this catalog start from users complaining about a paid competitor. This one started from JetBrains' own Platform Blog, which describes a background-thread entry point reaching a blocking, non-cancellable read-lock call as a recurring cause of IDE freezes.</p>
-        <p>Pointed at IntelliJ&rsquo;s own source, it found the pattern in <code>SearchForTestsTask</code>, which runs one step through the cancellable <code>ReadAction.nonBlocking()</code> and its sibling through the blocking <code>ReadAction.run()</code>. That became <a href="https://youtrack.jetbrains.com/issue/IDEA-393501" target="_blank" rel="noopener">IDEA-393501</a>, filed with JetBrains and since triaged and assigned. On the same code it also skipped a read action whose only caller runs on the EDT: a false positive avoided in production code, not in a synthetic test.</p>
+        <p>Pointed at IntelliJ&rsquo;s own source, it found the pattern in <code>SearchForTestsTask</code>, which ran one step through the cancellable <code>ReadAction.nonBlocking()</code> and its sibling through the blocking <code>ReadAction.run()</code>. That became <a href="https://youtrack.jetbrains.com/issue/IDEA-393501" target="_blank" rel="noopener">IDEA-393501</a>, filed with JetBrains and since fixed on master. On the same code it also skipped a read action whose only caller runs on the EDT: a false positive avoided in production code, not in a synthetic test.</p>
         <a class="btn" href="https://github.com/GapHunterLabs/background-readaction-freeze-companion#readme" target="_blank" rel="noopener">View evidence</a>
       </div>
       <dl class="case-meta">

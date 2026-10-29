@@ -280,9 +280,9 @@
 }
 </script>
 <link rel="stylesheet" href="/css/theme.css?v=b641a03e">
-<link rel="stylesheet" href="/css/home.css?v=05341b00">
-<link rel="stylesheet" href="/css/shell.css?v=31bcabdf">
-<link rel="stylesheet" href="/css/tw.css?v=a8c71639">
+<link rel="stylesheet" href="/css/home.css?v=e7a6e77b">
+<link rel="stylesheet" href="/css/shell.css?v=5379c65a">
+<link rel="stylesheet" href="/css/tw.css?v=8b76ac4a">
 </head>
 <body>
 <!-- Fase 2 (2026-09-22): sin loader -- hero, stats, categorias y
@@ -433,16 +433,16 @@
         <p class="inv-no">No. 05 &middot; Static analysis</p>
         <p class="inv-id"><a href="https://youtrack.jetbrains.com/issue/IDEA-393501" target="_blank" rel="noopener">IDEA-393501</a></p>
         <p class="inv-scope">IntelliJ IDEA &middot; Java &rsaquo; Tests &middot; read actions</p>
-        <p class="inv-status is-open">Filed &middot; assigned to a JetBrains developer, open</p>
+        <p class="inv-status is-fixed">Fixed by JetBrains</p>
       </div>
       <div class="inv-body">
         <h3 id="inv5Title">A freeze pattern inside IntelliJ&rsquo;s own test search</h3>
         <dl class="inv-facts">
-          <div><dt>Cause</dt><dd><code>SearchForTestsTask</code> runs in the background but calls <code>onFound()</code> through the blocking <code>ReadAction.run()</code>, with no <code>checkCanceled()</code> anywhere in the class. JetBrains&rsquo; Platform Blog names this pattern as a recurring cause of UI freezes.</dd></div>
+          <div><dt>Cause</dt><dd><code>SearchForTestsTask</code> ran in the background but called <code>onFound()</code> through the blocking <code>ReadAction.run()</code>, with no <code>checkCanceled()</code> anywhere in the class. JetBrains&rsquo; Platform Blog names this pattern as a recurring cause of UI freezes.</dd></div>
           <div><dt>Intervention</dt><dd>Found by Background ReadAction Freeze Companion, a static check for this pattern. A follow-up showed why a plain switch to a non-blocking read action is not safe here: <code>onFound()</code> writes files, and a restarted read action would write them again.</dd></div>
-          <div><dt>Outcome</dt><dd>JetBrains moved the ticket to the IDEA project and assigned it to a developer. Both calls are still on master as of October 2026.</dd></div>
+          <div><dt>Outcome</dt><dd>JetBrains moved the ticket to the IDEA project, assigned it to a developer and fixed it on master on October 28, 2026. <code>onFound()</code> now runs in a non-blocking read action, the loops that build the test lists call <code>checkCanceled()</code>, and the JUnit upload step moved to <code>onSuccess()</code>. The ticket is marked Fixed.</dd></div>
         </dl>
-        <p class="inv-links"><a href="https://youtrack.jetbrains.com/issue/IDEA-393501" target="_blank" rel="noopener">Ticket and follow-up</a><a href="/catalog/background-readaction-freeze-companion/">The plugin that found it</a></p>
+        <p class="inv-links"><a href="https://youtrack.jetbrains.com/issue/IDEA-393501" target="_blank" rel="noopener">Ticket and follow-up</a><a href="https://github.com/JetBrains/intellij-community/commit/4a88fdfa4d4a7979f00173c1a45af86e0c1920bd" target="_blank" rel="noopener">Commit 4a88fdfa</a><a href="/catalog/background-readaction-freeze-companion/">The plugin that found it</a></p>
       </div>
     </article>
 

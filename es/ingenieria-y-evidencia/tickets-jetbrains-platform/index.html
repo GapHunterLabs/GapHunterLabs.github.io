@@ -199,8 +199,8 @@
     .case-meta-row { flex: 1 1 140px; }
   }
 </style>
-<link rel="stylesheet" href="/css/shell.css?v=31bcabdf">
-<link rel="stylesheet" href="/css/tw.css?v=a8c71639">
+<link rel="stylesheet" href="/css/shell.css?v=5379c65a">
+<link rel="stylesheet" href="/css/tw.css?v=8b76ac4a">
 </head>
 <body>
 <div class="app-shell">
@@ -242,10 +242,10 @@
       <div class="ticket-head">
         <a class="ticket-id" href="https://youtrack.jetbrains.com/issue/IDEA-393501" target="_blank" rel="noopener">IDEA-393501 &#8599;</a>
         <h3>SearchForTestsTask: non-cancellable ReadAction.run() in a background task</h3>
-        <span class="ticket-status is-progress">En progreso</span>
+        <span class="ticket-status is-fixed">Corregido</span>
       </div>
-      <p>Encontrado por <a href="/es/catalogo/background-readaction-freeze-companion/">Background ReadAction Freeze Companion</a>. <code>SearchForTestsTask</code> es un <code>Task.Backgroundable</code> cuyo <code>run()</code> envuelve <code>search()</code> en el cancelable <code>ReadAction.nonBlocking()</code> y, unas líneas después, llama al <code>onFound()</code> hermano con el bloqueante <code>ReadAction.run()</code>, sin ningún <code>checkCanceled()</code> en toda la clase. El Platform Blog de JetBrains señala ese patrón como causa recurrente de congelamientos de la interfaz. Se presentó como IJPL-254654; JetBrains lo movió al proyecto IDEA (Java &rsaquo; Tests) y lo asignó a un desarrollador.</p>
-      <p>Un <a href="https://youtrack.jetbrains.com/issue/IDEA-393501#focus=Comments-27-14497295.0-0" target="_blank" rel="noopener">comentario de seguimiento</a> (octubre de 2026) agregó dos puntos. La rama de modo smart, la predeterminada, también bloquea: llama al <code>DumbService.runReadActionInSmartMode()</code>, que está deprecado y usa <code>ReadAction.computeBlocking()</code> por dentro. Y cambiar sin más a <code>ReadAction.nonBlocking()</code> no es seguro, porque <code>onFound()</code> escribe archivos y una acción de lectura reiniciada los volvería a escribir. Las dos llamadas siguen en <code>master</code> a octubre de 2026.</p>
+      <p>Encontrado por <a href="/es/catalogo/background-readaction-freeze-companion/">Background ReadAction Freeze Companion</a>. <code>SearchForTestsTask</code> es un <code>Task.Backgroundable</code> cuyo <code>run()</code> envolvía <code>search()</code> en el cancelable <code>ReadAction.nonBlocking()</code> y, unas líneas después, llamaba al <code>onFound()</code> hermano con el bloqueante <code>ReadAction.run()</code>, sin ningún <code>checkCanceled()</code> en toda la clase. El Platform Blog de JetBrains señala este patrón como causa recurrente de congelamientos de la interfaz. Se presentó como IJPL-254654; JetBrains lo movió al proyecto IDEA (Java &rsaquo; Tests) y lo asignó a un desarrollador.</p>
+      <p>Un <a href="https://youtrack.jetbrains.com/issue/IDEA-393501#focus=Comments-27-14497295.0-0" target="_blank" rel="noopener">comentario de seguimiento</a> (octubre de 2026) agregó dos puntos. La rama de modo smart, la predeterminada, también bloquea: llama al <code>DumbService.runReadActionInSmartMode()</code>, que está deprecado y usa <code>ReadAction.computeBlocking()</code> por dentro. Y cambiar sin más a <code>ReadAction.nonBlocking()</code> no es seguro, porque <code>onFound()</code> escribe archivos y una acción de lectura reiniciada los volvería a escribir. JetBrains lo corrigió en <code>master</code> el 28 de octubre de 2026 (<a href="https://github.com/JetBrains/intellij-community/commit/4a88fdfa4d4a7979f00173c1a45af86e0c1920bd" target="_blank" rel="noopener">commit 4a88fdfa</a>): <code>onFound()</code> ahora corre en una acción de lectura no bloqueante en modo smart, los bucles que arman las listas de pruebas llaman a <code>checkCanceled()</code> y el paso de subida de JUnit pasó a <code>onSuccess()</code>. El ticket figura como corregido (Fixed).</p>
     </article>
     <article class="ticket-card">
       <div class="ticket-head">

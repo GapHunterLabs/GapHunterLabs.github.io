@@ -26,6 +26,10 @@ a.badge:focus-visible { outline: 2px solid var(--signal); outline-offset: 2px; }
 .badge-status.is-fixed { --dot: var(--valid); }
 .badge-status.is-open { --dot: var(--inspect); }
 .badge-status.is-progress { --dot: var(--cyan); }
+/* Pricing on plugin pages */
+.badge-status.is-free { --dot: var(--valid); }
+.badge-status.is-freemium { --dot: var(--cyan); }
+.badge-status.is-paid { --dot: var(--inspect); }
 
 /* ---- Badge table: centered caption, rows of badges, alternating bands (reference design) ---- */
 .badge-table {
