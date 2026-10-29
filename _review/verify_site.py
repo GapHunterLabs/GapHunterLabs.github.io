@@ -315,7 +315,8 @@ def _home_checks(lang: str):
         with env.page() as p:
             env.go(p, L["home"])
             text = p.locator(".nb-impact").inner_text()
-            expect(("{:,}".format(env.total_downloads)) in text, "downloads %s not shown: %r" % ("{:,}".format(env.total_downloads), text[:120]))
+            shown = "{:,}".format(env.total_downloads).replace(",", "," if lang == "en" else ".")   # Spanish groups thousands with a period
+            expect(shown in text, "downloads %s not shown: %r" % (shown, text[:120]))
             expect(str(env.total_plugins + env.total_vsx) in text, "tool total %d not shown" % (env.total_plugins + env.total_vsx))
             expect(str(env.total_plugins) in text and str(env.total_vsx) in text, "per-platform totals not shown")
             eq(p.locator(".nb-impact .tw-p-5").count(), 4, "metric tiles")
