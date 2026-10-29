@@ -178,15 +178,23 @@ def load_sponsors():
     return rows
 
 
-def sponsor_link(r, inner, cls):
+def sponsor_slug(name):
+    return re.sub(r"[^a-z0-9]+", "-", name.lower()).strip("-") or "sponsor"
+
+
+def sponsor_link(r, inner, cls, where):
+    """A linked sponsor. GoatCounter counts the clicks per sponsor and place (aggregate, no personal data) for the
+    quarterly note that Gold and Platinum sponsors get."""
     if not r.get("url"):
         return '<span class="%s">%s</span>' % (cls, inner)
-    return '<a class="%s" href="%s" target="_blank" rel="sponsored noopener">%s</a>' % (cls, esc(r["url"]), inner)
+    return ('<a class="%s" href="%s" target="_blank" rel="sponsored noopener" data-goatcounter-click="sponsor-%s-%s" '
+            'data-goatcounter-title="%s">%s</a>' % (cls, esc(r["url"]), sponsor_slug(r["name"]), where, esc(r["name"]), inner))
 
 
 def sponsors_html(rows, home):
     """Muro de patrocinadores. Sin patrocinadores muestra la convocatoria (nada inventado)."""
     tiers = [(k, t) for k, t in SPONSOR_TIERS if not home or k in HOME_TIERS]
+    where = "home" if home else "page"
     groups = []
     for key, title in tiers:
         mine = [r for r in rows if r["tier"] == key]
@@ -197,12 +205,12 @@ def sponsors_html(rows, home):
                 "<li>%s</li>" % sponsor_link(
                     r, ('<img class="sp-logo-img" src="%s" alt="%s" height="%d" loading="lazy" decoding="async">'
                         % (esc(r["logo"]), esc(r["name"]), {"platinum": 56, "gold": 44, "silver": 34}[key]))
-                    if r.get("logo") else '<span class="sp-name">%s</span>' % esc(r["name"]), "sp-logo")
+                    if r.get("logo") else '<span class="sp-name">%s</span>' % esc(r["name"]), "sp-logo", where)
                 for r in mine)
             groups.append('<div class="sp-tier sp-tier-%s"><p class="sp-tier-title">%s</p><ul class="sp-logos">%s</ul></div>'
                           % (key, title, items))
         else:
-            items = "".join("<li>%s</li>" % sponsor_link(r, '<span class="sp-name">%s</span>' % esc(r["name"]), "sp-person")
+            items = "".join("<li>%s</li>" % sponsor_link(r, '<span class="sp-name">%s</span>' % esc(r["name"]), "sp-person", where)
                             for r in mine)
             groups.append('<div class="sp-tier sp-tier-%s"><p class="sp-tier-title">%s</p><ul class="sp-names">%s</ul></div>'
                           % (key, title, items))

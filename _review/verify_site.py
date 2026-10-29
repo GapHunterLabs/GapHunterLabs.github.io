@@ -523,6 +523,23 @@ def _sponsors_home(env: Env):
             expect(p.locator("#sponsors a.btn.primary[href='%s']" % target).count() == 1, "the call to action [%s]" % lang)
 
 
+@check("sponsors", "sponsor links are counted per sponsor and place, keep rel=sponsored, and unlinked names stay plain")
+def _sponsors_counted(env: Env):
+    sys.path.insert(0, str(ROOT / "pipeline"))
+    from build_home import sponsors_html
+    rows = [{"name": "Acme Corp", "tier": "gold", "url": "https://acme.example/"},
+            {"name": "Jane Roe", "tier": "backer", "url": "https://jane.example/"},
+            {"name": "No Link", "tier": "supporter"}]
+    for home, where, want in ((True, "home", ["sponsor-acme-corp-home"]),
+                              (False, "page", ["sponsor-acme-corp-page", "sponsor-jane-roe-page"])):
+        html = sponsors_html(rows, home=home)
+        links = re.findall(r"<a [^>]*>", html)
+        expect(links and all('rel="sponsored noopener"' in a for a in links), "sponsor links must carry rel=sponsored [%s]" % where)
+        eq(re.findall(r'data-goatcounter-click="([^"]+)"', html), want, "sponsor click events [%s]" % where)
+        expect(home or '<span class="sp-person"><span class="sp-name">No Link</span></span>' in html,
+               "a sponsor without a URL must stay plain text")
+
+
 @check("share", "Spanish pages translate their titles and social cards (not just the visible text)")
 def _es_meta(env: Env):
     sys.path.insert(0, str(ROOT / "pipeline"))
