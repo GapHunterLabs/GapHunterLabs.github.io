@@ -30,6 +30,7 @@ import argparse
 import json
 import re
 import sys
+from datetime import date
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
@@ -41,6 +42,7 @@ HOME_PAGE = ROOT / "index.html"
 VSCODE_DATA = ROOT / "data" / "vscode-catalog-data.json"
 SPONSORS_DATA = ROOT / "data" / "sponsors.json"
 SPONSORS_PAGE = ROOT / "sponsors" / "index.html"
+REACH_DATA = ROOT / "data" / "reach.json"
 RESEARCH_DATA = ROOT / "data" / "research.json"
 PRICING_LABEL = {"FREE": "Free", "FREEMIUM": "Freemium", "PAID": "Paid"}
 
@@ -211,6 +213,98 @@ def sponsors_html(rows, home):
                                             SPONSOR_OPEN + " Your name or logo could be the first one here.")
 
 
+# Audience figures: copied by hand from GoatCounter and the LinkedIn page analytics (neither has a public API).
+REACH_COUNTS = {"site": ("visits",), "linkedin": ("followers", "impressions", "membersReached")}
+REACH_SHARES = {"site": ("countries", "languages"), "linkedin": ("followerProfile", "viewerProfile")}
+REACH_STALE_DAYS = 120
+
+
+def _iso(value, name):
+    try:
+        return date.fromisoformat(str(value))
+    except ValueError:
+        die("reach.json: %s tiene que ser una fecha AAAA-MM-DD" % name)
+
+
+def load_reach():
+    """Reads data/reach.json. The figures are printed on the sponsors page, so a wrong one is a public error."""
+    if not REACH_DATA.exists():
+        die("falta data/reach.json (la pagina de patrocinadores imprime esas cifras)")
+    raw = json.loads(REACH_DATA.read_text(encoding="utf-8"))
+    as_of = _iso(raw.get("asOf"), "asOf")
+    for key in ("site", "linkedin"):
+        block = raw.get(key)
+        if not isinstance(block, dict):
+            die("reach.json: falta el bloque %r" % key)
+        start, end = _iso(block.get("from"), key + ".from"), _iso(block.get("to"), key + ".to")
+        if not start <= end <= as_of:
+            die("reach.json: en %r tiene que cumplirse from <= to <= asOf" % key)
+        if not block.get("source"):
+            die("reach.json: %s.source esta vacio" % key)
+        for field in REACH_COUNTS[key]:
+            if not isinstance(block.get(field), int) or block[field] <= 0:
+                die("reach.json: %s.%s tiene que ser un entero positivo" % (key, field))
+        for field in REACH_SHARES[key]:
+            items = block.get(field)
+            if not items:
+                die("reach.json: %s.%s esta vacio" % (key, field))
+            for item in items:
+                pct = item.get("pct")
+                if not item.get("label") or not isinstance(pct, int) or not 0 <= pct <= 100:
+                    die("reach.json: %s.%s: cada elemento lleva label y un pct entero de 0 a 100" % (key, field))
+    outside = raw["linkedin"].get("outsideNetworkPct")
+    if not isinstance(outside, int) or not 0 <= outside <= 100:
+        die("reach.json: linkedin.outsideNetworkPct tiene que ser un entero de 0 a 100")
+    if (date.today() - as_of).days > REACH_STALE_DAYS:
+        print("[build_home] AVISO: data/reach.json es del %s; actualiza las cifras" % as_of)
+    return raw
+
+
+def _share_chips(title, items):
+    chips = "".join('<li><span class="sp-person"><span>%s</span> <b>%d%%</b></span></li>' % (esc(i["label"]), i["pct"])
+                    for i in items)
+    return '<div><p class="sp-tier-title">%s</p><ul class="sp-names">%s</ul></div>' % (title, chips)
+
+
+def _reach_note(first, inner):
+    return '<p class="tw-%s tw-font-mono tw-text-xs tw-text-faint">%s</p>' % ("mt-3" if first else "mt-1", inner)
+
+
+def _reach_window(label, block, first):
+    # Text and data live in separate elements so the Spanish keys never carry a date.
+    return _reach_note(first, '<span>%s, from</span> <time datetime="%s">%s</time> <span>to</span> <time datetime="%s">%s</time>'
+                       % (label, block["from"], block["from"], block["to"], block["to"]))
+
+
+def reach_html(reach):
+    """The audience a sponsor's name reaches: this site and the LinkedIn page, with the dates each figure covers."""
+    site, li = reach["site"], reach["linkedin"]
+    days = (date.fromisoformat(site["to"]) - date.fromisoformat(site["from"])).days + 1
+    per_week = max(1, round(site["visits"] * 7 / days))
+    tiles = [
+        tile("LinkedIn followers", format(li["followers"], ","), "<span>On my LinkedIn page</span>"),
+        tile("LinkedIn impressions", format(li["impressions"], ","),
+             "<b>%d%%</b> <span>from outside my network</span>" % li["outsideNetworkPct"]),
+        tile("Members reached", format(li["membersReached"], ","), "<span>Different people who saw my posts</span>"),
+        tile("Site visits", format(site["visits"], ","), "<span>About %d a week</span>" % per_week),
+    ]
+    grid = ('<div class="tw-grid tw-grid-cols-2 tw-gap-px tw-overflow-hidden tw-rounded-lg tw-border tw-border-line '
+            'tw-bg-line md:tw-grid-cols-4">%s</div>' % "".join(tiles))
+    facts = '<div class="sp-facts">%s</div>' % "".join([
+        _share_chips("Where site visits come from", site["countries"]),
+        _share_chips("Browser language of site visits", site["languages"]),
+        _share_chips("Who follows my LinkedIn page", li["followerProfile"]),
+        _share_chips("Who sees my posts on LinkedIn", li["viewerProfile"]),
+    ])
+    notes = [_reach_window("Site visits: " + site["source"], site, True),
+             _reach_window("LinkedIn: " + li["source"], li, False)]
+    if site.get("includesOwnVisits"):
+        notes.append(_reach_note(False, "<span>The site count includes my own visits.</span>"))
+    notes.append(_reach_note(False, "<span>LinkedIn shows only the most common value in each category.</span>"))
+    notes.append(_reach_note(False, '<span>Counts as of</span> <time datetime="%s">%s</time>' % (reach["asOf"], reach["asOf"])))
+    return grid + facts + "".join(notes)
+
+
 def die(msg: str) -> "NoReturn":  # noqa: F821
     sys.exit("[build_home] ERROR: " + msg)
 
@@ -278,6 +372,8 @@ def build(dry_run: bool = False) -> None:
                          sponsors_html(sponsors, home=False), "SPONSORS (pagina)")
         sp_page = inject(sp_page, "<!-- PRERENDER:METRICS:START -->", "<!-- PRERENDER:METRICS:END -->",
                          metrics_html(data, research, vscode_total), "METRICS (pagina)")
+        sp_page = inject(sp_page, "<!-- PRERENDER:REACH:START -->", "<!-- PRERENDER:REACH:END -->",
+                         reach_html(load_reach()), "REACH (pagina)")
 
     if dry_run:
         print("[dry-run] %d herramientas, catalogo: %s -- nada escrito" % (len(rows), catalog_line))

@@ -1,0 +1,42 @@
+{
+  "_note": "Audience figures printed on /sponsors/, copied by hand from two dashboards (neither has a public API): GoatCounter for the site and the LinkedIn page analytics. Dates are ISO and are printed next to the figures. LinkedIn's dashboard offers 365 days; its 'from' is the first day with any activity, not the start of the window. 'Other or unknown' is the share of visits whose browser language is not English or Spanish or is not reported. Both blocks are required. Turn includesOwnVisits off once the site count excludes my own visits. After editing, run: python pipeline/build_home.py && python pipeline/build_i18n.py --strict && python pipeline/version_assets.py.",
+  "asOf": "2026-10-29",
+  "site": {
+    "source": "GoatCounter",
+    "from": "2026-08-14",
+    "to": "2026-10-29",
+    "visits": 170,
+    "includesOwnVisits": true,
+    "countries": [
+      { "label": "Colombia", "pct": 37 },
+      { "label": "United States", "pct": 18 },
+      { "label": "Switzerland", "pct": 8 },
+      { "label": "Chile", "pct": 8 },
+      { "label": "Japan", "pct": 6 },
+      { "label": "Venezuela", "pct": 5 }
+    ],
+    "languages": [
+      { "label": "English", "pct": 31 },
+      { "label": "Spanish", "pct": 27 },
+      { "label": "Other or unknown", "pct": 42 }
+    ]
+  },
+  "linkedin": {
+    "source": "page analytics",
+    "from": "2026-08-13",
+    "to": "2026-10-29",
+    "followers": 149,
+    "impressions": 8932,
+    "membersReached": 2861,
+    "outsideNetworkPct": 50,
+    "followerProfile": [
+      { "label": "IT services and consulting", "pct": 44 },
+      { "label": "DevOps Engineer", "pct": 29 }
+    ],
+    "viewerProfile": [
+      { "label": "IT services and consulting", "pct": 27 },
+      { "label": "Companies with more than 10,000 employees", "pct": 17 },
+      { "label": "Software Engineer", "pct": 11 }
+    ]
+  }
+}

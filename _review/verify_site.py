@@ -482,6 +482,9 @@ def _contact_prefill(env: Env):
 @check("sponsors", "sponsors page: five levels, ways to join, reach figures and sponsor links marked rel=sponsored")
 def _sponsors_page(env: Env):
     listed = json.loads((ROOT / "data" / "sponsors.json").read_text(encoding="utf-8")).get("sponsors", [])
+    reach = json.loads((ROOT / "data" / "reach.json").read_text(encoding="utf-8"))
+    li, site = reach["linkedin"], reach["site"]
+    figures = [li["followers"], li["impressions"], li["membersReached"], site["visits"]]
     for lang, path, contact in (("en", "/sponsors/", "/contact/"), ("es", "/es/patrocinadores/", "/es/contacto/")):
         with env.page() as p:
             env.go(p, path)
@@ -491,6 +494,18 @@ def _sponsors_page(env: Env):
             expect(any("buymeacoffee.com" in h for h in hrefs), "the Buy Me a Coffee link is missing [%s]" % lang)
             expect(contact in hrefs, "the company-sponsorship link should go to %s [%s]" % (contact, lang))
             eq(p.locator(".sp-reach .tw-bg-bg").count(), 4, "reach figures [%s]" % lang)
+            sep = "," if lang == "en" else "."
+            downloads = p.evaluate("document.querySelector('.sp-reach .tw-text-3xl').textContent.trim()")
+            expect(re.fullmatch(r"\d{1,3}(%s\d{3})+" % re.escape(sep), downloads), "downloads separator [%s]: %r" % (lang, downloads))
+            # the audience card prints data/reach.json: same numbers, the thousands separator of the language, dated
+            eq(p.locator(".sp-audience .tw-bg-bg").count(), 4, "audience figures [%s]" % lang)
+            want = [format(n, ",").replace(",", sep) for n in figures]
+            eq(p.evaluate("[...document.querySelectorAll('.sp-audience .tw-text-3xl')].map(e => e.textContent.trim())"),
+               want, "audience figures match data/reach.json [%s]" % lang)
+            stamps = p.evaluate("[...document.querySelectorAll('.sp-audience time')].map(t => t.getAttribute('datetime'))")
+            eq(stamps, [site["from"], site["to"], li["from"], li["to"], reach["asOf"]], "audience dates [%s]" % lang)
+            expect(not re.search(r"NaN|undefined|None", p.locator(".sp-audience").inner_text()),
+                   "the audience card prints a broken value [%s]" % lang)
             eq(p.locator(".sp-wall").count() > 0, bool(listed), "the wall and data/sponsors.json disagree [%s]" % lang)
             if not listed:
                 eq(p.locator(".sp-empty").count(), 1, "the open call [%s]" % lang)
