@@ -916,3 +916,41 @@ tr.row td[data-label]::before { font-family: var(--sans); font-size: 11px; lette
 @media (max-width: 640px) {
   .gh-page-header .contact-lead, .gh-page-header .ch-copy > p:not(.eyebrow) { font-size: 15px; }
 }
+
+/* =====================================================================
+   Redesign v3 -- services page and the shared side rail (.page-insights).
+   Service cards are plain 1px surfaces (no left accent rule), the price levels are a
+   banded table with mono terms, and the rail cards use the mono signal eyebrow.
+   ===================================================================== */
+.disclosure-list { gap: 16px; counter-reset: svc; }
+.disclosure { padding: 24px; border: 1px solid var(--border); border-left-width: 1px; border-radius: var(--radius-lg); background: var(--surface); }
+.disclosure h2 { margin: 0 0 10px; font: 700 20px / 1.3 var(--sans); letter-spacing: -0.025em; }
+.disclosure p, .disclosure li { font-size: 14.5px; }
+/* Decorative index on the priced services (the ones that carry a price table). */
+.disclosure:has(> .tier-list) h2::before {
+  counter-increment: svc; content: counter(svc, decimal-leading-zero); content: counter(svc, decimal-leading-zero) / "";
+  display: block; margin-bottom: 8px; font: 600 11.5px/1 var(--mono); letter-spacing: 0.1em; color: var(--signal);
+}
+
+/* Price levels: banded table, mono terms. */
+.tier-list { margin: 18px 0 14px; overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--surface); }
+.tier-list .tier { padding: 13px 18px; border-bottom: 0; border-top: 1px solid var(--border); align-items: center; }
+.tier-list .tier:first-child { border-top: 0; }
+.tier-list .tier:nth-child(odd) { background: var(--band-a); }
+.tier-list .tier:nth-child(even) { background: var(--band-b); }
+.tier-list dt { font-size: 14px; }
+.tier-list .tier-scope { font-size: 14px; }
+.tier-list .tier-terms { font: 500 12.5px/1.55 var(--mono); color: var(--text); }
+@media (max-width: 760px) { .tier-list .tier { padding: 12px 14px; } }
+.disclosure .btn { min-height: 38px; font-size: 13.5px; }
+
+/* Side rail. */
+.page-insights { padding-top: 28px; gap: 14px; }
+.pi-card { padding: 18px; box-shadow: none; }
+.pi-eyebrow { color: var(--signal); font: 600 11px/1.4 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; }
+.pi-list { padding-left: 1.05em; }
+.pi-list li::marker { color: var(--text-faint); }
+.pi-results li { padding-left: 12px; border-left-width: 2px; border-radius: 1px; }
+.pi-results a { font-size: 12.5px; }
+.pi-links a[aria-current="page"] { border-left: 2px solid var(--signal); }
+.pi-cta a { color: var(--text); text-decoration: underline; text-underline-offset: 0.2em; }
