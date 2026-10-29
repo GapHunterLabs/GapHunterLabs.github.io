@@ -480,7 +480,7 @@
    Snyk, Sonar, Vercel). Reemplaza la barra lateral: .app-shell deja de
    ser una grilla de 2 columnas. Markup generado por pipeline/build_chrome.py.
    ===================================================================== */
-:root { --page-max: 1280px; --page-pad: 24px; --gh-header-h: 64px; }
+:root { --page-max: 1280px; --page-pad: 24px; --gh-header-h: 56px; }
 .app-shell { display: block; min-height: 0; }
 .app-main > .methodology-main, .app-main > .contact-main { margin-left: auto; margin-right: auto; }
 @media (min-width: 841px) { body { background-image: none; } }
@@ -488,13 +488,13 @@
 .gh-header { position: sticky; top: 0; z-index: 50; background: var(--glass);
   -webkit-backdrop-filter: saturate(1.4) blur(10px); backdrop-filter: saturate(1.4) blur(10px); border-bottom: 1px solid var(--border); }
 .gh-header-inner { position: relative; max-width: var(--page-max); margin: 0 auto; padding: 0 var(--page-pad);
-  height: var(--gh-header-h); display: flex; align-items: center; gap: 28px; }
+  height: var(--gh-header-h); display: flex; align-items: center; gap: 20px; }
 .gh-brand { display: inline-flex; align-items: center; gap: 10px; color: var(--text); text-decoration: none;
-  font: 700 16px var(--sans); white-space: nowrap; }
-.gh-logo { width: 28px; height: 28px; flex: none; }
+  font: 700 15px var(--sans); letter-spacing: -0.01em; white-space: nowrap; }
+.gh-logo { width: 24px; height: 24px; flex: none; }
 .gh-nav { display: flex; align-items: center; gap: 2px; flex: 1; min-width: 0; }
-.gh-nav-link { display: inline-flex; align-items: center; gap: 4px; padding: 8px 12px; border: 0; border-radius: var(--radius);
-  background: none; color: var(--text-dim); font: 500 14.5px var(--sans); text-decoration: none; cursor: pointer; white-space: nowrap; }
+.gh-nav-link { display: inline-flex; align-items: center; gap: 4px; padding: 6px 10px; border: 0; border-radius: var(--radius);
+  background: none; color: var(--text-dim); font: 500 13.5px var(--sans); text-decoration: none; cursor: pointer; white-space: nowrap; }
 .gh-nav-link:hover, .gh-nav-link[aria-expanded="true"] { color: var(--text); background: var(--surface-2); }
 .gh-nav-link[aria-current="page"], .gh-nav-link.is-active { color: var(--accent); font-weight: 600; }
 .gh-chevron { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round;
@@ -509,8 +509,8 @@
 .gh-nav-group .gh-pop { left: 0; right: auto; }
 .gh-pop-wide { min-width: 330px; }
 .gh-pop-link { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: var(--radius); color: var(--text); text-decoration: none; }
-.gh-pop-link strong { font-size: 14px; font-weight: 600; }
-.gh-pop-link span { font-size: 13px; color: var(--text-faint); }
+.gh-pop-link strong { font-size: 13.5px; font-weight: 600; }
+.gh-pop-link span { font-size: 12.5px; color: var(--text-faint); }
 .gh-pop-link:hover, .gh-pop-link[aria-current="page"] { background: var(--surface-2); }
 .gh-pop-link[aria-current="page"] strong { color: var(--accent); }
 .gh-pop-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; border: 0; border-radius: var(--radius);
@@ -521,21 +521,21 @@
 .gh-ico svg, .gh-seg-btn svg, .gh-social svg { width: 18px; height: 18px; fill: none; stroke: currentColor;
   stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
 
-.gh-tools { display: flex; align-items: center; gap: 10px; margin-left: auto; }
-.gh-icon-btn { width: 38px; height: 38px; display: inline-flex; align-items: center; justify-content: center;
+.gh-tools { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+.gh-icon-btn { width: 34px; height: 34px; display: inline-flex; align-items: center; justify-content: center;
   border: 1px solid var(--border); border-radius: var(--radius); background: var(--surface); color: var(--text-dim); cursor: pointer; }
 .gh-icon-btn:hover, .gh-icon-btn[aria-expanded="true"] { color: var(--text); border-color: var(--border-strong); }
 .gh-icon-btn .gh-ico { display: none; }
 :root:not([data-theme]) .gh-icon-btn .gh-ico-system,
 :root[data-theme="light"] .gh-icon-btn .gh-ico-light,
 :root[data-theme="dark"] .gh-icon-btn .gh-ico-dark { display: inline-flex; }
-.gh-cta.btn { padding: 9px 16px; }
+.gh-cta.btn { min-height: 34px; padding: 0 14px; font-size: 13px; }
 .gh-nav-cta { display: none; }
-.gh-burger { display: none; position: relative; width: 40px; height: 38px; border: 1px solid var(--border);
+.gh-burger { display: none; position: relative; width: 38px; height: 34px; border: 1px solid var(--border);
   border-radius: var(--radius); background: var(--surface); cursor: pointer; }
 .gh-burger span, .gh-burger span::before, .gh-burger span::after { content: ""; position: absolute; left: 11px;
   width: 16px; height: 2px; border-radius: 2px; background: var(--text); transition: transform .15s ease; }
-.gh-burger span { top: 17px; }
+.gh-burger span { top: 15px; }
 .gh-burger span::before { top: -5px; left: 0; }
 .gh-burger span::after { top: 5px; left: 0; }
 .gh-header.nav-open .gh-burger span { background: transparent; }
@@ -549,7 +549,7 @@
     gap: 2px; padding: 12px var(--page-pad) 18px; background: var(--surface); border-bottom: 1px solid var(--border);
     box-shadow: var(--shadow-pop); max-height: calc(100vh - var(--gh-header-h)); overflow-y: auto; }
   .gh-header.nav-open .gh-nav { display: flex; }
-  .gh-nav-link { justify-content: space-between; padding: 12px; font-size: 16px; }
+  .gh-nav-link { justify-content: space-between; padding: 11px 12px; font-size: 15px; }
   .gh-nav-group .gh-pop { position: static; min-width: 0; padding: 0 0 6px 10px; border: 0; box-shadow: none; background: none; }
   .gh-nav-cta { display: inline-flex; justify-content: center; margin-top: 10px; }
 }
@@ -721,24 +721,24 @@ nav.crumbs a, nav.crumbs span { font-family: var(--sans); }
 /* Selector de idioma (EN/ES) */
 .gh-lang-btn { width: auto; gap: 6px; padding: 0 10px; }
 .gh-lang-btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.5; }
-.gh-lang-code { font: 700 12.5px var(--sans); letter-spacing: .04em; }
+.gh-lang-code { font: 700 12px var(--sans); letter-spacing: .04em; }
 .gh-lang .gh-pop-item[aria-current="true"] { color: var(--accent); font-weight: 600; }
 .gh-lang .gh-pop-item { text-decoration: none; }
-@media (max-width: 420px) { .gh-lang-code { display: none; } .gh-lang-btn { width: 38px; padding: 0; } }
+@media (max-width: 420px) { .gh-lang-code { display: none; } .gh-lang-btn { width: 34px; padding: 0; } }
 
 /* Buscador del topbar (2026-10-05): boton en .gh-tools + dialogo con lista y
    vista previa (js/site-search.js lo arma al abrirse). Tokens del tema, asi
    que funciona igual en claro y oscuro. */
-.gh-search-btn { display: inline-flex; align-items: center; gap: 8px; height: 38px; min-width: 190px; padding: 0 8px 0 12px;
+.gh-search-btn { display: inline-flex; align-items: center; gap: 8px; height: 34px; min-width: 168px; padding: 0 6px 0 10px;
   border: 1px solid var(--border); border-radius: var(--radius-md); background: var(--surface); color: var(--text-dim);
-  font: 500 13px var(--sans); cursor: pointer; }
+  font: 500 12.5px var(--sans); cursor: pointer; }
 .gh-search-btn:hover, .gh-search-btn[aria-expanded="true"] { border-color: var(--border-strong); color: var(--text); }
 .gh-search-btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .gh-search-btn svg { width: 16px; height: 16px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; }
 .gh-search-label { flex: 1; text-align: left; }
 .gh-search-kbd { font: 600 11px var(--mono); padding: 2px 6px; border: 1px solid var(--border); border-radius: var(--radius); color: var(--text-faint); background: var(--bg); }
 @media (max-width: 1180px) {
-  .gh-search-btn { min-width: 0; width: 38px; padding: 0; justify-content: center; }
+  .gh-search-btn { min-width: 0; width: 34px; padding: 0; justify-content: center; }
   .gh-search-label, .gh-search-kbd { display: none; }
 }
 html.ghs-open { overflow: hidden; }
@@ -873,4 +873,35 @@ tr.row td[data-label]::before { font-family: var(--sans); font-size: 11px; lette
 @media (max-width: 760px) {
   .tier-list .tier { grid-template-columns: minmax(0, 1fr); }
   .tier-list .tier-terms { white-space: normal; text-align: left; }
+}
+
+/* =====================================================================
+   Redesign v3 -- page header (.gh-page-header): the home hero language on every
+   inner page: mono signal eyebrow, smaller headline and lede, faint grid and glow.
+   ===================================================================== */
+.page-hero.gh-page-header { isolation: isolate; padding: clamp(24px, 3.4vw, 40px) 0 clamp(20px, 2.6vw, 28px); }
+.page-hero.gh-page-header::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background:
+    radial-gradient(420px 160px at 18% 0%, color-mix(in srgb, var(--signal) 13%, transparent), transparent 70%),
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size: auto, 40px 40px, 40px 40px;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 16%, #000 52%, transparent 100%), linear-gradient(180deg, #000 35%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-image: linear-gradient(90deg, transparent, #000 16%, #000 52%, transparent 100%), linear-gradient(180deg, #000 35%, transparent 100%);
+  mask-composite: intersect;
+}
+.gh-page-header .contact-kicker,
+.gh-page-header .ch-copy > .eyebrow {
+  font: 600 11.5px/1.4 var(--mono); letter-spacing: 0.1em; text-transform: uppercase; color: var(--signal);
+}
+.gh-page-header:not(.hero) h1 {
+  max-width: 24ch; margin-top: 10px;
+  font: 700 clamp(26px, 2.9vw, 38px) / 1.12 var(--sans); letter-spacing: -0.03em;
+}
+.gh-page-header .contact-lead,
+.gh-page-header .ch-copy > p:not(.eyebrow) { max-width: 62ch; margin-top: 12px; font-size: 15.5px; line-height: 1.65; }
+@media (max-width: 640px) {
+  .gh-page-header .contact-lead, .gh-page-header .ch-copy > p:not(.eyebrow) { font-size: 15px; }
 }
