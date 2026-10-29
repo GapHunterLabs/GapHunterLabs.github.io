@@ -507,6 +507,25 @@ def _sponsors_home(env: Env):
             expect(p.locator("#sponsors a.btn.primary[href='%s']" % target).count() == 1, "the call to action [%s]" % lang)
 
 
+@check("share", "Spanish pages translate their titles and social cards (not just the visible text)")
+def _es_meta(env: Env):
+    sys.path.insert(0, str(ROOT / "pipeline"))
+    from build_chrome import ES_PATHS
+    keys = ('property="og:title"', 'name="twitter:title"', 'property="og:description"', 'name="twitter:description"',
+            'property="og:image:alt"', 'name="twitter:image:alt"', 'name="description"')
+
+    def metas(path):
+        rel = "index.html" if path == "/" else path.strip("/") + "/index.html"
+        text = (ROOT / rel).read_text(encoding="utf-8")
+        return {k: (re.search(r"<meta %s content=\"([^\"]*)\"" % re.escape(k), text) or [None, None])[1] for k in keys}
+
+    same = []
+    for en_path, es_path in ES_PATHS.items():
+        en, es = metas(en_path), metas(es_path)
+        same += ["%s %s" % (es_path, k.split('"')[1]) for k in keys if en[k] and en[k] == es[k]]
+    expect(not same, "still in English: " + "; ".join(same[:8]))
+
+
 # ================================================================================ pages
 PAGES_AT_390 = ["/", "/es/", "/catalog/", "/es/catalogo/", "/catalog/openapi-companion/", "/services/", "/es/servicios/",
                 "/engineering-evidence/", "/engineering-evidence/jetbrains-platform-tickets/",
