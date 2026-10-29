@@ -579,18 +579,25 @@ def _visible_main(text):
     return " ".join(_html.unescape(body).split())
 
 
-@check("voice", "public copy speaks in the first person singular (no 'we', 'our', 'Joel does', 'one engineer')")
+@check("voice", "public copy and page descriptions speak in the first person singular (no 'we', 'our', 'Joel does', 'one engineer')")
 def _voice(env: Env):
+    import html as _html
     bad = []
     for f in sorted(ROOT.rglob("index.html")):
         rel = f.relative_to(ROOT).as_posix()
         if rel.startswith(("node_modules/", "pipeline/", "_review/")) or rel.startswith(VOICE_SKIP):
             continue
         rx = VOICE_ES if rel.startswith("es/") else VOICE_EN
-        text = _visible_main(f.read_text(encoding="utf-8"))
+        page = f.read_text(encoding="utf-8")
+        text = _visible_main(page)
         for sent in re.split(r"(?<=[.!?])\s+", text):
             if rx.search(sent) and "Gap Hunter Labs is my" not in sent:
                 bad.append("%s: %s" % (rel, sent[:110]))
+        # what search results and social cards show: the page descriptions
+        for m in re.finditer(r'<meta (?:name|property)="(?:description|og:description|twitter:description)" content="([^"]*)"', page):
+            share = _html.unescape(m.group(1))
+            if rx.search(share):
+                bad.append("%s (description): %s" % (rel, share[:110]))
     for js in ("contact.js", "catalog.js", "catalog-vsx.js", "site-search.js"):
         text = (ROOT / "js" / js).read_text(encoding="utf-8")
         for m in re.finditer(r"'([^'\n]{12,})'", text):
