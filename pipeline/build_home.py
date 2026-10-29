@@ -119,6 +119,17 @@ def metrics_html(data, research, vscode_total):
     return grid + '<div class="tw-mt-4">' + chips + "</div>" + foot
 
 
+# Focus areas: shown in the hero card and as the "Disciplines" row of the stack table.
+DISCIPLINES = [dict(label="Static analysis", icon="code", variant="dark"),
+               dict(label="Performance", icon="gauge", variant="dark"),
+               dict(label="Security research", icon="shield", variant="dark"),
+               dict(label="Reliability", icon="layers", variant="dark")]
+
+
+def focus_html():
+    return badge_row(DISCIPLINES)
+
+
 def stack_html():
     rows = [
         ("Platforms", [dict(label="JetBrains IDEs", icon="jetbrains", variant="dark"),
@@ -127,10 +138,7 @@ def stack_html():
                        dict(label="Windows", icon="windows", variant="dark")]),
         ("Languages", [dict(label="Kotlin", icon="kotlin"), dict(label="Java", icon="java", variant="soft"),
                        dict(label="Python", icon="python")]),
-        ("Disciplines", [dict(label="Static analysis", icon="code", variant="dark"),
-                         dict(label="Performance", icon="gauge", variant="dark"),
-                         dict(label="Security research", icon="shield", variant="dark"),
-                         dict(label="Reliability", icon="layers", variant="dark")]),
+        ("Disciplines", DISCIPLINES),
         ("Tooling", [dict(label="Gradle", icon="gradle", variant="soft"), dict(label="JUnit", icon="junit"),
                      dict(label="Git", icon="git"), dict(label="GitHub", icon="github", variant="dark"),
                      dict(label="GitHub Actions", icon="github-actions")]),
@@ -190,6 +198,7 @@ def build(dry_run: bool = False) -> None:
     html = inject(html, "<!-- PRERENDER:METRICS:START -->", "<!-- PRERENDER:METRICS:END -->",
                   metrics_html(data, research, vscode_total), "METRICS")
     html = inject(html, "<!-- PRERENDER:STACK:START -->", "<!-- PRERENDER:STACK:END -->", stack_html(), "STACK")
+    html = inject(html, "<!-- PRERENDER:FOCUS:START -->", "<!-- PRERENDER:FOCUS:END -->", focus_html(), "FOCUS")
     html = inject(html, "<!-- PRERENDER:CATALOG:START -->", "<!-- PRERENDER:CATALOG:END -->", esc(catalog_line), "CATALOG")
 
     if dry_run:
