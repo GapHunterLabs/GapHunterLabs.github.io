@@ -33,9 +33,9 @@ ROOT = Path(__file__).resolve().parents[1]
 import sys as _sys
 from pathlib import Path as _Path
 _sys.path.insert(0, str(_Path(__file__).resolve().parent))
-from site_config import SITE_URL  # noqa: E402
+from site_config import SITE_URL, OG_VERSION  # noqa: E402
 SITE = SITE_URL
-OG_IMAGE = SITE + "/og-image.png?v=3"
+OG_IMAGE = "%s/og-image.png?v=%s" % (SITE, OG_VERSION)
 OG_ALT = "Gap Hunter Labs — performance, security and reliability engineering"
 
 STUBS = (

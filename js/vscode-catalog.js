@@ -17,5 +17,10 @@
       return data;
     });
 
+  // The consumers (catalog-vsx.js) attach their own handlers, but a failure that arrives before they run
+  // (a blocked or refused request) was reported as an uncaught rejection. This only marks it as handled;
+  // `ready` itself still rejects for every consumer.
+  ready.catch(function () {});
+
   window.GapVSCode = { ready: ready };
 })();

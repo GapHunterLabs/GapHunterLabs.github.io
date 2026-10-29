@@ -51,7 +51,7 @@ ROOT = Path(__file__).resolve().parents[1]
 import sys as _sys
 from pathlib import Path as _Path
 _sys.path.insert(0, str(_Path(__file__).resolve().parent))
-from site_config import SITE_URL  # noqa: E402
+from site_config import SITE_URL, OG_VERSION  # noqa: E402
 from badges import badge, price_badge  # noqa: E402
 SITE = SITE_URL
 ORG_ID = SITE + "/#org"
@@ -67,7 +67,7 @@ CSS_OUT = ROOT / "css" / "plugin.css"
 SITEMAP = ROOT / "sitemap.xml"
 LASTMOD_STORE = ROOT / "_review" / "plugin_lastmod.json"
 
-OG_IMAGE = SITE + "/og-image.png?v=3"
+OG_IMAGE = "%s/og-image.png?v=%s" % (SITE, OG_VERSION)
 OG_IMAGE_ALT = "Gap Hunter Labs — performance, security and reliability engineering"
 MEDIA_DIR = ROOT / "media"
 SHARE_ICON_X = ('<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 '
@@ -1281,7 +1281,7 @@ def main():
         # no existe para este plugin, cae a la og-image.png generica en
         # vez de romper el <head>.
         has_own_og = (MEDIA_DIR / slug / "og.png").exists()
-        og_image = "%s/media/%s/og.png" % (SITE, slug) if has_own_og else OG_IMAGE
+        og_image = "%s/media/%s/og.png?v=%s" % (SITE, slug, OG_VERSION) if has_own_og else OG_IMAGE
         og_image_alt = ("%s — Gap Hunter Labs" % p["name"]) if has_own_og else OG_IMAGE_ALT
         page = shell.render(
             title=renderer.title(p),
@@ -1325,10 +1325,14 @@ def main():
             die("nombre de extension invalido como ruta: %r" % e["name"])
         slug = renderer.vsx_path(e)
         url = "%s/catalog/%s/" % (SITE, slug)
+        # media/vscode/<name>/og.png lo genera pipeline/build_og_images.py; sin el, cae a la generica.
+        has_own_og = (MEDIA_DIR / slug / "og.png").exists()
         page = shell.render(
             title=renderer.vsx_title(e), og_title="%s — Gap Hunter Labs" % e["displayName"],
             desc=renderer.vsx_description(e), url=url, jsonld=renderer.vsx_jsonld(e, url),
-            body=renderer.vsx_body_html(e), og_image=OG_IMAGE, og_image_alt=OG_IMAGE_ALT)
+            body=renderer.vsx_body_html(e),
+            og_image="%s/media/%s/og.png?v=%s" % (SITE, slug, OG_VERSION) if has_own_og else OG_IMAGE,
+            og_image_alt=("%s — VS Code extension — Gap Hunter Labs" % e["displayName"]) if has_own_og else OG_IMAGE_ALT)
         page = page.replace('<div class="app-main">', '<div class="app-main plugin-page">', 1)
         fingerprint = json.dumps({k: e.get(k) for k in ("displayName", "pitch", "niche", "version", "marketplaceUrl")},
                                  ensure_ascii=False, sort_keys=True)
