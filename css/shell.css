@@ -943,6 +943,7 @@ tr.row td[data-label]::before { font-family: var(--sans); font-size: 11px; lette
 .tier-list .tier-terms { font: 500 12.5px/1.55 var(--mono); color: var(--text); }
 @media (max-width: 760px) { .tier-list .tier { padding: 12px 14px; } }
 .disclosure .btn { min-height: 38px; font-size: 13.5px; }
+.svc-badges { margin: 0 0 14px; }
 
 /* Side rail. */
 .page-insights { padding-top: 28px; gap: 14px; }

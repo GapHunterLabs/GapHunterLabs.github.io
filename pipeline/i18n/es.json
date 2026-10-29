@@ -1284,5 +1284,6 @@
  "I follow each problem to its root cause and ship the precise fix that removes it: from upstream reports and patches to specialized tools and tailored audits. Every finding and fix published here is backed by verifiable technical evidence: tickets, pull requests, tests and a direct trail to the source.": "Sigo cada problema hasta su causa raíz y envío la solución precisa que lo elimina: desde reportes y parches upstream hasta herramientas especializadas y auditorías a medida. Cada hallazgo y corrección publicados en este sitio están respaldados por evidencia técnica verificable: tickets, pull requests, tests y trazabilidad directa hasta la fuente.",
  "Go": "Go",
  "IntelliJ Platform": "IntelliJ Platform",
- "Third-party audit": "Auditoría de terceros"
+ "Third-party audit": "Auditoría de terceros",
+ "GitLab CI": "GitLab CI"
 }
