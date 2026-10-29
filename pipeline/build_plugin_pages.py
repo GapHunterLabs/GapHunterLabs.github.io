@@ -52,7 +52,7 @@ import sys as _sys
 from pathlib import Path as _Path
 _sys.path.insert(0, str(_Path(__file__).resolve().parent))
 from site_config import SITE_URL  # noqa: E402
-from badges import badge  # noqa: E402
+from badges import badge, price_badge  # noqa: E402
 SITE = SITE_URL
 ORG_ID = SITE + "/#org"
 CATALOG_URL = SITE + "/catalog/"
@@ -265,11 +265,6 @@ def js_literal(src: str, name: str, label: str):
 # =============================================================================
 # 2. Helpers de render (puerto 1:1 de los de js/catalog-shared.js)
 # =============================================================================
-
-def price_badge(key: str, text: str) -> str:
-    """Pricing as a status badge: the dot color (is-free/is-freemium/is-paid/is-pending) backs the label, never replaces it."""
-    return '<span class="badge badge-status is-%s">%s</span>' % (esc(key), esc(text))
-
 
 def esc(value) -> str:
     """Mismo escape que esc() en catalog-shared.js: & < > "."""

@@ -34,7 +34,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from build_plugin_pages import Sources, esc  # noqa: E402
-from badges import badge, badge_row, badge_table  # noqa: E402
+from badges import badge, badge_row, badge_table, price_badge  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[1]
 HOME_PAGE = ROOT / "index.html"
@@ -173,11 +173,13 @@ def build(dry_run: bool = False) -> None:
         rows.append(
             '<article class="tool">'
             '<div class="tool-head"><h3 class="tool-name"><a href="/catalog/%s/">%s</a></h3>'
-            '<p class="tool-meta">JetBrains IDEs &middot; %s</p></div>'
+            '<div class="badge-row tool-badges">%s%s</div></div>'
             '<dl class="tool-facts"><div><dt class="is-gap">Gap</dt><dd>%s</dd></div>'
             '<div><dt class="is-fix">Fix</dt><dd>%s</dd></div></dl>'
             '</article>'
-            % (esc(slug), esc(p["name"]), PRICING_LABEL.get(pricing, "Free"), gap, fix)
+            % (esc(slug), esc(p["name"]),
+               badge("JetBrains IDEs", icon="jetbrains", variant="dark"),
+               price_badge(pricing.lower(), PRICING_LABEL.get(pricing, "Free")), gap, fix)
         )
     tools_html = "".join(rows)
 
