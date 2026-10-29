@@ -315,7 +315,8 @@ def _home_checks(lang: str):
         with env.page() as p:
             env.go(p, L["home"])
             text = p.locator(".nb-impact").inner_text()
-            expect(("{:,}".format(env.total_downloads)) in text, "downloads %s not shown: %r" % ("{:,}".format(env.total_downloads), text[:120]))
+            shown = "{:,}".format(env.total_downloads).replace(",", "," if lang == "en" else ".")   # Spanish groups thousands with a period
+            expect(shown in text, "downloads %s not shown: %r" % (shown, text[:120]))
             expect(str(env.total_plugins + env.total_vsx) in text, "tool total %d not shown" % (env.total_plugins + env.total_vsx))
             expect(str(env.total_plugins) in text and str(env.total_vsx) in text, "per-platform totals not shown")
             eq(p.locator(".nb-impact .tw-p-5").count(), 4, "metric tiles")
@@ -481,6 +482,9 @@ def _contact_prefill(env: Env):
 @check("sponsors", "sponsors page: five levels, ways to join, reach figures and sponsor links marked rel=sponsored")
 def _sponsors_page(env: Env):
     listed = json.loads((ROOT / "data" / "sponsors.json").read_text(encoding="utf-8")).get("sponsors", [])
+    reach = json.loads((ROOT / "data" / "reach.json").read_text(encoding="utf-8"))
+    li, site = reach["linkedin"], reach["site"]
+    figures = [li["followers"], li["impressions"], li["membersReached"], site["visits"]]
     for lang, path, contact in (("en", "/sponsors/", "/contact/"), ("es", "/es/patrocinadores/", "/es/contacto/")):
         with env.page() as p:
             env.go(p, path)
@@ -490,6 +494,18 @@ def _sponsors_page(env: Env):
             expect(any("buymeacoffee.com" in h for h in hrefs), "the Buy Me a Coffee link is missing [%s]" % lang)
             expect(contact in hrefs, "the company-sponsorship link should go to %s [%s]" % (contact, lang))
             eq(p.locator(".sp-reach .tw-bg-bg").count(), 4, "reach figures [%s]" % lang)
+            sep = "," if lang == "en" else "."
+            downloads = p.evaluate("document.querySelector('.sp-reach .tw-text-3xl').textContent.trim()")
+            expect(re.fullmatch(r"\d{1,3}(%s\d{3})+" % re.escape(sep), downloads), "downloads separator [%s]: %r" % (lang, downloads))
+            # the audience card prints data/reach.json: same numbers, the thousands separator of the language, dated
+            eq(p.locator(".sp-audience .tw-bg-bg").count(), 4, "audience figures [%s]" % lang)
+            want = [format(n, ",").replace(",", sep) for n in figures]
+            eq(p.evaluate("[...document.querySelectorAll('.sp-audience .tw-text-3xl')].map(e => e.textContent.trim())"),
+               want, "audience figures match data/reach.json [%s]" % lang)
+            stamps = p.evaluate("[...document.querySelectorAll('.sp-audience time')].map(t => t.getAttribute('datetime'))")
+            eq(stamps, [site["from"], site["to"], li["from"], li["to"], reach["asOf"]], "audience dates [%s]" % lang)
+            expect(not re.search(r"NaN|undefined|None", p.locator(".sp-audience").inner_text()),
+                   "the audience card prints a broken value [%s]" % lang)
             eq(p.locator(".sp-wall").count() > 0, bool(listed), "the wall and data/sponsors.json disagree [%s]" % lang)
             if not listed:
                 eq(p.locator(".sp-empty").count(), 1, "the open call [%s]" % lang)
@@ -505,6 +521,23 @@ def _sponsors_home(env: Env):
             env.go(p, home)
             expect(p.locator("#sponsors").count() == 1, "the sponsors section is missing [%s]" % lang)
             expect(p.locator("#sponsors a.btn.primary[href='%s']" % target).count() == 1, "the call to action [%s]" % lang)
+
+
+@check("sponsors", "sponsor links are counted per sponsor and place, keep rel=sponsored, and unlinked names stay plain")
+def _sponsors_counted(env: Env):
+    sys.path.insert(0, str(ROOT / "pipeline"))
+    from build_home import sponsors_html
+    rows = [{"name": "Acme Corp", "tier": "gold", "url": "https://acme.example/"},
+            {"name": "Jane Roe", "tier": "backer", "url": "https://jane.example/"},
+            {"name": "No Link", "tier": "supporter"}]
+    for home, where, want in ((True, "home", ["sponsor-acme-corp-home"]),
+                              (False, "page", ["sponsor-acme-corp-page", "sponsor-jane-roe-page"])):
+        html = sponsors_html(rows, home=home)
+        links = re.findall(r"<a [^>]*>", html)
+        expect(links and all('rel="sponsored noopener"' in a for a in links), "sponsor links must carry rel=sponsored [%s]" % where)
+        eq(re.findall(r'data-goatcounter-click="([^"]+)"', html), want, "sponsor click events [%s]" % where)
+        expect(home or '<span class="sp-person"><span class="sp-name">No Link</span></span>' in html,
+               "a sponsor without a URL must stay plain text")
 
 
 @check("share", "Spanish pages translate their titles and social cards (not just the visible text)")
@@ -546,18 +579,25 @@ def _visible_main(text):
     return " ".join(_html.unescape(body).split())
 
 
-@check("voice", "public copy speaks in the first person singular (no 'we', 'our', 'Joel does', 'one engineer')")
+@check("voice", "public copy and page descriptions speak in the first person singular (no 'we', 'our', 'Joel does', 'one engineer')")
 def _voice(env: Env):
+    import html as _html
     bad = []
     for f in sorted(ROOT.rglob("index.html")):
         rel = f.relative_to(ROOT).as_posix()
         if rel.startswith(("node_modules/", "pipeline/", "_review/")) or rel.startswith(VOICE_SKIP):
             continue
         rx = VOICE_ES if rel.startswith("es/") else VOICE_EN
-        text = _visible_main(f.read_text(encoding="utf-8"))
+        page = f.read_text(encoding="utf-8")
+        text = _visible_main(page)
         for sent in re.split(r"(?<=[.!?])\s+", text):
             if rx.search(sent) and "Gap Hunter Labs is my" not in sent:
                 bad.append("%s: %s" % (rel, sent[:110]))
+        # what search results and social cards show: the page descriptions
+        for m in re.finditer(r'<meta (?:name|property)="(?:description|og:description|twitter:description)" content="([^"]*)"', page):
+            share = _html.unescape(m.group(1))
+            if rx.search(share):
+                bad.append("%s (description): %s" % (rel, share[:110]))
     for js in ("contact.js", "catalog.js", "catalog-vsx.js", "site-search.js"):
         text = (ROOT / "js" / js).read_text(encoding="utf-8")
         for m in re.finditer(r"'([^'\n]{12,})'", text):

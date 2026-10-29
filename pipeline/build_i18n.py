@@ -273,6 +273,9 @@ def translate(text, table, missing, page):
         frag = text[a:b]
         key, vals = normalize(frag)
         if not key or not has_letters(key):
+            lone = frag.strip()
+            if GROUPED_RE.fullmatch(lone):      # a figure on its own ("12,770") takes the Spanish separator too
+                edits.append((a, b, frag.replace(lone, es_number(lone))))
             continue
         tr = lookup(key, table)
         if tr is not None:
