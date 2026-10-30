@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-29 11:11:22 UTC",
+  "generatedAt": "2026-10-30 01:30:55 UTC",
   "totalPlugins": 146,
   "totalDownloads": 12770,
   "pending": 0,
@@ -7,10 +7,6 @@
   "totalReviews": 0,
   "avgRating": null,
   "trend7d": [
-    {
-      "date": "2026-10-23",
-      "totalDownloads": 12100
-    },
     {
       "date": "2026-10-24",
       "totalDownloads": 12242
@@ -34,45 +30,13 @@
     {
       "date": "2026-10-29",
       "totalDownloads": 12770
+    },
+    {
+      "date": "2026-10-30",
+      "totalDownloads": 12770
     }
   ],
-  "recentChanges": [
-    {
-      "date": "2026-10-29",
-      "type": "growth",
-      "name": "Mermaid Companion",
-      "niche": "Diagrams",
-      "delta": 29
-    },
-    {
-      "date": "2026-10-29",
-      "type": "growth",
-      "name": "Spreadsheet Companion",
-      "niche": "CSV/XLSX Tooling",
-      "delta": 3
-    },
-    {
-      "date": "2026-10-29",
-      "type": "growth",
-      "name": "React Native Companion",
-      "niche": "React Native Tooling",
-      "delta": 3
-    },
-    {
-      "date": "2026-10-29",
-      "type": "growth",
-      "name": "Dependency Vulnerability Companion",
-      "niche": "Dependency / SCA Security",
-      "delta": 3
-    },
-    {
-      "date": "2026-10-29",
-      "type": "growth",
-      "name": "Cert Companion",
-      "niche": "Certificates / X.509",
-      "delta": 3
-    }
-  ],
+  "recentChanges": [],
   "plugins": [
     {
       "xmlId": "dev.gaphunter.mermaidcompanion",
