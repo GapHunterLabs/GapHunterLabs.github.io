@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-10-30 11:06:23 UTC",
+  "generatedAt": "2026-10-31 01:21:54 UTC",
   "totalPlugins": 146,
   "totalDownloads": 12965,
   "pending": 0,
@@ -7,10 +7,6 @@
   "totalReviews": 0,
   "avgRating": null,
   "trend7d": [
-    {
-      "date": "2026-10-24",
-      "totalDownloads": 12242
-    },
     {
       "date": "2026-10-25",
       "totalDownloads": 12376
@@ -34,45 +30,13 @@
     {
       "date": "2026-10-30",
       "totalDownloads": 12965
+    },
+    {
+      "date": "2026-10-31",
+      "totalDownloads": 12965
     }
   ],
-  "recentChanges": [
-    {
-      "date": "2026-10-30",
-      "type": "growth",
-      "name": "Mermaid Companion",
-      "niche": "Diagrams",
-      "delta": 20
-    },
-    {
-      "date": "2026-10-30",
-      "type": "growth",
-      "name": "GraphQL Companion",
-      "niche": "GraphQL Tooling",
-      "delta": 6
-    },
-    {
-      "date": "2026-10-30",
-      "type": "growth",
-      "name": "Dependency Vulnerability Companion",
-      "niche": "Dependency / SCA Security",
-      "delta": 6
-    },
-    {
-      "date": "2026-10-30",
-      "type": "growth",
-      "name": "Kafka Producer Reuse Companion",
-      "niche": "Messaging Client Reuse",
-      "delta": 3
-    },
-    {
-      "date": "2026-10-30",
-      "type": "growth",
-      "name": "Kafka Premature Offset Commit Companion",
-      "niche": "Kafka / Messaging Bugs",
-      "delta": 3
-    }
-  ],
+  "recentChanges": [],
   "plugins": [
     {
       "xmlId": "dev.gaphunter.mermaidcompanion",
